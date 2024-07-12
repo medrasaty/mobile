@@ -2,25 +2,32 @@
   "expo": {
     "name": "medrasaty-mobile",
     "slug": "medrasaty-mobile",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/images/splash_icon.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#191C1D"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "ExpoLocalization_supportsRTL": true,
+        "ExpoLocalization_forcesRTL": true
+      }
     },
+
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#191C1D"
+      },
+      "package": "com.solomonsh.medrasatymobile"
     },
+
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -32,7 +39,9 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/Cairo-Regular.ttf"]
+          "fonts": [
+            "./assets/fonts/Cairo-Regular.ttf"
+          ]
         }
       ]
     ],
@@ -41,7 +50,13 @@
     },
     "extra": {
       "supportsRTL": true,
-      "forcesRTL": true
+      "forcesRTL": true,
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "8a520cb5-0b91-49ee-a13b-1ae5e3ac194b"
+      }
     }
   }
 }
