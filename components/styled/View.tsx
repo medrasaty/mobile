@@ -44,8 +44,8 @@ export function Container({ children, style, ...props }: ViewProps) {
         {
           flex: 1,
           backgroundColor: colors.surface,
-          marginStart: 16,
-          marginEnd: 16,
+          paddingStart: 16,
+          paddingEnd: 16,
         },
         style,
       ]}

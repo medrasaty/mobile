@@ -1,10 +1,12 @@
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { Stack, SplashScreen, Slot } from "expo-router";
 import { useEffect } from "react";
 import { I18nManager, useColorScheme } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
+import { SessionProvider } from "@/auth/ctx";
 import { Darktheme, LightTheme } from "@/constants/theme";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -41,34 +43,15 @@ export default function RootLayout() {
   const theme = colorscheme === "dark" ? Darktheme : LightTheme;
 
   return (
-    <PaperProvider theme={theme}>
-      <SafeAreaProvider>
-        <StatusBar style="auto"/>
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: theme.colors.surface,
-            },
-
-            headerTitleStyle: {
-              color: theme.colors.onSurface,
-            },
-            headerTitleAlign: "center",
-            headerBackTitleVisible: false,
-          }}
-        >
-          <Stack.Screen
-            name="index"
-            options={{
-              headerTitle: "مرحباَ",
-            }}
-          />
-          <Stack.Screen
-            name="login"
-            options={{ headerShown: false }}
-          />
-        </Stack>
-      </SafeAreaProvider>
-    </PaperProvider>
+    <QueryClientProvider client={new QueryClient()}>
+      <SessionProvider>
+        <PaperProvider theme={theme}>
+          <SafeAreaProvider>
+            <StatusBar style="auto" />
+            <Slot />
+          </SafeAreaProvider>
+        </PaperProvider>
+      </SessionProvider>
+    </QueryClientProvider>
   );
 }
