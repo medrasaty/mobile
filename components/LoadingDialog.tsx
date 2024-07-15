@@ -3,13 +3,18 @@ import { ActivityIndicator, View } from "react-native";
 import { Text, Dialog, Portal } from "react-native-paper";
 
 export default function LoadingDialog({
-  message = "يتم معالجة البيانات ...",
-
+  message = "جاري التحميل...",
   visible,
 }: {
   message?: string;
   visible: boolean;
 }) {
+  /**
+   * Return a Dialog with a message and  Loading indicator
+   * default message is "يتم معالجة البيانات ..."
+   * @param message?: string
+   * @param visible:  boolean (required)
+   */
   return (
     <View>
       <Portal>

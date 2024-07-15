@@ -48,7 +48,7 @@ export default function RootLayout() {
         <PaperProvider theme={theme}>
           <SafeAreaProvider>
             <StatusBar style="auto" />
-            <Slot />
+            <Slot initialRouteName="/home" />
           </SafeAreaProvider>
         </PaperProvider>
       </SessionProvider>

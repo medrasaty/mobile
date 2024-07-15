@@ -9,9 +9,10 @@ import LoginFailedDialog from "@/components/login/LoginFailedDialog";
 import LoadingDialog from "@/components/LoadingDialog";
 import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
+import { LOGIN_PAGE, HOME_PAGE } from "@/constants/routes";
 
 export default function Index() {
-  const { signIn } = useSession();
+  const { signIn, session } = useSession();
   const queryClient = useQueryClient();
 
   const [username, setUsername] = useState<string | undefined>(undefined);
@@ -20,6 +21,10 @@ export default function Index() {
   const [isSending, setIsSending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
+  if (session) {
+    router.replace(HOME_PAGE);
+  }
+
   function handleLogin() {
     if (username && password && isSending === false) {
       setIsSending(true);
@@ -27,7 +32,7 @@ export default function Index() {
       signIn({ username, password })
         .then((user) => {
           queryClient.setQueryData(["profile"], user);
-          router.replace("/home/");
+          router.replace(HOME_PAGE);
         })
         .catch((error: Error) => {
           setErrorMessage(error.message);

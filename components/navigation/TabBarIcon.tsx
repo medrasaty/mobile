@@ -1,9 +1,19 @@
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { useTheme } from "react-native-paper";
 
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { type IconProps } from '@expo/vector-icons/build/createIconSet';
-import { type ComponentProps } from 'react';
-
-export function TabBarIcon({ style, ...rest }: IconProps<ComponentProps<typeof Ionicons>['name']>) {
-  return <Ionicons size={28} style={[{ marginBottom: -3 }, style]} {...rest} />;
+export default function TabBarIcon({
+  icon_name,
+  color,
+  size,
+  focused,
+}: {
+  icon_name: any; // FIXME: replace "any" with correct type
+  color: string;
+  size: number;
+  focused: boolean;
+}) {
+  const theme = useTheme();
+  const name = focused ? icon_name : `${icon_name}-outline`;
+  console.log(color);
+  return <MaterialCommunityIcons name={name} size={size} color={color} />;
 }

@@ -8,7 +8,7 @@ export default function HomePage() {
       <Container
         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       >
-        <Text variant="displaySmall">الرئيسية</Text>
+        <Text variant="displaySmall">الإشعارات</Text>
       </Container>
     </SafeAreaView>
   );
