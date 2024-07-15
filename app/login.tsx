@@ -8,10 +8,9 @@ import LoginButton from "@/components/login/LoginButton";
 import LoginFailedDialog from "@/components/login/LoginFailedDialog";
 import LoadingDialog from "@/components/LoadingDialog";
 import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { router } from "expo-router";
 
 export default function Index() {
-  const theme = useTheme();
   const { signIn } = useSession();
   const queryClient = useQueryClient();
 
@@ -22,22 +21,16 @@ export default function Index() {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   function handleLogin() {
-    if (username && password) {
+    if (username && password && isSending === false) {
       setIsSending(true);
 
       signIn({ username, password })
         .then((user) => {
           queryClient.setQueryData(["profile"], user);
-          alert("login success");
+          router.replace("/home/");
         })
-        .catch((error: AxiosError) => {
-          if (error.response) {
-            setErrorMessage(error.response.data as string);
-          } else if (error.request) {
-            setErrorMessage(
-              "حدث خطأ اثناء محاولة تسجيل الدخول, تحقق من اتصال جهازك باإنترنت ثم حاول مجدداً"
-            );
-          }
+        .catch((error: Error) => {
+          setErrorMessage(error.message);
         })
         .finally(() => setIsSending(false));
     }
@@ -47,7 +40,13 @@ export default function Index() {
     <SafeAreaView>
       <Container>
         <View style={{ flex: 1 }}>
-          <MedrasatyLogo />
+          <MedrasatyLogo
+            style={{
+              flex: 0.7,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          />
           <Text
             style={{
               marginBottom: 14,
