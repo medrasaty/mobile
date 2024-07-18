@@ -8,7 +8,11 @@ export default function RegisterPage() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Container style={{ flex: 1 }}>
-        <Text style={{ color: theme.colors.primary }}>solo is register</Text>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text style={{ color: theme.colors.primary }}>solo is register</Text>
+        </View>
       </Container>
     </SafeAreaView>
   );

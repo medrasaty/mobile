@@ -8,6 +8,7 @@ export interface BaseUser {
   father_name: string;
   grand_father_name: string;
   family_name: string;
+  short_name: string;
   full_name: string;
   type: UserType;
   school: number;

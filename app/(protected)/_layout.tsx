@@ -1,31 +1,30 @@
-import { useSession } from "@/auth/ctx";
 import LoadingDialog from "@/components/LoadingDialog";
-import { Tabs, router } from "expo-router";
 import BottomTabNavigationBar from "@/components/navigation/BottomNavigationBar";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import TabBarIcon from "@/components/navigation/TabBarIcon";
-import { Text, useTheme } from "react-native-paper";
 import { LOGIN_PAGE } from "@/constants/routes";
+import { useSession } from "@/hooks/useSession";
+import { Redirect, Tabs } from "expo-router";
 
 export default function ProtectedLayout() {
   const { session, isLoading } = useSession();
-  const theme = useTheme();
 
   if (isLoading) {
     return <LoadingDialog visible={isLoading} />;
   }
 
-  if (!session) {
-    router.replace(LOGIN_PAGE);
+  // Redirect to login page if not logged in.
+  if (session === null) {
+    return <Redirect href={LOGIN_PAGE} />;
   }
 
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{ headerShown: false }}
       tabBar={BottomTabNavigationBar}
     >
       <Tabs.Screen
-        name="home"
+        name="index"
         options={{
           tabBarLabel: "الرئيسية",
           tabBarIcon: (props) => <TabBarIcon {...props} icon_name={"home"} />,

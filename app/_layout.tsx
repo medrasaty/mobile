@@ -9,6 +9,7 @@ import { Darktheme, LightTheme } from "@/constants/theme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useReactQueryDevTools } from "@dev-plugins/react-query";
 
 // inforce Right to Left layout
 I18nManager.allowRTL(true);
@@ -16,9 +17,11 @@ I18nManager.forceRTL(true);
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const colorscheme = useColorScheme();
+  useReactQueryDevTools(queryClient);
 
   const [loaded] = useFonts({
     Cairo: require("../assets/fonts/Cairo-Regular.ttf"),
@@ -43,12 +46,19 @@ export default function RootLayout() {
   const theme = colorscheme === "dark" ? Darktheme : LightTheme;
 
   return (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider client={queryClient}>
       <SessionProvider>
         <PaperProvider theme={theme}>
           <SafeAreaProvider>
             <StatusBar style="auto" />
-            <Slot initialRouteName="/home" />
+            <Stack
+              initialRouteName="login"
+              screenOptions={{ headerShown: false }}
+            >
+              <Stack.Screen name="(protected)" />
+              <Stack.Screen name="login" />
+              <Stack.Screen name="index" />
+            </Stack>
           </SafeAreaProvider>
         </PaperProvider>
       </SessionProvider>

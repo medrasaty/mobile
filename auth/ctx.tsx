@@ -1,24 +1,22 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import React from "react";
-import { useStorageState } from "./useStorageState";
-import { BaseUser, UserType } from "@/definitions/user.types";
-import { UserTypes } from "@/definitions/_definitions";
-import { LoginError } from "./LoginError";
+import React, { useState } from "react";
+import { useStorageState } from "@/hooks/useStorageState";
+import { BaseUser, Student, Teacher, UserType } from "@/definitions/user.types";
 
 export type Session = {
-  user: BaseUser;
+  user: Student | Teacher;
   token: string;
 };
 
-type AuthSession = {
+export type AuthSession = {
   signIn: (credentials: Credentials) => Promise<Session>;
   signOut: () => void;
-  session?: string | null;
+  session: string | null;
   isLoading: boolean;
 };
 
-const AuthContext = React.createContext<AuthSession>({
+export const AuthContext = React.createContext<AuthSession>({
   // initial values
   signIn: () => {},
   signOut: () => {},
@@ -26,30 +24,23 @@ const AuthContext = React.createContext<AuthSession>({
   isLoading: true,
 });
 
-export function useSession(): AuthSession {
-  /**
-   * Return the auth context value.
-   */
-  const value = React.useContext(AuthContext);
-
-  if (process.env.NODE_ENV !== "production") {
-    if (!value) {
-      throw new Error("useSession must be used within a <SessionProvider>");
-    }
-  }
-
-  return value;
-}
-
 export function SessionProvider(props: React.PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState("session");
+
+  const queryClient = useQueryClient();
 
   return (
     <AuthContext.Provider
       value={{
         signIn: async (credentials: Credentials) =>
           await signIn(credentials, setSession),
-        signOut: () => setSession(null),
+        signOut: () => {
+          // remove profile data from cache
+          queryClient.removeQueries({ queryKey: ["profile"] });
+          // set token to null
+          setSession(null);
+        },
+
         session,
         isLoading,
       }}
@@ -84,8 +75,10 @@ async function signIn(
         cause: "INVALID_USER_TYPE",
       });
     }
-    setSession(token);
-    // Set current user in the cache
+
+    // convert user and token to serialized string
+    const session = JSON.stringify({ user, token });
+    setSession(session);
     return { user, token };
   } catch (error) {
     // check if  error is of type AxiosError
@@ -94,6 +87,8 @@ async function signIn(
         throw new Error("اسم المستخدم او كلمة المرور غير صحيحة", {
           cause: "INVALID_CREDENTIALS",
         });
+      } else if (error?.response?.status === 500) {
+        throw new Error("حدث خطأ ما، حاول مجدداً  في وقت لاحق");
       } else {
         throw new Error(
           "حدث خطأ اثناء محاولة تسجيل الدخول, تحقق من اتصال جهازك بالانترنت ثم حاول مجدداً",
@@ -120,7 +115,7 @@ async function ServerLogin(credentials: Credentials): Promise<Session> {
   const config = {
     method: "post",
     url: "/auth/login/",
-    baseURL: "http://192.168.1.4:8000",
+    baseURL: "http://192.168.1.6:8000",
     headers: {
       Authorization: "Basic " + encodedCredentials,
     },

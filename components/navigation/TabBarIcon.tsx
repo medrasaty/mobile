@@ -14,6 +14,5 @@ export default function TabBarIcon({
 }) {
   const theme = useTheme();
   const name = focused ? icon_name : `${icon_name}-outline`;
-  console.log(color);
   return <MaterialCommunityIcons name={name} size={size} color={color} />;
 }

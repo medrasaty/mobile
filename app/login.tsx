@@ -1,6 +1,7 @@
-import { useSession } from "@/auth/ctx";
+import { useSession } from "@/hooks/useSession";
+import { Keyboard } from "react-native";
 import View, { Container, SafeAreaView } from "@/components/styled/View";
-import { Text, TextInput, useTheme } from "react-native-paper";
+import { Text, TextInput } from "react-native-paper";
 import { useState } from "react";
 import MedrasatyLogo from "@/components/login/MedrasatyLogo";
 import DoNotHaveAccount from "@/components/login/DoNotHaveAccount";
@@ -8,31 +9,33 @@ import LoginButton from "@/components/login/LoginButton";
 import LoginFailedDialog from "@/components/login/LoginFailedDialog";
 import LoadingDialog from "@/components/LoadingDialog";
 import { useQueryClient } from "@tanstack/react-query";
-import { router } from "expo-router";
-import { LOGIN_PAGE, HOME_PAGE } from "@/constants/routes";
+import { Redirect } from "expo-router";
+import { HOME_PAGE } from "@/constants/routes";
+import { Session } from "@/auth/ctx";
 
-export default function Index() {
+export default function LoginPage() {
   const { signIn, session } = useSession();
   const queryClient = useQueryClient();
 
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [password, setPassword] = useState<string | undefined>(undefined);
-
   const [isSending, setIsSending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  if (session) {
-    router.replace(HOME_PAGE);
+  // Redirect to home page if already logged in.
+  if (session !== null) {
+    return <Redirect href={HOME_PAGE} />;
   }
 
   function handleLogin() {
     if (username && password && isSending === false) {
       setIsSending(true);
+      // Remove keyboard from screen
+      Keyboard.dismiss();
 
       signIn({ username, password })
-        .then((user) => {
-          queryClient.setQueryData(["profile"], user);
-          router.replace(HOME_PAGE);
+        .then((session: Session) => {
+          queryClient.setQueryData(["profile"], session.user);
         })
         .catch((error: Error) => {
           setErrorMessage(error.message);
