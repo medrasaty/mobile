@@ -4,9 +4,17 @@ import TabBarIcon from "@/components/navigation/TabBarIcon";
 import { LOGIN_PAGE } from "@/constants/routes";
 import { useSession } from "@/hooks/useSession";
 import { Redirect, Tabs } from "expo-router";
+import { useTheme } from "react-native-paper";
+import Text from "@/components/styled/Text";
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 export default function ProtectedLayout() {
   const { session, isLoading } = useSession();
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   if (isLoading) {
     return <LoadingDialog visible={isLoading} />;

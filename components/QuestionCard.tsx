@@ -1,7 +1,9 @@
 import { Question } from "@/definitions/forum.types";
 import { ViewProps } from "react-native";
-import { Avatar, Card, Divider, Text } from "react-native-paper";
+import { Avatar, Badge, Card, Divider } from "react-native-paper";
 import View from "./styled/View";
+import Text from "./styled/Text";
+
 import { useTheme } from "react-native-paper";
 
 export type QuestionProps = {
@@ -15,10 +17,6 @@ export default function QuestionCard({ question, ...props }: QuestionProps) {
       elevation={0}
       style={{
         padding: 8,
-        marginTop: 12,
-        borderWidth: 0.5,
-        borderStyle: "dotted",
-        borderColor: theme.colors.secondary,
       }}
     >
       <View style={{ gap: 8 }}>
@@ -47,11 +45,7 @@ const CardHeader = ({ title, ...props }: { title: string } & ViewProps) => {
 const CardBody = ({ text, ...props }: { text: string } & ViewProps) => {
   return (
     <View {...props}>
-      <Text
-        numberOfLines={2}
-        variant="bodyMedium"
-        style={{ fontWeight: "100" }}
-      >
+      <Text numberOfLines={2} variant="bodyMedium">
         {text}
       </Text>
     </View>
@@ -94,9 +88,15 @@ const CardFooter = ({
           gap: 4,
         }}
       >
-        <Avatar.Text label="S" size={24} />
-        <View style={{ gap: 1 }}>
-          <Text variant="bodySmall" style={{ fontWeight: "400" }}>
+        <Avatar.Text label="S" size={30} />
+
+        <View style={{ gap: 2 }}>
+          <Text
+            variant="bodySmall"
+            style={{
+              fontWeight: "400",
+            }}
+          >
             {owner.short_name}
           </Text>
           <Text variant="bodySmall">{owner.school_name}</Text>

@@ -5,11 +5,12 @@ import { SafeAreaView } from "@/components/styled";
 import QuestionCard from "@/components/QuestionCard";
 import { Question } from "@/definitions/forum.types";
 import Text from "@/components/styled/Text";
+// import { Text } from "react-native";
 
 export default function HomePage() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Container style={{ flex: 1 }}>
+    <SafeAreaView>
+      <Container>
         <QuestionsPage />
       </Container>
     </SafeAreaView>
@@ -17,23 +18,21 @@ export default function HomePage() {
 }
 
 const QuestionsPage = () => {
-  return <QuestionsList />;
+  return (
+    <>
+      <QuestionsList />
+    </>
+  );
 };
 
 import React from "react";
 import { FlashList } from "@shopify/flash-list";
 import { ActivityIndicator } from "react-native";
+import { Divider } from "react-native-paper";
+import useQuestions from "@/hooks/forum/useQuestions";
 
 const QuestionsList = () => {
-  const client = useAuthClient();
-
-  const q = useQuery({
-    queryKey: ["questions"],
-    queryFn: async (): Promise<Question[]> => {
-      const response = await client.get("/forum/questions/");
-      return response.data;
-    },
-  });
+  const q = useQuestions();
 
   if (q.isFetching) return <ActivityIndicator />;
 
@@ -43,12 +42,12 @@ const QuestionsList = () => {
     return (
       <>
         <FlashList
-          ListHeaderComponent={<Text variant="displaySmall">الأسئلة</Text>}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingTop: 60 }}
+          ItemSeparatorComponent={Divider}
           data={q.data}
           renderItem={({ item }) => <QuestionCard question={item} />}
           estimatedItemSize={200}
+          overScrollMode="never"
         />
       </>
     );

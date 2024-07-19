@@ -4,7 +4,7 @@
     "slug": "medrasaty-mobile",
     "version": "0.1.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon_exper.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -39,9 +39,7 @@
       [
         "expo-font",
         {
-          "fonts": [
-            "./assets/fonts/Cairo-Regular.ttf"
-          ]
+          "fonts": ["./assets/fonts/Cairo-Regular.ttf"]
         }
       ]
     ],
