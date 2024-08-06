@@ -14,7 +14,7 @@ export default function IndexPage() {
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            gap: 3,
+            gap: 9,
           }}
         >
           <Button mode="contained" onPress={() => router.push(LOGIN_PAGE)}>

@@ -10,6 +10,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 // inforce Right to Left layout
 I18nManager.allowRTL(true);
@@ -25,7 +27,7 @@ export default function RootLayout() {
 
   const [loaded] = useFonts({
     Cairo: require("../assets/fonts/Cairo-Regular.ttf"),
-    Noto: require("../assets/fonts/NotoSansArabic-Regular.ttf"),
+    NotoSansArabic: require("../assets/fonts/NotoSansArabic-Regular.ttf"),
   });
 
   useEffect(() => {
@@ -46,22 +48,26 @@ export default function RootLayout() {
   const theme = colorscheme === "dark" ? Darktheme : LightTheme;
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <SessionProvider>
-        <PaperProvider theme={theme}>
-          <SafeAreaProvider>
-            <StatusBar style="auto" />
-            <Stack
-              initialRouteName="login"
-              screenOptions={{ headerShown: false }}
-            >
-              <Stack.Screen name="(protected)" />
-              <Stack.Screen name="login" />
-              <Stack.Screen name="index" />
-            </Stack>
-          </SafeAreaProvider>
-        </PaperProvider>
-      </SessionProvider>
-    </QueryClientProvider>
+    <GestureHandlerRootView>
+      <BottomSheetModalProvider>
+        <QueryClientProvider client={queryClient}>
+          <SessionProvider>
+            <PaperProvider theme={theme}>
+              <SafeAreaProvider>
+                <StatusBar style="auto" />
+                <Stack
+                  initialRouteName="login"
+                  screenOptions={{ headerShown: false }}
+                >
+                  <Stack.Screen name="(protected)" />
+                  <Stack.Screen name="login" />
+                  <Stack.Screen name="index" />
+                </Stack>
+              </SafeAreaProvider>
+            </PaperProvider>
+          </SessionProvider>
+        </QueryClientProvider>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }

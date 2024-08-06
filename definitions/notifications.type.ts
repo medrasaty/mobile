@@ -6,3 +6,8 @@ export interface Notification {
   type: string;
   instance_id: string;
 }
+
+export interface Registry {
+  id: string;
+  question: string;
+}

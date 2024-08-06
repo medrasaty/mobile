@@ -3,6 +3,7 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import React, { useState } from "react";
 import { useStorageState } from "@/hooks/useStorageState";
 import { BaseUser, Student, Teacher, UserType } from "@/definitions/user.types";
+import { API_URL } from "@/constants";
 
 export type Session = {
   user: Student | Teacher;
@@ -115,7 +116,7 @@ async function ServerLogin(credentials: Credentials): Promise<Session> {
   const config = {
     method: "post",
     url: "/auth/login/",
-    baseURL: "http://192.168.1.6:8000",
+    baseURL: API_URL,
     headers: {
       Authorization: "Basic " + encodedCredentials,
     },

@@ -4,13 +4,14 @@ import {
 } from "react-native-paper";
 
 import { CyanDark, CyanLight } from "@/constants/Colors";
+import { applyCustomFontFamily } from "@/constants/fonts";
 
-export const Darktheme = {
+export const Darktheme = applyCustomFontFamily({
   ...DefaultDarkTheme,
   colors: CyanDark.colors,
-};
+});
 
-export const LightTheme = {
+export const LightTheme = applyCustomFontFamily({
   ...DefaultLightTheme,
   colors: CyanLight.colors,
-};
+});

@@ -70,6 +70,7 @@ export default function LoginPage() {
           <View style={{ gap: 12, flex: 1 }}>
             <TextInput
               value={username}
+              keyboardType="email-address"
               onChangeText={(text) => setUsername(text)}
               label="اسم المستخدم"
               mode="outlined"

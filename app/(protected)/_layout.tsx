@@ -1,20 +1,13 @@
 import LoadingDialog from "@/components/LoadingDialog";
-import BottomTabNavigationBar from "@/components/navigation/BottomNavigationBar";
-import TabBarIcon from "@/components/navigation/TabBarIcon";
 import { LOGIN_PAGE } from "@/constants/routes";
 import { useSession } from "@/hooks/useSession";
-import { Redirect, Tabs } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 import { useTheme } from "react-native-paper";
-import Text from "@/components/styled/Text";
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { Text } from "react-native-paper";
+import { AppBar } from "@/components/navigation/AppBar";
 
 export default function ProtectedLayout() {
   const { session, isLoading } = useSession();
-  const theme = useTheme();
-  const insets = useSafeAreaInsets();
 
   if (isLoading) {
     return <LoadingDialog visible={isLoading} />;
@@ -26,40 +19,27 @@ export default function ProtectedLayout() {
   }
 
   return (
-    <Tabs
-      initialRouteName="index"
-      screenOptions={{ headerShown: false }}
-      tabBar={BottomTabNavigationBar}
+    <Stack
+      screenOptions={{
+        header: (props) => console.log(props),
+        headerShown: false,
+      }}
     >
-      <Tabs.Screen
-        name="index"
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen
         options={{
-          tabBarLabel: "الرئيسية",
-          tabBarIcon: (props) => <TabBarIcon {...props} icon_name={"home"} />,
+          headerShown: true,
+          header: () => <AppBar title="الرئيسية" />,
+        }}
+        name="questions/details/[questionId]"
+      />
+      <Stack.Screen
+        name="questions/new"
+        options={{
+          headerShown: true,
+          title: "solo",
         }}
       />
-
-      <Tabs.Screen
-        name="notifications"
-        options={{
-          tabBarLabel: "الإشعارات",
-          tabBarIcon: (props) => <TabBarIcon {...props} icon_name="bell" />,
-        }}
-      />
-      <Tabs.Screen
-        name="leader_board"
-        options={{
-          tabBarLabel: "الجوائز",
-          tabBarIcon: (props) => <TabBarIcon {...props} icon_name="star" />,
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          tabBarLabel: "انت",
-          tabBarIcon: (props) => <TabBarIcon {...props} icon_name="account" />,
-        }}
-      />
-    </Tabs>
+    </Stack>
   );
 }

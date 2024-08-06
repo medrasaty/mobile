@@ -1,11 +1,12 @@
 import axios, { Axios, AxiosRequestConfig } from "axios";
 import useToken from "./useToken";
+import { API_URL } from "@/constants";
 
 export default function useAuthClient(): Axios {
   const token = useToken();
 
   const config = {
-    baseURL: "http://192.168.1.6:8000",
+    baseURL: API_URL,
     headers: {
       Authorization: `TOKEN ${token}`,
     },
