@@ -3,6 +3,8 @@
  * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
  */
 
+import { MD3Colors } from "react-native-paper/src/types";
+
 const tintColorLight = "#0a7ea4";
 const tintColorDark = "#fff";
 
@@ -56,6 +58,9 @@ const CyanDark = {
     inverseSurface: "rgb(225, 227, 227)",
     inverseOnSurface: "rgb(46, 49, 50)",
     inversePrimary: "rgb(0, 104, 116)",
+    /** Custom Colors */
+    link: "rgb(79, 216, 235)",
+    /** End of Custom Colors */
     elevation: {
       level0: "transparent",
       level1: "rgb(28, 37, 39)",
@@ -93,7 +98,6 @@ const CyanLight = {
     surface: "rgb(250, 253, 253)",
     onSurface: "rgb(25, 28, 29)",
     surfaceVariant: "rgb(219, 228, 230)",
-    onSurfaceVariant: "rgb(63, 72, 74)",
     outline: "rgb(111, 121, 122)",
     outlineVariant: "rgb(191, 200, 202)",
     shadow: "rgb(0, 0, 0)",
@@ -101,6 +105,7 @@ const CyanLight = {
     inverseSurface: "rgb(46, 49, 50)",
     inverseOnSurface: "rgb(239, 241, 241)",
     inversePrimary: "rgb(79, 216, 235)",
+    link: "rgb(0, 104, 116)",
     elevation: {
       level0: "transparent",
       level1: "rgb(238, 246, 246)",

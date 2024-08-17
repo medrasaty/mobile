@@ -1,16 +1,16 @@
 import { AddQuestionAnimatedFAB } from "@/components/FAB";
 import FilteringOptions from "@/components/FilteringOptions";
-import QuestionCard from "@/components/QuestionCard";
+import QuestionCard from "@/features/forum/components/question/QuestionCard";
 import Text from "@/components/styled/Text";
 import View, { SafeAreaView } from "@/components/styled/View";
 import { useAnimatedAppBar } from "@/contexts";
-import { orderingOptionType } from "@/definitions";
-import { Question } from "@/definitions/forum.types";
-import useQuestions from "@/hooks/forum/useQuestions";
+import useQuestions from "@/features/forum/hooks/useQuestions";
+import { orderingOptionType } from "@/types";
+import { Question } from "@/types/forum.types";
 import { FlashList } from "@shopify/flash-list";
 import { useFocusEffect } from "expo-router";
 import React, { useCallback, useState } from "react";
-import { ActivityIndicator, ViewProps, RefreshControl } from "react-native";
+import { ActivityIndicator, RefreshControl, ViewProps } from "react-native";
 import { Divider } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
 

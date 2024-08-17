@@ -1,53 +1,30 @@
 import { Session } from "@/auth/ctx";
-import { Subject } from "@/definitions/school.types";
+import { CyanDark, CyanLight } from "@/constants/Colors";
+import { useSession } from "@/hooks/useSession";
+import { Subject } from "@/types/school.types";
+import { BaseUser, UserType } from "@/types/user.types";
+import { useTheme } from "react-native-paper";
 
-export function parseSession(session: string): Session {
-  return JSON.parse(session);
+export function parseSession(session: string | null): Session {
+  try {
+    // if session is valid
+    return JSON.parse(session);
+  } catch (error) {
+    // clear session
+    throw Error("session is invalid");
+  }
 }
 
 export function getSubjectColor(subject: Subject["name"]) {
   subject = subject.toLowerCase();
-  switch (subject) {
-    case "english":
-      return "#FFC107";
+  // FIXME: add custom colors to each subject
+  return CyanLight.colors.primary;
+}
 
-    case "arabic":
-      return "#03A9F4";
+export function is_student(user: BaseUser) {
+  return user.type === UserType.STUDENT;
+}
 
-    case "math":
-      return "#4CAF50";
-
-    case "physics":
-      return "#9C27B0";
-
-    case "chemistry":
-      return "#E91E63";
-
-    case "biology":
-      return "#2196F3";
-
-    case "history":
-      return "#F44336";
-
-    case "geography":
-      return "#FF5722";
-
-    case "politics":
-      return "#795548";
-
-    case "art":
-      return "#FF9800";
-
-    case "religion":
-      return "#9C27B0";
-
-    case "science":
-      return "#673AB7";
-
-    case "other":
-      return "#9E9E9E";
-
-    default:
-      return "#9E9E9E";
-  }
+export function is_teacher(user: BaseUser) {
+  return user.type === UserType.TEACHER;
 }

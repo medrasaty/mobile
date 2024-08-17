@@ -1,31 +1,30 @@
-import { useSession } from "@/hooks/useSession";
-import { Keyboard } from "react-native";
-import View, { Container, SafeAreaView } from "@/components/styled/View";
-import { Text, TextInput } from "react-native-paper";
-import { useState } from "react";
-import MedrasatyLogo from "@/components/login/MedrasatyLogo";
-import DoNotHaveAccount from "@/components/login/DoNotHaveAccount";
-import LoginButton from "@/components/login/LoginButton";
-import LoginFailedDialog from "@/components/login/LoginFailedDialog";
 import LoadingDialog from "@/components/LoadingDialog";
+import MedrasatyLogo from "@/components/MedrasatyLogo";
+import View, { Container, SafeAreaView } from "@/components/styled/View";
+import { HOME_PAGE } from "@/constants/routes";
+import DoNotHaveAccount from "@/features/auth/components/DoNotHaveAccount";
+import LoginButton from "@/features/auth/components/LoginButton";
+import LoginFailedDialog from "@/features/auth/components/LoginFailedDialog";
+import { Session } from "@/features/auth/ctx";
+import { useSession } from "@/hooks/useSession";
 import { useQueryClient } from "@tanstack/react-query";
 import { Redirect } from "expo-router";
-import { HOME_PAGE } from "@/constants/routes";
-import { Session } from "@/auth/ctx";
+import { useState } from "react";
+import { Keyboard } from "react-native";
+import { Text, TextInput } from "react-native-paper";
 
 export default function LoginPage() {
   const { signIn, session } = useSession();
   const queryClient = useQueryClient();
 
-  const [username, setUsername] = useState<string | undefined>(undefined);
-  const [password, setPassword] = useState<string | undefined>(undefined);
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [isSending, setIsSending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [hiddentPassword, setHiddentPassword] = useState(true);
 
   // Redirect to home page if already logged in.
-  if (session !== null) {
-    return <Redirect href={HOME_PAGE} />;
-  }
+  if (session !== null) return <Redirect href={HOME_PAGE} />;
 
   function handleLogin() {
     if (username && password && isSending === false) {
@@ -72,15 +71,21 @@ export default function LoginPage() {
               value={username}
               keyboardType="email-address"
               onChangeText={(text) => setUsername(text)}
-              label="اسم المستخدم"
+              label="البريد الإلكتروني"
               mode="outlined"
             />
             <TextInput
               mode="outlined"
               value={password}
               onChangeText={(text) => setPassword(text)}
-              secureTextEntry
+              secureTextEntry={hiddentPassword}
               label="كلمة السر"
+              right={
+                <TextInput.Icon
+                  onPress={() => setHiddentPassword(!hiddentPassword)}
+                  icon={hiddentPassword ? "eye" : "eye-off"}
+                />
+              }
             />
           </View>
           {/* end TextInputs */}

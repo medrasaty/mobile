@@ -1,12 +1,10 @@
+import NotificationCard from "@/features/notifications/components/NotificationCard";
 import { Container } from "@/components/styled";
-import useNotifications from "@/hooks/notifications/useNotifications";
+import View, { SafeAreaView } from "@/components/styled/View";
+import useNotifications from "@/features/notifications/hooks/useNotifications";
+import { Notification } from "@/types/notifications.type";
 import { FlashList } from "@shopify/flash-list";
-import { ViewProps } from "react-native";
 import { ActivityIndicator, Divider, Text } from "react-native-paper";
-import { Notification } from "@/definitions/notifications.type";
-import View from "@/components/styled/View";
-import { SafeAreaView } from "@/components/styled/View";
-import NotificationCard from "@/components/NotificationCard";
 
 export default function HomePage() {
   return (

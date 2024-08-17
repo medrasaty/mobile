@@ -1,34 +1,31 @@
 import Text from "@/components/styled/Text";
-import View, { Container, SafeAreaView } from "@/components/styled/View";
-import { useQuestion } from "@/hooks/forum/useQuestions";
+import View, { Container } from "@/components/styled/View";
+import { useQuestion } from "@/features/forum/hooks/useQuestions";
 import { FlashList } from "@shopify/flash-list";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-
-import AnswerCard from "@/components/AnswerCard";
 import FullPageLoadingIndicator from "@/components/FullPageLoadingIndicator";
-import QuestionDetailActions from "@/components/question/QuestionDetailActions";
-import QuestionDetailInfo from "@/components/question/QuestionDetailInfo";
-import { DetailQuestion } from "@/definitions/forum.types";
-import { useQuestionAnswers } from "@/hooks/forum/useAnswers";
-import { useEffect } from "react";
-import { ActivityIndicator } from "react-native-paper";
 import { SnackbarProvider } from "@/contexts/SnackbarContext";
-import { WINDOW_HEIGHT } from "@gorhom/bottom-sheet";
+import AnswerCard from "@/features/forum/components/answer/AnswerCard";
+import { useQuestionAnswers } from "@/features/forum/hooks/useAnswers";
+import React, { ReducerWithoutAction, useEffect } from "react";
+import { RefreshControl } from "react-native";
+import { ActivityIndicator, AnimatedFAB, Divider } from "react-native-paper";
+import QuestionDetail from "@/features/forum/components/question/detail/QuestionDetail";
+import Page from "@/components/Page";
+import { containerPaddings } from "@/constants/styels";
+import { AddQuestionFAB } from "@/components/FAB";
 
 export default function QuestionDetailPage() {
   return (
-    <SnackbarProvider>
-      <View style={{ flex: 1 }}>
-        <QuestionDetail />
-      </View>
-    </SnackbarProvider>
+    <Page>
+      <List />
+    </Page>
   );
 }
 
-const QuestionDetail = () => {
-  const navigation = useNavigation();
+const List = () => {
   const { questionId } = useLocalSearchParams();
-
+  const navigation = useNavigation();
   const questionQuery = useQuestion(questionId as string);
   const answersQuery = useQuestionAnswers(questionId as string);
 
@@ -68,28 +65,32 @@ const QuestionDetail = () => {
     }
   };
 
+  const renderHeader = () => {
+    return (
+      <Container style={{ marginBottom: 20, gap: 12 }}>
+        <QuestionDetail question={question} />
+        <Text variant="headlineSmall">الإجابات</Text>
+      </Container>
+    );
+  };
+
   return (
     <FlashList
       data={answersQuery.data}
-      ListHeaderComponent={() => <QuestionDetailHeader question={question} />}
+      ListHeaderComponent={renderHeader}
       renderItem={({ item }) => <AnswerCard answer={item} />}
-      contentContainerStyle={{ paddingTop: 10 }}
+      contentContainerStyle={{ paddingTop: 10, paddingBottom: 70 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={questionQuery.isRefetching || answersQuery.isRefetching}
+          onRefresh={() => {
+            questionQuery.refetch();
+            answersQuery.refetch();
+          }}
+        />
+      }
       estimatedItemSize={20}
       ListEmptyComponent={renderEmptyComponent}
-      overScrollMode="never"
     />
-  );
-};
-
-const QuestionDetailHeader = ({ question }: { question: DetailQuestion }) => {
-  return (
-    <Container>
-      <View>
-        <View style={{ flexDirection: "row", gap: 12 }}>
-          <QuestionDetailActions question={question} />
-          <QuestionDetailInfo question={question} />
-        </View>
-      </View>
-    </Container>
   );
 };

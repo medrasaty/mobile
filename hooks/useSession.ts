@@ -1,4 +1,4 @@
-import { AuthContext, AuthSession } from "@/auth/ctx";
+import { AuthContext, AuthSession } from "@/features/auth/ctx";
 import * as React from "react";
 
 export function useSession(): AuthSession {

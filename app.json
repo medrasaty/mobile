@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "medrasaty-mobile",
-    "slug": "medrasaty-mobile",
+    "slug": "مدرستي",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,7 +19,6 @@
         "ExpoLocalization_forcesRTL": true
       }
     },
-
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -27,7 +26,6 @@
       },
       "package": "com.solomonsh.medrasatymobile"
     },
-
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -39,7 +37,10 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/Cairo-Regular.ttf"]
+          "fonts": [
+            "./assets/fonts/Cairo-Regular.ttf",
+            "./assets/fonts/NotoSansArabic-Regular.ttf"
+          ]
         }
       ]
     ],
@@ -48,7 +49,6 @@
     },
     "extra": {
       "supportsRTL": true,
-      "forcesRTL": true,
       "router": {
         "origin": false
       },

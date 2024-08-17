@@ -1,12 +1,10 @@
 import LoadingDialog from "@/components/LoadingDialog";
-import BottomTabNavigationBar from "@/components/navigation/BottomNavigationBar";
-import TabBarIcon from "@/components/navigation/TabBarIcon";
 import { LOGIN_PAGE } from "@/constants/routes";
+import { IndexAppBar } from "@/features/navigation/components/AppBar";
+import BottomTabNavigationBar from "@/features/navigation/components/BottomNavigationBar";
+import TabBarIcon from "@/features/navigation/components/TabBarIcon";
 import { useSession } from "@/hooks/useSession";
 import { Redirect, Tabs } from "expo-router";
-import { AnimatedAppBarProvider } from "@/contexts";
-import { IndexAppBar } from "@/components/navigation/AppBar";
-import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
 
 export default function TabsLayout() {
   const { session, isLoading } = useSession();
@@ -21,51 +19,47 @@ export default function TabsLayout() {
   }
 
   return (
-    <AnimatedAppBarProvider>
-      <Tabs
-        initialRouteName="index"
-        screenOptions={{
-          // TODO: set custom AppBar here
-          headerShown: false,
+    <Tabs
+      initialRouteName="index"
+      screenOptions={{
+        // TODO: set custom AppBar here
+        headerShown: false,
+      }}
+      tabBar={BottomTabNavigationBar}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          headerShown: true,
+          header: (props) => {
+            return <IndexAppBar title="الأسئلة" />;
+          },
+          tabBarLabel: "الرئيسية",
+          tabBarIcon: (props) => <TabBarIcon {...props} icon_name={"home"} />,
         }}
-        tabBar={BottomTabNavigationBar}
-      >
-        <Tabs.Screen
-          name="index"
-          options={{
-            headerShown: true,
-            header: (props) => {
-              return <IndexAppBar title="الأسئلة" />;
-            },
-            tabBarLabel: "الرئيسية",
-            tabBarIcon: (props) => <TabBarIcon {...props} icon_name={"home"} />,
-          }}
-        />
+      />
 
-        <Tabs.Screen
-          name="notifications"
-          options={{
-            tabBarLabel: "الإشعارات",
-            tabBarIcon: (props) => <TabBarIcon {...props} icon_name="bell" />,
-          }}
-        />
-        <Tabs.Screen
-          name="leader_board"
-          options={{
-            tabBarLabel: "الجوائز",
-            tabBarIcon: (props) => <TabBarIcon {...props} icon_name="star" />,
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            tabBarLabel: "انت",
-            tabBarIcon: (props) => (
-              <TabBarIcon {...props} icon_name="account" />
-            ),
-          }}
-        />
-      </Tabs>
-    </AnimatedAppBarProvider>
+      <Tabs.Screen
+        name="notifications"
+        options={{
+          tabBarLabel: "الإشعارات",
+          tabBarIcon: (props) => <TabBarIcon {...props} icon_name="bell" />,
+        }}
+      />
+      <Tabs.Screen
+        name="leader_board"
+        options={{
+          tabBarLabel: "الجوائز",
+          tabBarIcon: (props) => <TabBarIcon {...props} icon_name="star" />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          tabBarLabel: "انت",
+          tabBarIcon: (props) => <TabBarIcon {...props} icon_name="account" />,
+        }}
+      />
+    </Tabs>
   );
 }

@@ -1,26 +1,27 @@
 import { useFonts } from "expo-font";
-import { Stack, SplashScreen, Slot } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { I18nManager, useColorScheme } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
-import { SessionProvider } from "@/auth/ctx";
+import { SessionProvider } from "@/features/auth/ctx";
+import { HOME_PAGE } from "@/constants/routes";
 import { Darktheme, LightTheme } from "@/constants/theme";
+import { useReactQueryDevTools } from "@dev-plugins/react-query";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // inforce Right to Left layout
-I18nManager.allowRTL(true);
-I18nManager.forceRTL(true);
+// I18nManager.allowRTL(true);
+// I18nManager.forceRTL(true);
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-const queryClient = new QueryClient();
 
+const queryClient = new QueryClient();
 export default function RootLayout() {
   const colorscheme = useColorScheme();
   useReactQueryDevTools(queryClient);
@@ -49,25 +50,22 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView>
-      <BottomSheetModalProvider>
-        <QueryClientProvider client={queryClient}>
-          <SessionProvider>
-            <PaperProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <SessionProvider>
+          <PaperProvider theme={theme}>
+            <BottomSheetModalProvider>
               <SafeAreaProvider>
                 <StatusBar style="auto" />
-                <Stack
-                  initialRouteName="login"
-                  screenOptions={{ headerShown: false }}
-                >
-                  <Stack.Screen name="(protected)" />
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name={HOME_PAGE} />
                   <Stack.Screen name="login" />
                   <Stack.Screen name="index" />
                 </Stack>
               </SafeAreaProvider>
-            </PaperProvider>
-          </SessionProvider>
-        </QueryClientProvider>
-      </BottomSheetModalProvider>
+            </BottomSheetModalProvider>
+          </PaperProvider>
+        </SessionProvider>
+      </QueryClientProvider>
     </GestureHandlerRootView>
   );
 }

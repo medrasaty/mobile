@@ -1,6 +1,6 @@
 import { LOGIN_PAGE } from "@/constants/routes";
-import { Student, Teacher } from "@/definitions/user.types";
 import { parseSession } from "@/lib/utils";
+import { Student, Teacher } from "@/types/user.types";
 import { router } from "expo-router";
 import { useSession } from "./useSession";
 

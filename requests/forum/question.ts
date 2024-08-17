@@ -1,4 +1,4 @@
-import { Question, Rating, RatingValue } from "@/definitions/forum.types";
+import { Question, Rating, RatingValue } from "@/types/forum.types";
 import { Axios } from "axios";
 
 export async function rateQuestion(

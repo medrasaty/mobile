@@ -6,11 +6,11 @@ import { useSession } from "./useSession";
 export default function useToken(): string | null {
   const { session } = useSession();
 
-  if (session === null) {
+  try {
+    const { token } = parseSession(session);
+    return token as string;
+  } catch (error) {
     router.replace(LOGIN_PAGE);
     return null;
   }
-
-  const { token } = parseSession(session);
-  return token as string;
 }

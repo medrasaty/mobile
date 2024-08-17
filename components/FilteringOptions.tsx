@@ -1,4 +1,4 @@
-import { orderingOptionType } from "@/definitions";
+import { orderingOptionType } from "@/types";
 import React from "react";
 import { ScrollView } from "react-native";
 import { Chip } from "react-native-paper";
@@ -11,7 +11,6 @@ type FilteringOptionsProps = {
 const FilteringOptions = ({ onSelect, options }: FilteringOptionsProps) => {
   /**
       Display a list of options in a horizontal list
-method: 
 
     @method
     - onSelect: (id: orderingOptionType["id"]) => void

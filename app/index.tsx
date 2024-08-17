@@ -17,10 +17,10 @@ export default function IndexPage() {
             gap: 9,
           }}
         >
-          <Button mode="contained" onPress={() => router.push(LOGIN_PAGE)}>
+          <Button mode="contained" onPress={() => router.replace(LOGIN_PAGE)}>
             go to login
           </Button>
-          <Button mode="elevated" onPress={() => router.push(HOME_PAGE)}>
+          <Button mode="elevated" onPress={() => router.replace(HOME_PAGE)}>
             go to home
           </Button>
         </View>

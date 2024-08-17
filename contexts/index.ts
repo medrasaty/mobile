@@ -1,2 +1,2 @@
-export { AnimatedAppBarProvider } from "./AnimateAppBarContext";
-export { useAnimatedAppBar } from "./AnimateAppBarContext";
+export { AnimatedAppBarProvider, useAnimatedAppBar } from "../features/navigation/contexts/AnimateAppBarContext";
+

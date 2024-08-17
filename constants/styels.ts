@@ -9,3 +9,8 @@ export const containerMargins = {
   marginStart: 16,
   marginEnd: 16,
 };
+
+export const debugStyle = {
+  borderWidth: 1,
+  borderColor: "red",
+};
