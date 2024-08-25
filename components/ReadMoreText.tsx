@@ -2,6 +2,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "./ThemedView";
 import { useTheme } from "react-native-paper";
 import useReadMoreText from "@/features/forum/hooks/useReadMoreText";
+import { debugStyle } from "@/constants/styels";
 
 type ReadMoreTextProps = {
   text: string;
@@ -23,13 +24,17 @@ export default function ReadMoreText({
       trailing: trailing,
     });
 
+  const theme = useTheme();
+
   return (
-    <ThemedView>
-      <ThemedText variant="bodySmall">
-        {modifiedText}{" "}
+    <ThemedView
+      style={{ borderWidth: 0.3, borderColor: theme.colors.background }}
+    >
+      <ThemedText variant="bodyMedium">
+        {modifiedText}
         {isOverFlow && (
           <ReadMore
-            text={isReadMore ? "المزيد" : "أقل"}
+            text={isReadMore ? " المزيد " : " أقل"}
             onPress={toggleIsReadMore}
           />
         )}
@@ -48,7 +53,7 @@ export const ReadMore = ({
   const theme = useTheme();
   return (
     <ThemedText
-      style={{ color: theme.colors.link }}
+      color={theme.colors.primary}
       variant="labelSmall"
       onPress={onPress}
     >

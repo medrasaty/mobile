@@ -10,6 +10,7 @@ import RatingButton, {
 import useQuestionRatingMutation from "@/features/forum/hooks/useQuestionRatingMutation";
 import { memo } from "react";
 import { ViewProps } from "react-native";
+import RatingComponent from "../../Rating";
 
 type QuestionDetailActionsProps = {
   question: DetailQuestion;
@@ -32,31 +33,30 @@ const QuestionDetailActions = ({
 };
 
 const RatingActions = memo(({ question }: { question: DetailQuestion }) => {
-  const userRating = question.user_rating;
   const { mutate: rateQuestion } = useQuestionRatingMutation(question);
 
+  const handlePositivePressed = () => {
+    // check if previous ratings is positive ( delete it )
+    if (question.user_rating === RatingValue.POSITIVE) {
+      rateQuestion(RatingValue.NEURAL);
+    }
+    rateQuestion(RatingValue.POSITIVE);
+  };
+
+  const handleNegativePressed = () => {
+    if (question.user_rating === RatingValue.NEGATIVE) {
+      rateQuestion(RatingValue.NEURAL);
+    }
+    rateQuestion(RatingValue.NEGATIVE);
+  };
+
   return (
-    <View style={{ alignItems: "center", gap: 8 }}>
-      <RatingButton
-        onPress={() => {
-          if (userRating?.value !== RatingValue.POSITIVE) {
-            rateQuestion(RatingValue.POSITIVE);
-          }
-        }}
-        isPressed={userRating?.value == RatingValue.POSITIVE}
-        direction="up"
-      />
-      <Text style={{ fontWeight: "bold" }}>{question.ratings_value}</Text>
-      <RatingButton
-        onPress={() => {
-          if (userRating?.value !== RatingValue.NEGATIVE) {
-            rateQuestion(RatingValue.NEGATIVE);
-          }
-        }}
-        isPressed={userRating?.value == RatingValue.NEGATIVE}
-        direction="down"
-      />
-    </View>
+    <RatingComponent
+      ratingsValue={question.ratings_value}
+      currentRating={question.user_rating}
+      onPositivePressed={handlePositivePressed}
+      onNegativePressed={handleNegativePressed}
+    />
   );
 });
 

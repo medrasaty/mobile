@@ -1,21 +1,22 @@
-import { Container, SafeAreaView } from "@/components/styled";
+import Page from "@/components/Page";
+import { ThemedText } from "@/components/ThemedText";
+import { SafeAreaView } from "@/components/styled";
+import { calcNewRatingsValue } from "@/features/forum/utils";
 import { useSession } from "@/hooks/useSession";
-import { Button, Text } from "react-native-paper";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import Gallery from "react-native-awesome-gallery";
+import { Button } from "react-native-paper";
 
 export default function HomePage() {
   const { signOut } = useSession();
+  const newRatingsValue = calcNewRatingsValue(9, -1, 0);
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Container
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      >
-        <Text variant="displaySmall">
-          {JSON.stringify(process.env.NODE_ENV)}
-        </Text>
-        <Button mode="contained-tonal" onPress={() => signOut()}>
-          logout
-        </Button>
-      </Container>
+    <SafeAreaView>
+      <Page container>
+        <ThemedText>{newRatingsValue}</ThemedText>
+      </Page>
     </SafeAreaView>
   );
 }

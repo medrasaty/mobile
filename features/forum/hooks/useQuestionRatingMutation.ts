@@ -3,6 +3,7 @@ import useAuthClient from "@/hooks/useAuthClient";
 import { rateQuestion as rateQuestionRequest } from "@/requests/forum/question";
 import { DetailQuestion, RatingValue } from "@/types/forum.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { calcNewRatingsValue } from "../utils";
 
 const useQuestionRatingMutation = (question: DetailQuestion) => {
   const queryClient = useQueryClient();
@@ -11,12 +12,7 @@ const useQuestionRatingMutation = (question: DetailQuestion) => {
 
   return useMutation({
     mutationFn: (ratingValue: RatingValue) =>
-      rateQuestionRequest(
-        question.id,
-        question.user_rating?.id,
-        ratingValue,
-        client
-      ),
+      rateQuestionRequest(question, ratingValue, client),
 
     onMutate: async (newRating) => {
       await queryClient.cancelQueries({ queryKey: ["question", question.id] });
@@ -26,15 +22,16 @@ const useQuestionRatingMutation = (question: DetailQuestion) => {
         question.id,
       ]);
 
-      const isNewRating = !previousQuestion?.user_rating;
       const previousRatingsValue = previousQuestion?.ratings_value ?? 0;
-      const previousUserRatingValue = previousQuestion?.user_rating?.value ?? 0;
+      const previousUserRating = previousQuestion?.user_rating ?? 0;
+      const currentRating = newRating;
 
-      const newRatingsValue = isNewRating
-        ? previousRatingsValue + newRating
-        : previousRatingsValue - previousUserRatingValue + newRating;
+      const newRatingsValue = calcNewRatingsValue(
+        previousRatingsValue,
+        previousUserRating,
+        currentRating
+      );
 
-      // update the cached query data
       queryClient.setQueryData(
         ["question", question.id],
         (old: DetailQuestion) => {
@@ -42,10 +39,7 @@ const useQuestionRatingMutation = (question: DetailQuestion) => {
           return {
             ...old,
             ratings_value: newRatingsValue,
-            user_rating: {
-              ...old.user_rating,
-              value: newRating,
-            },
+            user_rating: newRating,
           };
         }
       );
@@ -55,7 +49,7 @@ const useQuestionRatingMutation = (question: DetailQuestion) => {
 
     onError: (err, newRating, context: any) => {
       // Reset question when error accure
-      console.log(err);
+      console.error(err);
       queryClient.setQueryData(
         ["question", question.id],
         context.previousQuestion

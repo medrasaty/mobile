@@ -1,32 +1,30 @@
 import { ThemedView } from "@/components/ThemedView";
 import RatingButton from "./RatingButton";
 import { ThemedText } from "@/components/ThemedText";
-import { Rating as RatingType } from "@/types/forum.types";
+import { Rating as RatingType, RatingValue } from "@/types/forum.types";
 type RatingProps = {
-  value: number;
+  ratingsValue: number;
   onPositivePressed: () => void;
   onNegativePressed: () => void;
-  positivePressed?: boolean;
-  negativePressed?: boolean;
+  currentRating: RatingValue;
 };
 
 export default function RatingComponent({
-  value,
+  ratingsValue,
   onPositivePressed,
   onNegativePressed,
-  positivePressed = false,
-  negativePressed = false,
+  currentRating = 0,
 }: RatingProps) {
   return (
     <RatingContainer>
       <RatingButton
-        isPressed={positivePressed}
+        isPressed={currentRating === RatingValue.POSITIVE}
         direction="up"
         onPress={onPositivePressed}
       />
-      <RatingValue value={8} />
+      <RatingValueText value={ratingsValue} />
       <RatingButton
-        isPressed={negativePressed}
+        isPressed={currentRating === RatingValue.NEGATIVE}
         onPress={onNegativePressed}
         direction="down"
       />
@@ -42,7 +40,7 @@ const RatingContainer = ({ children, ...props }: React.PropsWithChildren) => {
   );
 };
 
-const RatingValue = ({ value }: { value: number }) => {
+const RatingValueText = ({ value }: { value: number }) => {
   return (
     <ThemedText variant="bodyLarge" style={{ fontWeight: "bold" }}>
       {value}

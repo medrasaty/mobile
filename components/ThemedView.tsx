@@ -1,10 +1,32 @@
-import { View, type ViewProps } from "react-native";
+import { View, type ViewProps, StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
 
-export function ThemedView({ style, ...props }: ViewProps) {
+type ThemedViewProps = {
+  direction?: "column" | "row";
+} & ViewProps;
+
+export function ThemedView({
+  direction = "column",
+  ...props
+}: ThemedViewProps) {
   const {
     colors: { background },
   } = useTheme();
 
-  return <View style={[{ backgroundColor: background }, style]} {...props} />;
+  return (
+    <View
+      style={[
+        direction === "row" && styles.row,
+        { backgroundColor: background },
+        props.style,
+      ]}
+      {...props}
+    />
+  );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+  },
+});

@@ -2,26 +2,27 @@ import overlay from "react-native-paper/src/styles/overlay";
 import { Subject } from "./school.types";
 import { BaseUser, Student, Teacher } from "./user.types";
 
-export interface Question {
-  id: string;
+export interface BaseQuestionAnswer {
   owner: Teacher | Student;
-  tags: string[];
-  subject: Subject;
-  title: string;
   text: string;
-  picture: null;
-  ratings: number[];
+  picture: string | null;
   ratings_value: number;
-  views: number;
-  answers_count: number;
-  answers: string[];
   created: Date;
   modified: Date;
 }
 
+export interface Question extends BaseQuestionAnswer {
+  id: string;
+  tags: string[];
+  subject: Subject;
+  title: string;
+  answers_count: number;
+  answers: string[];
+  views: number;
+}
+
 export interface DetailQuestion extends Question {
-  answers: Answer[];
-  user_rating: Rating | null;
+  user_rating: RatingValue;
   is_bookmarked: boolean;
   is_registered: boolean;
 }
@@ -36,16 +37,21 @@ export interface Rating {
 export enum RatingValue {
   POSITIVE = 1,
   NEGATIVE = -1,
+  NEURAL = 0,
 }
 
-export interface Answer {
+export interface Answer extends BaseQuestionAnswer {
+  id: string;
+  question: string;
+  replies_count: number;
+  user_rating: RatingValue;
+}
+
+export interface Reply {
   id: string;
   owner: BaseUser;
-  question: string;
+  answer: string;
   text: string;
-  picture: null | string;
-  ratings: number[];
-  replies: string[];
   created: Date;
   modified: Date;
 }

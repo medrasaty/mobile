@@ -12,7 +12,7 @@ import { RefreshControl } from "react-native";
 import { ActivityIndicator, AnimatedFAB, Divider } from "react-native-paper";
 import QuestionDetail from "@/features/forum/components/question/detail/QuestionDetail";
 import Page from "@/components/Page";
-import { containerPaddings } from "@/constants/styels";
+import { containerMargins, containerPaddings } from "@/constants/styels";
 import { AddQuestionFAB } from "@/components/FAB";
 
 export default function QuestionDetailPage() {
@@ -89,7 +89,8 @@ const List = () => {
           }}
         />
       }
-      estimatedItemSize={20}
+      ItemSeparatorComponent={() => <Divider style={containerMargins} />}
+      estimatedItemSize={160}
       ListEmptyComponent={renderEmptyComponent}
     />
   );

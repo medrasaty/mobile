@@ -28,3 +28,11 @@ export function is_student(user: BaseUser) {
 export function is_teacher(user: BaseUser) {
   return user.type === UserType.TEACHER;
 }
+
+export function translateDate(date: Date) {
+  const year = date.getFullYear();
+  const month = date.getUTCMonth();
+  const day = date.getDay();
+
+  return ` ${year}-${month}-${day}`;
+}

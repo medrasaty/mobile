@@ -18,7 +18,7 @@ type RatingButtonProps = {
 
 type IconName = "caretup" | "caretdown";
 
-const ButtonSize = 45;
+const ButtonSize = 40;
 
 export default function RatingButton({
   direction,
@@ -56,7 +56,7 @@ export default function RatingButton({
       >
         <AntDesign
           name={icon_name}
-          size={15}
+          size={ButtonSize / 3}
           color={
             isPressed ? theme.colors.onPrimary : theme.colors.onPrimaryContainer
           }
@@ -68,8 +68,9 @@ export default function RatingButton({
 
 const useIconProps = () => {
   const theme = useTheme();
+
   return {
-    size: 24,
+    size: ButtonSize / 2, // half RatingButton size
     color: theme.colors.primary,
   };
 };
@@ -87,22 +88,6 @@ export function BookmarkQuestion({ question }: { question: DetailQuestion }) {
       onPress={handlePress}
     />
   );
-}
-
-function useBookmarkQuestions() {
-  const client = useAuthClient();
-
-  const fetchBookmarkedQuestion = async (): Promise<
-    { question: Question; bookmarked_at: string }[]
-  > => {
-    const response = await client.get("/forum/bookmarks/questions/");
-    return response.data.results;
-  };
-
-  return useQuery({
-    queryKey: ["bookmark", "questions"],
-    queryFn: fetchBookmarkedQuestion,
-  });
 }
 
 export function RegisterQuestion({ question }: { question: DetailQuestion }) {

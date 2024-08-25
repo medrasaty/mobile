@@ -11,9 +11,11 @@ export const QuestionDetailOwner = ({ owner }: { owner: BaseUser }) => {
       <ProfilePicture size={44} source={owner.profile_picture} />
       <View>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-          <Username username={owner.username} variant="bodyMedium">
-            {owner.short_name}
-          </Username>
+          <Username
+            name={owner.short_name}
+            username={owner.username}
+            variant="bodyMedium"
+          />
           <UserVerificationBadge userType={owner.type} />
         </View>
         <Text style={{ color: "gray" }} variant="labelSmall">

@@ -1,12 +1,12 @@
-import { Touchable, ViewProps } from "react-native";
 import Text from "./styled/Text";
-import View from "./styled/View";
 import { TextProps } from "react-native-paper";
-import { router } from "expo-router";
 
-type UsernameProps = {
+// FIXME
+interface UsernameProps extends TextProps<any> {
   username: string;
-} & TextProps<any>;
+  name: string;
+  children?: React.ReactNode;
+}
 
 export default function Username({ username, ...props }: UsernameProps) {
   const handlePress = () => {
@@ -23,7 +23,7 @@ export default function Username({ username, ...props }: UsernameProps) {
 
   return (
     <Text {...props} onPress={handlePress}>
-      {props.children}
+      {props.name}
     </Text>
   );
 }

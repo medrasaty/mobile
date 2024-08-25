@@ -11,8 +11,10 @@ type QuestionDetailInfoProps = {
 
 import Tag from "@/components/Tag";
 import { useTheme } from "react-native-paper";
-import { ZoomableImage } from "@/app/(protected)/(tabs)/leader_board";
-import { API_URL, HOST } from "@/constants";
+import { API_URL } from "@/constants";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import AnswerCard from "../../answer/AnswerCard";
 
 export default function QuestionDetailInfo({
   question,
@@ -36,7 +38,10 @@ export default function QuestionDetailInfo({
       {<Picture />}
 
       <View style={{ flex: 0.1, gap: 9, marginTop: 4 }}>
-        <StatInfo question={question} />
+        <ThemedView style={{ flexDirection: "row" }}>
+          <ViewsCount views={question.views} />
+          <AnswersCount answers_count={question.answers_count} />
+        </ThemedView>
         <TimeInfo created={question.created} modified={question.modified} />
       </View>
     </View>
@@ -68,18 +73,20 @@ const TagsList = ({ tags }: { tags: DetailQuestion["tags"] }) => {
   );
 };
 
-const StatInfo = ({ question }: { question: DetailQuestion }) => {
+const ViewsCount = ({ views }: { views: DetailQuestion["views"] }) => {
   return (
     <View style={{ flexDirection: "row" }}>
-      <Text variant="labelSmall">{question.views} مشاهدة, </Text>
-
-      <Text variant="labelSmall">
-        {question.answers_count === 0
-          ? "لا اجابات"
-          : `${question.answers_count} اجابة`}
-      </Text>
+      <Text variant="labelSmall">{views} مشاهدة, </Text>
     </View>
   );
+};
+
+export const AnswersCount = ({
+  answers_count,
+}: {
+  answers_count: DetailQuestion["answers_count"];
+}) => {
+  return <ThemedText variant="labelSmall">{answers_count} اجابة</ThemedText>;
 };
 
 const SubjectInfo = ({ subject }: { subject: DetailQuestion["subject"] }) => {
@@ -120,7 +127,7 @@ const Picture = () => {
       <Image
         style={{
           height: 200,
-          borderRadius: theme.roundness,
+          borderRadius: theme.roundness + 8,
         }}
         source={`${API_URL}/media/students/profile_pictures/wallhaven-yx9log.jpg`}
         placeholder={hash}

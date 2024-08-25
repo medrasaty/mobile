@@ -14,5 +14,4 @@ export const Darktheme = applyCustomFontFamily({
 export const LightTheme = applyCustomFontFamily({
   ...DefaultLightTheme,
   colors: CyanLight.colors,
-  roundness: 16,
 });

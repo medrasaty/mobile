@@ -1,20 +1,27 @@
 import { Image, ImageProps } from "expo-image";
 import View from "@/components/styled/View";
 
-export type AvatarProps = ImageProps & {
+export type AvatarProps = {
   size?: number;
-};
+  dense?: boolean;
+  source: ImageProps["source"];
+  square?: boolean;
+} & ImageProps;
 
-export const DEFAULT_AVATAR_SIZE = 64;
+export const AVATAR_SIZE = 64;
+export const DENSE_AVATAR_SIZE = 52;
 
 export default function Avatar({
-  size = DEFAULT_AVATAR_SIZE,
+  size,
+  dense = false,
+  square = false,
   ...props
 }: AvatarProps) {
+  const borderRadius = square === true ? 0 : 100;
   return (
     <View>
       <Image
-        style={{ width: size, height: size, borderRadius: 100 }}
+        style={{ width: size, height: size, borderRadius: borderRadius }}
         {...props}
       />
     </View>

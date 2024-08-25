@@ -1,10 +1,11 @@
-import View, { Container } from "@/components/styled/View";
+import View, { Container, SafeAreaView } from "@/components/styled/View";
 import { ViewProps } from "react-native";
 
-const Page = ({
-  container = false,
-  ...props
-}: ViewProps & { container?: boolean }) => {
+type PageProps = {
+  container?: boolean;
+} & ViewProps;
+
+const Page = ({ container = false, ...props }: PageProps) => {
   if (container) {
     return (
       <Container {...props} style={[{ flex: 1 }, props.style]}>
