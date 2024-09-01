@@ -1,6 +1,6 @@
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import useAuthClient from "@/hooks/useAuthClient";
-import { Answer, Rating, RatingValue } from "@/types/forum.types";
+import { Answer, RatingValue } from "@/types/forum.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Axios } from "axios";
 import { calcNewRatingsValue } from "../utils";
@@ -55,3 +55,4 @@ export default function useAnswerRatingMutation(answer: Answer) {
     },
   });
 }
+

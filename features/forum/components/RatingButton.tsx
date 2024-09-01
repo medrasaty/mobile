@@ -1,14 +1,15 @@
 import { useQuestionRegistryMutation } from "@/features/notifications/hooks/registryMutation";
-import { useRegistries } from "@/features/notifications/hooks/useRegistries";
-import useAuthClient from "@/hooks/useAuthClient";
 import { DetailQuestion, Question } from "@/types/forum.types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useQuery } from "@tanstack/react-query";
 import { ViewProps } from "react-native";
 import { TouchableRipple, useTheme } from "react-native-paper";
 import View from "@/components/styled/View";
 import useQuestionBookmarkMutation from "../hooks/useQuestionBookmarkMutation";
+import Bookmark from "./Bookmark";
+import useActionsProps from "../hooks/useIconProps";
+import { RatingButtonSize } from "../hooks/useIconProps";
+import { RegisterIcon } from "./Icons";
 
 type RatingButtonProps = {
   direction: "up" | "down";
@@ -17,8 +18,6 @@ type RatingButtonProps = {
 } & ViewProps;
 
 type IconName = "caretup" | "caretdown";
-
-const ButtonSize = 40;
 
 export default function RatingButton({
   direction,
@@ -29,7 +28,8 @@ export default function RatingButton({
 }: RatingButtonProps) {
   const theme = useTheme();
   const icon_name: IconName = `caret${direction}`;
-  const backgroundColor = isPressed ? theme.colors.primary : undefined;
+  const { color } = useActionsProps();
+  const backgroundColor = isPressed ? color : undefined;
   return (
     <View
       style={[
@@ -37,11 +37,11 @@ export default function RatingButton({
         {
           backgroundColor: backgroundColor,
           borderWidth: 1,
-          borderColor: theme.colors.primary,
+          borderColor: color,
           borderRadius: 100,
           overflow: "hidden",
-          width: ButtonSize,
-          height: ButtonSize,
+          width: RatingButtonSize,
+          height: RatingButtonSize,
         },
       ]}
       {...props}
@@ -56,7 +56,7 @@ export default function RatingButton({
       >
         <AntDesign
           name={icon_name}
-          size={ButtonSize / 3}
+          size={RatingButtonSize / 3}
           color={
             isPressed ? theme.colors.onPrimary : theme.colors.onPrimaryContainer
           }
@@ -66,27 +66,14 @@ export default function RatingButton({
   );
 }
 
-const useIconProps = () => {
-  const theme = useTheme();
-
-  return {
-    size: ButtonSize / 2, // half RatingButton size
-    color: theme.colors.primary,
-  };
-};
-
 export function BookmarkQuestion({ question }: { question: DetailQuestion }) {
-  const iconProps = useIconProps();
   const { bookmark, unbookmark } = useQuestionBookmarkMutation(question.id);
   const handlePress = () => {
     question.is_bookmarked ? unbookmark(question.id) : bookmark(question.id);
   };
+
   return (
-    <MaterialCommunityIcons
-      {...iconProps}
-      name={question.is_bookmarked ? "bookmark" : "bookmark-outline"}
-      onPress={handlePress}
-    />
+    <Bookmark isBookmarked={question.is_bookmarked} onPress={handlePress} />
   );
 }
 
@@ -106,17 +93,3 @@ export function RegisterQuestion({ question }: { question: DetailQuestion }) {
     </>
   );
 }
-
-const RegisterIcon = ({
-  isRegistered,
-  onPress,
-}: {
-  isRegistered: boolean | null;
-  onPress: () => void;
-}) => {
-  const iconProps = useIconProps();
-  const iconName = isRegistered ? "bell" : "bell-outline";
-  return (
-    <MaterialCommunityIcons {...iconProps} onPress={onPress} name={iconName} />
-  );
-};

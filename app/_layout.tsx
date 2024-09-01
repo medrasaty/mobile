@@ -13,6 +13,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import AlertDialogProvider from "@/contexts/AlertDialogContext";
 
 // inforce Right to Left layout
 // I18nManager.allowRTL(true);
@@ -55,12 +56,14 @@ export default function RootLayout() {
           <PaperProvider theme={theme}>
             <BottomSheetModalProvider>
               <SafeAreaProvider>
-                <StatusBar style="auto" />
-                <Stack screenOptions={{ headerShown: false }}>
-                  <Stack.Screen name={HOME_PAGE} />
-                  <Stack.Screen name="login" />
-                  <Stack.Screen name="index" />
-                </Stack>
+                <AlertDialogProvider>
+                  <StatusBar style="auto" />
+                  <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name={HOME_PAGE} />
+                    <Stack.Screen name="login" />
+                    <Stack.Screen name="index" />
+                  </Stack>
+                </AlertDialogProvider>
               </SafeAreaProvider>
             </BottomSheetModalProvider>
           </PaperProvider>

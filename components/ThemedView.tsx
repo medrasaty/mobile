@@ -10,14 +10,14 @@ export function ThemedView({
   ...props
 }: ThemedViewProps) {
   const {
-    colors: { background },
+    colors: { surface },
   } = useTheme();
 
   return (
     <View
       style={[
         direction === "row" && styles.row,
-        { backgroundColor: background },
+        { backgroundColor: surface },
         props.style,
       ]}
       {...props}

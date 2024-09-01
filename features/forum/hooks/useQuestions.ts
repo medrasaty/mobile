@@ -3,6 +3,7 @@ import { DetailQuestion, Question } from "@/types/forum.types";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import useAuthClient from "../../../hooks/useAuthClient";
+import { transformDates } from "../utils";
 
 type useQuestionsProps = {
   params?: any;
@@ -66,11 +67,7 @@ export default function useQuestions({
 function transformQuestion(
   question: Question | DetailQuestion
 ): Question | DetailQuestion {
-  return {
-    ...question,
-    created: new Date(question.created),
-    modified: new Date(question.modified),
-  };
+  return transformDates(question);
 }
 
 export function useQuestion(questionId: string) {

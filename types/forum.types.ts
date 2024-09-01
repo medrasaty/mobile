@@ -2,6 +2,16 @@ import overlay from "react-native-paper/src/styles/overlay";
 import { Subject } from "./school.types";
 import { BaseUser, Student, Teacher } from "./user.types";
 
+export interface BasicAnswer {
+  id: string;
+  owner: string;
+  question: string;
+  text: string;
+  picture: null;
+  created: Date;
+  modified: Date;
+}
+
 export interface BaseQuestionAnswer {
   owner: Teacher | Student;
   text: string;
@@ -43,6 +53,7 @@ export enum RatingValue {
 export interface Answer extends BaseQuestionAnswer {
   id: string;
   question: string;
+  replies: string[]; // list of replies ids
   replies_count: number;
   user_rating: RatingValue;
 }
@@ -50,7 +61,7 @@ export interface Answer extends BaseQuestionAnswer {
 export interface Reply {
   id: string;
   owner: BaseUser;
-  answer: string;
+  answer: BasicAnswer;
   text: string;
   created: Date;
   modified: Date;

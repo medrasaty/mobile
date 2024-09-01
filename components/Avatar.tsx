@@ -1,5 +1,7 @@
 import { Image, ImageProps } from "expo-image";
 import View from "@/components/styled/View";
+import { API_URL } from "@/constants";
+import { useTheme } from "react-native-paper";
 
 export type AvatarProps = {
   size?: number;
@@ -15,13 +17,26 @@ export default function Avatar({
   size,
   dense = false,
   square = false,
+  source,
   ...props
 }: AvatarProps) {
   const borderRadius = square === true ? 0 : 100;
+  const theme = useTheme();
+  source = `${API_URL}/media/${source}`; // FIXME: do it better
   return (
-    <View>
+    <View
+      style={{
+        backgroundColor: theme.colors.surfaceVariant,
+        borderRadius: borderRadius,
+      }}
+    >
       <Image
-        style={{ width: size, height: size, borderRadius: borderRadius }}
+        style={{
+          width: size,
+          height: size,
+          borderRadius: borderRadius,
+        }}
+        source={source}
         {...props}
       />
     </View>
@@ -29,6 +44,5 @@ export default function Avatar({
 }
 
 export function ProfilePicture({ ...props }: AvatarProps) {
-  const profilePlaceholder = require("@/assets/images/icon.png");
-  return <Avatar placeholder={profilePlaceholder} {...props} />;
+  return <Avatar {...props} />;
 }

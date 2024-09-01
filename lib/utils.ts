@@ -36,3 +36,45 @@ export function translateDate(date: Date) {
 
   return ` ${year}-${month}-${day}`;
 }
+
+export function random(number: number) {
+  /**
+   * Return random number in range of provided number
+   *
+   */
+
+  return Math.floor(Math.random() * (number + 1));
+}
+
+export function translateSubject(subject: string | undefined) {
+  switch (subject?.toLowerCase()) {
+    case "english language":
+      return "اللغة الإنجليزية";
+    case "arabic language":
+      return "اللغة العربية";
+    case "math":
+      return "الرياضيات";
+    case "physics":
+      return "الفيزياء";
+    case "chemistry":
+      return "الكيمياء";
+    case "biology":
+      return "الاحياء";
+    case "history":
+      return "التاريخ";
+    case "geography":
+      return "الجغرافية";
+    case "politics":
+      return "السياسة";
+    case "art":
+      return "الفنون";
+    case "religion":
+      return "الاسلامية";
+    case "science":
+      return "العلوم";
+    case "other":
+      return "اخرى";
+    default:
+      return subject;
+  }
+}

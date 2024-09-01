@@ -19,6 +19,7 @@ export const User = ({
         size={30}
         source={user.profile_picture}
       />
+
       <View>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
           <Username

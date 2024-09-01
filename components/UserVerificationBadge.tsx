@@ -9,7 +9,7 @@ const UserVerificationBadge = ({ userType }: { userType: UserType }) => {
       color={
         userType === UserType.STUDENT
           ? theme.colors.tertiary
-          : theme.colors.solo
+          : theme.colors.error
       }
       size={15}
       name="verified"

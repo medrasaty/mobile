@@ -13,6 +13,8 @@ import React, { useCallback, useState } from "react";
 import { ActivityIndicator, RefreshControl, ViewProps } from "react-native";
 import { Divider } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
 
 export default function HomePage() {
   return (

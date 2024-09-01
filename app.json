@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "medrasaty-mobile",
-    "slug": "مدرستي",
+    "name": "medrasaty",
+    "slug": "medrasaty-mobile",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/images/splash_icon.png",
       "resizeMode": "cover",
-      "backgroundColor": "#191C1D"
+      "backgroundColor": "#181818"
     },
     "ios": {
       "supportsTablet": true,
@@ -32,6 +32,12 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermissions": ""
+        }
+      ],
       "expo-router",
       "expo-localization",
       [

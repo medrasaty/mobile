@@ -5,11 +5,10 @@ import { Appbar, useTheme } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
-
-type AppBarProps = {
+type AppBarProps = React.PropsWithChildren<{
   title: string | undefined;
   backAction?: boolean;
-} & React.PropsWithChildren;
+}>;
 
 const APPBAR_MODE = "small";
 const APPBAR_HEIGHT = modeAppbarHeight[APPBAR_MODE];
@@ -67,3 +66,4 @@ export const IndexAppBar = ({ title }: { title: string }) => {
     </AnimatedAppBar>
   );
 };
+

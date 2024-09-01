@@ -1,19 +1,22 @@
+import FullPageLoadingIndicator from "@/components/FullPageLoadingIndicator";
+import Page from "@/components/Page";
 import Text from "@/components/styled/Text";
 import View, { Container } from "@/components/styled/View";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { containerMargins } from "@/constants/styels";
+import AnswerCard from "@/features/forum/components/answer/AnswerCard";
+import CreateAnswer from "@/features/forum/components/answer/CreateAnswer";
+import QuestionDetail from "@/features/forum/components/question/detail/QuestionDetail";
+import { QuestionProvider } from "@/features/forum/contexts/QuestionContext";
+import { useQuestionAnswers } from "@/features/forum/hooks/useAnswers";
 import { useQuestion } from "@/features/forum/hooks/useQuestions";
+import { Answer } from "@/types/forum.types";
 import { FlashList } from "@shopify/flash-list";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import FullPageLoadingIndicator from "@/components/FullPageLoadingIndicator";
-import { SnackbarProvider } from "@/contexts/SnackbarContext";
-import AnswerCard from "@/features/forum/components/answer/AnswerCard";
-import { useQuestionAnswers } from "@/features/forum/hooks/useAnswers";
-import React, { ReducerWithoutAction, useEffect } from "react";
+import React, { useEffect } from "react";
 import { RefreshControl } from "react-native";
-import { ActivityIndicator, AnimatedFAB, Divider } from "react-native-paper";
-import QuestionDetail from "@/features/forum/components/question/detail/QuestionDetail";
-import Page from "@/components/Page";
-import { containerMargins, containerPaddings } from "@/constants/styels";
-import { AddQuestionFAB } from "@/components/FAB";
+import { ActivityIndicator, Divider } from "react-native-paper";
 
 export default function QuestionDetailPage() {
   return (
@@ -44,24 +47,17 @@ const List = () => {
   const renderEmptyComponent = () => {
     if (!answersQuery.isFetching) {
       return (
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        ></View>
+        <ThemedView style={{ marginTop: 30, alignItems: "center" }}>
+          <ThemedText>لا اجابات</ThemedText>
+        </ThemedView>
       );
     }
     return null;
   };
 
   const renderFooter = () => {
-    if (answersQuery.isFetching) {
-      return (
-        <View style={{ padding: 20 }}>
-          <ActivityIndicator size={"large"} />
-        </View>
-      );
+    if (answersQuery.isLoading) {
+      return <ActivityIndicator size={"large"} />;
     }
   };
 
@@ -74,24 +70,31 @@ const List = () => {
     );
   };
 
+  const handleRenderItem = ({ item, index }: { item: Answer; index }) => {
+    return <AnswerCard key={item.id} answer={item} />;
+  };
+
   return (
-    <FlashList
-      data={answersQuery.data}
-      ListHeaderComponent={renderHeader}
-      renderItem={({ item }) => <AnswerCard answer={item} />}
-      contentContainerStyle={{ paddingTop: 10, paddingBottom: 70 }}
-      refreshControl={
-        <RefreshControl
-          refreshing={questionQuery.isRefetching || answersQuery.isRefetching}
-          onRefresh={() => {
-            questionQuery.refetch();
-            answersQuery.refetch();
-          }}
-        />
-      }
-      ItemSeparatorComponent={() => <Divider style={containerMargins} />}
-      estimatedItemSize={160}
-      ListEmptyComponent={renderEmptyComponent}
-    />
+    <QuestionProvider question={question}>
+      <FlashList
+        data={answersQuery.data}
+        ListHeaderComponent={renderHeader}
+        renderItem={handleRenderItem}
+        contentContainerStyle={{ paddingTop: 10, paddingBottom: 70 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={questionQuery.isRefetching || answersQuery.isRefetching}
+            onRefresh={() => {
+              questionQuery.refetch();
+              answersQuery.refetch();
+            }}
+          />
+        }
+        ItemSeparatorComponent={() => <Divider style={containerMargins} />}
+        estimatedItemSize={170}
+        ListEmptyComponent={renderEmptyComponent}
+      />
+      <CreateAnswer question={question} />
+    </QuestionProvider>
   );
 };

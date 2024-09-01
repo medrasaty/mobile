@@ -22,21 +22,23 @@ export default function ProtectedLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
+          header: (props) => {
+            return <AppBar title={props.options.headerTitle} {...props} />;
+          },
         }}
       >
         <Stack.Screen name="(tabs)" />
         <Stack.Screen
           options={{
             headerShown: true,
-            header: () => <AppBar title="الرئيسية" />,
+            headerTitle: "",
           }}
           name="questions/details/[questionId]"
         />
         <Stack.Screen
           name="questions/new"
           options={{
-            headerShown: true,
-            title: "solo",
+            headerShown: false, // render appBar in the page itself
           }}
         />
       </Stack>

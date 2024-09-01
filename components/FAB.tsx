@@ -1,18 +1,15 @@
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { FAB, AnimatedFAB } from "react-native-paper";
+import { FAB, AnimatedFAB, FABProps } from "react-native-paper";
+import { StyleSheet } from "react-native";
 
 export function AddQuestionFAB() {
   return (
     <FAB
       icon="plus"
+      variant="secondary"
       onPress={() => router.push("questions/new/index")}
-      style={{
-        position: "absolute",
-        margin: 16,
-        right: 0,
-        bottom: 0,
-      }}
+      style={styles.FABStyles}
     />
   );
 }
@@ -36,12 +33,16 @@ export function AddQuestionAnimatedFAB({
       extended={isExtended}
       iconMode="dynamic"
       onPress={handlePress}
-      style={{
-        position: "absolute",
-        margin: 16,
-        right: 0,
-        bottom: 0,
-      }}
+      style={styles.FABStyles}
     />
   );
 }
+
+const styles = StyleSheet.create({
+  FABStyles: {
+    position: "absolute",
+    margin: 16,
+    right: 0,
+    bottom: 0,
+  },
+});

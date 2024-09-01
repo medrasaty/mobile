@@ -1,8 +1,8 @@
 import Text from "@/components/styled/Text";
 import View from "@/components/styled/View";
 import { DetailQuestion, Question } from "@/types/forum.types";
-import { ViewProps } from "react-native";
 import { Image } from "expo-image";
+import { ViewProps } from "react-native";
 import Animated from "react-native-reanimated";
 
 type QuestionDetailInfoProps = {
@@ -10,11 +10,12 @@ type QuestionDetailInfoProps = {
 } & ViewProps;
 
 import Tag from "@/components/Tag";
-import { useTheme } from "react-native-paper";
-import { API_URL } from "@/constants";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import AnswerCard from "../../answer/AnswerCard";
+import { API_URL } from "@/constants";
+import { translateSubject } from "@/lib/utils";
+import { memo, useCallback, useMemo } from "react";
+import { useTheme } from "react-native-paper";
 
 export default function QuestionDetailInfo({
   question,
@@ -24,18 +25,18 @@ export default function QuestionDetailInfo({
   return (
     <View
       style={{
-        gap: 6,
         flex: 1,
+        justifyContent: "space-between",
       }}
       {...props}
     >
-      <View style={{ flex: 1, gap: 6 }}>
+      <ThemedView style={{ flex: 1, gap: 4 }}>
         <Title title={question.title} />
         <SubjectInfo subject={question.subject} />
         <Description description={question.text} />
         <TagsList tags={question.tags} />
-      </View>
-      {<Picture />}
+      </ThemedView>
+      {question.picture && <Picture image={question.picture} />}
 
       <View style={{ flex: 0.1, gap: 9, marginTop: 4 }}>
         <ThemedView style={{ flexDirection: "row" }}>
@@ -48,12 +49,16 @@ export default function QuestionDetailInfo({
   );
 }
 
-const Title = ({ title }: { title: Question["title"] }) => {
+export const Title = ({ title }: { title: Question["title"] }) => {
   return <Text variant="headlineMedium">{title}</Text>;
 };
 
-const Description = ({ description }: { description: Question["text"] }) => {
-  return <Text variant="bodyMedium">{description}</Text>;
+export const Description = ({
+  description,
+}: {
+  description: Question["text"];
+}) => {
+  return <ThemedText variant="bodyLarge">{description}</ThemedText>;
 };
 
 const TagsList = ({ tags }: { tags: DetailQuestion["tags"] }) => {
@@ -76,7 +81,7 @@ const TagsList = ({ tags }: { tags: DetailQuestion["tags"] }) => {
 const ViewsCount = ({ views }: { views: DetailQuestion["views"] }) => {
   return (
     <View style={{ flexDirection: "row" }}>
-      <Text variant="labelSmall">{views} مشاهدة, </Text>
+      <ThemedText variant="labelSmall">{views} مشاهدة, </ThemedText>
     </View>
   );
 };
@@ -89,11 +94,15 @@ export const AnswersCount = ({
   return <ThemedText variant="labelSmall">{answers_count} اجابة</ThemedText>;
 };
 
-const SubjectInfo = ({ subject }: { subject: DetailQuestion["subject"] }) => {
+export const SubjectInfo = ({
+  subject,
+}: {
+  subject: DetailQuestion["subject"];
+}) => {
   const theme = useTheme();
   return (
-    <Text style={{ color: theme.colors.primary }} variant="labelMedium">
-      رياضيات
+    <Text style={{ color: theme.colors.tertiary }} variant="labelMedium">
+      {translateSubject(subject.name)}
     </Text>
   );
 };
@@ -118,20 +127,34 @@ const TimeInfo = ({
   );
 };
 
-const Picture = () => {
+export const Picture = memo(({ image }: { image?: string }) => {
   const hash = "";
   const theme = useTheme();
+  const style = useMemo(
+    () => ({
+      height: 190,
+      backgroundColor: theme.colors.surfaceVariant,
+      borderRadius: theme.roundness + 6,
+    }),
+    [theme.colors?.surfaceVariant, theme.roundness]
+  );
+
+  const source = useCallback(() => {
+    return image
+      ? image
+      : `${API_URL}/media/students/profile_pictures/wallhaven-yx9log.jpg`;
+  }, [image]);
 
   return (
     <Animated.View>
       <Image
-        style={{
-          height: 200,
-          borderRadius: theme.roundness + 8,
-        }}
-        source={`${API_URL}/media/students/profile_pictures/wallhaven-yx9log.jpg`}
+        style={style}
+        source={source()}
         placeholder={hash}
+        contentFit="cover"
+        cachePolicy={"memory-disk"}
+        transition={300}
       />
     </Animated.View>
   );
-};
+});

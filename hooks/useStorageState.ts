@@ -2,7 +2,7 @@ import * as SecureStore from "expo-secure-store";
 import * as React from "react";
 import { Platform } from "react-native";
 
-type UseStateHook<T> = [[boolean, T], (value: T | null) => void];
+export type UseStateHook<T> = [[boolean, T], (value: T | null) => void];
 
 function useAsyncState<T>(
   initialValue: [boolean, T | null] = [true, null]

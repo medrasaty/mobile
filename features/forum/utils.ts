@@ -1,4 +1,4 @@
-import { RatingValue } from "@/types/forum.types";
+import { Answer, Question, RatingValue, Reply } from "@/types/forum.types";
 
 export function calcNewRatingsValue(
   previousRatingsValue: number, // question.ratings_value
@@ -14,4 +14,13 @@ export function calcNewRatingsValue(
    */
 
   return previousRatingsValue - previousUserRating + currentRating;
+}
+
+type instanceType = Question | Answer | Reply;
+export function transformDates(instance: instanceType): instanceType {
+  return {
+    ...instance,
+    created: new Date(instance.created),
+    modified: new Date(instance.modified),
+  };
 }

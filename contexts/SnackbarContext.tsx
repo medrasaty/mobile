@@ -1,7 +1,7 @@
 import React, { useContext, createContext } from "react";
 import { Snackbar } from "react-native-paper";
 
-type SnackbarContextType = {
+export type SnackbarContextType = {
   message: string;
   show: (message: string) => void;
   hide: () => void;

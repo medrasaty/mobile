@@ -2,7 +2,7 @@ import useAuthClient from "@/hooks/useAuthClient";
 import { Answer, Question } from "@/types/forum.types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Axios } from "axios";
-import { useEffect } from "react";
+import { transformDates } from "../utils";
 
 export default function useAnswers(params = {}) {
   const client = useAuthClient();
@@ -18,39 +18,22 @@ export default function useAnswers(params = {}) {
 
 export function useQuestionAnswers(questionId: Question["id"]) {
   const client = useAuthClient();
-  const queyrClient = useQueryClient();
 
-  const params = {
-    question: questionId,
-  };
-  const answers = useQuery({
+  return useQuery({
     queryKey: ["answers", questionId],
-    queryFn: async (): Promise<Answer[]> => {
-      const response = await client.get(`/forum/answers/`, { params });
-      // format the answers
-      return response.data.results.map((answer: Answer) =>
-        formatAnswer(answer)
-      );
-    },
+    queryFn: async () => await fetchQuestionAnswers(client, questionId),
   });
-
-  useEffect(() => {
-    // set queryData manually fr each answer so you can get them back using queyrClient with the queryKey like this ["answer", answerId]
-    if (answers.isSuccess) {
-      for (const answer of answers.data) {
-        queyrClient.setQueryData(["answer", answer.id], answer);
-      }
-    }
-  }, [answers.data]);
-  return answers;
 }
 
-function formatAnswer(answer: Answer) {
-  return {
-    ...answer,
-    created: new Date(answer.created),
-    modified: new Date(answer.modified),
-  };
+async function fetchQuestionAnswers(client: Axios, questionId: Question["id"]) {
+  const response = await client.get(`/forum/answers/`, {
+    params: { question: questionId },
+  });
+
+  const answers = response.data.results.map((answer: Answer) =>
+    transformDates(answer)
+  );
+  return answers;
 }
 
 async function fetchAnswer(client: Axios, id: Answer["id"]) {

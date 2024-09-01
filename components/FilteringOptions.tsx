@@ -1,7 +1,8 @@
 import { orderingOptionType } from "@/types";
 import React from "react";
 import { ScrollView } from "react-native";
-import { Chip } from "react-native-paper";
+import { Chip, useTheme } from "react-native-paper";
+import { ThemedText } from "./ThemedText";
 
 type FilteringOptionsProps = {
   onSelect: (id: orderingOptionType["id"]) => void;
@@ -21,6 +22,7 @@ const FilteringOptions = ({ onSelect, options }: FilteringOptionsProps) => {
 
     */
   const padding = 15;
+  const { colors } = useTheme();
   return (
     <ScrollView
       horizontal
@@ -43,7 +45,7 @@ const FilteringOptions = ({ onSelect, options }: FilteringOptionsProps) => {
           icon={item.icon}
           onPress={() => onSelect(item.id)}
         >
-          {item.label}
+          <ThemedText>{item.label}</ThemedText>
         </Chip>
       ))}
     </ScrollView>

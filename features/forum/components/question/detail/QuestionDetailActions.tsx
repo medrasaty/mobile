@@ -12,6 +12,8 @@ import { memo } from "react";
 import { ViewProps } from "react-native";
 import RatingComponent from "../../Rating";
 
+export const ACTIONS_GAP = 12;
+
 type QuestionDetailActionsProps = {
   question: DetailQuestion;
 } & ViewProps;
@@ -23,7 +25,7 @@ const QuestionDetailActions = ({
 }: QuestionDetailActionsProps) => {
   return (
     <>
-      <View style={{ gap: 12, alignItems: "center" }}>
+      <View style={{ gap: ACTIONS_GAP, alignItems: "center" }}>
         <RatingActions question={question} />
         <BookmarkQuestion question={question} />
         <RegisterQuestion question={question} />

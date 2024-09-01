@@ -7,3 +7,9 @@ export type orderingOptionType = {
   selected?: boolean;
   filter: (list: any[]) => any[];
 };
+
+export type fileUploadType = {
+  uri: string;
+  type: string; // mimeType
+  name: string; // file name
+};

@@ -3,53 +3,46 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { translateDate } from "@/lib/utils";
 import { Answer } from "@/types/forum.types";
-import { useState } from "react";
 import { View, ViewProps } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useAnswer } from "../../contexts/AnswerContext";
-import ReplySheet from "./ReplySheet";
 import User from "@/components/User";
+import { useMemo } from "react";
+import { debugStyle } from "@/constants/styels";
 
-export default function Info({ style, ...props }: ViewProps) {
-  const answer = useAnswer();
+export default function Info({
+  answer,
+  style,
+  ...props
+}: { answer: Answer } & ViewProps) {
   return (
     <ThemedView
-      style={[style, { flex: 1, gap: 4, justifyContent: "space-between" }]}
+      style={[style, { flex: 1, justifyContent: "space-between" }]}
       {...props}
     >
       <View>
         <AnswerText text={answer.text} />
-        <StatInfo />
+        <StatInfo answer={answer} />
       </View>
-      <View style={{ gap: 10, marginTop: 20 }}>
+      <View
+        style={{
+          gap: 10,
+          marginTop: 20,
+        }}
+      >
         <User user={answer.owner} />
-        <Reply />
       </View>
     </ThemedView>
   );
 }
 
-export const StatInfo = () => {
+export const StatInfo = ({ answer }: { answer: Answer }) => {
   return (
     <ThemedView>
       <ThemedView style={{ gap: 3, flexDirection: "row" }}>
-        <TimeInfo />
+        <TimeInfo answer={answer} />
       </ThemedView>
     </ThemedView>
-  );
-};
-
-export const Reply = () => {
-  const answer = useAnswer();
-  const [present, setPresent] = useState<boolean>(false);
-  const presentSheet = () => setPresent(true);
-  const hideSheet = () => setPresent(false);
-
-  return (
-    <>
-      <ReplyText onPress={presentSheet} replies_count={answer.replies_count} />
-      <ReplySheet present={present} onDismiss={hideSheet} />
-    </>
   );
 };
 
@@ -92,31 +85,30 @@ export const ReplyText = ({
   }
 };
 
-export const TimeInfo = () => {
+export const TimeInfo = ({ answer }: { answer: Answer }) => {
   // TODO: add modified time
   return (
     <ThemedView style={{ flexDirection: "row", gap: 6 }}>
-      <Created />
+      <Created answer={answer} />
     </ThemedView>
   );
 };
 
-export const Created = () => {
-  const { created } = useAnswer();
-
+export const Created = ({ answer }: { answer: Answer }) => {
+  const formatedDate = useMemo(() => translateDate(answer.created), [answer]);
   return (
     <ThemedText color="gray" variant="labelSmall">
-      {translateDate(created)}
+      {formatedDate}
     </ThemedText>
   );
 };
 
-export const Modified = () => {
+export const Modified = ({ answer }: { answer: Answer }) => {
   return (
     <ThemedText variant="labelSmall">{new Date().toLocaleString()}</ThemedText>
   );
 };
 
 function AnswerText({ text }: { text: Answer["text"] }) {
-  return <ReadMoreText text={text} />;
+  return <ReadMoreText>{text}</ReadMoreText>;
 }

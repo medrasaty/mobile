@@ -1,21 +1,26 @@
 import Page from "@/components/Page";
 import { ThemedText } from "@/components/ThemedText";
 import { SafeAreaView } from "@/components/styled";
-import { calcNewRatingsValue } from "@/features/forum/utils";
 import { useSession } from "@/hooks/useSession";
-import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import Gallery from "react-native-awesome-gallery";
+import React from "react";
+import { ScrollView, View } from "react-native";
 import { Button } from "react-native-paper";
+import { Item, Number } from "@/components/Item";
+import { useAlert } from "@/contexts/AlertDialogContext";
 
-export default function HomePage() {
+export default function NumberPage() {
   const { signOut } = useSession();
-  const newRatingsValue = calcNewRatingsValue(9, -1, 0);
+  const Alert = useAlert();
 
   return (
     <SafeAreaView>
-      <Page container>
-        <ThemedText>{newRatingsValue}</ThemedText>
+      <Page
+        container
+        style={{ gap: 10, justifyContent: "center", alignItems: "center" }}
+      >
+        <Button onPress={() => Alert({ message: "solo is alerting" })}>
+          alert
+        </Button>
       </Page>
     </SafeAreaView>
   );

@@ -1,21 +1,25 @@
-import { RatingValue } from "@/types/forum.types";
+import { Answer, RatingValue } from "@/types/forum.types";
 import { useAnswer } from "../../contexts/AnswerContext";
 import useAnswerRatingMutation from "../../hooks/useAnswerRatingMutation";
 import Rating from "../Rating";
-import { BookmarkQuestion } from "../RatingButton";
 import { ThemedView } from "@/components/ThemedView";
+import { ACTIONS_GAP } from "../question/detail/QuestionDetailActions";
+import ReplySheet from "../reply/ReplySheet";
+import { useState } from "react";
+import Bookmark from "../Bookmark";
+import { ReplyIcon } from "../Icons";
 
-const Actions = () => {
+const Actions = ({ answer }: { answer: Answer }) => {
   return (
-    <ThemedView style={{ alignItems: "center", gap: 8 }}>
-      <RatingActions />
-      <BookmarkQuestion question={{}} />
+    <ThemedView style={{ alignItems: "center", gap: ACTIONS_GAP }}>
+      <RatingActions answer={answer} />
+      <BookmarkAnswer answer={answer} />
+      <Reply answer={answer} />
     </ThemedView>
   );
 };
 
-const RatingActions = () => {
-  const answer = useAnswer();
+const RatingActions = ({ answer }: { answer: Answer }) => {
   const { user_rating } = answer;
   const { mutate } = useAnswerRatingMutation(answer);
 
@@ -40,6 +44,23 @@ const RatingActions = () => {
       onNegativePressed={handleNegativePressed}
       currentRating={answer.user_rating}
     />
+  );
+};
+
+export const BookmarkAnswer = ({ answer }: { answer: Answer }) => {
+  return <Bookmark isBookmarked={false} onPress={() => {}} />;
+};
+
+export const Reply = ({ answer }: { answer: Answer }) => {
+  const [present, setPresent] = useState<boolean>(false);
+  const presentSheet = () => setPresent(true);
+  const hideSheet = () => setPresent(false);
+
+  return (
+    <>
+      <ReplyIcon onPress={presentSheet} repliesCount={answer.replies_count} />
+      <ReplySheet answer={answer} present={present} onDismiss={hideSheet} />
+    </>
   );
 };
 

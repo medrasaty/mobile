@@ -4,7 +4,7 @@ import QuestionDetailInfo from "@/features/forum/components/question/detail/Ques
 import { DetailQuestion } from "@/types/forum.types";
 import QuestionDetailOwner from "./Owner";
 
-export const QUESTION_LAYOUT_GAP = 12;
+export const QUESTION_LAYOUT_GAP = 16;
 
 export const QuestionDetail = ({ question }: { question: DetailQuestion }) => {
   return (
