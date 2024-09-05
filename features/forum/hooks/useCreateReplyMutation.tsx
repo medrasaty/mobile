@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-import { Answer, Reply } from "@/types/forum.types";
 import useAuthClient from "@/hooks/useAuthClient";
+import { Answer, Reply } from "@/types/forum.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Axios } from "axios";
 import { transformDates } from "../utils";
@@ -27,7 +26,6 @@ export default function useCreateReplyMutation() {
       queryClient.setQueryData(
         ["replies", data.answer],
         (oldReplies: Reply[]) => {
-          console.log({ old: oldReplies, new: data });
           if (!oldReplies) return data;
           return [data, ...oldReplies];
         }

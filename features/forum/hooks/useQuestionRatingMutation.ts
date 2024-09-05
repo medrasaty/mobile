@@ -1,25 +1,25 @@
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import useAuthClient from "@/hooks/useAuthClient";
 import { rateQuestion as rateQuestionRequest } from "@/requests/forum/question";
-import { DetailQuestion, RatingValue } from "@/types/forum.types";
+import { DetailQuestion, Question, RatingValue } from "@/types/forum.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { calcNewRatingsValue } from "../utils";
 
-const useQuestionRatingMutation = (question: DetailQuestion) => {
+const useQuestionRatingMutation = (questionID: Question["id"]) => {
   const queryClient = useQueryClient();
   const client = useAuthClient();
   const { show: showSnack } = useSnackbar();
 
   return useMutation({
     mutationFn: (ratingValue: RatingValue) =>
-      rateQuestionRequest(question, ratingValue, client),
+      rateQuestionRequest(questionID, ratingValue, client),
 
     onMutate: async (newRating) => {
-      await queryClient.cancelQueries({ queryKey: ["question", question.id] });
+      await queryClient.cancelQueries({ queryKey: ["question", questionID] });
 
       const previousQuestion = queryClient.getQueryData<DetailQuestion>([
         "question",
-        question.id,
+        questionID,
       ]);
 
       const previousRatingsValue = previousQuestion?.ratings_value ?? 0;
@@ -33,7 +33,7 @@ const useQuestionRatingMutation = (question: DetailQuestion) => {
       );
 
       queryClient.setQueryData(
-        ["question", question.id],
+        ["question", questionID],
         (old: DetailQuestion) => {
           // previous user_rating must be null if it's a new rating
           return {
@@ -51,7 +51,7 @@ const useQuestionRatingMutation = (question: DetailQuestion) => {
       // Reset question when error accure
       console.error(err);
       queryClient.setQueryData(
-        ["question", question.id],
+        ["question", questionID],
         context.previousQuestion
       );
 

@@ -1,6 +1,6 @@
 import { fileUploadType } from "@/types";
 import { ImagePickerAsset } from "expo-image-picker";
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useState } from "react";
 
 type imageType = ImagePickerAsset | null | undefined;
 
@@ -27,7 +27,6 @@ export default function useImageAssetState(): useImageAssetStateHook<fileUploadT
       const imageType = mimeType?.split("/")[1];
 
       const fileName = image.fileName ?? `${new Date()}.${imageType}`; // generate new file name in case you couldn't access fileName.
-      console.log(fileName);
 
       setImage({
         uri: image.uri,

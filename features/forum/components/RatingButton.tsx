@@ -66,29 +66,37 @@ export default function RatingButton({
   );
 }
 
-export function BookmarkQuestion({ question }: { question: DetailQuestion }) {
-  const { bookmark, unbookmark } = useQuestionBookmarkMutation(question.id);
+export function BookmarkQuestion({
+  questionID,
+  isBookmarked,
+}: {
+  questionID: DetailQuestion["id"];
+  isBookmarked: DetailQuestion["is_bookmarked"];
+}) {
+  const { bookmark, unbookmark } = useQuestionBookmarkMutation(questionID);
   const handlePress = () => {
-    question.is_bookmarked ? unbookmark(question.id) : bookmark(question.id);
+    isBookmarked ? unbookmark(questionID) : bookmark(questionID);
   };
 
-  return (
-    <Bookmark isBookmarked={question.is_bookmarked} onPress={handlePress} />
-  );
+  return <Bookmark isBookmarked={isBookmarked} onPress={handlePress} />;
 }
 
-export function RegisterQuestion({ question }: { question: DetailQuestion }) {
-  const { register, unregister } = useQuestionRegistryMutation(question.id);
+export function RegisterQuestion({
+  questionID,
+  isRegistered,
+}: {
+  questionID: DetailQuestion["id"];
+  isRegistered: DetailQuestion["is_registered"];
+}) {
+  const { register, unregister } = useQuestionRegistryMutation(questionID);
 
   return (
     <>
       <RegisterIcon
         onPress={() => {
-          question.is_registered
-            ? unregister(question.id)
-            : register(question.id);
+          isRegistered ? unregister(questionID) : register(questionID);
         }}
-        isRegistered={question.is_registered}
+        isRegistered={isRegistered}
       />
     </>
   );

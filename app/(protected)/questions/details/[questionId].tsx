@@ -78,7 +78,7 @@ const List = () => {
   };
 
   return (
-    <QuestionProvider question={question}>
+    <>
       <FlashList
         data={answersQuery.data}
         ListHeaderComponent={renderHeader}
@@ -98,6 +98,6 @@ const List = () => {
         ListEmptyComponent={renderEmptyComponent}
       />
       <CreateAnswer question={question} />
-    </QuestionProvider>
+    </>
   );
 };
