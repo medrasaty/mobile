@@ -1,5 +1,5 @@
-import { Session } from "@/auth/ctx";
-import { CyanDark, CyanLight } from "@/constants/Colors";
+import { Session } from "@/features/auth/ctx";
+import { GruvboxDarkCyan, GruvboxLightCyan } from "@/constants/Colors";
 import { useSession } from "@/hooks/useSession";
 import { Subject } from "@/types/school.types";
 import { BaseUser, UserType } from "@/types/user.types";
@@ -18,7 +18,7 @@ export function parseSession(session: string | null): Session {
 export function getSubjectColor(subject: Subject["name"]) {
   subject = subject.toLowerCase();
   // FIXME: add custom colors to each subject
-  return CyanLight.colors.primary;
+  return GruvboxLightCyan.colors.primary;
 }
 
 export function is_student(user: BaseUser) {

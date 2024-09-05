@@ -17,20 +17,27 @@
       "infoPlist": {
         "ExpoLocalization_supportsRTL": true,
         "ExpoLocalization_forcesRTL": true
-      }
+      },
+      // "googleServicesFile": "./GoogleService-Info.plist",
+      "bundleIdentifier": "com.solomonsh.medrasatymobile"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#191C1D"
       },
-      "package": "com.solomonsh.medrasatymobile"
+      "package": "com.solomonsh.medrasatymobile",
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
+    "jsEngine": "hermes",
     "plugins": [
       [
         "expo-image-picker",
@@ -48,11 +55,15 @@
             "./assets/fonts/NotoSansArabic-Regular.ttf"
           ]
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#458588"
+        }
       ]
     ],
-    "experiments": {
-      "typedRoutes": true
-    },
     "extra": {
       "supportsRTL": true,
       "router": {

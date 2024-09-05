@@ -30,7 +30,7 @@ export default function QuestionDetailInfo({
       }}
       {...props}
     >
-      <ThemedView style={{ flex: 1, gap: 4 }}>
+      <ThemedView style={{ flex: 1 }}>
         <Title title={question.title} />
         <SubjectInfo subject={question.subject} />
         <Description description={question.text} />
@@ -127,7 +127,10 @@ const TimeInfo = ({
   );
 };
 
+let refreshCounter = 0;
+
 export const Picture = memo(({ image }: { image?: string }) => {
+  console.log("solo is here");
   const hash = "";
   const theme = useTheme();
   const style = useMemo(

@@ -5,6 +5,7 @@ import { AppBar } from "@/features/navigation/components/AppBar";
 import { useSession } from "@/hooks/useSession";
 import { Redirect, Stack } from "expo-router";
 import * as React from "react";
+import Toast, { BaseToast } from "react-native-toast-message";
 
 export default function ProtectedLayout() {
   const { session, isLoading } = useSession();

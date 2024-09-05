@@ -1,7 +1,7 @@
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { I18nManager, useColorScheme } from "react-native";
+import { useColorScheme } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
 import { SessionProvider } from "@/features/auth/ctx";
@@ -14,10 +14,7 @@ import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AlertDialogProvider from "@/contexts/AlertDialogContext";
-
-// inforce Right to Left layout
-// I18nManager.allowRTL(true);
-// I18nManager.forceRTL(true);
+import "@/localazation/i18n";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

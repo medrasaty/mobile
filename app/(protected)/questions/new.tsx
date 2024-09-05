@@ -109,7 +109,7 @@ export default function NewQuestionPage() {
         <Button
           style={{ marginBottom: 8, marginTop: 8, ...containerMargins }}
           onPress={handleSubmit}
-          mode="contained-tonal"
+          mode="contained"
         >
           نشر
         </Button>

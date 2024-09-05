@@ -7,7 +7,7 @@ export function AddQuestionFAB() {
   return (
     <FAB
       icon="plus"
-      variant="secondary"
+      variant="primary"
       onPress={() => router.push("questions/new/index")}
       style={styles.FABStyles}
     />
@@ -28,7 +28,7 @@ export function AddQuestionAnimatedFAB({
   return (
     <AnimatedFAB
       icon="plus"
-      variant="secondary"
+      variant="primary"
       label="سؤال جديد"
       extended={isExtended}
       iconMode="dynamic"

@@ -11,12 +11,14 @@ import QuestionDetail from "@/features/forum/components/question/detail/Question
 import { QuestionProvider } from "@/features/forum/contexts/QuestionContext";
 import { useQuestionAnswers } from "@/features/forum/hooks/useAnswers";
 import { useQuestion } from "@/features/forum/hooks/useQuestions";
-import { Answer } from "@/types/forum.types";
+import { Answer, Question } from "@/types/forum.types";
 import { FlashList } from "@shopify/flash-list";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect } from "react";
 import { RefreshControl } from "react-native";
 import { ActivityIndicator, Divider } from "react-native-paper";
+import { Facebook } from "react-content-loader/native";
+import Toast, { BaseToast } from "react-native-toast-message";
 
 export default function QuestionDetailPage() {
   return (
@@ -35,6 +37,7 @@ const List = () => {
   useEffect(() => {
     if (questionQuery.data) {
       navigation.setOptions({ headerTitle: questionQuery.data.title });
+      Toast.show({ text1: "solo is info toast", type: "success" });
     }
   }, [questionQuery.data]);
 

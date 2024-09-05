@@ -10,7 +10,6 @@ import { useAlert } from "@/contexts/AlertDialogContext";
 
 export default function NumberPage() {
   const { signOut } = useSession();
-  const Alert = useAlert();
 
   return (
     <SafeAreaView>
@@ -18,9 +17,7 @@ export default function NumberPage() {
         container
         style={{ gap: 10, justifyContent: "center", alignItems: "center" }}
       >
-        <Button onPress={() => Alert({ message: "solo is alerting" })}>
-          alert
-        </Button>
+        <Button onPress={signOut}>signuot</Button>
       </Page>
     </SafeAreaView>
   );

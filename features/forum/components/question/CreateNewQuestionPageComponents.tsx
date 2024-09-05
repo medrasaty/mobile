@@ -23,7 +23,6 @@ import {
   SubjectInfo,
 } from "@/features/forum/components/question/detail/QuestionDetailInfo";
 import { Subject } from "@/types/school.types";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import useVisible from "@/hooks/useVisible";
 import { useState } from "react";
 

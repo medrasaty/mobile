@@ -12,10 +12,15 @@ import { Redirect } from "expo-router";
 import { useState } from "react";
 import { Keyboard } from "react-native";
 import { Text, TextInput } from "react-native-paper";
+import { useTranslation } from "react-i18next";
+import useRoundedTheme from "@/hooks/useRoundedTheme";
+import { getLocales } from "expo-localization";
 
 export default function LoginPage() {
   const { signIn, session } = useSession();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
+  const theme = useRoundedTheme();
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -62,7 +67,7 @@ export default function LoginPage() {
             }}
             variant="headlineMedium"
           >
-            تسجيل الدخول
+            {t("login")}
           </Text>
 
           {/* TextInputs */}
@@ -73,6 +78,7 @@ export default function LoginPage() {
               onChangeText={(text) => setUsername(text)}
               label="البريد الإلكتروني"
               mode="outlined"
+              theme={theme}
             />
             <TextInput
               mode="outlined"
@@ -80,6 +86,7 @@ export default function LoginPage() {
               onChangeText={(text) => setPassword(text)}
               secureTextEntry={hiddentPassword}
               label="كلمة السر"
+              theme={theme}
               right={
                 <TextInput.Icon
                   onPress={() => setHiddentPassword(!hiddentPassword)}

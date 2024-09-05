@@ -3,15 +3,15 @@ import {
   MD3LightTheme as DefaultLightTheme,
 } from "react-native-paper";
 
-import { CyanDark, CyanLight } from "@/constants/Colors";
+import { GruvboxDarkCyan, GruvboxLightCyan } from "@/constants/Colors";
 import { applyCustomFontFamily } from "@/constants/fonts";
 
 export const Darktheme = applyCustomFontFamily({
   ...DefaultDarkTheme,
-  colors: CyanDark.colors,
+  colors: GruvboxDarkCyan.colors,
 });
 
 export const LightTheme = applyCustomFontFamily({
   ...DefaultLightTheme,
-  colors: CyanLight.colors,
+  colors: GruvboxLightCyan.colors,
 });
