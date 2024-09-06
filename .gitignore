@@ -13,6 +13,5 @@ web-build/
 # macOS
 .DS_Store
 
-
-
 .env
+.medrasaty-666-firebase-adminsdk-private-key.json
