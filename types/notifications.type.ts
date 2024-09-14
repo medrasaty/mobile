@@ -1,10 +1,24 @@
+
 export interface Notification {
-  id: string;
-  message: string;
-  is_read: boolean;
-  created: Date;
-  type: string;
-  instance_id: string;
+    id:           string;
+    notification: BaseNotification;
+    is_read:      boolean;
+}
+
+export interface BaseNotification {
+    id:          string;
+    title:       string;
+    body:        string;
+    type:        NotificationType;
+    instance_id: string;
+    created:     Date;
+}
+
+enum NotificationType {
+  Question= "QUESTION",
+  Answer = "ANSWER",
+  Reply = "REPLY",
+  Other = "OTHER"
 }
 
 export interface Registry {

@@ -97,14 +97,12 @@ export default function NewQuestionPage() {
               onPress={showSubjectDialog}
             />
           </ThemedView>
-          {title && description && subject && (
-            <CreateQuestion.Preview
-              title={title}
-              subject={subject}
-              description={description}
-              image={picture?.uri}
-            />
-          )}
+          <CreateQuestion.Preview
+            title={title}
+            subject={subject}
+            description={description}
+            image={picture?.uri}
+          />
         </ScrollView>
         <Button
           style={{ marginBottom: 8, marginTop: 8, ...containerMargins }}

@@ -169,7 +169,7 @@ export const HashTags = () => {
 
 export type PreviewProps = {
   title: string;
-  subject: Subject;
+  subject?: Subject;
   description: string;
   image?: string; // uri
 } & ViewProps;
@@ -200,9 +200,9 @@ export const Preview = ({
         <>
           <Divider />
           <PreviewContent
-            title={title}
+            title={title ?? ""}
             subject={subject}
-            description={description}
+            description={description ?? ""}
             image={image}
           />
         </>
@@ -222,7 +222,7 @@ export const PreviewContent = ({
   return (
     <ThemedView style={[style, { flex: 1, gap: 8 }]} {...props}>
       <TitlePreview title={title} />
-      <SubjectInfo subject={subject} />
+      {subject && <SubjectInfo subject={subject} />}
       <DescriptionPreview description={description} />
       <PicturePreview image={image} />
     </ThemedView>

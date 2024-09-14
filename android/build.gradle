@@ -2,6 +2,9 @@
 
 buildscript {
     ext {
+        // build will fail if you don not add this: https://github.com/DylanVann/react-native-fast-image/blob/main/docs/app-glide-module.md
+        excludeAppGlideModule = true
+
         buildToolsVersion = findProperty('android.buildToolsVersion') ?: '34.0.0'
         minSdkVersion = Integer.parseInt(findProperty('android.minSdkVersion') ?: '23')
         compileSdkVersion = Integer.parseInt(findProperty('android.compileSdkVersion') ?: '34')

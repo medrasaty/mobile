@@ -1,14 +1,32 @@
 import useAuthClient from "@/hooks/useAuthClient";
-import { Notification } from "@/types/notifications.type";
 import { useQuery } from "@tanstack/react-query";
+import { getNotifications } from "../lib/requests";
+import { useState } from "react";
 
-export default function useNotifications() {
+type useNotificationsParams = {
+  is_read?: boolean;
+};
+
+export default function useNotifications(params: useNotificationsParams = {}) {
+  /**
+   * Return list of Notifications for the authenticated user.
+   */
   const client = useAuthClient();
+
   return useQuery({
     queryKey: ["notifications"],
-    queryFn: async (): Promise<Notification[]> => {
-      const response = await client.get("/notifications/notifications/");
-      return response.data;
-    },
+    queryFn: async () => await getNotifications(client, params),
   });
+}
+
+export function useUnreadNotificationsCount() {
+  /**
+   * return the number of unread notifications, if notifications are not yet loaded , return null
+   */
+
+  const q = useNotifications({ is_read: false });
+
+  if (q.isLoading || q.isError) return null;
+
+  return q.data?.length;
 }

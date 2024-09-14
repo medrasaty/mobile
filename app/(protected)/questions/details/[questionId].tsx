@@ -1,24 +1,23 @@
 import FullPageLoadingIndicator from "@/components/FullPageLoadingIndicator";
 import Page from "@/components/Page";
 import Text from "@/components/styled/Text";
-import View, { Container } from "@/components/styled/View";
+import { Container } from "@/components/styled/View";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { containerMargins } from "@/constants/styels";
 import AnswerCard from "@/features/forum/components/answer/AnswerCard";
 import CreateAnswer from "@/features/forum/components/answer/CreateAnswer";
 import QuestionDetail from "@/features/forum/components/question/detail/QuestionDetail";
-import { QuestionProvider } from "@/features/forum/contexts/QuestionContext";
 import { useQuestionAnswers } from "@/features/forum/hooks/useAnswers";
 import { useQuestion } from "@/features/forum/hooks/useQuestions";
-import { Answer, Question } from "@/types/forum.types";
+import { AppBar } from "@/features/navigation/components/AppBar";
+import { Answer } from "@/types/forum.types";
 import { FlashList } from "@shopify/flash-list";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect } from "react";
 import { RefreshControl } from "react-native";
 import { ActivityIndicator, Divider } from "react-native-paper";
-import { Facebook } from "react-content-loader/native";
-import Toast, { BaseToast } from "react-native-toast-message";
+import Toast from "react-native-toast-message";
 
 export default function QuestionDetailPage() {
   return (
@@ -48,7 +47,8 @@ const List = () => {
   const question = questionQuery.data;
 
   const renderEmptyComponent = () => {
-    if (!answersQuery.isFetching) {
+    // first time loading
+    if (!answersQuery.isLoading) {
       return (
         <ThemedView style={{ marginTop: 30, alignItems: "center" }}>
           <ThemedText>لا اجابات</ThemedText>
@@ -66,7 +66,7 @@ const List = () => {
 
   const renderHeader = () => {
     return (
-      <Container style={{ marginBottom: 20, gap: 12 }}>
+      <Container style={{ gap: 12 }}>
         <QuestionDetail question={question} />
         <Text variant="headlineSmall">الإجابات</Text>
       </Container>
@@ -79,6 +79,7 @@ const List = () => {
 
   return (
     <>
+    <AppBar title={question.title} />
       <FlashList
         data={answersQuery.data}
         ListHeaderComponent={renderHeader}

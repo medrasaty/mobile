@@ -23,45 +23,47 @@ type QuestionDetailInfoProps = {
   modified: DetailQuestion["modified"];
 } & ViewProps;
 
-const QuestionDetailInfo = memo(({
-  title,
-  subject,
-  text,
-  tags,
-  picture,
-  views,
-  answersCount,
-  created,
-  modified,
-  style,
-  ...props
-}: QuestionDetailInfoProps) => {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "space-between",
-      }}
-      {...props}
-    >
-      <ThemedView style={{ flex: 1 }}>
-        <Title title={title} />
-        <SubjectInfo subject={subject} />
-        <Description description={text} />
-        <TagsList tags={tags} />
-      </ThemedView>
-      {picture && <Picture image={picture} />}
-
-      <View style={{ flex: 0.1, gap: 9, marginTop: 4 }}>
-        <ThemedView style={{ flexDirection: "row" }}>
-          <ViewsCount views={views} />
-          <AnswersCount answersCount={answersCount} />
+const QuestionDetailInfo = memo(
+  ({
+    title,
+    subject,
+    text,
+    tags,
+    picture,
+    views,
+    answersCount,
+    created,
+    modified,
+    style,
+    ...props
+  }: QuestionDetailInfoProps) => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "space-between",
+        }}
+        {...props}
+      >
+        <ThemedView style={{ flex: 1 }}>
+          <Title title={title} />
+          <SubjectInfo subject={subject} />
+          <Description description={text} />
+          <TagsList tags={tags} />
         </ThemedView>
-        <TimeInfo created={created} modified={modified} />
+        {picture && <Picture image={picture} />}
+
+        <View style={{ flex: 0.1, gap: 9, marginTop: 4 }}>
+          <ThemedView style={{ flexDirection: "row" }}>
+            <ViewsCount views={views} />
+            <AnswersCount answersCount={answersCount} />
+          </ThemedView>
+          <TimeInfo created={created} modified={modified} />
+        </View>
       </View>
-    </View>
-  );
-})
+    );
+  }
+);
 
 export const Title = ({ title }: { title: Question["title"] }) => {
   return <Text variant="headlineMedium">{title}</Text>;
@@ -143,6 +145,7 @@ const TimeInfo = ({
 
 export const Picture = memo(({ image }: { image?: string }) => {
   const hash = "";
+
   const theme = useTheme();
   const style = useMemo(
     () => ({
@@ -153,18 +156,12 @@ export const Picture = memo(({ image }: { image?: string }) => {
     [theme.colors?.surfaceVariant, theme.roundness]
   );
 
-  const source = useCallback(() => {
-    return image
-      ? image
-      : `${API_URL}/media/students/profile_pictures/wallhaven-yx9log.jpg`;
-  }, [image]);
-
   return (
     <View>
       <FastImage
         style={style}
         source={{
-          uri: source(),
+          uri: image,
           priority: FastImage.priority.high,
         }}
         resizeMode={FastImage.resizeMode.cover}
@@ -173,5 +170,5 @@ export const Picture = memo(({ image }: { image?: string }) => {
   );
 });
 
+export default QuestionDetailInfo;
 
-export default QuestionDetailInfo

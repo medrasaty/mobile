@@ -1,9 +1,10 @@
 import LoadingDialog from "@/components/LoadingDialog";
 import Sheet from "@/components/Sheet";
+import { ThemedView } from "@/components/ThemedView";
 import { containerMargins } from "@/constants/styels";
 import { DetailQuestion } from "@/types/forum.types";
 import { BottomSheetView, useBottomSheetInternal } from "@gorhom/bottom-sheet";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Keyboard, KeyboardAvoidingView, StyleSheet, View } from "react-native";
 import {
   Button,
@@ -12,8 +13,6 @@ import {
   useTheme,
 } from "react-native-paper";
 import useCreateAnswerMutation from "../../hooks/useCreateAnswerMutation";
-import { ThemedView } from "@/components/ThemedView";
-import Toast from "react-native-toast-message";
 
 export type CreateAnswerSheetProps = {
   question: DetailQuestion;
@@ -67,13 +66,11 @@ export default function CreateAnswerSheet({
 export type AnswerTextInputProps = {} & TextInputProps;
 
 export const AnswerTextInput = ({ ...props }: AnswerTextInputProps) => {
-  const { isContentHeightFixed } = useBottomSheetInternal();
   const theme = useTheme();
   const Attachment = (
     <TextInput.Icon icon="attachment" onPress={() => alert("soloishere")} />
   );
 
-  console.log(isContentHeightFixed);
   return (
     <View
       style={{
@@ -107,7 +104,6 @@ export const Actions = ({
   onSubmit,
   submitDisabled,
 }: ActionsProps) => {
-  alert(Keyboard.metrics());
   return (
     <ThemedView style={styles.actionsContainer}>
       <Button

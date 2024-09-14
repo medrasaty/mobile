@@ -2,13 +2,14 @@ import LoadingDialog from "@/components/LoadingDialog";
 import { LOGIN_PAGE } from "@/constants/routes";
 import { AnimatedAppBarProvider } from "@/contexts";
 import { AppBar } from "@/features/navigation/components/AppBar";
+import usePushNotificationFeature from "@/features/notifications/hooks/usePushNotificationFeature";
 import { useSession } from "@/hooks/useSession";
 import { Redirect, Stack } from "expo-router";
 import * as React from "react";
-import Toast, { BaseToast } from "react-native-toast-message";
 
 export default function ProtectedLayout() {
   const { session, isLoading } = useSession();
+  usePushNotificationFeature();
 
   if (isLoading) {
     return <LoadingDialog visible={isLoading} />;
@@ -29,19 +30,8 @@ export default function ProtectedLayout() {
         }}
       >
         <Stack.Screen name="(tabs)" />
-        <Stack.Screen
-          options={{
-            headerShown: true,
-            headerTitle: "",
-          }}
-          name="questions/details/[questionId]"
-        />
-        <Stack.Screen
-          name="questions/new"
-          options={{
-            headerShown: false, // render appBar in the page itself
-          }}
-        />
+        <Stack.Screen name="questions/details/[questionId]" />
+        <Stack.Screen name="questions/new" />
       </Stack>
     </AnimatedAppBarProvider>
   );

@@ -1,31 +1,43 @@
 import { useAnimatedAppBar } from "@/contexts";
 import { useNavigation } from "expo-router";
 import React from "react";
-import { Appbar, useTheme } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { Appbar, AppbarProps, useTheme } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
 type AppBarProps = React.PropsWithChildren<{
   title: string | undefined;
   backAction?: boolean;
+  opacity?: number;
+  options?: AppbarProps;
 }>;
 
 const APPBAR_MODE = "small";
 const APPBAR_HEIGHT = modeAppbarHeight[APPBAR_MODE];
 
-export function AppBar({ title, backAction = false, ...props }: AppBarProps) {
-  const navigation = useNavigation();
-  const canGoBack = navigation.canGoBack();
-  const theme = useTheme();
+export function AppBar({
+  title,
+  backAction = false,
+  opacity,
+  options,
+  ...props
+}: AppBarProps) {
+  const { canGoBack, goBack } = useNavigation();
 
   return (
-    <>
-      <Appbar.Header {...props}>
-        {canGoBack && <Appbar.BackAction onPress={() => navigation.goBack()} />}
-        <Appbar.Content title={title} />
-        {props.children}
-      </Appbar.Header>
-    </>
+    <Appbar.Header
+      style={[styles.header, { opacity: opacity ?? 1 }]}
+      {...props}
+      {...options}
+    >
+      {/* TODO: write description*/}
+      {backAction && canGoBack() && (
+        <Appbar.BackAction onPress={() => goBack()} />
+      )}
+      <Appbar.Content title={title} />
+      {props.children}
+    </Appbar.Header>
   );
 }
 
@@ -67,3 +79,6 @@ export const IndexAppBar = ({ title }: { title: string }) => {
   );
 };
 
+const styles = StyleSheet.create({
+  header: {},
+});

@@ -2,13 +2,16 @@ import { Image, ImageProps } from "expo-image";
 import View from "@/components/styled/View";
 import { API_URL } from "@/constants";
 import { useTheme } from "react-native-paper";
+import FastImage, { FastImageProps, Source } from "react-native-fast-image";
+import { useMemo } from "react";
+import { StyleSheet } from "react-native";
 
 export type AvatarProps = {
   size?: number;
   dense?: boolean;
-  source: ImageProps["source"];
+  source: Source["uri"];
   square?: boolean;
-} & ImageProps;
+} & FastImageProps;
 
 export const AVATAR_SIZE = 64;
 export const DENSE_AVATAR_SIZE = 52;
@@ -20,25 +23,25 @@ export default function Avatar({
   source,
   ...props
 }: AvatarProps) {
-  const borderRadius = square === true ? 0 : 100;
   const theme = useTheme();
-  source = `${API_URL}/media/${source}`; // FIXME: do it better
-  return (
-    <View
-      style={{
+  const styles = useMemo(() => {
+    const borderRadius = square === true ? 0 : 100;
+    return StyleSheet.create({
+      container: {
         backgroundColor: theme.colors.surfaceVariant,
         borderRadius: borderRadius,
-      }}
-    >
-      <Image
-        style={{
-          width: size,
-          height: size,
-          borderRadius: borderRadius,
-        }}
-        source={source}
-        {...props}
-      />
+      },
+      image: {
+        width: size,
+        height: size,
+        borderRadius: borderRadius,
+      },
+    });
+  }, [size, square]);
+
+  return (
+    <View style={styles.container}>
+      <FastImage style={styles.image} source={{ uri: source }} {...props} />
     </View>
   );
 }
