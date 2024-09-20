@@ -1,11 +1,10 @@
 import LoadingDialog from "@/components/LoadingDialog";
-import Sheet from "@/components/Sheet";
 import { ThemedView } from "@/components/ThemedView";
-import { containerMargins } from "@/constants/styels";
+import { containerMargins, containerPaddings } from "@/constants/styels";
 import { DetailQuestion } from "@/types/forum.types";
-import { BottomSheetView, useBottomSheetInternal } from "@gorhom/bottom-sheet";
-import { useMemo, useState } from "react";
-import { Keyboard, KeyboardAvoidingView, StyleSheet, View } from "react-native";
+import { BottomSheetFooter, BottomSheetView } from "@gorhom/bottom-sheet";
+import React, { useMemo, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import {
   Button,
   TextInput,
@@ -13,21 +12,19 @@ import {
   useTheme,
 } from "react-native-paper";
 import useCreateAnswerMutation from "../../hooks/useCreateAnswerMutation";
+import SheetView from "@/components/SheetView";
 
 export type CreateAnswerSheetProps = {
   question: DetailQuestion;
-  present: boolean;
-  hide: () => void;
 };
-export default function CreateAnswerSheet({
-  question,
-  present,
-  hide,
-}: CreateAnswerSheetProps) {
+export const CreateAnswerSheet = React.forwardRef<
+  typeof SheetView,
+  CreateAnswerSheetProps
+>(({ question }, ref) => {
   /**
    * Allow user to answer question
    */
-  const snapPoints = useMemo(() => ["50%"], []);
+  const snapPoints = useMemo(() => ["50%", "75%", "95%"], []);
   const [answerText, setAnswerText] = useState<string>("");
 
   const { mutate: createAnswer, ...rest } = useCreateAnswerMutation();
@@ -39,29 +36,33 @@ export default function CreateAnswerSheet({
 
   const reset = () => {
     setAnswerText("");
-    hide();
+  };
+
+  const renderFooter = (props) => {
+    return (
+      <BottomSheetFooter {...props} bottomInset={8} style={containerPaddings}>
+        <Actions onCancle={reset} onSubmit={handleSubmit} />
+      </BottomSheetFooter>
+    );
   };
 
   return (
-    <Sheet
-      enableDynamicSizing
+    <SheetView
+      ref={ref}
       snapPoints={snapPoints}
-      present={present}
-      onDismiss={hide}
+      onDismiss={() => reset()}
+      footerComponent={renderFooter}
     >
-      <KeyboardAvoidingView>
-        <BottomSheetView style={styles.sheetContainer}>
-          <AnswerTextInput
-            value={answerText}
-            onChangeText={(text) => setAnswerText(text)}
-          />
-          <Actions onCancle={reset} onSubmit={handleSubmit} />
-        </BottomSheetView>
-      </KeyboardAvoidingView>
+      <BottomSheetView style={styles.sheetContainer}>
+        <AnswerTextInput
+          value={answerText}
+          onChangeText={(text) => setAnswerText(text)}
+        />
+      </BottomSheetView>
       <LoadingDialog visible={rest.isPending} message="جاري الإرسال..." />
-    </Sheet>
+    </SheetView>
   );
-}
+});
 
 export type AnswerTextInputProps = {} & TextInputProps;
 

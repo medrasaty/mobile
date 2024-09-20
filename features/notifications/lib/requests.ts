@@ -31,6 +31,10 @@ export async function readNotification(
   return await client.patch(`/notifications/${notificationId}/read/`);
 }
 
+export async function readAllNotifications(client: Axios) {
+  return await client.patch("/notifications/notifications/read_all/");
+}
+
 type DeviceData = {
   name: string;
   device_id: string;

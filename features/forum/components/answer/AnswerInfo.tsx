@@ -37,13 +37,7 @@ export default function Info({
 }
 
 export const StatInfo = ({ answer }: { answer: Answer }) => {
-  return (
-    <ThemedView>
-      <ThemedView style={{ gap: 3, flexDirection: "row" }}>
-        <TimeInfo answer={answer} />
-      </ThemedView>
-    </ThemedView>
-  );
+  return <TimeInfo answer={answer} />;
 };
 
 export const ReplyText = ({

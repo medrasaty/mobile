@@ -2,12 +2,16 @@ import LoadingDialog from "@/components/LoadingDialog";
 import { LOGIN_PAGE } from "@/constants/routes";
 import { IndexAppBar } from "@/features/navigation/components/AppBar";
 import BottomTabNavigationBar from "@/features/navigation/components/BottomNavigationBar";
-import TabBarIcon from "@/features/navigation/components/TabBarIcon";
+import TabBarIcon, {
+  NotificationsTabBarIcon,
+} from "@/features/navigation/components/TabBarIcon";
 import { useSession } from "@/hooks/useSession";
 import { Redirect, Tabs } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 export default function TabsLayout() {
   const { session, isLoading } = useSession();
+  const { t } = useTranslation();
 
   if (isLoading) {
     return <LoadingDialog visible={isLoading} />;
@@ -32,9 +36,9 @@ export default function TabsLayout() {
         options={{
           headerShown: true,
           header: (props) => {
-            return <IndexAppBar title="الأسئلة" />;
+            return <IndexAppBar title={t("Home")} />;
           },
-          tabBarLabel: "الرئيسية",
+          tabBarLabel: t("Home"),
           tabBarIcon: (props) => <TabBarIcon {...props} icon_name={"home"} />,
         }}
       />
@@ -42,21 +46,23 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="notifications"
         options={{
-          tabBarLabel: "الإشعارات",
-          tabBarIcon: (props) => <TabBarIcon {...props} icon_name="bell" />,
+          tabBarLabel: t("notification"),
+          tabBarIcon: (props) => (
+            <NotificationsTabBarIcon {...props} icon_name="bell" />
+          ),
         }}
       />
       <Tabs.Screen
         name="leader_board"
         options={{
-          tabBarLabel: "الجوائز",
+          tabBarLabel: t("Leaderboard"),
           tabBarIcon: (props) => <TabBarIcon {...props} icon_name="star" />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarLabel: "انت",
+          tabBarLabel: t("You"),
           tabBarIcon: (props) => <TabBarIcon {...props} icon_name="account" />,
         }}
       />

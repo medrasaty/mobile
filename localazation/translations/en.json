@@ -1,4 +1,14 @@
 {
   "login": "Login",
-  "Notification": "Notification"
+  "Notification": "Notification",
+  "notification": "notification",
+  "empty_notifications": "No Notifications",
+  "all": "all",
+  "questions": "Question",
+  "answers": "Answers",
+  "replies": "Replies",
+  "other": "other",
+  "Home": "Home",
+  "Leaderboard": "Leaderboard",
+  "You": "You"
 }

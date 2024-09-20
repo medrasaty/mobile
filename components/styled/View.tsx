@@ -1,3 +1,4 @@
+import React from "react";
 import { View as BaseView, ViewProps } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -35,7 +36,7 @@ export function SafeAreaView({
   );
 }
 
-export function Container({ children, style, ...props }: ViewProps) {
+export const Container = ({ children, style, ...props }: ViewProps) => {
   const { colors } = useTheme();
 
   return (
@@ -54,4 +55,4 @@ export function Container({ children, style, ...props }: ViewProps) {
       {children}
     </BaseView>
   );
-}
+};

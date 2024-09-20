@@ -13,32 +13,53 @@ import { useQuestion } from "@/features/forum/hooks/useQuestions";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { Answer } from "@/types/forum.types";
 import { FlashList } from "@shopify/flash-list";
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useEffect } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useMemo, useRef } from "react";
 import { RefreshControl } from "react-native";
 import { ActivityIndicator, Divider } from "react-native-paper";
-import Toast from "react-native-toast-message";
 
 export default function QuestionDetailPage() {
   return (
     <Page>
-      <List />
+      <AnswersList />
     </Page>
   );
 }
 
-const List = () => {
-  const { questionId } = useLocalSearchParams();
-  const navigation = useNavigation();
+function useScrollToAnswerEffect(
+  answers: Answer[] | undefined,
+  ListRef: React.RefObject<FlashList<Answer>>
+) {
+  const params = useLocalSearchParams<{ answerId?: string }>();
+  const router = useRouter();
+
+  const answerIndex = useMemo(() => {
+    return answers?.findIndex((answer) => answer.id === params.answerId);
+  }, [answers, params.answerId]);
+
+  useEffect(() => {
+    if (params.answerId && answers && answerIndex !== -1 && ListRef.current) {
+      // find answer index in the list
+      ListRef.current.scrollToIndex({
+        index: answerIndex ?? 0,
+        animated: true,
+        viewPosition: 1,
+      });
+      console.log("scrollToIndex finished");
+    }
+
+    return () => {
+      router.setParams({ answerId: undefined });
+    };
+  }, [answers]);
+}
+const AnswersList = () => {
+  const { questionId } = useLocalSearchParams<{ questionId: string }>();
   const questionQuery = useQuestion(questionId as string);
   const answersQuery = useQuestionAnswers(questionId as string);
 
-  useEffect(() => {
-    if (questionQuery.data) {
-      navigation.setOptions({ headerTitle: questionQuery.data.title });
-      Toast.show({ text1: "solo is info toast", type: "success" });
-    }
-  }, [questionQuery.data]);
+  const ListRef = useRef<FlashList<Answer>>(null);
+  useScrollToAnswerEffect(answersQuery.data, ListRef);
 
   if (questionQuery.isLoading) return <FullPageLoadingIndicator />;
   if (questionQuery.isError) return <Text>error</Text>;
@@ -73,16 +94,18 @@ const List = () => {
     );
   };
 
-  const handleRenderItem = ({ item, index }: { item: Answer; index }) => {
+  const handleRenderItem = ({ item }: { item: Answer }) => {
     return <AnswerCard key={item.id} answer={item} />;
   };
 
   return (
     <>
-    <AppBar title={question.title} />
+      <AppBar title={question.title} />
       <FlashList
+        ref={ListRef}
         data={answersQuery.data}
         ListHeaderComponent={renderHeader}
+        keyExtractor={(item) => item.id}
         renderItem={handleRenderItem}
         contentContainerStyle={{ paddingTop: 10, paddingBottom: 70 }}
         refreshControl={
@@ -97,6 +120,7 @@ const List = () => {
         ItemSeparatorComponent={() => <Divider style={containerMargins} />}
         estimatedItemSize={170}
         ListEmptyComponent={renderEmptyComponent}
+        onLayout={() => console.log("solo is onLayout")}
       />
       <CreateAnswer question={question} />
     </>

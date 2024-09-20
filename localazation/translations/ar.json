@@ -1,4 +1,14 @@
 {
   "login": "تسجيل الدخول",
-  "Notification": "الإشعارات"
+  "Notification": "الإشعارات",
+  "notification": "الإشعارات",
+  "empty_notifications": "لا توجد اشعارات",
+  "all": "الكلِ",
+  "questions": "الأسئلة",
+  "answers": "الأجوبة",
+  "replies": "الردود",
+  "other": "أخرى",
+  "Home": "الرئيسية",
+  "Leaderboard": "الصدارة",
+  "You": "أنت"
 }

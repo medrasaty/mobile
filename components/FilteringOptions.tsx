@@ -21,8 +21,8 @@ const FilteringOptions = ({ onSelect, options }: FilteringOptionsProps) => {
     - options: orderingOptionType[]
 
     */
+
   const padding = 15;
-  const { colors } = useTheme();
   return (
     <ScrollView
       horizontal

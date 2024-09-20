@@ -3,6 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import useAuthClient from "../../../hooks/useAuthClient";
 
 export function useRegistries() {
+  /**
+   * return all questions registered for notifications.
+   */
   const client = useAuthClient();
 
   const fetchRegistries = async (): Promise<Registry[]> => {

@@ -18,7 +18,7 @@ const APPBAR_HEIGHT = modeAppbarHeight[APPBAR_MODE];
 
 export function AppBar({
   title,
-  backAction = false,
+  backAction = true,
   opacity,
   options,
   ...props

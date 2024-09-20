@@ -26,10 +26,9 @@ export default function ReadMoreText({
       trailing: trailing,
     });
 
-  const theme = useTheme();
-
+  /* border width is required due to strange error */
   return (
-    <ThemedView style={{ borderWidth: 0.3, borderColor: theme.colors.surface }}>
+    <ThemedView style={{ borderWidth: 0.2, borderColor: "transparent" }}>
       <ThemedText variant={variant} {...props}>
         {modifiedText}
         {isOverFlow && (

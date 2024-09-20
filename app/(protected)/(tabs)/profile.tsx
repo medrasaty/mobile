@@ -1,18 +1,44 @@
 import Page from "@/components/Page";
-import { SafeAreaView } from "@/components/styled";
-import { useSession } from "@/hooks/useSession";
-import React from "react";
-import { View } from "react-native";
-import { Button } from "react-native-paper";
+import React, { useEffect, useRef } from "react";
 
 import { ThemedText } from "@/components/ThemedText";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { useTheme } from "react-native-paper";
 
 type ProfileProps = {};
 
+const useHighlightAnimatedStyle = () => {
+  const theme = useTheme();
+  const backgroundColor = useSharedValue(theme.colors.surfaceVariant);
+
+  useEffect(() => {
+    backgroundColor.value = withTiming(theme.colors.surface, {
+      duration: 2500,
+    });
+  }, []);
+
+  if (true) {
+    return useAnimatedStyle(() => {
+      return {
+        backgroundColor: backgroundColor.value,
+      };
+    });
+  }
+};
+
 const Profile = ({}: ProfileProps) => {
+  const theme = useTheme();
+  const highlightStyle = useHighlightAnimatedStyle();
+
   return (
-    <Page container>
-      <ThemedText>Profile</ThemedText>
+    <Page container style={{ justifyContent: "center", alignItems: "center" }}>
+      <Animated.View style={highlightStyle}>
+        <ThemedText variant="titleLarge">solo is animating text</ThemedText>
+      </Animated.View>
     </Page>
   );
 };

@@ -1,21 +1,19 @@
-import { Container } from "@/components/styled";
-import View, { SafeAreaView } from "@/components/styled/View";
-import NotificationCard from "@/features/notifications/components/NotificationCard";
+import View from "@/components/styled/View";
 import useNotifications from "@/features/notifications/hooks/useNotifications";
-import { Notification } from "@/types/notifications.type";
-import { FlashList } from "@shopify/flash-list";
-import React from "react";
-import { ActivityIndicator, Appbar, Divider, Text } from "react-native-paper";
+import { NotificationType } from "@/types/notifications.type";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { ActivityIndicator, Appbar, Text, useTheme } from "react-native-paper";
 
-import { registerForPushNotificationsAsync } from "@/features/notifications/lib/push_notification";
-import { useEffect, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import FilterOptionsView from "@/components/FilterOptionsView";
+import { ThemedView } from "@/components/ThemedView";
 import { AppBar } from "@/features/navigation/components/AppBar";
-import { containerMargins } from "@/constants/styels";
+import { useReadAllNotificationEffect } from "@/features/notifications/hooks/useReadNotification";
+import NotificationsList from "@/features/notifications/components/NotificationsList";
 
 export default function NotificationPage() {
   const { t } = useTranslation();
+  useReadAllNotificationEffect();
 
   return (
     <>
@@ -31,42 +29,55 @@ export default function NotificationPage() {
 }
 
 function Notifications() {
-  const q = useNotifications();
+  const {
+    isFetching,
+    isLoading,
+    refetch,
+    isError,
+    filteredNotifications,
+    setFilter,
+    filter,
+  } = useNotifications();
+  const { t } = useTranslation();
+
+  const filterOptions = useMemo(
+    () => [
+      { label: t("all"), value: "ALL" },
+      { label: t("questions"), value: NotificationType.Question },
+      { label: t("answers"), value: NotificationType.Answer },
+      { label: t("replies"), value: NotificationType.Reply },
+    ],
+    []
+  );
 
   return (
-    <>
-      {q.isFetching || q.isError ? (
+    <ThemedView style={{ flex: 1 }}>
+      {/* Must be wraped inside View*/}
+      <ThemedView>
+        <FilterOptionsView
+          filterOptions={filterOptions}
+          currentFilter={filter}
+          // @ts-ignore
+          onFilterChange={setFilter}
+        />
+      </ThemedView>
+
+      {isLoading || isError ? (
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          {q.isFetching && <ActivityIndicator />}
-          {q.isError && <Text>solo</Text>}
+          {isLoading && <ActivityIndicator />}
+          {isError && <Text>Error loading notifications</Text>}
         </View>
       ) : (
         <View style={{ flex: 1 }}>
-          {q.data && <NotificationsList data={q.data} />}
+          <NotificationsList
+            isFetching={isFetching}
+            onRefresh={() => refetch()}
+            data={filteredNotifications}
+          />
         </View>
       )}
-    </>
-  );
-}
-
-function NotificationsList({ data }: { data: Notification[] }) {
-  const EmptyComponent = () => (
-    <View style={{ justifyContent: "center", alignItems: "center" }}>
-      <Text>ستظهر الاشعارات في هذا المكان.</Text>
-    </View>
-  );
-
-  return (
-    <FlashList
-      data={data}
-      showsVerticalScrollIndicator={false}
-      // ItemSeparatorComponent={() => <Divider style={containerMargins} />}
-      renderItem={({ item }) => <NotificationCard notification={item} />}
-      ListEmptyComponent={EmptyComponent}
-      estimatedItemSize={200}
-      overScrollMode="never"
-    />
+    </ThemedView>
   );
 }

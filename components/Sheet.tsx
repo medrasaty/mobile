@@ -4,13 +4,15 @@ import {
   BottomSheetModal,
   BottomSheetModalProps,
   BottomSheetProps,
+  BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet";
 import { BlurView } from "expo-blur";
-import { useCallback, useEffect, useRef } from "react";
+import React, { forwardRef, useCallback, useEffect, useRef } from "react";
 import { StyleSheet, ViewProps } from "react-native";
 import { useTheme } from "react-native-paper";
 import { ThemedView } from "./ThemedView";
+import { BottomSheetViewProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types";
 
 type SheetProps = {
   present: boolean;
@@ -18,6 +20,9 @@ type SheetProps = {
   backdrop?: boolean;
 } & BottomSheetModalProps;
 
+/**
+ * @deprecated use SheetView instead
+ */
 export default function Sheet({
   present,
   backdrop = true,
@@ -48,7 +53,7 @@ export default function Sheet({
       ref={sheetRef}
       snapPoints={snapPoints}
       enableDismissOnClose
-      backgroundStyle={{ backgroundColor: theme.colors.background }}
+      backgroundStyle={{ backgroundColor: theme.colors.surface }}
       backdropComponent={backdrop ? renderBackdrop : null}
       {...props}
     >

@@ -25,6 +25,7 @@ export default function ProtectedLayout() {
         screenOptions={{
           headerShown: false,
           header: (props) => {
+            // you can customize only the title of Appbar
             return <AppBar title={props.options.headerTitle} {...props} />;
           },
         }}

@@ -1,22 +1,42 @@
 import useAuthClient from "@/hooks/useAuthClient";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { getNotifications } from "../lib/requests";
-import { useState } from "react";
 
 type useNotificationsParams = {
   is_read?: boolean;
 };
 
-export default function useNotifications(params: useNotificationsParams = {}) {
+import { NotificationType } from "@/types/notifications.type";
+import { useMemo } from "react";
+
+export default function useNotifications() {
   /**
-   * Return list of Notifications for the authenticated user.
+   * return all notifications for active client
    */
   const client = useAuthClient();
+  const [filter, setFilter] = useState<NotificationType | "ALL">("ALL");
 
-  return useQuery({
+  const query = useQuery({
     queryKey: ["notifications"],
-    queryFn: async () => await getNotifications(client, params),
+    queryFn: async () => await getNotifications(client),
   });
+
+  // filter notifications
+  const filteredNotifications = useMemo(() => {
+    if (!query.data) return [];
+    if (filter === "ALL") return query.data;
+    return query.data.filter(
+      (notification) => notification.notification.type === filter
+    );
+  }, [query.data, filter]);
+
+  return {
+    ...query,
+    filteredNotifications,
+    setFilter,
+    filter,
+  };
 }
 
 export function useUnreadNotificationsCount() {
@@ -24,9 +44,22 @@ export function useUnreadNotificationsCount() {
    * return the number of unread notifications, if notifications are not yet loaded , return null
    */
 
-  const q = useNotifications({ is_read: false });
+  const [count, setCount] = useState(0);
 
-  if (q.isLoading || q.isError) return null;
+  const q = useNotifications();
 
-  return q.data?.length;
+  useEffect(() => {
+    if (q.isLoading || q.isError) setCount(0);
+
+    if (q.data) {
+      // Calculate unread notification count
+      const unreadNotifications = q.data?.filter(
+        (notification) => !notification.is_read
+      );
+
+      setCount(unreadNotifications.length);
+    }
+  }, [q.data]);
+
+  return count;
 }

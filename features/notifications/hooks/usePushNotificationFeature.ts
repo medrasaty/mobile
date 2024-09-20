@@ -1,9 +1,7 @@
 import { registerForPushNotificationsAsync } from "@/features/notifications/lib/push_notification";
+import { useQueryClient } from "@tanstack/react-query";
 import * as Notifications from "expo-notifications";
 import { useEffect, useRef } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import * as Device from "expo-device";
-import { registerDeviceForPushNotification } from "../lib/requests";
 
 export default function usePushNotificationFeature() {
   /**
@@ -34,7 +32,7 @@ export default function usePushNotificationFeature() {
         // queryClient.setQueryData(["notifications"], (oldNotifications) => {
         //     return [notification, ...oldNotifications]
         // })
-        console.log(notification);
+        console.warn(notification.date);
       });
 
     responseListener.current =
@@ -42,7 +40,7 @@ export default function usePushNotificationFeature() {
         /**
          * if the user clicked on the push notification , this function will be fired
          */
-        console.log(response);
+        console.warn(response);
       });
 
     // Clear listeners when the app is closed

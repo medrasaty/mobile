@@ -48,6 +48,12 @@ const sortingOptions: orderingOptionType[] = [
     filter: (questions: Question[]) =>
       questions.sort((a, b) => b.views - a.views),
   },
+  {
+    id: 9,
+    label: "الاكثر مشاهدة",
+    filter: (questions: Question[]) =>
+      questions.sort((a, b) => b.views - a.views),
+  },
 
   {
     id: 4,
