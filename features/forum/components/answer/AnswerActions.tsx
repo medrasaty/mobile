@@ -5,9 +5,11 @@ import Rating from "../Rating";
 import { ThemedView } from "@/components/ThemedView";
 import { ACTIONS_GAP } from "../question/detail/QuestionDetailActions";
 import ReplySheet from "../reply/ReplySheet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Bookmark from "../Bookmark";
 import { ReplyIcon } from "../Icons";
+import { useSheetViewRef } from "@/components/SheetView";
+import { useLocalSearchParams } from "expo-router";
 
 const Actions = ({ answer }: { answer: Answer }) => {
   return (
@@ -52,14 +54,24 @@ export const BookmarkAnswer = ({ answer }: { answer: Answer }) => {
 };
 
 export const Reply = ({ answer }: { answer: Answer }) => {
-  const [present, setPresent] = useState<boolean>(false);
-  const presentSheet = () => setPresent(true);
-  const hideSheet = () => setPresent(false);
+  const sheetRef = useSheetViewRef();
+  const show = () => sheetRef.current?.present();
+
+  const params = useLocalSearchParams<{
+    answerId?: string;
+    replyId?: string;
+  }>();
+
+  useEffect(() => {
+    if (params.answerId === answer.id && params.replyId) {
+      show();
+    }
+  }, [params]);
 
   return (
     <>
-      <ReplyIcon onPress={presentSheet} repliesCount={answer.replies_count} />
-      <ReplySheet answer={answer} present={present} onDismiss={hideSheet} />
+      <ReplyIcon onPress={show} repliesCount={answer.replies_count} />
+      <ReplySheet answer={answer} ref={sheetRef} />
     </>
   );
 };
