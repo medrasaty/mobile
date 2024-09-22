@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "631787687763",
+    "project_id": "medrasaty-666",
+    "storage_bucket": "medrasaty-666.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631787687763:android:e565450050a29bc9711ba6",
+        "android_client_info": {
+          "package_name": "com.solomonsh.medrasatymobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANz3O-6Bsk5jU9Hy4DImwjTL2nDTN5ULk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
+
