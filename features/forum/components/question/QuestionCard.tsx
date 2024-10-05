@@ -120,7 +120,7 @@ const IconWithInfo = ({
 const QuestionOwnerInfo = ({ owner }: { owner: Question["owner"] }) => {
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-      <ProfilePicture size={26} source={owner.profile_picture} />
+      <ProfilePicture size={26} source={owner.avatar_thumbnail} />
       <Text>{owner.short_name}</Text>
     </View>
   );

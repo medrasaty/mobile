@@ -33,6 +33,7 @@ export default function ProtectedLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="questions/details/[questionId]" />
         <Stack.Screen name="questions/new" />
+        <Stack.Screen name="users/[username]" />
       </Stack>
     </AnimatedAppBarProvider>
   );

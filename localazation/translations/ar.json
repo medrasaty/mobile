@@ -6,9 +6,20 @@
   "all": "الكلِ",
   "questions": "الأسئلة",
   "answers": "الأجوبة",
+  "Answers": "الأجوبة",
   "replies": "الردود",
   "other": "أخرى",
   "Home": "الرئيسية",
   "Leaderboard": "الصدارة",
-  "You": "أنت"
+  "You": "أنت",
+  "follow": "متابعة",
+  "reputation": "السمعة",
+  "Reputation": "السمعة",
+  "reach": "الوصول",
+  "Reach": "الوصول",
+  "followers": "المتابعين",
+  "followings": "يتابع",
+  "Followers": "المتابعين",
+  "Followings": "يتابع",
+  "Total_views": "المشاهدات"
 }

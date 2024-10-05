@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import Text from "./styled/Text";
 import { TextProps } from "react-native-paper";
 
@@ -10,15 +11,13 @@ interface UsernameProps extends TextProps<any> {
 
 export default function Username({ username, ...props }: UsernameProps) {
   const handlePress = () => {
-    console.log(
-      reverse({
-        name: "user-detail",
-        args: { username: username },
-      })
-    );
-    // router.navigate(
-    //     reverse("user-detail", { username: username })
+    // console.log(
+    //   reverse({
+    //     name: "user-detail",
+    //     args: { username: username },
+    //   })
     // );
+    router.push("/users/" + username);
   };
 
   return (

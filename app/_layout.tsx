@@ -15,6 +15,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AlertDialogProvider from "@/contexts/AlertDialogContext";
 import "@/localazation/i18n";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -51,18 +52,20 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
           <PaperProvider theme={theme}>
-            <BottomSheetModalProvider>
-              <SafeAreaProvider>
-                <AlertDialogProvider>
-                  <StatusBar style="auto" />
-                  <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name={HOME_PAGE} />
-                    <Stack.Screen name="login" />
-                    <Stack.Screen name="index" />
-                  </Stack>
-                </AlertDialogProvider>
-              </SafeAreaProvider>
-            </BottomSheetModalProvider>
+            <RootSiblingParent>
+              <BottomSheetModalProvider>
+                <SafeAreaProvider>
+                  <AlertDialogProvider>
+                    <StatusBar style="auto" />
+                    <Stack screenOptions={{ headerShown: false }}>
+                      <Stack.Screen name={HOME_PAGE} />
+                      <Stack.Screen name="login" />
+                      <Stack.Screen name="index" />
+                    </Stack>
+                  </AlertDialogProvider>
+                </SafeAreaProvider>
+              </BottomSheetModalProvider>
+            </RootSiblingParent>
           </PaperProvider>
         </SessionProvider>
       </QueryClientProvider>

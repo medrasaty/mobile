@@ -23,6 +23,7 @@ export interface BaseUser {
   reputation_points: number;
   profile_picture: string;
   token: string;
+  avatar_thumbnail: string;
 }
 
 export enum UserType {

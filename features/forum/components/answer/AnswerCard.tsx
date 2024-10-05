@@ -1,39 +1,13 @@
-import { Container } from "@/components/styled";
 import { QUESTION_LAYOUT_GAP } from "@/features/forum/components/question/detail/QuestionDetail";
 import useAnswerView from "@/features/forum/hooks/useAnswerView";
 import { Answer } from "@/types/forum.types";
-import { useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
-import { useTheme } from "react-native-paper";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import { StyleSheet } from "react-native";
+import Animated from "react-native-reanimated";
 import Actions from "./AnswerActions";
 import Info from "./AnswerInfo";
 import { containerPaddings } from "@/constants/styels";
-
-function useHighlightAnswerAnimatedStyle(answerId: Answer["id"]) {
-  const params = useLocalSearchParams<{ answerId?: string }>();
-  const theme = useTheme();
-  const backgroundColor = useSharedValue(
-    params.answerId === answerId
-      ? theme.colors.surfaceVariant
-      : theme.colors.surface
-  );
-
-  useEffect(() => {
-    backgroundColor.value = withTiming(theme.colors.surface, {
-      duration: 3500,
-    });
-  }, [params.answerId]);
-
-  return useAnimatedStyle(() => ({
-    backgroundColor: backgroundColor.value,
-  }));
-}
+import { ThemedView } from "@/components/ThemedView";
+import useHighlightAnswerAnimatedStyle from "@/features/forum/hooks/useHighlightAnswerAnimatedStyle";
 
 export default function AnswerCard({ answer }: { answer: Answer }) {
   useAnswerView(answer.id);
@@ -41,12 +15,12 @@ export default function AnswerCard({ answer }: { answer: Answer }) {
 
   return (
     <Animated.View style={[highlightAnimatedStyle, styles.container]}>
-      <View>
-        <View style={{ flexDirection: "row", gap: QUESTION_LAYOUT_GAP }}>
+      <ThemedView>
+        <ThemedView style={{ flexDirection: "row", gap: QUESTION_LAYOUT_GAP }}>
           <Actions answer={answer} />
           <Info answer={answer} />
-        </View>
-      </View>
+        </ThemedView>
+      </ThemedView>
     </Animated.View>
   );
 }

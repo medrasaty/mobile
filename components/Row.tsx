@@ -2,11 +2,20 @@ import { ThemedText } from "@/components/ThemedText";
 import { ViewProps } from "react-native";
 import { ThemedView } from "./ThemedView";
 
-type RowProps = {} & ViewProps;
+type RowProps = {
+  alignItems?: "flex-start" | "flex-end" | "center";
+} & ViewProps;
 
-export default function Row(props: RowProps) {
+export default function Row({
+  alignItems = "flex-start",
+  style,
+  ...props
+}: RowProps) {
   return (
-    <ThemedView style={[props.style, { flexDirection: "row" }]} {...props}>
+    <ThemedView
+      style={[style, { flexDirection: "row", alignItems: alignItems }]}
+      {...props}
+    >
       {props.children}
     </ThemedView>
   );

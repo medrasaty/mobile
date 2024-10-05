@@ -1,23 +1,20 @@
-import Sheet from "@/components/Sheet";
+import LoadingIndicator from "@/components/LoadingIndicator";
+import SheetView from "@/components/SheetView";
 import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { containerPaddings } from "@/constants/styels";
 import { Answer, Reply } from "@/types/forum.types";
 import {
   BottomSheetFlatList,
   BottomSheetFooterProps,
   BottomSheetModal,
 } from "@gorhom/bottom-sheet";
-import { forwardRef, useCallback, useEffect, useMemo, useRef } from "react";
-import useReplies from "../../hooks/useReplies";
-import { useTheme } from "react-native-paper";
-import { ThemedView } from "@/components/ThemedView";
-import { containerPaddings } from "@/constants/styels";
-import ReplyCard from "../reply/ReplyCard";
-import LoadingIndicator from "@/components/LoadingIndicator";
-import { ReplySheetFooter } from "./ReplySheetFooter";
-import SheetView from "@/components/SheetView";
-import { BottomSheetFlatListProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types";
 import { useLocalSearchParams } from "expo-router";
-import { FlatList } from "react-native";
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTheme } from "react-native-paper";
+import useReplies from "../../hooks/useReplies";
+import ReplyCard from "../reply/ReplyCard";
+import { ReplySheetFooter } from "./ReplySheetFooter";
 
 type ReplySheetProps = {
   answer: Answer;
@@ -70,6 +67,7 @@ function useScrollToReplyEffect({
   listRef: any;
 }) {
   const params = useLocalSearchParams<{ replyId?: string }>();
+  const [hasScrolledToReply, setHasScrolledToReply] = useState(false);
 
   // optemize the calculation of the index by using useMemo
   const replyIndex = useMemo(() => {
@@ -81,7 +79,7 @@ function useScrollToReplyEffect({
   }, [replies, params.replyId]);
 
   useEffect(() => {
-    if (listRef.current && params.replyId) {
+    if (listRef.current && params.replyId && !hasScrolledToReply) {
       // scroll to the reply using its index
       if (replyIndex !== -1) {
         listRef.current?.scrollToIndex({
@@ -89,6 +87,7 @@ function useScrollToReplyEffect({
           animated: true,
           viewPosition: 1,
         });
+        setHasScrolledToReply(true);
       }
     }
   }, [replies, params.replyId]);

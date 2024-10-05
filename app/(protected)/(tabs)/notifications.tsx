@@ -10,6 +10,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { useReadAllNotificationEffect } from "@/features/notifications/hooks/useReadNotification";
 import NotificationsList from "@/features/notifications/components/NotificationsList";
+import Page from "@/components/Page";
 
 export default function NotificationPage() {
   const { t } = useTranslation();
@@ -23,7 +24,9 @@ export default function NotificationPage() {
           onPress={() => alert("looking")}
         />
       </AppBar>
-      <Notifications />
+      <Page>
+        <Notifications />
+      </Page>
     </>
   );
 }

@@ -1,15 +1,11 @@
-import Page from "@/components/Page";
-import React, { useEffect, useRef } from "react";
-import { Button } from "react-native-paper";
+import UserProfileScreen from "@/features/profile/screens/UserProfileScreen";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import { useSession } from "@/hooks/useSession";
+import { useLocalSearchParams } from "expo-router";
 
-type ProfileProps = {};
-
-const Profile = ({}: ProfileProps) => {
-  return (
-    <Page container style={{ justifyContent: "center", alignItems: "center" }}>
-      <Button onPress={() => {}}>solo</Button>
-    </Page>
-  );
+const Profile = () => {
+  const user = useCurrentUser();
+  return <UserProfileScreen username={user?.username} />;
 };
 
 export default Profile;

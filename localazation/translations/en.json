@@ -5,10 +5,21 @@
   "empty_notifications": "No Notifications",
   "all": "all",
   "questions": "Question",
-  "answers": "Answers",
+  "answers": "answers",
+  "Answers": "Answers",
   "replies": "Replies",
   "other": "other",
   "Home": "Home",
   "Leaderboard": "Leaderboard",
-  "You": "You"
+  "You": "You",
+  "follow": "follow",
+  "reputation": "reputation",
+  "Reputation": "Reputation",
+  "reach": "reach",
+  "Reach": "Reach",
+  "followers": "followers",
+  "followings": "followings",
+  "Followers": "Followers",
+  "Followings": "Followings",
+  "Total_views": "Total views"
 }

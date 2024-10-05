@@ -8,6 +8,15 @@ export interface School {
   sections: string[];
 }
 
+export interface BaseSchool {
+  id: number;
+  name: string;
+  location: string;
+  logo: string;
+  grades: any[];
+  sections: string[];
+}
+
 export enum Level {
   Elementary = "elementary",
   High = "high",

@@ -13,8 +13,9 @@ import { useQuestion } from "@/features/forum/hooks/useQuestions";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { Answer } from "@/types/forum.types";
 import { FlashList } from "@shopify/flash-list";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useMemo, useRef } from "react";
+import { useLocalSearchParams } from "expo-router";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { RefreshControl } from "react-native";
 import { ActivityIndicator, Divider } from "react-native-paper";
 
@@ -26,101 +27,105 @@ export default function QuestionDetailPage() {
   );
 }
 
-function useScrollToAnswerEffect(
+function useScrollToAnswer(
   answers: Answer[] | undefined,
-  ListRef: React.RefObject<FlashList<Answer>>
+  listRef: React.RefObject<FlashList<Answer>>
 ) {
-  const params = useLocalSearchParams<{ answerId?: string }>();
-  const router = useRouter();
+  const { answerId } = useLocalSearchParams<{ answerId?: string }>();
+  const [hasScrolled, setHasScrolled] = useState(false);
 
-  const answerIndex = useMemo(() => {
-    return answers?.findIndex((answer) => answer.id === params.answerId);
-  }, [answers, params.answerId]);
+  const answerIndex = useMemo(
+    () => answers?.findIndex((answer) => answer.id === answerId) ?? -1,
+    [answers, answerId]
+  );
 
   useEffect(() => {
-    if (params.answerId && answers && answerIndex !== -1 && ListRef.current) {
-      // find answer index in the list
-      ListRef.current.scrollToIndex({
-        index: answerIndex ?? 0,
+    if (
+      answerId &&
+      answers &&
+      answerIndex !== -1 &&
+      listRef.current &&
+      !hasScrolled
+    ) {
+      listRef.current.scrollToIndex({
+        index: answerIndex,
         animated: true,
-        viewPosition: 1,
+        viewPosition: 0,
       });
-      console.log("scrollToIndex finished");
+      setHasScrolled(true);
     }
-
-    return () => {
-      router.setParams({ answerId: undefined });
-    };
-  }, [answers]);
+  }, [answers, answerId, answerIndex, listRef, hasScrolled]);
 }
+
 const AnswersList = () => {
   const { questionId } = useLocalSearchParams<{ questionId: string }>();
-  const questionQuery = useQuestion(questionId as string);
-  const answersQuery = useQuestionAnswers(questionId as string);
+  const {
+    data: question,
+    isLoading: isQuestionLoading,
+    isError: isQuestionError,
+    refetch: refetchQuestion,
+  } = useQuestion(questionId as string);
+  const {
+    data: answers,
+    isLoading: isAnswersLoading,
+    isRefetching: isAnswersRefetching,
+    refetch: refetchAnswers,
+  } = useQuestionAnswers(questionId as string);
+  const {t} = useTranslation()
 
-  const ListRef = useRef<FlashList<Answer>>(null);
-  useScrollToAnswerEffect(answersQuery.data, ListRef);
+  const listRef = useRef<FlashList<Answer>>(null);
+  useScrollToAnswer(answers, listRef);
 
-  if (questionQuery.isLoading) return <FullPageLoadingIndicator />;
-  if (questionQuery.isError) return <Text>error</Text>;
-  if (!questionQuery.data) return <Text>there is not question</Text>;
+  if (isQuestionLoading) return <FullPageLoadingIndicator />;
+  if (isQuestionError) return <Text>Error loading question</Text>;
+  if (!question) return <Text>Question not found</Text>;
 
-  const question = questionQuery.data;
-
-  const renderEmptyComponent = () => {
-    // first time loading
-    if (!answersQuery.isLoading) {
-      return (
-        <ThemedView style={{ marginTop: 30, alignItems: "center" }}>
-          <ThemedText>لا اجابات</ThemedText>
-        </ThemedView>
-      );
-    }
-    return null;
-  };
-
-  const renderFooter = () => {
-    if (answersQuery.isLoading) {
-      return <ActivityIndicator size={"large"} />;
-    }
-  };
-
-  const renderHeader = () => {
-    return (
-      <Container style={{ gap: 12 }}>
-        <QuestionDetail question={question} />
-        <Text variant="headlineSmall">الإجابات</Text>
-      </Container>
+  const renderEmptyComponent = () =>
+    !isAnswersLoading && (
+      <ThemedView style={{ marginTop: 30, alignItems: "center" }}>
+        <ThemedText>No answers yet</ThemedText>
+      </ThemedView>
     );
-  };
 
-  const handleRenderItem = ({ item }: { item: Answer }) => {
-    return <AnswerCard key={item.id} answer={item} />;
+  const renderFooter = () =>
+    isAnswersLoading && <ActivityIndicator size="large" />;
+
+  const renderHeader = () => (
+    <Container style={{ gap: 12 }}>
+      <QuestionDetail question={question} />
+      <Text variant="headlineSmall">{t("Answers")}</Text>
+    </Container>
+  );
+
+  const handleRenderItem = ({ item }: { item: Answer }) => (
+    <AnswerCard key={item.id} answer={item} />
+  );
+
+  const handleRefresh = () => {
+    refetchQuestion();
+    refetchAnswers();
   };
 
   return (
     <>
       <AppBar title={question.title} />
       <FlashList
-        ref={ListRef}
-        data={answersQuery.data}
+        ref={listRef}
+        data={answers}
         ListHeaderComponent={renderHeader}
         keyExtractor={(item) => item.id}
         renderItem={handleRenderItem}
         contentContainerStyle={{ paddingTop: 10, paddingBottom: 70 }}
         refreshControl={
           <RefreshControl
-            refreshing={questionQuery.isRefetching || answersQuery.isRefetching}
-            onRefresh={() => {
-              questionQuery.refetch();
-              answersQuery.refetch();
-            }}
+            refreshing={isAnswersRefetching}
+            onRefresh={handleRefresh}
           />
         }
         ItemSeparatorComponent={() => <Divider style={containerMargins} />}
         estimatedItemSize={170}
         ListEmptyComponent={renderEmptyComponent}
-        onLayout={() => console.log("solo is onLayout")}
+        ListFooterComponent={renderFooter}
       />
       <CreateAnswer question={question} />
     </>

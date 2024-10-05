@@ -246,7 +246,7 @@ export const PreviewToggle = ({
         onPress={onTogglePressed}
         iconColor={theme.colors.onSurface}
         icon={visible ? "arrow-down" : "arrow-left"}
-        size={20}
+        size={18}
       />
     </ThemedView>
   );

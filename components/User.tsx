@@ -17,7 +17,7 @@ export const User = ({
       <ProfilePicture
         square={squarePicture}
         size={30}
-        source={user.profile_picture}
+        source={user.avatar_thumbnail}
       />
 
       <View>

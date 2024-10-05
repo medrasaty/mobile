@@ -3,7 +3,6 @@ import { ThemedView } from "@/components/ThemedView";
 import { containerMargins } from "@/constants/styels";
 import { Notification, NotificationType } from "@/types/notifications.type";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import { useRoute } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React, { useCallback, useMemo } from "react";
 import { StyleSheet, ViewProps } from "react-native";
@@ -33,7 +32,8 @@ const NotificationCard: React.FC<
     router.push({
       pathname: `/questions/details/${ref.question}`,
       params: {
-        answerId: ref.answer,
+        answerId: ref.answer ?? undefined,
+        replyId: ref.reply ?? undefined,
       },
     });
   };
@@ -93,6 +93,7 @@ const NotificationTypeAvatar: React.FC<{ type: NotificationType }> = ({
 
     return (
       <MaterialCommunityIcons
+      // @ts-expect-error
         name={iconName}
         size={iconSize}
         color={iconColor}

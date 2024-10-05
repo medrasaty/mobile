@@ -1,15 +1,15 @@
-import { Answer, RatingValue } from "@/types/forum.types";
-import { useAnswer } from "../../contexts/AnswerContext";
-import useAnswerRatingMutation from "../../hooks/useAnswerRatingMutation";
-import Rating from "../Rating";
+import { useSheetViewRef } from "@/components/SheetView";
 import { ThemedView } from "@/components/ThemedView";
-import { ACTIONS_GAP } from "../question/detail/QuestionDetailActions";
-import ReplySheet from "../reply/ReplySheet";
+import { Answer, RatingValue } from "@/types/forum.types";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
+import useAnswerRatingMutation from "../../hooks/useAnswerRatingMutation";
 import Bookmark from "../Bookmark";
 import { ReplyIcon } from "../Icons";
-import { useSheetViewRef } from "@/components/SheetView";
-import { useLocalSearchParams } from "expo-router";
+import { ACTIONS_GAP } from "../question/detail/QuestionDetailActions";
+import Rating from "../Rating";
+import ReplySheet from "../reply/ReplySheet";
 
 const Actions = ({ answer }: { answer: Answer }) => {
   return (
@@ -52,21 +52,43 @@ const RatingActions = ({ answer }: { answer: Answer }) => {
 export const BookmarkAnswer = ({ answer }: { answer: Answer }) => {
   return <Bookmark isBookmarked={false} onPress={() => {}} />;
 };
+/**
+ *
+ * @param param0 answer
+ * @returns
+ */
 
-export const Reply = ({ answer }: { answer: Answer }) => {
-  const sheetRef = useSheetViewRef();
-  const show = () => sheetRef.current?.present();
-
+const useOpenReplySheetEffect = ({
+  answer,
+  sheetRef,
+}: {
+  answer: Answer;
+  sheetRef: React.RefObject<BottomSheetModal>;
+}) => {
   const params = useLocalSearchParams<{
     answerId?: string;
     replyId?: string;
   }>();
+  const [hasOpendReplySheet, setHasOpendReplySheet] = useState(false);
 
   useEffect(() => {
-    if (params.answerId === answer.id && params.replyId) {
-      show();
+    if (
+      params.answerId === answer.id &&
+      params.replyId &&
+      !hasOpendReplySheet
+    ) {
+      sheetRef.current?.present();
+      setHasOpendReplySheet(true);
     }
   }, [params]);
+
+  return;
+};
+
+export const Reply = ({ answer }: { answer: Answer }) => {
+  const sheetRef = useSheetViewRef();
+  const show = () => sheetRef.current?.present();
+  useOpenReplySheetEffect({ answer, sheetRef });
 
   return (
     <>

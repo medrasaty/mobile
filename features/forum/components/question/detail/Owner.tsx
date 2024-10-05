@@ -8,7 +8,7 @@ import { BaseUser } from "@/types/user.types";
 export const QuestionDetailOwner = ({ owner }: { owner: BaseUser }) => {
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-      <ProfilePicture size={44} source={owner.profile_picture} />
+      <ProfilePicture size={44} source={owner.avatar_thumbnail} />
       <View>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
           <Username

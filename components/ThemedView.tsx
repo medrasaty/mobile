@@ -7,22 +7,14 @@ type ThemedViewProps = {
 
 export function ThemedView({
   direction = "column",
+  style,
   ...props
 }: ThemedViewProps) {
   const {
     colors: { surface },
   } = useTheme();
 
-  return (
-    <View
-      style={[
-        direction === "row" && styles.row,
-        { backgroundColor: surface },
-        props.style,
-      ]}
-      {...props}
-    />
-  );
+  return <View style={[style, direction === "row" && styles.row]} {...props} />;
 }
 
 const styles = StyleSheet.create({
