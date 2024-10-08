@@ -1,4 +1,4 @@
-import { orderingOptionType } from "@/types";
+import { filterOptionType } from "@/types";
 import { DetailQuestion, Question } from "@/types/forum.types";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import { transformDates } from "../utils";
 
 type useQuestionsProps = {
   params?: any;
-  selectedOrdering: orderingOptionType;
+  selectedOrdering: filterOptionType;
 };
 
 export default function useQuestions({

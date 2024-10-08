@@ -2,18 +2,13 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { UserProfile } from "../types";
 import FastImage from "react-native-fast-image";
-import { Button, Divider, useTheme } from "react-native-paper";
+import { Button, useTheme } from "react-native-paper";
 import React, { useMemo } from "react";
-import { StyleSheet, TouchableOpacity, View, ViewProps } from "react-native";
-import { containerPaddings, debugStyle } from "@/constants/styels";
-import { Container, ContainerView } from "@/components/styled";
-import { LinearGradient } from "expo-linear-gradient";
+import { StyleSheet, TouchableOpacity, ViewProps } from "react-native";
+import { ContainerView } from "@/components/styled";
 import { useTranslation } from "react-i18next";
 import Row from "@/components/Row";
-import useRoundedTheme from "@/hooks/useRoundedTheme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { HelloWave } from "@/components/HelloWave";
-import PagerView from "react-native-pager-view";
 
 interface ProfileInfoProps {
   profile: UserProfile;
@@ -153,10 +148,10 @@ const StatsInfo = ({ profile, style, ...props }: StatsInfoProps) => {
         <StatInfo label={t("Reach")} value={profile.reach} />
         <StatInfo label={t("Total_views")} value={profile.total_views} />
       </Row>
-      <Row style={styles.row}>
+      {/*<Row style={styles.row}>
         <StatInfo label={t("Followers")} value={profile.followers_count} />
         <StatInfo label={t("Following")} value={profile.followings_count} />
-      </Row>
+        </Row> */}
     </TouchableOpacity>
   );
 };

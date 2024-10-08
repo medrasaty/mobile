@@ -1,12 +1,12 @@
-import { orderingOptionType } from "@/types";
+import { filterOptionType } from "@/types";
 import React from "react";
 import { ScrollView } from "react-native";
-import { Chip, useTheme } from "react-native-paper";
+import { Chip } from "react-native-paper";
 import { ThemedText } from "./ThemedText";
 
 type FilteringOptionsProps = {
-  onSelect: (id: orderingOptionType["id"]) => void;
-  options: orderingOptionType[];
+  onSelect: (id: filterOptionType["id"]) => void;
+  options: filterOptionType[];
 };
 
 const FilteringOptions = ({ onSelect, options }: FilteringOptionsProps) => {

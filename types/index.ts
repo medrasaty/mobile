@@ -1,6 +1,6 @@
 import { Question } from "./forum.types";
 
-export type orderingOptionType = {
+export type filterOptionType = {
   id: number;
   label: string;
   icon?: string;

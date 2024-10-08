@@ -33,8 +33,13 @@ export enum ProfileNavigatorChoices {
   ANSWERS = "answers",
 }
 
-type NavigatorButtonType = {
+export type NavigatorButtonType = {
   index: number;
   label: string;
   value: string;
+};
+
+export type SortingOption<T> = {
+  label: string;
+  key: T;
 };

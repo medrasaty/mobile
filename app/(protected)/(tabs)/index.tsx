@@ -5,7 +5,7 @@ import Text from "@/components/styled/Text";
 import View, { SafeAreaView } from "@/components/styled/View";
 import { useAnimatedAppBar } from "@/contexts";
 import useQuestions from "@/features/forum/hooks/useQuestions";
-import { orderingOptionType } from "@/types";
+import { filterOptionType } from "@/types";
 import { Question } from "@/types/forum.types";
 import { FlashList } from "@shopify/flash-list";
 import { useFocusEffect } from "expo-router";
@@ -13,8 +13,6 @@ import React, { useCallback, useState } from "react";
 import { ActivityIndicator, RefreshControl, ViewProps } from "react-native";
 import { Divider } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
-import { ThemedView } from "@/components/ThemedView";
-import { ThemedText } from "@/components/ThemedText";
 
 export default function HomePage() {
   return (
@@ -28,7 +26,7 @@ const QuestionsPage = () => {
   return <QuestionsList />;
 };
 
-const sortingOptions: orderingOptionType[] = [
+const sortingOptions: filterOptionType[] = [
   {
     id: 1,
     label: "الكل",
@@ -66,7 +64,7 @@ const sortingOptions: orderingOptionType[] = [
 
 const QuestionsList = () => {
   const [orderingOptions, setOrderingOptions] =
-    useState<orderingOptionType[]>(sortingOptions);
+    useState<filterOptionType[]>(sortingOptions);
   const [isFABExtended, setIsFABExtended] = useState(true);
   const { show, hide } = useAnimatedAppBar();
 
@@ -140,8 +138,8 @@ const QuestionsList = () => {
 };
 
 type QuestionsListHeaderProps = {
-  options: orderingOptionType[];
-  setOptions: React.Dispatch<React.SetStateAction<orderingOptionType[]>>;
+  options: filterOptionType[];
+  setOptions: React.Dispatch<React.SetStateAction<filterOptionType[]>>;
 } & ViewProps;
 
 const QuestionsListHeader = ({
@@ -149,7 +147,7 @@ const QuestionsListHeader = ({
   setOptions,
   ...props
 }: QuestionsListHeaderProps) => {
-  function handleOptionSelect(id: orderingOptionType["id"]) {
+  function handleOptionSelect(id: filterOptionType["id"]) {
     const selectedOptions = options.map((option) => {
       if (option.id === id) {
         return { ...option, selected: true };
