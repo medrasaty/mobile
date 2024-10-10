@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
-import { Divider, useTheme } from "react-native-paper";
-import { Ionicons } from "@expo/vector-icons";
 import useProfile from "../hooks/useProfile";
 import { BaseUser } from "@/types/user.types";
 import UserProfileScreenLoading from "../components/UserProfileScreenLoading";
@@ -16,14 +14,11 @@ import Page from "@/components/Page";
 import { ContainerView } from "@/components/styled";
 import { ProfileBackgroundImage } from "../components/Profile";
 import ProfileInfo from "../components/ProfileInfo";
-import useProfileQuestions, {
-  questionOrderKeys,
-} from "../hooks/useProfileQuestions";
-import useProfileAnswers from "../hooks/useProfileAnswers";
+import { questionOrderKeys } from "../hooks/useProfileQuestions";
 import { FlashList } from "@shopify/flash-list";
 import { ThemedView } from "@/components/ThemedView";
 import LoadingIndicator from "@/components/LoadingIndicator";
-import { Answer, Question } from "@/types/forum.types";
+import { Answer } from "@/types/forum.types";
 import QuestionCard from "@/features/forum/components/question/QuestionCard";
 import ProfileNavigator from "../components/ProfileQuestionAnswerNavigator";
 import { NavigatorButtonType } from "../types";
@@ -31,8 +26,10 @@ import Row from "@/components/Row";
 import { useTranslation } from "react-i18next";
 import SortingMenu from "../components/SortingMenu";
 import useProfileListData from "../hooks/useProfileListData";
-import { BlurView } from "expo-blur";
-import { debugStyle } from "@/constants/styels";
+import {
+  ProfileScreenProvider,
+  useProfileScreen,
+} from "../contexts/ProfileScreenContext";
 
 interface UserProfileScreenProps {
   username: BaseUser["username"] | undefined;
@@ -47,11 +44,14 @@ const UserProfileScreen = ({ username }: UserProfileScreenProps) => {
   if (q.isPending) return <UserProfileScreenLoading />;
   if (q.isError) return <UserProfileScreenError />;
 
-  return <UserProfileScreenContent onRefresh={q.refetch} profile={q.data} />;
+  return (
+    <ProfileScreenProvider value={{ profileQuery: q }}>
+      <UserProfileScreenContent onRefresh={q.refetch} profile={q.data} />;
+    </ProfileScreenProvider>
+  );
 };
 
 interface UserProfileScreenContentProps {
-  profile: UserProfile;
   onRefresh: () => void;
 }
 
@@ -93,11 +93,11 @@ const sortingOptions = [
 ];
 
 export const UserProfileScreenContent = ({
-  profile,
   onRefresh,
 }: UserProfileScreenContentProps) => {
   const initialButton = ProfileNavigatorChoices.QUESTIONS;
   const { t } = useTranslation();
+  const {} = useProfileScreen();
 
   const [selectedList, setSelectedList] =
     useState<ProfileNavigatorChoices>(initialButton);

@@ -13,6 +13,8 @@ export default function Component() {
   const viewableItems = useRef([]);
 
   const onLayout = useCallback((event, id) => {
+    console.log(event.nativeEvent.layout);
+
     const { height } = event.nativeEvent.layout;
     itemHeights.current[id] = height;
   }, []);
@@ -23,16 +25,10 @@ export default function Component() {
     totalHeight += itemHeights.current[item.item.id];
   });
 
-  alert(totalHeight);
+  console.log(totalHeight);
 
   const onViewableItemsChanged = useCallback(({ viewableItems: vItems }) => {
     viewableItems.current = vItems;
-    console.log("Viewable items heights:");
-    vItems.forEach((item) => {
-      console.log(
-        `Item ${item.item.id}: ${itemHeights.current[item.item.id]}px`
-      );
-    });
   }, []);
 
   const renderItem = useCallback(
@@ -60,6 +56,7 @@ export default function Component() {
 
 const styles = StyleSheet.create({
   item: {
+    height: 100,
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
@@ -70,6 +67,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 });
+
 // import Page from "@/components/Page";
 
 // import { ThemedView } from "@/components/ThemedView";
