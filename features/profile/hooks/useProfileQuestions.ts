@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, useMemo, useCallback } from "react";
 import { getUserQuestions } from "../requests";
 import { sort } from "@/lib/ordering";
+import { useProfileListContext } from "../contexts/ProfileListContext";
 
 export const enum questionOrderKeys {
   NEWEST = "-created",
@@ -13,31 +14,11 @@ export const enum questionOrderKeys {
 
 export default function useProfileQuestions(username: BaseUser["username"]) {
   const client = useAuthClient();
-  const [sortKey, setSortKey] = useState<questionOrderKeys>(
-    questionOrderKeys.NEWEST
-  );
+  const { questionsSelectedSort: selectedSort } = useProfileListContext();
 
-  const query = useQuery({
-    queryKey: ["questions", username, sortKey],
-    queryFn: async () => await getUserQuestions(client, username, sortKey),
+  return useQuery({
+    queryKey: ["questions", username, selectedSort.key],
+    queryFn: async () =>
+      await getUserQuestions(client, username, selectedSort.key),
   });
-
-  const orderedQuestions = query.data;
-  // // useMemo(() => {
-  //   if (!query.data) return [];
-  //   return sort(query.data, sortKey);
-  // }, [query.data, sortKey]);
-
-  const handleSortKeyChange = useCallback(
-    (key: questionOrderKeys) => {
-      setSortKey(key);
-    },
-    [sortKey]
-  );
-
-  return {
-    ...query,
-    orderedQuestions,
-    handleSortKeyChange,
-  };
 }

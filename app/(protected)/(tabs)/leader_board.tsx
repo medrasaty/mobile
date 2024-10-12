@@ -13,8 +13,6 @@ export default function Component() {
   const viewableItems = useRef([]);
 
   const onLayout = useCallback((event, id) => {
-    console.log(event.nativeEvent.layout);
-
     const { height } = event.nativeEvent.layout;
     itemHeights.current[id] = height;
   }, []);
@@ -24,8 +22,6 @@ export default function Component() {
   viewableItems.current.forEach((item) => {
     totalHeight += itemHeights.current[item.item.id];
   });
-
-  console.log(totalHeight);
 
   const onViewableItemsChanged = useCallback(({ viewableItems: vItems }) => {
     viewableItems.current = vItems;

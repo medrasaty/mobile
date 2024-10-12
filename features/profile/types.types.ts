@@ -28,18 +28,35 @@ export interface UserProfile {
   is_follower: boolean;
 }
 
-export enum ProfileNavigatorChoices {
+export enum ProfileListChoices {
   QUESTIONS = "questions",
   ANSWERS = "answers",
 }
 
+export type NavigatorButtonTypeValues =
+  | ProfileListChoices.QUESTIONS
+  | ProfileListChoices.ANSWERS;
+
 export type NavigatorButtonType = {
   index: number;
   label: string;
-  value: string;
+  value: NavigatorButtonTypeValues;
 };
 
 export type SortingOption<T> = {
   label: string;
   key: T;
 };
+
+export type TypedData<T> = {
+  type: T;
+  payload: any;
+};
+
+const enum ProfileListTypedDataChoices {
+  ANSWER = "ANSWER",
+  QUESTION = "QUESTION",
+  NAVIGATOR = "NAVIGATOR",
+  FILTER = "FILTER",
+  EMPTY = "EMPTY",
+}

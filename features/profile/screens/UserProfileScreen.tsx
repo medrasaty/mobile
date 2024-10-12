@@ -5,31 +5,23 @@ import { BaseUser } from "@/types/user.types";
 import UserProfileScreenLoading from "../components/UserProfileScreenLoading";
 import UserProfileScreenError from "../components/UserProfileScreenError";
 import {
-  ProfileNavigatorChoices,
-  SortingOption,
-  UserProfile,
+  ProfileListChoices,
+  NavigatorButtonType,
+  TypedData,
 } from "@/features/profile/types.types";
-import { ThemedText } from "@/components/ThemedText";
 import Page from "@/components/Page";
-import { ContainerView } from "@/components/styled";
-import { ProfileBackgroundImage } from "../components/Profile";
-import ProfileInfo from "../components/ProfileInfo";
-import { questionOrderKeys } from "../hooks/useProfileQuestions";
-import { FlashList } from "@shopify/flash-list";
+import ProfileHeader from "../components/Profile";
+import { FlashList, FlashListProps } from "@shopify/flash-list";
 import { ThemedView } from "@/components/ThemedView";
 import LoadingIndicator from "@/components/LoadingIndicator";
-import { Answer } from "@/types/forum.types";
-import QuestionCard from "@/features/forum/components/question/QuestionCard";
-import ProfileNavigator from "../components/ProfileQuestionAnswerNavigator";
-import { NavigatorButtonType } from "../types";
-import Row from "@/components/Row";
-import { useTranslation } from "react-i18next";
-import SortingMenu from "../components/SortingMenu";
 import useProfileListData from "../hooks/useProfileListData";
+import { ProfileScreenProvider } from "../contexts/ProfileScreenContext";
 import {
-  ProfileScreenProvider,
-  useProfileScreen,
-} from "../contexts/ProfileScreenContext";
+  ProfileListProvider,
+  useProfileListContext,
+} from "../contexts/ProfileListContext";
+import { ProfileListItem } from "../components/ProfileListItem";
+import { transformToTypedData } from "@/features/profile/utils";
 
 interface UserProfileScreenProps {
   username: BaseUser["username"] | undefined;
@@ -44,73 +36,46 @@ const UserProfileScreen = ({ username }: UserProfileScreenProps) => {
   if (q.isPending) return <UserProfileScreenLoading />;
   if (q.isError) return <UserProfileScreenError />;
 
-  return (
-    <ProfileScreenProvider value={{ profileQuery: q }}>
-      <UserProfileScreenContent onRefresh={q.refetch} profile={q.data} />;
-    </ProfileScreenProvider>
-  );
+  if (q.data) {
+    return (
+      <ProfileScreenProvider value={{ profile: q.data }}>
+        <ProfileListProvider>
+          <UserProfileScreenContent onRefresh={q.refetch} />
+        </ProfileListProvider>
+      </ProfileScreenProvider>
+    );
+  }
 };
 
 interface UserProfileScreenContentProps {
   onRefresh: () => void;
 }
 
-const Buttons: NavigatorButtonType[] = [
-  { index: 0, label: "Questions", value: ProfileNavigatorChoices.QUESTIONS },
-  { index: 1, label: "Answers", value: ProfileNavigatorChoices.ANSWERS },
+export const ProfileListNavigatorButtons: NavigatorButtonType[] = [
+  { index: 0, label: "Questions", value: ProfileListChoices.QUESTIONS },
+  { index: 1, label: "Answers", value: ProfileListChoices.ANSWERS },
 ];
 
-type TypedData = {
-  type: ListTypedData;
-  payload: any;
-};
-
-const enum ListTypedData {
+export const enum ProfileListTypedDataChoices {
   ANSWER = "ANSWER",
   QUESTION = "QUESTION",
   NAVIGATOR = "NAVIGATOR",
   FILTER = "FILTER",
+  EMPTY = "EMPTY",
 }
 
-function transformToTypedData(data: any[] | undefined, type: ListTypedData) {
-  if (!data) return [];
-  return data.map((d) => ({ type, payload: d }));
-}
+export type ProfileListTypedData = TypedData<ProfileListTypedDataChoices>;
 
-const sortingOptions = [
-  {
-    label: "Newest",
-    key: questionOrderKeys.NEWEST,
-  },
-  {
-    label: "Oldest",
-    key: questionOrderKeys.OLDEST,
-  },
-  {
-    label: "Most rated",
-    key: questionOrderKeys.MOST_RATED,
-  },
-];
+export const DEFAULT_EMTY_CELL_HEIGHT = 100;
 
-export const UserProfileScreenContent = ({
-  onRefresh,
-}: UserProfileScreenContentProps) => {
-  const initialButton = ProfileNavigatorChoices.QUESTIONS;
-  const { t } = useTranslation();
-  const {} = useProfileScreen();
-
-  const [selectedList, setSelectedList] =
-    useState<ProfileNavigatorChoices>(initialButton);
-
-  const handleNavigatorSelect = (button: NavigatorButtonType) => {
-    setSelectedList(button.value as ProfileNavigatorChoices);
-  };
+export const UserProfileScreenContent = ({}: UserProfileScreenContentProps) => {
+  const { selectedList } = useProfileListContext();
 
   const {
     questionQuery,
     answersQuery,
     onRefresh: onRefreshProfileList,
-  } = useProfileListData(profile.username);
+  } = useProfileListData();
 
   const [isPullRefreshing, setIsPullRefreshing] = useState(false);
 
@@ -120,28 +85,105 @@ export const UserProfileScreenContent = ({
     }
   }, [isPullRefreshing, questionQuery.isRefetching, answersQuery.isRefetching]);
 
-  const selectedButton =
-    Buttons.find((b) => b.value === selectedList) ?? Buttons[0];
-
-  const handleQuestionSortingChange = (
-    option: SortingOption<questionOrderKeys>
-  ) => {
-    questionQuery.handleSortKeyChange(option.key);
-  };
-  const handleAnswerSortingChange = (
-    option: SortingOption<questionOrderKeys>
-  ) => {
-    // answersQuery.handleSortKeyChange(option.key);
+  const handleRefresh = () => {
+    setIsPullRefreshing(true);
+    onRefreshProfileList();
   };
 
-  const listHeader = () => {
+  const mainData = useMemo(() => {
+    return selectedList === ProfileListChoices.QUESTIONS
+      ? transformToTypedData(
+          questionQuery.data,
+          ProfileListTypedDataChoices.QUESTION
+        )
+      : transformToTypedData(
+          answersQuery.data,
+          ProfileListTypedDataChoices.ANSWER
+        );
+  }, [selectedList, answersQuery.data, questionQuery.data]);
+
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: ProfileListTypedData;
+    index: number;
+  }) => {
     return (
-      <ThemedView>
-        <ProfileBackgroundImage url={profile.background_picture} />
-        <ProfileInfo profile={profile} />
+      <ThemedView key={index}>
+        <ProfileListItem item={item} />
       </ThemedView>
     );
   };
+
+  const genEmptyCells = (count: number) => {
+    const emptyCells = [];
+    for (let i = 0; i < count; i++) {
+      emptyCells.push({
+        type: ProfileListTypedDataChoices.EMPTY,
+        payload: {},
+      });
+    }
+    return emptyCells;
+  };
+
+  const emptyCells = genEmptyCells(5);
+
+  const finalData = [
+    {
+      type: ProfileListTypedDataChoices.NAVIGATOR,
+      payload: {},
+    },
+    {
+      type: ProfileListTypedDataChoices.FILTER,
+      payload: {},
+    },
+    ...mainData,
+    ...emptyCells,
+  ];
+
+  return (
+    <ProfileFlashList
+      stickyHeaderIndices={[0]}
+      data={finalData}
+      renderItem={renderItem}
+      viewabilityConfig={{
+        // TODO: replace hard coded value
+        itemVisiblePercentThreshold: 50,
+      }}
+      estimatedItemSize={150}
+      onRefresh={handleRefresh}
+      refreshing={isPullRefreshing}
+    />
+  );
+};
+
+const styles = StyleSheet.create({
+  footerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+
+type ProfileFlashListProps = {} & FlashListProps<ProfileListTypedData>;
+
+export const ProfileFlashList = ({ ...props }: ProfileFlashListProps) => {
+  /**
+   * what do you want?
+   * I want to:
+   * - calculate the height of the current visible items in the list.
+   * how :
+   * use the onLayout and onvisibleItemsChanged props of the flashlist
+   *
+   * Based on that information , you should :
+   * - set the height of the list footer ( loading indicator )
+   * - create empty cells their height all together is equal to the height of the current visible items
+   */
+
+  const { questionQuery, answersQuery } = useProfileListData();
+
+  const listHeader = ProfileHeader;
 
   const listFooter = () => {
     if (questionQuery.isFetching || answersQuery.isFetching) {
@@ -154,88 +196,15 @@ export const UserProfileScreenContent = ({
     return null;
   };
 
-  const handleRefresh = () => {
-    setIsPullRefreshing(true);
-    onRefreshProfileList();
-    onRefresh();
-  };
-
-  const data = useMemo(() => {
-    return selectedList === ProfileNavigatorChoices.QUESTIONS
-      ? transformToTypedData(questionQuery.data, ListTypedData.QUESTION)
-      : transformToTypedData(answersQuery.data, ListTypedData.ANSWER);
-  }, [selectedList, answersQuery.data, questionQuery.data]);
-
-  const renderItem = ({ item }: { item: TypedData }) => {
-    if (item.type === ListTypedData.QUESTION) {
-      return <QuestionCard question={item.payload} />;
-    } else if (item.type === ListTypedData.ANSWER) {
-      return <AnswerCell answer={item.payload} />;
-    } else if (item.type === ListTypedData.NAVIGATOR) {
-      return (
-        <ThemedView>
-          <ProfileNavigator
-            onSelectChange={handleNavigatorSelect}
-            currentIndex={selectedButton?.index}
-            navigatorButtons={Buttons}
-            style={{ paddingTop: 20 }}
-          />
-        </ThemedView>
-      );
-    } else if (item.type === ListTypedData.FILTER) {
-      return (
-        <ContainerView style={{ marginTop: 20 }}>
-          <Row alignItems="center" style={{ justifyContent: "space-between" }}>
-            <ThemedText bold variant="titleLarge">
-              {t(selectedButton?.label)}
-            </ThemedText>
-            <SortingMenu
-              onSelect={handleQuestionSortingChange}
-              options={sortingOptions}
-            />
-          </Row>
-        </ContainerView>
-      );
-    }
-  };
-
   return (
     <Page>
       <FlashList
         ListHeaderComponent={listHeader}
         ListFooterComponent={listFooter}
-        stickyHeaderIndices={[0]}
-        data={[
-          {
-            type: ListTypedData.NAVIGATOR,
-            payload: {},
-          },
-          {
-            type: ListTypedData.FILTER,
-            payload: {},
-          },
-          ...data,
-        ]}
-        renderItem={renderItem}
-        estimatedItemSize={150}
-        onRefresh={handleRefresh}
-        refreshing={isPullRefreshing}
-        onScroll={(props) => console.log(props)}
+        {...props}
       />
     </Page>
   );
 };
-
-export const AnswerCell = ({ answer }: { answer: Answer }) => {
-  return <ThemedText>{answer.text}</ThemedText>;
-};
-
-const styles = StyleSheet.create({
-  footerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
 
 export default UserProfileScreen;

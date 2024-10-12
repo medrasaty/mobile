@@ -9,14 +9,14 @@ import { ContainerView } from "@/components/styled";
 import { useTranslation } from "react-i18next";
 import Row from "@/components/Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useProfileScreen } from "../contexts/ProfileScreenContext";
 
-interface ProfileInfoProps {
-  profile: UserProfile;
-}
+type ProfileInfoProps = {} & ViewProps;
 
-const ProfileInfo = ({ profile }: ProfileInfoProps) => {
+const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
+  const { profile } = useProfileScreen();
   return (
-    <ContainerView style={styles.container}>
+    <ContainerView style={[style, styles.container]} {...props}>
       <Row style={styles.row}>
         <ProfilePicture url={profile.profile_picture} />
         <Follow />

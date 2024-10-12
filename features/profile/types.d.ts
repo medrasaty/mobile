@@ -28,13 +28,8 @@ export interface UserProfile {
   is_follower: boolean;
 }
 
-export enum ProfileNavigatorChoices {
-  QUESTIONS = "questions",
-  ANSWERS = "answers",
-}
-
 type NavigatorButtonType = {
   index: number;
   label: string;
-  value: string;
+  value: ProfileListChoices;
 };

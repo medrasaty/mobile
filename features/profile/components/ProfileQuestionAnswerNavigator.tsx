@@ -9,27 +9,22 @@ import {
 } from "react-native";
 import { useTheme } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import {
-  NavigatorButtonType,
-  ProfileNavigatorChoices,
-} from "@/features/profile/types";
+import { NavigatorButtonType } from "@/features/profile/types";
+import { useProfileListContext } from "../contexts/ProfileListContext";
 
 type ProfileNavigatorProps = {
-  onSelectChange?: (button: NavigatorButtonType) => void;
   navigatorButtons: NavigatorButtonType[];
-  currentIndex: number;
 } & ViewProps;
 
 const ProfileNavigator = ({
-  onSelectChange = () => {},
   navigatorButtons,
-  currentIndex,
   style,
   ...props
 }: ProfileNavigatorProps) => {
+  const { selectedList, setSelectedList } = useProfileListContext();
   const styles = useStyles();
   const handleSelect = (button: NavigatorButtonType) => {
-    onSelectChange(button);
+    setSelectedList(button.value);
   };
   return (
     <ThemedView style={[style, styles.container]} {...props}>
@@ -38,7 +33,7 @@ const ProfileNavigator = ({
           return (
             <NavigatorButton
               key={index}
-              currentIndex={currentIndex}
+              selected={button.value === selectedList}
               onSelect={handleSelect}
               {...button}
             />
@@ -50,7 +45,7 @@ const ProfileNavigator = ({
 };
 
 type NavigatorButtonProps = {
-  currentIndex: NavigatorButtonType["index"];
+  selected: boolean;
   onSelect: (button: NavigatorButtonType) => void;
 } & TouchableOpacityProps &
   NavigatorButtonType;
@@ -58,7 +53,7 @@ type NavigatorButtonProps = {
 export const NavigatorButton = ({
   label,
   index,
-  currentIndex,
+  selected,
   value,
   onSelect,
   style,
@@ -69,8 +64,6 @@ export const NavigatorButton = ({
   const handlePress = () => {
     onSelect({ index, label, value });
   };
-
-  const selected = index === currentIndex;
 
   return (
     <TouchableOpacity

@@ -2,25 +2,30 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { UserProfile } from "../types";
 import FastImage from "react-native-fast-image";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ViewProps } from "react-native";
 import { useMemo } from "react";
 import { useTheme } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
+import { useProfileScreen } from "../contexts/ProfileScreenContext";
+import ProfileInfo from "./ProfileInfo";
 
-export type ProfileBackgroundImageProps = {
-  url: UserProfile["background_picture"] | undefined;
-};
+type ProfileBackgroundImageProps = {} & ViewProps;
 
 const DEFAULT_BACKGROUND_IMAGE_HEIGHT = 200;
 const AVATAR_SIZE = 84;
 
 export const ProfileBackgroundImage = ({
-  url,
+  style,
+  ...props
 }: ProfileBackgroundImageProps) => {
+  const {
+    profile: { background_picture: url },
+  } = useProfileScreen();
+
   const styles = useProfileBackgroundStyle();
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[style, styles.container]} {...props}>
       <FastImage
         resizeMode={FastImage.resizeMode.cover}
         source={{ uri: url }}
@@ -55,3 +60,14 @@ function useProfileBackgroundStyle() {
     });
   }, []);
 }
+
+const ProfileHeader = () => {
+  return (
+    <ThemedView>
+      <ProfileBackgroundImage />
+      <ProfileInfo />
+    </ThemedView>
+  );
+};
+
+export default ProfileHeader;

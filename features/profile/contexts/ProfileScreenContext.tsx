@@ -1,12 +1,12 @@
 import React, { useContext, createContext } from "react";
-import { Snackbar } from "react-native-paper";
-import { UseQueryResult } from "@tanstack/react-query";
+import { UserProfile } from "@/features/profile/types";
 
 export type ProfileScreenContextType = {
-  profileQuery: UseQueryResult;
+  profile: UserProfile;
 };
 
-export const ProfileScreenContext = createContext<ProfileScreenContextType>({});
+export const ProfileScreenContext =
+  createContext<ProfileScreenContextType | null>(null);
 
 export function ProfileScreenProvider({
   children,
@@ -19,15 +19,13 @@ export function ProfileScreenProvider({
   );
 }
 
-export function useProfileScreen(): ProfileScreenContextType {
+export function useProfileScreen() {
   const value = useContext(ProfileScreenContext);
 
-  if (process.env.NODE_ENV !== "production") {
-    if (!value) {
-      throw new Error(
-        "useProfileScreen must be used within a <ProfileScreenProvider>"
-      );
-    }
+  if (!value) {
+    throw new Error(
+      "useProfileScreen must be used within a ProfileScreenProvider"
+    );
   }
 
   return value;

@@ -3,6 +3,8 @@ import { Axios } from "axios";
 import { UserProfile } from "./types";
 import { Answer, Question } from "@/types/forum.types";
 import { transformDates } from "../forum/utils";
+import { SortingOption } from "./types.types";
+import { questionOrderKeys } from "./hooks/useProfileQuestions";
 
 export async function getProfile(
   client: Axios,
@@ -22,7 +24,7 @@ function transformProfile(profile: UserProfile) {
 export async function getUserQuestions(
   client: Axios,
   username: BaseUser["username"],
-  sort: string
+  sort: SortingOption<questionOrderKeys>
 ): Promise<Question[]> {
   const response = await client.get("/forum/questions/", {
     params: {
@@ -36,11 +38,13 @@ export async function getUserQuestions(
 
 export async function getUserAnswers(
   client: Axios,
-  username: BaseUser["username"]
+  username: BaseUser["username"],
+  sortKey: string
 ): Promise<Answer[]> {
   const response = await client.get("/forum/answers/", {
     params: {
       owner: username,
+      ordering: sortKey,
     },
   });
 
