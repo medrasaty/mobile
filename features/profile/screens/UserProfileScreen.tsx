@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import useProfile from "../hooks/useProfile";
 import { BaseUser } from "@/types/user.types";
 import UserProfileScreenLoading from "../components/UserProfileScreenLoading";
@@ -116,19 +116,6 @@ export const UserProfileScreenContent = ({}: UserProfileScreenContentProps) => {
     );
   };
 
-  const genEmptyCells = (count: number) => {
-    const emptyCells = [];
-    for (let i = 0; i < count; i++) {
-      emptyCells.push({
-        type: ProfileListTypedDataChoices.EMPTY,
-        payload: {},
-      });
-    }
-    return emptyCells;
-  };
-
-  const emptyCells = genEmptyCells(5);
-
   const finalData = [
     {
       type: ProfileListTypedDataChoices.NAVIGATOR,
@@ -139,7 +126,6 @@ export const UserProfileScreenContent = ({}: UserProfileScreenContentProps) => {
       payload: {},
     },
     ...mainData,
-    ...emptyCells,
   ];
 
   return (
@@ -182,13 +168,16 @@ export const ProfileFlashList = ({ ...props }: ProfileFlashListProps) => {
    */
 
   const { questionQuery, answersQuery } = useProfileListData();
+  const { height: windowHeight } = useWindowDimensions();
 
   const listHeader = ProfileHeader;
 
   const listFooter = () => {
     if (questionQuery.isFetching || answersQuery.isFetching) {
       return (
-        <ThemedView style={styles.footerContainer}>
+        <ThemedView
+          style={[styles.footerContainer, { height: windowHeight / 2 }]}
+        >
           <LoadingIndicator />
         </ThemedView>
       );
