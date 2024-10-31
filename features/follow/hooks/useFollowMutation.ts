@@ -1,7 +1,6 @@
 import useAuthClient from "@/hooks/useAuthClient";
 import { BaseUser } from "@/types/user.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
 import { follow } from "../requests";
 import * as Burnt from "burnt";
 import { useTranslation } from "react-i18next";

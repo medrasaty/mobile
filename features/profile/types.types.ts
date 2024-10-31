@@ -30,6 +30,12 @@ export interface UserProfile {
   following_request_status: RequestStatus | null;
 }
 
+export enum FollowingRequestStatus {
+  ACCEPTED = "accepted",
+  REJECTED = "rejected",
+  PENDING = "pending",
+}
+
 type RequestStatus = "accepted" | "rejected" | "pending";
 
 export interface BaseProfile {

@@ -36,5 +36,7 @@
   "confirm": "confirm",
   "cancel": "cancle",
   "confirm_unfollow_title": "Confirm Unfollow!",
-  "confirm_unfollow_message": "Are you sure you want to unfollow this user ?"
+  "confirm_unfollow_message": "Are you sure you want to unfollow this user ?",
+  "follow_request_pending": "pending",
+  "send_follow_request": "send following request"
 }

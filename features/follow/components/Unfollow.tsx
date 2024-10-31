@@ -1,11 +1,12 @@
-import { Button, ButtonProps, Portal } from "react-native-paper";
+import { Button, ButtonProps } from "react-native-paper";
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useProfileScreen } from "@/features/profile/contexts/ProfileScreenContext";
-import useFollowMutation from "@/features/follow/hooks/useFollowMutation";
-import useUnfollowMutation from "@/features/follow/hooks/useUnfollowMutation";
+
 import ConfirmDialog, { confirmStatus } from "@/components/ConfirmDialog";
 import useVisible from "@/hooks/useVisible";
+import useUnfollowMutation from "../hooks/useUnfollowMutation";
+import useFollowMutation from "../hooks/useFollowMutation";
 
 export const Unfollow = () => {
   const { profile: user } = useProfileScreen();
@@ -77,19 +78,6 @@ export const FollowingButton = ({
   return (
     <Button onPress={onPress} icon={icon} mode={mode}>
       {profile.is_following ? t("unfollow") : t("follow")}
-    </Button>
-  );
-};
-
-export const FollowRequestButton = () => {
-  const { t } = useTranslation();
-  const { profile: user } = useProfileScreen();
-
-  const handlePress = () => {};
-
-  return (
-    <Button onPress={handlePress} icon={"account"} mode="outlined">
-      {t("follow_request")}
     </Button>
   );
 };

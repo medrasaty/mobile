@@ -11,11 +11,8 @@ import Row from "@/components/Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useProfileScreen } from "../contexts/ProfileScreenContext";
 
-import {
-  Unfollow,
-  FollowRequestButton,
-  Follow,
-} from "@/features/follow/components/Unfollow";
+import { Unfollow, Follow } from "@/features/follow/components/Unfollow";
+import FollowingRequestButton from "@/features/follow/components/FollowRequest";
 
 type ProfileInfoProps = {} & ViewProps;
 
@@ -30,7 +27,7 @@ const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
       return Unfollow;
     }
 
-    return is_private ? FollowRequestButton : Follow;
+    return is_private ? FollowingRequestButton : Follow;
   }, [user.is_following]);
 
   return (

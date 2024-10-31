@@ -16,3 +16,19 @@ export async function unfollow(client: Axios, username: BaseUser["username"]) {
   const response = await client.delete(`/users/${username}/unfollow/`);
   return response;
 }
+
+export async function sendFollowingRequest(
+  client: Axios,
+  username: BaseUser["username"]
+) {
+  /**
+   * Send following request to user
+   */
+
+  const data = {
+    to_user: username,
+  };
+
+  const response = await client.post("/following_requests/", data);
+  return response;
+}
