@@ -12,7 +12,7 @@ import { useReadAllNotificationEffect } from "@/features/notifications/hooks/use
 import NotificationsList from "@/features/notifications/components/NotificationsList";
 import Page from "@/components/Page";
 
-export default function NotificationPage() {
+export default function MainNotificationScreen() {
   const { t } = useTranslation();
   useReadAllNotificationEffect();
 

@@ -1,7 +1,7 @@
 import { ThemedText } from "@/components/ThemedText";
 import useVisible from "@/hooks/useVisible";
 import { useTranslation } from "react-i18next";
-import { Button, Dialog } from "react-native-paper";
+import { Button, Dialog, Portal } from "react-native-paper";
 
 export enum confirmStatus {
   CONFIRM = "confirm",
@@ -26,16 +26,18 @@ const ConfirmDialog = ({
   };
 
   return (
-    <Dialog visible={visible}>
-      {title && title?.length > 0 && <Dialog.Title>{title}</Dialog.Title>}
-      <Dialog.Content>
-        <ThemedText>{message}</ThemedText>
-      </Dialog.Content>
-      <Dialog.Actions style={{ gap: 8 }}>
-        <CancelButton onPress={handlePress} />
-        <ConfirmButton onPress={handlePress} />
-      </Dialog.Actions>
-    </Dialog>
+    <Portal>
+      <Dialog visible={visible}>
+        {title && title?.length > 0 && <Dialog.Title>{title}</Dialog.Title>}
+        <Dialog.Content>
+          <ThemedText>{message}</ThemedText>
+        </Dialog.Content>
+        <Dialog.Actions style={{ gap: 8 }}>
+          <CancelButton onPress={handlePress} />
+          <ConfirmButton onPress={handlePress} />
+        </Dialog.Actions>
+      </Dialog>
+    </Portal>
   );
 };
 

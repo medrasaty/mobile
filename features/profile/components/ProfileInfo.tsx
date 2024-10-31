@@ -48,7 +48,7 @@ const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
         type={user.type}
       />
       <Bio bio={"لامكان لليأس في التطبيق"} />
-      <StatsInfo style={{ marginTop: 10 }} profile={user} />
+      <StatsInfo style={styles.statsInfoContainer} profile={user} />
     </ContainerView>
   );
 };
@@ -210,6 +210,8 @@ export const StatInfo = ({
 
 export default ProfileInfo;
 
+const statsInfoContainerMargins = 10;
+
 const styles = StyleSheet.create({
   container: {
     gap: 16,
@@ -220,5 +222,9 @@ const styles = StyleSheet.create({
   },
   follow: {
     marginTop: 10,
+  },
+  statsInfoContainer: {
+    marginTop: statsInfoContainerMargins,
+    marginBottom: statsInfoContainerMargins,
   },
 });

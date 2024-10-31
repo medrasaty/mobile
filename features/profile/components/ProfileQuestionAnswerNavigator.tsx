@@ -90,7 +90,7 @@ function useStyles() {
   return useMemo(() => {
     return StyleSheet.create({
       container: {
-        // backgroundColor: theme.colors.surface,
+        backgroundColor: theme.colors.surface,
       },
       rowContainer: {},
       navigatorButton: {

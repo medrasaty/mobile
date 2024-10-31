@@ -29,14 +29,12 @@ export const Unfollow = () => {
   return (
     <>
       <FollowingButton onPress={() => showConfirm()} />
-      <Portal>
-        <ConfirmDialog
-          visible={visible}
-          title={t("confirm_unfollow_title")}
-          message={t("confirm_unfollow_message")}
-          onConfirm={handleConfirm}
-        />
-      </Portal>
+      <ConfirmDialog
+        visible={visible}
+        title={t("confirm_unfollow_title")}
+        message={t("confirm_unfollow_message")}
+        onConfirm={handleConfirm}
+      />
     </>
   );
 };

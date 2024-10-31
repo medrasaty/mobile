@@ -14,7 +14,7 @@ import { ActivityIndicator, RefreshControl, ViewProps } from "react-native";
 import { Divider } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
 
-export default function HomePage() {
+export default function HomeIndexScreen() {
   return (
     <SafeAreaView>
       <QuestionsPage />
