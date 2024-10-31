@@ -18,6 +18,8 @@
   "Leaderboard": "Leaderboard",
   "You": "You",
   "follow": "follow",
+  "unfollow": "ufollow",
+  "Unfollow": "Ufollow",
   "reputation": "reputation",
   "Reputation": "Reputation",
   "reach": "reach",
@@ -26,5 +28,13 @@
   "followings": "followings",
   "Followers": "Followers",
   "Followings": "Followings",
-  "Total_views": "Total views"
+  "Total_views": "Total views",
+  "follow_request": "Follow request",
+  "success_follow": "Following has been added.",
+  "failed_follow": "Failed to follow user.",
+  "success_unfollow": "Following has been removed.",
+  "confirm": "confirm",
+  "cancel": "cancle",
+  "confirm_unfollow_title": "Confirm Unfollow!",
+  "confirm_unfollow_message": "Are you sure you want to unfollow this user ?"
 }

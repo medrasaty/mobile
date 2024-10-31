@@ -30,6 +30,7 @@ export async function getUserQuestions(
     params: {
       owner: username,
       ordering: sort,
+      extend: "subject",
     },
   });
 

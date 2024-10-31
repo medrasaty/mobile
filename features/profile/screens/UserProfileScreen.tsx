@@ -173,16 +173,14 @@ export const ProfileFlashList = ({ ...props }: ProfileFlashListProps) => {
   const listHeader = ProfileHeader;
 
   const listFooter = () => {
-    if (questionQuery.isFetching || answersQuery.isFetching) {
-      return (
-        <ThemedView
-          style={[styles.footerContainer, { height: windowHeight / 2 }]}
-        >
-          <LoadingIndicator />
-        </ThemedView>
-      );
-    }
-    return null;
+    return (
+      <ThemedView
+        style={[styles.footerContainer, { height: windowHeight / 1.5 }]}
+      >
+        {questionQuery.isFetching ||
+          (answersQuery.isFetching && <LoadingIndicator />)}
+      </ThemedView>
+    );
   };
 
   return (

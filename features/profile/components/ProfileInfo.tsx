@@ -2,7 +2,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { UserProfile } from "../types";
 import FastImage from "react-native-fast-image";
-import { Button, useTheme } from "react-native-paper";
+import { Button, ButtonProps, useTheme } from "react-native-paper";
 import React, { useMemo } from "react";
 import { StyleSheet, TouchableOpacity, ViewProps } from "react-native";
 import { ContainerView } from "@/components/styled";
@@ -11,36 +11,45 @@ import Row from "@/components/Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useProfileScreen } from "../contexts/ProfileScreenContext";
 
+import {
+  Unfollow,
+  FollowRequestButton,
+  Follow,
+} from "@/features/follow/components/Unfollow";
+
 type ProfileInfoProps = {} & ViewProps;
 
 const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
-  const { profile } = useProfileScreen();
+  const { profile: user } = useProfileScreen();
+  const {
+    profile: { is_private },
+  } = user;
+
+  const FollowingSection = useMemo(() => {
+    if (user.is_following) {
+      return Unfollow;
+    }
+
+    return is_private ? FollowRequestButton : Follow;
+  }, [user.is_following]);
+
   return (
     <ContainerView style={[style, styles.container]} {...props}>
       <Row style={styles.row}>
-        <ProfilePicture url={profile.profile_picture} />
-        <Follow />
+        <ProfilePicture url={user.profile_picture} />
+        <ThemedView style={styles.follow}>
+          <FollowingSection />
+        </ThemedView>
       </Row>
       <UserInfo
-        fullName={profile.full_name}
-        username={profile.username}
-        schoolName={profile.school_name}
-        type={profile.type}
+        fullName={user.full_name}
+        username={user.username}
+        schoolName={user.school_name}
+        type={user.type}
       />
       <Bio bio={"لامكان لليأس في التطبيق"} />
-      <StatsInfo style={{ marginTop: 10 }} profile={profile} />
+      <StatsInfo style={{ marginTop: 10 }} profile={user} />
     </ContainerView>
-  );
-};
-
-export const Follow = () => {
-  const { t } = useTranslation();
-  return (
-    <ThemedView style={styles.follow}>
-      <Button onPress={() => {}} icon={"account"} mode="outlined">
-        {t("follow")}
-      </Button>
-    </ThemedView>
   );
 };
 

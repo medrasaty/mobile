@@ -74,7 +74,10 @@ export function useQuestion(questionId: string) {
   const client = useAuthClient();
 
   const fetchQuestion = async (): Promise<DetailQuestion> => {
-    const response = await client.get(`/forum/questions/${questionId}/`);
+    const response = await client.get(`/forum/questions/${questionId}/`, {
+      params: { expand: "subject" },
+    });
+
     return transformQuestion(response.data);
   };
 

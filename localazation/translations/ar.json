@@ -16,6 +16,9 @@
   "Leaderboard": "الصدارة",
   "You": "أنت",
   "follow": "متابعة",
+  "Follow": "متابعة",
+  "unfollow": "الغاء المتابعة",
+  "Unfollow": "الغاء المتابعة",
   "reputation": "السمعة",
   "Reputation": "السمعة",
   "reach": "الوصول",
@@ -24,5 +27,13 @@
   "followings": "يتابع",
   "Followers": "المتابعين",
   "Followings": "يتابع",
-  "Total_views": "المشاهدات"
+  "Total_views": "المشاهدات",
+  "follow_request": "طلب صداقة",
+  "success_follow": "تمت المتابعة بنجاح.",
+  "success_unfollow": "تمت ازالة المتابعة بنجاح",
+  "failed_follow": "فشل",
+  "confirm": "تأكيد",
+  "cancel": "إلغاء",
+  "confirm_unfollow_title": "تأكيد إلغاء المتابعة",
+  "confirm_unfollow_message": "هل أنت متأكد من الغاء متابعة هذا المستخدم?"
 }

@@ -33,15 +33,6 @@ export default function QuestionCard({ question, ...props }: QuestionProps) {
       ]}
     >
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text
-          variant="bodySmall"
-          style={{
-            color: getSubjectColor(question.subject.name),
-            fontWeight: "bold",
-          }}
-        >
-          {translateSubject(question.subject.name)}
-        </Text>
         <Text variant="bodySmall">{translateDate(question.created)}</Text>
       </View>
 

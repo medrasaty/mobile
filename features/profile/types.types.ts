@@ -26,6 +26,16 @@ export interface UserProfile {
   is_self: boolean;
   is_following: boolean;
   is_follower: boolean;
+  profile: BaseProfile;
+  following_request_status: RequestStatus | null;
+}
+
+type RequestStatus = "accepted" | "rejected" | "pending";
+
+export interface BaseProfile {
+  user: string;
+  is_private: boolean;
+  background: string;
 }
 
 export enum ProfileListChoices {

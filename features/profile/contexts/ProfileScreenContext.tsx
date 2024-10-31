@@ -1,5 +1,5 @@
 import React, { useContext, createContext } from "react";
-import { UserProfile } from "@/features/profile/types";
+import { UserProfile } from "@/features/profile/types.types";
 
 export type ProfileScreenContextType = {
   profile: UserProfile;
