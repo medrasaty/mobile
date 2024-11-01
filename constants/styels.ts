@@ -1,13 +1,15 @@
 import { StyleSheet } from "react-native";
 
+export const DEFAULT_CONTAINER_SPACING = 16;
+
 export const containerPaddings = {
-  paddingRight: 16,
-  paddingStart: 16,
+  paddingRight: DEFAULT_CONTAINER_SPACING,
+  paddingStart: DEFAULT_CONTAINER_SPACING,
 };
 
 export const containerMargins = {
-  marginStart: 16,
-  marginEnd: 16,
+  marginStart: DEFAULT_CONTAINER_SPACING,
+  marginEnd: DEFAULT_CONTAINER_SPACING,
 };
 
 export const debugStyle = {

@@ -34,9 +34,11 @@ const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
     <ContainerView style={[style, styles.container]} {...props}>
       <Row style={styles.row}>
         <ProfilePicture url={user.profile_picture} />
-        <ThemedView style={styles.follow}>
-          <FollowingSection />
-        </ThemedView>
+        {!user.is_self && (
+          <ThemedView style={styles.follow}>
+            <FollowingSection />
+          </ThemedView>
+        )}
       </Row>
       <UserInfo
         fullName={user.full_name}
@@ -100,7 +102,7 @@ const UserInfo = ({
 }: UserProfileProps) => {
   return (
     <ThemedView>
-      <ThemedText bold variant="titleLarge">
+      <ThemedText bold variant="displaySmall">
         {fullName}
       </ThemedText>
       <Username username={username} />

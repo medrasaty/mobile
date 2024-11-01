@@ -26,6 +26,7 @@
   "Reach": "Reach",
   "followers": "followers",
   "followings": "followings",
+  "following": "following",
   "Followers": "Followers",
   "Followings": "Followings",
   "Total_views": "Total views",
@@ -38,5 +39,9 @@
   "confirm_unfollow_title": "Confirm Unfollow!",
   "confirm_unfollow_message": "Are you sure you want to unfollow this user ?",
   "follow_request_pending": "pending",
-  "send_follow_request": "send following request"
+  "send_follow_request": "send following request",
+  "bookmarks": "bookmarks",
+  "Bookmarks": "Bookmarks",
+  "friends": "friends",
+  "Friends": "Friends"
 }

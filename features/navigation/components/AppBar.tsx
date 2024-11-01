@@ -2,7 +2,7 @@ import { useAnimatedAppBar } from "@/contexts";
 import { useNavigation } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Appbar, AppbarProps, useTheme } from "react-native-paper";
+import { Appbar, AppbarHeaderProps } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
@@ -10,7 +10,7 @@ type AppBarProps = React.PropsWithChildren<{
   title: string | undefined;
   backAction?: boolean;
   opacity?: number;
-  options?: AppbarProps;
+  options?: AppbarHeaderProps;
 }>;
 
 const APPBAR_MODE = "small";
@@ -28,10 +28,10 @@ export function AppBar({
   return (
     <Appbar.Header
       style={[styles.header, { opacity: opacity ?? 1 }]}
-      {...props}
       {...options}
+      {...props}
     >
-      {/* TODO: write description*/}
+      {/* TODO: write description */}
       {backAction && canGoBack() && (
         <Appbar.BackAction onPress={() => goBack()} />
       )}

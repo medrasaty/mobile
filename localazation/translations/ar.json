@@ -25,6 +25,7 @@
   "Reach": "الوصول",
   "followers": "المتابعين",
   "followings": "يتابع",
+  "following": "تتابع",
   "Followers": "المتابعين",
   "Followings": "يتابع",
   "Total_views": "المشاهدات",
@@ -37,5 +38,9 @@
   "confirm_unfollow_title": "تأكيد إلغاء المتابعة",
   "confirm_unfollow_message": "هل أنت متأكد من الغاء متابعة هذا المستخدم?",
   "follow_request_pending": "في انتظار الرد",
-  "send_follow_request": "ارسل طلب صداقة"
+  "send_follow_request": "ارسل طلب صداقة",
+  "bookmarks": "العلامات المرجعية",
+  "Bookmarks": "العلامات المرجعية",
+  "friends": "الأصدقاء",
+  "Friends": "الأصدقاء"
 }

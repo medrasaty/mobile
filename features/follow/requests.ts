@@ -32,3 +32,21 @@ export async function sendFollowingRequest(
   const response = await client.post("/following_requests/", data);
   return response;
 }
+
+export async function getAllFollowers(client: Axios) {
+  /**
+   * Get all followers of the current user.
+   */
+
+  const response = await client.get(`/friendship/followers/`);
+  return response.data.results;
+}
+
+export async function getAllFollowing(client: Axios) {
+  /**
+   * Get all followers of the current user.
+   */
+
+  const response = await client.get(`/friendship/following/`);
+  return response.data.results;
+}

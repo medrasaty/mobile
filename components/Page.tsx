@@ -13,6 +13,7 @@ const Page = ({ container = false, ...props }: PageProps) => {
       </Container>
     );
   }
+
   return (
     <View {...props} style={[{ flex: 1 }, props.style]}>
       {props.children}
