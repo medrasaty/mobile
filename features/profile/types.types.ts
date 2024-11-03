@@ -27,7 +27,7 @@ export interface UserProfile {
   is_following: boolean;
   is_follower: boolean;
   profile: BaseProfile;
-  following_request_status: RequestStatus | null;
+  following_request_status: FollowingRequestStatusType | null;
 }
 
 export enum FollowingRequestStatus {
@@ -36,7 +36,7 @@ export enum FollowingRequestStatus {
   PENDING = "pending",
 }
 
-type RequestStatus = "accepted" | "rejected" | "pending";
+export type FollowingRequestStatusType = "accepted" | "rejected" | "pending";
 
 export interface BaseProfile {
   user: string;

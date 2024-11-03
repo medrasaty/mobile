@@ -44,5 +44,10 @@
   "Bookmarks": "Bookmarks",
   "friends": "friends",
   "Friends": "Friends",
-  "follow_back": "follow back"
+  "follow_back": "follow back",
+  "Following_requests": "Following requests",
+  "Your_following_requests": "Your following requests",
+  "accepted": "accepted",
+  "rejected": "rejected",
+  "pending": "pending"
 }

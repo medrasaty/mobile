@@ -17,12 +17,14 @@ type Props = {
   state: DrawerNavigationState<ParamListBase>;
   navigation: DrawerNavigationHelpers;
   descriptors: DrawerDescriptorMap;
+  excludedRouteNames?: string[];
 };
 
 export default function MaterialDrawerItemList({
   state,
   navigation,
   descriptors,
+  excludedRouteNames = [],
 }: Props) {
   const buildLink = useLinkBuilder();
 
@@ -37,7 +39,12 @@ export default function MaterialDrawerItemList({
     drawerInactiveBackgroundColor,
   } = focusedOptions;
 
-  return state.routes.map((route, i) => {
+  // exclude routes
+  const routes = state.routes.filter(
+    (route) => !excludedRouteNames.includes(route.name)
+  );
+
+  return routes.map((route, i) => {
     const focused = i === state.index;
 
     const onPress = () => {
@@ -65,6 +72,8 @@ export default function MaterialDrawerItemList({
       drawerItemStyle,
       drawerAllowFontScaling,
     } = descriptors[route.key].options;
+
+    
 
     return (
       <MaterialDrawerItem

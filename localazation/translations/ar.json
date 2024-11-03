@@ -43,5 +43,10 @@
   "Bookmarks": "العلامات المرجعية",
   "friends": "الأصدقاء",
   "Friends": "الأصدقاء",
-  "follow_back": "رد المتابعة"
+  "follow_back": "رد المتابعة",
+  "Following_requests": "طلبات المتابعة",
+  "Your_following_requests": "طلباتك للمتابعة",
+  "accepted": "قبول",
+  "rejected": "رفض",
+  "pending": "في انتظار الرد"
 }

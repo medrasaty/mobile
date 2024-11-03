@@ -1,4 +1,4 @@
-import FollowingScreen from "@/features/follow/screens/FollowingScreen";
+import FollowingScreen from "@/features/friendship/screens/FollowingScreen";
 
 const FollowingPage = () => {
   return <FollowingScreen />;

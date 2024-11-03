@@ -1,11 +1,12 @@
-import { BaseUser } from "@/types/user.types";
-import { Button, ButtonProps } from "react-native-paper";
-import useUnfollowMutation from "@/features/follow/hooks/useUnfollowMutation";
-import { t } from "i18next";
-import { useFollowMutation } from "@/features/follow/hooks/useFollowMutation";
-import useFollowBackMutation from "../hooks/useFollowBackMutation";
 import ConfirmDialog, { confirmStatus } from "@/components/ConfirmDialog";
+import { useFollowMutation } from "@/features/friendship/hooks/useFollowMutation";
+import useUnfollowMutation from "@/features/friendship/hooks/useUnfollowMutation";
 import useVisible from "@/hooks/useVisible";
+import { BaseUser } from "@/types/user.types";
+import { t } from "i18next";
+import { Button, ButtonProps } from "react-native-paper";
+import useFollowBackMutation from "../hooks/useFollowBackMutation";
+import useSendFollowingRequestMutation from "../hooks/useFollowRequestMutation";
 
 type FollowButtonsProps = {
   username: BaseUser["username"];
@@ -66,4 +67,25 @@ const UnfollowButton = ({ username, ...props }: FollowButtonsProps) => {
   );
 };
 
-export { FollowButton, FollowBack, UnfollowButton };
+export const FollowRequestButton = ({
+  username,
+  ...props
+}: FollowButtonsProps) => {
+  const { mutate: sendRequest } = useSendFollowingRequestMutation();
+  return (
+    <Button onPress={() => sendRequest(username)} mode="contained" {...props}>
+      {t("send_follow_request")}
+    </Button>
+  );
+};
+
+export const FollowRequestStatusButton = () => {
+  return (
+    <Button disabled mode="contained">
+      {t("follow_request_pending")}
+    </Button>
+  );
+};
+
+export { FollowBack, FollowButton, UnfollowButton };
+

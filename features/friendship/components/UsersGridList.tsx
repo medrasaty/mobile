@@ -1,11 +1,9 @@
 import { ThemedView } from "@/components/ThemedView";
-import { FlatList } from "react-native";
-import { BaseUser } from "@/types/user.types";
-import UserCompactCell from "../components/UserCompactCell";
-import { RefreshControl } from "react-native";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
-import { StyleSheet } from "react-native";
+import { BaseUser } from "@/types/user.types";
+import { RefreshControl, StyleSheet } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
+import UserCompactCell from "./UserCompactCell";
 
 type UserGridListProps = {
   users: BaseUser[];

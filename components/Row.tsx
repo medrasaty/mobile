@@ -1,4 +1,3 @@
-import { ThemedText } from "@/components/ThemedText";
 import { ViewProps } from "react-native";
 import { ThemedView } from "./ThemedView";
 

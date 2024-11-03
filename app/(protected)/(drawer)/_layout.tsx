@@ -1,23 +1,18 @@
-import "react-native-gesture-handler";
-import { Drawer } from "expo-router/drawer";
-// import { MaterialDrawerContent } from "@/features/navigation/layouts/Drawer";
-import { useTranslation } from "react-i18next";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "@/components/styled";
-import { Drawer as MaterialDrawer } from "react-native-paper";
-import {
-  DrawerContentScrollView,
-  DrawerContentComponentProps,
-} from "@react-navigation/drawer";
-import MaterialDrawerItemList from "@/features/navigation/components/MaterialDrawerItemList";
-import { useWindowDimensions } from "react-native";
-import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { AppBar } from "@/features/navigation/components/AppBar";
+import MaterialDrawerItemList from "@/features/navigation/components/MaterialDrawerItemList";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import {
-  AnimatedAppBar,
-  AppBar,
-} from "@/features/navigation/components/AppBar";
-import { debugStyle } from "@/constants/styels";
+  DrawerContentComponentProps,
+  DrawerContentScrollView,
+} from "@react-navigation/drawer";
+import { Drawer } from "expo-router/drawer";
+import { useTranslation } from "react-i18next";
+import { useWindowDimensions } from "react-native";
+import "react-native-gesture-handler";
+import { Drawer as MaterialDrawer } from "react-native-paper";
 
 export const MaterialDrawerContent = (props: DrawerContentComponentProps) => {
   const { height } = useWindowDimensions();
@@ -57,7 +52,12 @@ export default function DrawerLayout() {
   return (
     <Drawer
       drawerContent={MaterialDrawerContent}
-      screenOptions={{ headerShown: false }}
+      screenOptions={{
+        headerShown: false,
+        drawerLabelStyle: {
+          fontSize: 98,
+        },
+      }}
       initialRouteName="(tabs)"
     >
       <Drawer.Screen
@@ -104,6 +104,48 @@ export default function DrawerLayout() {
           title: t("Friends"),
           drawerIcon: (props) => {
             return <Ionicons name="people-outline" {...props} />;
+          },
+        }}
+      />
+
+      <Drawer.Screen
+        name="following_requests"
+        options={{
+          headerShown: true,
+          header(props) {
+            return (
+              <AppBar
+                //@ts-ignore
+                options={{ mode: "center-aligned" }}
+                title={t("Following_requests")}
+              />
+            );
+          },
+          title: t("Following_requests"),
+          drawerIcon: (props) => {
+            return (
+              <MaterialCommunityIcons name="message-text-outline" {...props} />
+            );
+          },
+        }}
+      />
+
+      <Drawer.Screen
+        name="your_following_requests"
+        options={{
+          headerShown: true,
+          header(props) {
+            return (
+              <AppBar
+                //@ts-ignore
+                options={{ mode: "center-aligned" }}
+                title={t("Your_following_requests")}
+              />
+            );
+          },
+          title: t("Your_following_requests"),
+          drawerIcon: (props) => {
+            return <Ionicons name="send" {...props} />;
           },
         }}
       />

@@ -99,6 +99,7 @@ export default function MaterialDrawerItem(props: Props) {
     accessibilityLabel,
     ...rest
   } = props;
+  
 
   const color = focused ? colors.onSecondaryContainer : colors.onSurfaceVariant;
 

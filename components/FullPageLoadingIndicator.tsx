@@ -11,7 +11,7 @@ export default function FullPageLoadingIndicator() {
         alignItems: "center",
       }}
     >
-      <ActivityIndicator color={theme.colors.secondary} size={30} />
+      <ActivityIndicator color="gray" size={"large"} />
     </View>
   );
 }

@@ -1,6 +1,6 @@
 import { BaseUser } from "@/types/user.types";
 import { Axios } from "axios";
-import { FriendUser } from "./types";
+import { FollowingRequest, FriendUser } from "./types";
 
 export async function follow(client: Axios, username: BaseUser["username"]) {
   /**
@@ -66,4 +66,11 @@ export async function getAllFollowing(client: Axios) {
 
   const response = await client.get(`/friendship/followings/`);
   return response.data.results;
+}
+
+
+export async function getFollowingRequestFromUser(client: Axios): Promise<FollowingRequest[]> {
+  const response = await client.get<{results: FollowingRequest[]}>('/following_requests/from_me/')
+  return response.data.results
+
 }

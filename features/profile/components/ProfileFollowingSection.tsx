@@ -1,11 +1,11 @@
-import { ThemedText } from "@/components/ThemedText";
-import { UserProfile } from "../types.types";
 import {
-  FollowBack,
-  FollowButton,
-  UnfollowButton,
-} from "@/features/follow/components/FollowActionButtons";
-import { router } from "expo-router";
+    FollowBack,
+    FollowButton,
+    FollowRequestButton,
+    FollowRequestStatusButton,
+    UnfollowButton,
+} from "@/features/friendship/components/FollowActionButtons";
+import { FollowingRequestStatus, UserProfile } from "../types.types";
 
 type ProfileFollowingSectionProps = {
   user: UserProfile;
@@ -18,12 +18,15 @@ const ProfileFollowingSection = ({ user }: ProfileFollowingSectionProps) => {
   if (user.is_follower) return <FollowBack username={user.username} />;
 
   if (user.profile.is_private) {
-    // TODO: Add private profile following logic here.
-    return (
-      <ThemedText onPress={() => router.back()} variant="bodyMedium">
-        Private
-      </ThemedText>
-    );
+    // pending: show disabled pending button
+    // accepted: show unfollow button
+    // rejected: show normal send request button
+
+    if (user.following_request_status !== FollowingRequestStatus.PENDING) {
+      return <FollowRequestButton username={user.username} />;
+    }
+
+    return <FollowRequestStatusButton />;
   }
 
   return <FollowButton username={user.username} />;
