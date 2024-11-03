@@ -6,7 +6,7 @@ import { useProfileScreen } from "@/features/profile/contexts/ProfileScreenConte
 import ConfirmDialog, { confirmStatus } from "@/components/ConfirmDialog";
 import useVisible from "@/hooks/useVisible";
 import useUnfollowMutation from "../hooks/useUnfollowMutation";
-import useFollowMutation from "../hooks/useFollowMutation";
+import { useFollowMutation } from "../hooks/useFollowMutation";
 
 export const Unfollow = () => {
   const { profile: user } = useProfileScreen();
@@ -44,7 +44,6 @@ export const Follow = () => {
   const { profile: user } = useProfileScreen();
   const { t } = useTranslation();
   const { mutate: follow } = useFollowMutation();
-  const isFollowing = user.is_following;
 
   const handlePress = () => {
     follow({ username: user.username });

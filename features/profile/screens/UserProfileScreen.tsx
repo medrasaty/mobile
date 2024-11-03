@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import { BackHandler, StyleSheet, useWindowDimensions } from "react-native";
 import useProfile from "../hooks/useProfile";
 import { BaseUser } from "@/types/user.types";
 import UserProfileScreenLoading from "../components/UserProfileScreenLoading";

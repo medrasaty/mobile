@@ -38,7 +38,7 @@ function handleRegistrationError(errorMessage: string) {
   /**
    * TODO: handle this error , maybe you can send a log to sentry or something
    */
-  console.error(errorMessage);
+  // console.error(errorMessage);
 }
 
 export async function registerForPushNotificationsAsync() {
@@ -89,4 +89,3 @@ export async function registerForPushNotificationsAsync() {
     handleRegistrationError("Must use physical device for push notifications");
   }
 }
-

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useTheme } from "react-native-paper";
 
 export default function useTopTabsScreenOptions() {
@@ -13,6 +13,11 @@ export default function useTopTabsScreenOptions() {
       tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
       tabBarIndicatorStyle: {
         backgroundColor: theme.colors.primary,
+      },
+      tabBarLabelStyle: {
+        fontFamily: "NotoSansArabic",
+        fontWeight: "bold",
+        fontSize: 16,
       },
     }),
     [theme]

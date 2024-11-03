@@ -1,11 +1,20 @@
 import { BaseUser } from "@/types/user.types";
 import { Axios } from "axios";
+import { FriendUser } from "./types";
 
 export async function follow(client: Axios, username: BaseUser["username"]) {
   /**
    * Follow the user.
    */
   const response = await client.post(`/users/${username}/follow/`);
+  return response;
+}
+
+export async function followBack(
+  client: Axios,
+  username: BaseUser["username"]
+) {
+  const response = await client.post(`/users/${username}/follow_back/`);
   return response;
 }
 
@@ -33,6 +42,14 @@ export async function sendFollowingRequest(
   return response;
 }
 
+export async function getFriends(client: Axios): Promise<FriendUser[]> {
+  /**
+   * Get all friends of the current user.
+   */
+  const response = await client.get(`/friendship/friends/`);
+  return response.data.results;
+}
+
 export async function getAllFollowers(client: Axios) {
   /**
    * Get all followers of the current user.
@@ -47,6 +64,6 @@ export async function getAllFollowing(client: Axios) {
    * Get all followers of the current user.
    */
 
-  const response = await client.get(`/friendship/following/`);
+  const response = await client.get(`/friendship/followings/`);
   return response.data.results;
 }

@@ -1,60 +1,37 @@
 import Page from "@/components/Page";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import useFollowerQuery from "../hooks/useFollowersQuery";
-import { ActivityIndicator, FlatList } from "react-native";
-import { BaseUser } from "@/types/user.types";
-import UserCompactCell from "../components/UserCompactCell";
-import {
-  DEFAULT_CONTAINER_SPACING,
-  containerPaddings,
-} from "@/constants/styels";
-import { StyleSheet } from "react-native";
+import { ActivityIndicator } from "react-native";
+import { UserGridList } from "../components/UsersGridList";
+import useFollowingQuery from "../hooks/useFollowingQuery";
+import useFriendsQuery from "../hooks/useFriendsQuery";
+import { useMemo } from "react";
+import FrienshipScreenActivityIndicator from "../components/FrienshipScreenActivityIndicator";
 
-type FollowingScreenProps = {};
+const FollowingScreen = () => {
+  const query = useFriendsQuery();
 
-const FollowingScreen = ({}: FollowingScreenProps) => {
-  const query = useFollowerQuery();
+  const followings = useMemo(
+    () => query.data?.filter((user) => user.is_following) || [],
+    [query]
+  );
+
   return (
     <Page>
       {query.isPending ? (
-        <ActivityIndicator />
+        <FrienshipScreenActivityIndicator />
       ) : query.isError ? (
         <ThemedText>Error</ThemedText>
-      ) : query.data ? (
-        <FollowingList followings={query.data} />
+      ) : followings ? (
+        <UserGridList
+          onRefresh={query.refetch}
+          isRefreshing={query.isRefetching}
+          users={followings}
+        />
       ) : (
         <ThemedText>Couldn't get the data</ThemedText>
       )}
     </Page>
   );
 };
-
-export const FollowingList = ({ followings }: { followings: BaseUser[] }) => {
-  return (
-    <ThemedView style={styles.container}>
-      <FlatList
-        renderItem={({ item, index }) => {
-          return <UserCompactCell key={index} user={item} />;
-        }}
-        data={followings}
-        // estimatedItemSize={400}
-        showsVerticalScrollIndicator={false}
-        numColumns={3}
-        contentContainerStyle={{
-          gap: 2 * DEFAULT_CONTAINER_SPACING,
-          paddingTop: 10,
-        }}
-        columnWrapperStyle={{ gap: DEFAULT_CONTAINER_SPACING }}
-      />
-    </ThemedView>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default FollowingScreen;

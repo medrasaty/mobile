@@ -1,33 +1,35 @@
 import useAuthClient from "@/hooks/useAuthClient";
 import { BaseUser } from "@/types/user.types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { follow } from "../requests";
+import {
+  useMutation,
+  useQueryClient,
+  UseMutationOptions,
+  UseMutationResult,
+} from "@tanstack/react-query";
+import { follow, followBack } from "../requests";
 import * as Burnt from "burnt";
 import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 export type FollowMutateParams = {
   username: BaseUser["username"];
 };
 
-export default function useFollowMutation() {
-  /**
-   * Follow user
-   */
-  const client = useAuthClient();
+function useFollowMutationOptions(): UseMutationOptions<
+  void,
+  Error,
+  FollowMutateParams
+> {
   const queryClient = useQueryClient();
-  const { t } = useTranslation();
-  const mutation = useMutation({
-    mutationFn: async (params: FollowMutateParams) =>
-      await follow(client, params.username),
 
-    // onSuccess
-    // - update is_following property in profile of user with 'username'
-    // - update the following count of the current user
-    onSuccess: async (data, variables, context) => {
+  return {
+    onSuccess: async (_data, variables) => {
       const { username } = variables;
+      const profile = queryClient.getQueryData<{ is_following: boolean }>([
+        "profile",
+        username,
+      ]);
 
-      // update the following count of the current user
-      const profile = await queryClient.getQueryData(["profile", username]);
       if (profile) {
         queryClient.setQueryData(["profile", username], {
           ...profile,
@@ -35,29 +37,51 @@ export default function useFollowMutation() {
         });
       }
 
-      // show success Toast message
       Burnt.toast({
         title: t("success_follow"),
         haptic: "success",
       });
     },
-
-    onError: async (error) => {
-      // show error Toast message
+    onError: () => {
       Burnt.toast({
-        title: "Failed to follow user",
+        title: t("error_follow"),
         haptic: "error",
       });
     },
-    onSettled: async (data, error, variables, context) => {
-      // invalidate current user profile
-      // invalidate profile of user with 'username'
-
+    onSettled: (_data, _error, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["profile", variables.username],
       });
     },
-  });
+  };
+}
 
-  return mutation;
+export function useFollowMutation(): UseMutationResult<
+  void,
+  Error,
+  FollowMutateParams
+> {
+  const client = useAuthClient();
+  const { t } = useTranslation();
+
+  return useMutation<void, Error, FollowMutateParams>({
+    // @ts-ignore
+    mutationFn: async ({ username }) => follow(client, username),
+    ...useFollowMutationOptions(),
+  });
+}
+
+export function useFollowBackMutation(): UseMutationResult<
+  void,
+  Error,
+  FollowMutateParams
+> {
+  const client = useAuthClient();
+  const { t } = useTranslation();
+
+  return useMutation<void, Error, FollowMutateParams>({
+    // @ts-ignore
+    mutationFn: async ({ username }) => followBack(client, username),
+    ...useFollowMutationOptions(),
+  });
 }

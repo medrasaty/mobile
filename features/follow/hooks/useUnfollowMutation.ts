@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { follow, unfollow } from "../requests";
 import * as Burnt from "burnt";
 import { useTranslation } from "react-i18next";
+import { FriendUser } from "../types";
+import { FRIENDS_QUERY_KEY } from "./useFriendsQuery";
 
 interface UnfollowMutateParams {
   username: BaseUser["username"];
@@ -17,7 +19,7 @@ export default function useUnfollowMutation() {
   const client = useAuthClient();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
-  const mutation = useMutation({
+  return useMutation({
     mutationFn: async (params: UnfollowMutateParams) =>
       await unfollow(client, params.username),
 
@@ -33,6 +35,22 @@ export default function useUnfollowMutation() {
         queryClient.setQueryData(["profile", username], {
           ...profile,
           is_following: false,
+        });
+      }
+
+      // update friedns query
+      const friends = await queryClient.getQueryData([FRIENDS_QUERY_KEY]);
+      if (friends) {
+        queryClient.setQueryData([FRIENDS_QUERY_KEY], (old: FriendUser[]) => {
+          return old.map((user) => {
+            if (user.username === username) {
+              return {
+                ...user,
+                is_following: false,
+              };
+            }
+            return user;
+          });
         });
       }
 
@@ -59,6 +77,4 @@ export default function useUnfollowMutation() {
       });
     },
   });
-
-  return mutation;
 }

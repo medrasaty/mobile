@@ -10,11 +10,20 @@ import {
   BottomSheetModal,
 } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams } from "expo-router";
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTheme } from "react-native-paper";
 import useReplies from "../../hooks/useReplies";
 import ReplyCard from "../reply/ReplyCard";
 import { ReplySheetFooter } from "./ReplySheetFooter";
+import Animated, { LinearTransition } from "react-native-reanimated";
+import { FlatList } from "react-native";
 
 type ReplySheetProps = {
   answer: Answer;

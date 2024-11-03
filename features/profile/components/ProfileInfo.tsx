@@ -2,7 +2,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { UserProfile } from "../types";
 import FastImage from "react-native-fast-image";
-import { Button, ButtonProps, useTheme } from "react-native-paper";
+import { useTheme } from "react-native-paper";
 import React, { useMemo } from "react";
 import { StyleSheet, TouchableOpacity, ViewProps } from "react-native";
 import { ContainerView } from "@/components/styled";
@@ -10,25 +10,12 @@ import { useTranslation } from "react-i18next";
 import Row from "@/components/Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useProfileScreen } from "../contexts/ProfileScreenContext";
-
-import { Unfollow, Follow } from "@/features/follow/components/Unfollow";
-import FollowingRequestButton from "@/features/follow/components/FollowRequest";
+import ProfileFollowingSection from "./ProfileFollowingSection";
 
 type ProfileInfoProps = {} & ViewProps;
 
 const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
   const { profile: user } = useProfileScreen();
-  const {
-    profile: { is_private },
-  } = user;
-
-  const FollowingSection = useMemo(() => {
-    if (user.is_following) {
-      return Unfollow;
-    }
-
-    return is_private ? FollowingRequestButton : Follow;
-  }, [user.is_following]);
 
   return (
     <ContainerView style={[style, styles.container]} {...props}>
@@ -36,7 +23,7 @@ const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
         <ProfilePicture url={user.profile_picture} />
         {!user.is_self && (
           <ThemedView style={styles.follow}>
-            <FollowingSection />
+            <ProfileFollowingSection user={user} />
           </ThemedView>
         )}
       </Row>
