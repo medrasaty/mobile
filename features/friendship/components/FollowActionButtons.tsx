@@ -1,4 +1,7 @@
-import ConfirmDialog, { confirmStatus } from "@/components/ConfirmDialog";
+import ConfirmDialog, {
+  ConfirmDialogV2,
+  confirmStatus,
+} from "@/components/ConfirmDialog";
 import { useFollowMutation } from "@/features/friendship/hooks/useFollowMutation";
 import useUnfollowMutation from "@/features/friendship/hooks/useUnfollowMutation";
 import useVisible from "@/hooks/useVisible";
@@ -43,12 +46,10 @@ const UnfollowButton = ({ username, ...props }: FollowButtonsProps) => {
   const { mutate: unfollow } = useUnfollowMutation();
   const { visible, hide, show: showConfirm } = useVisible(false);
 
-  const handleConfirm = (status: confirmStatus) => {
-    if (status == confirmStatus.CONFIRM) {
-      unfollow({
-        username: username,
-      });
-    }
+  const handleConfirm = () => {
+    unfollow({
+      username: username,
+    });
     hide();
   };
 
@@ -57,11 +58,12 @@ const UnfollowButton = ({ username, ...props }: FollowButtonsProps) => {
       <Button onPress={() => showConfirm()} mode="text" {...props}>
         {t("unfollow")}
       </Button>
-      <ConfirmDialog
+      <ConfirmDialogV2
         visible={visible}
         title={t("confirm_unfollow_title")}
         message={t("confirm_unfollow_message")}
         onConfirm={handleConfirm}
+        onCancel={hide}
       />
     </>
   );
@@ -88,4 +90,3 @@ export const FollowRequestStatusButton = () => {
 };
 
 export { FollowBack, FollowButton, UnfollowButton };
-

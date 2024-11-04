@@ -3,8 +3,12 @@ import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useProfileScreen } from "@/features/profile/contexts/ProfileScreenContext";
 
-import ConfirmDialog, { confirmStatus } from "@/components/ConfirmDialog";
-import useVisible from "@/hooks/useVisible";
+import {
+  confirmStatus,
+  ConfirmDialog,
+  ConfirmDialogV2,
+} from "@/components/ConfirmDialog";
+import useVisible, { useVisibleV2 } from "@/hooks/useVisible";
 import useUnfollowMutation from "../hooks/useUnfollowMutation";
 import { useFollowMutation } from "../hooks/useFollowMutation";
 
@@ -12,29 +16,28 @@ export const Unfollow = () => {
   const { profile: user } = useProfileScreen();
   const { t } = useTranslation();
   const { mutate: unfollow, isPending } = useUnfollowMutation();
-  const { visible, hide, show: showConfirm } = useVisible(false);
+  const [confirmVisible, showConfirm, hideConfirm] = useVisibleV2(false);
 
   const icon = useMemo(() => {
     return isPending ? "loading" : "account-outline";
   }, [isPending]);
 
-  const handleConfirm = (status: confirmStatus) => {
-    if (status == confirmStatus.CONFIRM) {
-      unfollow({
-        username: user.username,
-      });
-    }
-    hide();
+  const handleConfirm = () => {
+    hideConfirm();
+    unfollow({
+      username: user.username,
+    });
   };
 
   return (
     <>
       <FollowingButton onPress={() => showConfirm()} />
-      <ConfirmDialog
-        visible={visible}
+      <ConfirmDialogV2
+        visible={confirmVisible}
         title={t("confirm_unfollow_title")}
         message={t("confirm_unfollow_message")}
         onConfirm={handleConfirm}
+        onCancel={hideConfirm}
       />
     </>
   );

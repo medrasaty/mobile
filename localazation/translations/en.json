@@ -49,5 +49,8 @@
   "Your_following_requests": "Your following requests",
   "accepted": "accepted",
   "rejected": "rejected",
-  "pending": "pending"
+  "pending": "pending",
+  "Delete": "Delete",
+  "delete": "delete",
+  "confirm_following_request_deletion": "Are you sure you want to delete this request ?"
 }

@@ -1,12 +1,12 @@
 import { ThemedView } from "@/components/ThemedView";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
-import { BaseUser } from "@/types/user.types";
 import { RefreshControl, StyleSheet } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
 import UserCompactCell from "./UserCompactCell";
+import { FriendUser } from "../types";
 
 type UserGridListProps = {
-  users: BaseUser[];
+  users: FriendUser[];
   onRefresh?: () => void;
   isRefreshing?: boolean;
 };

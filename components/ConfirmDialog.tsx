@@ -1,5 +1,4 @@
 import { ThemedText } from "@/components/ThemedText";
-import useVisible from "@/hooks/useVisible";
 import { useTranslation } from "react-i18next";
 import { Button, Dialog, Portal } from "react-native-paper";
 
@@ -41,6 +40,36 @@ const ConfirmDialog = ({
   );
 };
 
+type ConfirmDialogV2Props = {
+  onConfirm: () => void;
+  onCancel: () => void;
+  message: string;
+  title?: string;
+  visible: boolean;
+};
+
+const ConfirmDialogV2 = ({
+  onConfirm,
+  onCancel,
+  message,
+  title,
+  visible,
+}: ConfirmDialogV2Props) => {
+  return (
+    <Portal>
+      <Dialog visible={visible}>
+        {title && title?.length > 0 && <Dialog.Title>{title}</Dialog.Title>}
+        <Dialog.Content>
+          <ThemedText>{message}</ThemedText>
+        </Dialog.Content>
+        <Dialog.Actions style={{ gap: 8 }}>
+          <CancelButton onPress={onCancel} />
+          <ConfirmButton onPress={onConfirm} />
+        </Dialog.Actions>
+      </Dialog>
+    </Portal>
+  );
+};
 type ActionButtonProps = {
   onPress: (status: confirmStatus) => void;
 };
@@ -71,4 +100,4 @@ export const CancelButton = ({ onPress }: ActionButtonProps) => {
   );
 };
 
-export default ConfirmDialog;
+export { ConfirmDialog, ConfirmDialogV2 };

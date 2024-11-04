@@ -48,5 +48,8 @@
   "Your_following_requests": "طلباتك للمتابعة",
   "accepted": "قبول",
   "rejected": "رفض",
-  "pending": "في انتظار الرد"
+  "pending": "في انتظار الرد",
+  "Delete": "حذف",
+  "delete": "حذف",
+  "confirm_following_request_deletion": "هل انت متأكد من حذف طلب الصداقة؟"
 }

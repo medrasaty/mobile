@@ -2,7 +2,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { BaseUser } from "@/types/user.types";
 import { StyleSheet, useWindowDimensions } from "react-native";
-import { DEFAULT_CONTAINER_SPACING, debugStyle } from "@/constants/styels";
+import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
 import { useMemo } from "react";
 import UserAvatar from "@/components/UserAvatar";
 import { Link } from "expo-router";

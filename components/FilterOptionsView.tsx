@@ -5,7 +5,7 @@ import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Chip, ChipProps } from "react-native-paper";
 
-type FilterOption = {
+export type FilterOption = {
   label: string;
   value: string | NotificationType;
 };

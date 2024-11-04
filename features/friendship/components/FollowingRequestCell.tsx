@@ -2,36 +2,29 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import React, { useMemo } from "react";
 import { FollowingRequest } from "../types";
-import { StyleSheet } from "react-native";
-import { Button, Chip, IconButton, useTheme } from "react-native-paper";
+import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { Chip, IconButton, useTheme } from "react-native-paper";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
 import UserAvatar from "@/components/UserAvatar";
 import { School } from "./UserCompactCell";
 import { t } from "i18next";
 import { FollowingRequestStatusType } from "@/features/profile/types.types";
 import Row from "@/components/Row";
-
-function useFollowingRequestStatusColor(status: FollowingRequestStatusType) {
-  const theme = useTheme();
-
-  switch (status) {
-    case "accepted":
-      return "#00ff00";
-
-    case "rejected":
-      return "#ff0000";
-
-    case "pending":
-      return "#0000ff";
-
-    default:
-      return theme.colors.surface;
-  }
-}
+import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
+import useVisible, { useVisibleV2 } from "@/hooks/useVisible";
+import { Ionicons } from "@expo/vector-icons";
+import useDeleteFollowingRequestMutation from "../hooks/useDeleteFollowingRequestMutaiton";
+import LoadingDialog from "@/components/LoadingDialog";
+import { Link, router } from "expo-router";
 
 const FollowingRequestCell = ({ request }: { request: FollowingRequest }) => {
   return (
-    <ThemedView style={[styles.container]}>
+    <TouchableOpacity
+      onPress={() => {
+        router.push(`/users/${request.to_user.username}`);
+      }}
+      style={[styles.container]}
+    >
       <ThemedView style={styles.rowContainer}>
         <ThemedView
           style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
@@ -45,20 +38,57 @@ const FollowingRequestCell = ({ request }: { request: FollowingRequest }) => {
 
         <Row alignItems="center">
           <Status status={request.status} />
-          <Options />
+          <DeleteRequest requestId={request.id} />
         </Row>
       </ThemedView>
-    </ThemedView>
+    </TouchableOpacity>
   );
 };
 
 export const Status = ({ status }: { status: FollowingRequestStatusType }) => {
-  const color = useFollowingRequestStatusColor(status);
-  return <Button mode="contained-tonal">{t(status)}</Button>;
+  // TODO: Style chip differently based on status ( success: green, rejected: red, etc)
+
+  return (
+    <Chip compact mode="flat">
+      {t(status)}
+    </Chip>
+  );
 };
 
-export const Options = () => {
-  return <IconButton icon={"dots-vertical"} onPress={() => {}} />;
+export const DeleteRequest = ({
+  requestId,
+}: {
+  requestId: FollowingRequest["id"];
+}) => {
+  const [confirmVisible, showConfirm, hideConfirm] = useVisibleV2(false);
+  const { mutate: deleteRequest, isPending } =
+    useDeleteFollowingRequestMutation();
+  const theme = useTheme();
+
+  const handleDeletionConfirm = () => {
+    hideConfirm();
+    deleteRequest(requestId);
+  };
+
+  return (
+    <>
+      <IconButton
+        iconColor={theme.colors.error}
+        disabled={isPending}
+        onPress={() => showConfirm()}
+        icon={() => (
+          <Ionicons size={24} color={theme.colors.error} name="trash-outline" />
+        )}
+      />
+      <ConfirmDialogV2
+        visible={confirmVisible}
+        onCancel={hideConfirm}
+        onConfirm={handleDeletionConfirm}
+        message={t("confirm_following_request_deletion")}
+      />
+      <LoadingDialog visible={isPending} message="deleting..." />
+    </>
+  );
 };
 
 const styles = StyleSheet.create({

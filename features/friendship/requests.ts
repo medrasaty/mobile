@@ -68,9 +68,20 @@ export async function getAllFollowing(client: Axios) {
   return response.data.results;
 }
 
+export async function getFollowingRequestFromUser(
+  client: Axios,
+  params?: any
+): Promise<FollowingRequest[]> {
+  const response = await client.get<{ results: FollowingRequest[] }>(
+    "/following_requests/from_me/",
+    { params }
+  );
+  return response.data.results;
+}
 
-export async function getFollowingRequestFromUser(client: Axios): Promise<FollowingRequest[]> {
-  const response = await client.get<{results: FollowingRequest[]}>('/following_requests/from_me/')
-  return response.data.results
-
+export async function deleteFollowingRequest(
+  client: Axios,
+  requestId: FollowingRequest["id"]
+) {
+  return await client.delete(`/following_requests/${requestId}/`);
 }
