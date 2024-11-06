@@ -1,20 +1,14 @@
 import Page from "@/components/Page";
 import { ThemedText } from "@/components/ThemedText";
 import UserGridList from "../components/UsersGridList";
-import useFriendsQuery from "../hooks/useFriendsQuery";
-import { useMemo } from "react";
+import { useFollowersQuery } from "../hooks/useFriendsQuery";
 import FrienshipScreenActivityIndicator from "../components/FrienshipScreenActivityIndicator";
 import FrienshipScreenError from "../components/FrienshipScreenError";
 
 type FollowerScreenProps = {};
 
 const FollowerScreen = ({}: FollowerScreenProps) => {
-  const query = useFriendsQuery();
-
-  const followers = useMemo(
-    () => query.data?.filter((user) => user.is_follower) || [],
-    [query]
-  );
+  const query = useFollowersQuery();
 
   return (
     <Page>
@@ -22,11 +16,11 @@ const FollowerScreen = ({}: FollowerScreenProps) => {
         <FrienshipScreenActivityIndicator />
       ) : query.isError ? (
         <FrienshipScreenError message="something went wrong!" />
-      ) : followers ? (
+      ) : query.data ? (
         <UserGridList
           onRefresh={query.refetch}
           isRefreshing={query.isRefetching}
-          users={followers}
+          users={query.data}
         />
       ) : (
         <ThemedText>Couldn't get the data</ThemedText>

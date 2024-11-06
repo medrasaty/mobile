@@ -1,19 +1,13 @@
 import Page from "@/components/Page";
 import { ThemedText } from "@/components/ThemedText";
-import { ActivityIndicator } from "react-native";
 import { UserGridList } from "../components/UsersGridList";
-import useFollowingQuery from "../hooks/useFollowingQuery";
-import useFriendsQuery from "../hooks/useFriendsQuery";
+import useFriendsQuery, { useFollowingQuery } from "../hooks/useFriendsQuery";
 import { useMemo } from "react";
 import FrienshipScreenActivityIndicator from "../components/FrienshipScreenActivityIndicator";
+import { FriendUser } from "../types";
 
 const FollowingScreen = () => {
-  const query = useFriendsQuery();
-
-  const followings = useMemo(
-    () => query.data?.filter((user) => user.is_following) || [],
-    [query]
-  );
+  const query = useFollowingQuery();
 
   return (
     <Page>
@@ -21,11 +15,11 @@ const FollowingScreen = () => {
         <FrienshipScreenActivityIndicator />
       ) : query.isError ? (
         <ThemedText>Error</ThemedText>
-      ) : followings ? (
+      ) : query.data ? (
         <UserGridList
           onRefresh={query.refetch}
           isRefreshing={query.isRefetching}
-          users={followings}
+          users={query.data}
         />
       ) : (
         <ThemedText>Couldn't get the data</ThemedText>

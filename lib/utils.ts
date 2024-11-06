@@ -78,3 +78,23 @@ export function translateSubject(subject: string | undefined) {
       return subject;
   }
 }
+
+/**
+ * Compare two queryKeys
+ */
+
+export function areListsEqual(list1: any[], list2: any[]): boolean {
+  if (list1.length !== list2.length) return false;
+
+  return list1.every((item, index) => {
+    const item2 = list2[index];
+
+    // Handle objects
+    if (typeof item === "object" && item !== null) {
+      return JSON.stringify(item) === JSON.stringify(item2);
+    }
+
+    // Handle primitives
+    return item === item2;
+  });
+}

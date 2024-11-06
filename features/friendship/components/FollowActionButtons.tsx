@@ -10,6 +10,7 @@ import { t } from "i18next";
 import { Button, ButtonProps } from "react-native-paper";
 import useFollowBackMutation from "../hooks/useFollowBackMutation";
 import useSendFollowingRequestMutation from "../hooks/useFollowRequestMutation";
+import LoadingDialog from "@/components/LoadingDialog";
 
 type FollowButtonsProps = {
   username: BaseUser["username"];
@@ -43,7 +44,7 @@ const FollowBack = ({ username, ...props }: FollowButtonsProps) => {
 };
 
 const UnfollowButton = ({ username, ...props }: FollowButtonsProps) => {
-  const { mutate: unfollow } = useUnfollowMutation();
+  const { mutate: unfollow, isPending } = useUnfollowMutation();
   const { visible, hide, show: showConfirm } = useVisible(false);
 
   const handleConfirm = () => {
@@ -55,7 +56,12 @@ const UnfollowButton = ({ username, ...props }: FollowButtonsProps) => {
 
   return (
     <>
-      <Button onPress={() => showConfirm()} mode="text" {...props}>
+      <Button
+        disabled={isPending}
+        onPress={() => showConfirm()}
+        mode="text"
+        {...props}
+      >
         {t("unfollow")}
       </Button>
       <ConfirmDialogV2

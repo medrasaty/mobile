@@ -3,8 +3,9 @@ import { BaseUser } from "@/types/user.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteFollowingRequest } from "../requests";
 import { FollowingRequest } from "../types";
-import { YOUR_FOLLOWING_REQUESTS_QUERY_KEY } from "./useYourFollowingRequestQuery";
+import { FOLLOWING_REQUESTS_FROM_ME_QUERY_KEY } from "./useYourFollowingRequestQuery";
 import { useSnackbar } from "@/contexts/SnackbarContext";
+import { QueryFilters } from "@tanstack/react-query";
 
 export type useDeleteFollowingRequestMutationProps = {
   username: BaseUser["username"];
@@ -12,18 +13,22 @@ export type useDeleteFollowingRequestMutationProps = {
 
 export default function useDeleteFollowingRequestMutation() {
   const client = useAuthClient();
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (requestId: FollowingRequest["id"]) =>
-      await deleteFollowingRequest(client, requestId),
-    onSuccess: (data, requestId) => {
-      /**
-       * update YourFollowingRequest query
-       */
-      queryClient.invalidateQueries({
-        queryKey: [YOUR_FOLLOWING_REQUESTS_QUERY_KEY],
-      });
+      deleteFollowingRequest(client, requestId),
+    onSuccess: (_data, requestId) => {
+      // update
+      qc.setQueriesData(
+        { queryKey: FOLLOWING_REQUESTS_FROM_ME_QUERY_KEY },
+        (oldData: FollowingRequest[] | undefined) => {
+          if (oldData) {
+            return oldData.filter((req) => req.id !== requestId);
+          }
+          return oldData;
+        }
+      );
     },
   });
 }

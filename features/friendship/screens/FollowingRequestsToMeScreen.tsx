@@ -2,13 +2,12 @@ import Page from "@/components/Page";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import { useSession } from "@/hooks/useSession";
 import useFollowingRequestsToMe from "../hooks/useFollowingRequestsToMe";
 import FullPageLoadingIndicator from "@/components/FullPageLoadingIndicator";
 import { FollowingRequest } from "../types";
-import { FlashList, FlashListProps } from "@shopify/flash-list";
 import FollowingRequestsToMeCell from "../components/FollowingRequestToMeCell";
-import { Divider } from "react-native-paper";
+import Animated, { LinearTransition } from "react-native-reanimated";
+import { FlatListProps } from "react-native";
 
 type FollowingRequestsToMeScreenProps = {};
 
@@ -33,7 +32,7 @@ export const FollowingRequestsToMe = () => {
 };
 
 type FollowingRequestsToMeListProps = Omit<
-  Omit<FlashListProps<FollowingRequest>, "renderItem">,
+  Omit<FlatListProps<FollowingRequest>, "renderItem">,
   "estimatedItemSize"
 >;
 
@@ -42,12 +41,13 @@ const FollowingRequestsToMeList = ({
   ...props
 }: FollowingRequestsToMeListProps) => {
   return (
-    <FlashList
+    <Animated.FlatList
       renderItem={({ item, index }) => {
         return <FollowingRequestsToMeCell request={item} />;
       }}
-      estimatedItemSize={120}
+      // estimatedItemSize={120}
       data={data}
+      itemLayoutAnimation={LinearTransition}
       {...props}
     />
   );

@@ -17,6 +17,9 @@ export function calcNewRatingsValue(
 }
 
 type instanceType = Question | Answer | Reply;
+/**
+ * @deprecated
+ */
 export function transformDates(instance: instanceType): instanceType {
   return {
     ...instance,
@@ -25,13 +28,13 @@ export function transformDates(instance: instanceType): instanceType {
   };
 }
 
-type ObjType<T> = {
-  other;
+type ObjType = {
   created: string;
   modified: string;
+  [key: string]: any;
 };
 
-function datesTransformer<T>(obj: T) {
+export function datesTransformer(obj: ObjType) {
   return {
     ...obj,
     created: new Date(obj.created),
