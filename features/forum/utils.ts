@@ -24,3 +24,17 @@ export function transformDates(instance: instanceType): instanceType {
     modified: new Date(instance.modified),
   };
 }
+
+type ObjType<T> = {
+  other;
+  created: string;
+  modified: string;
+};
+
+function datesTransformer<T>(obj: T) {
+  return {
+    ...obj,
+    created: new Date(obj.created),
+    modified: new Date(obj.modified),
+  };
+}

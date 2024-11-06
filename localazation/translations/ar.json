@@ -51,5 +51,9 @@
   "pending": "في انتظار الرد",
   "Delete": "حذف",
   "delete": "حذف",
-  "confirm_following_request_deletion": "هل انت متأكد من حذف طلب الصداقة؟"
+  "confirm_following_request_deletion": "هل انت متأكد من حذف طلب الصداقة؟",
+  "Accept": "قبول",
+  "Reject": "رفض",
+  "accept": "قبول",
+  "reject": "رفض"
 }

@@ -18,22 +18,20 @@ import LoadingDialog from "@/components/LoadingDialog";
 import { Link, router } from "expo-router";
 
 const FollowingRequestCell = ({ request }: { request: FollowingRequest }) => {
+  const gotToUser = () => {
+    router.push(`/users/${request.to_user.username}`);
+  };
   return (
-    <TouchableOpacity
-      onPress={() => {
-        router.push(`/users/${request.to_user.username}`);
-      }}
-      style={[styles.container]}
-    >
+    <ThemedView style={[styles.container]}>
       <ThemedView style={styles.rowContainer}>
         <ThemedView
           style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
         >
           <UserAvatar url={request.to_user.profile_picture} size={60} />
-          <ThemedView style={{ gap: 5 }}>
+          <Pressable onPress={gotToUser} style={{ gap: 5 }}>
             <ThemedText>{request.to_user.short_name}</ThemedText>
             <School name={request.to_user.school_name} />
-          </ThemedView>
+          </Pressable>
         </ThemedView>
 
         <Row alignItems="center">
@@ -41,7 +39,7 @@ const FollowingRequestCell = ({ request }: { request: FollowingRequest }) => {
           <DeleteRequest requestId={request.id} />
         </Row>
       </ThemedView>
-    </TouchableOpacity>
+    </ThemedView>
   );
 };
 

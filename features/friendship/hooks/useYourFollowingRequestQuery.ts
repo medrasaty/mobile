@@ -1,6 +1,6 @@
 import useAuthClient from "@/hooks/useAuthClient";
 import { useQuery } from "@tanstack/react-query";
-import { getFollowingRequestFromUser } from "../requests";
+import { getFollowingRequestsFromUser } from "../requests";
 import { FilterOption } from "@/components/FilterOptionsView";
 
 export const YOUR_FOLLOWING_REQUESTS_QUERY_KEY = "your_following_requests";
@@ -15,6 +15,6 @@ export default function useYourFollowingRequestQuery({
   const client = useAuthClient();
   return useQuery({
     queryKey: [YOUR_FOLLOWING_REQUESTS_QUERY_KEY, params],
-    queryFn: async () => await getFollowingRequestFromUser(client, params),
+    queryFn: async () => await getFollowingRequestsFromUser(client, params),
   });
 }

@@ -52,5 +52,9 @@
   "pending": "pending",
   "Delete": "Delete",
   "delete": "delete",
-  "confirm_following_request_deletion": "Are you sure you want to delete this request ?"
+  "confirm_following_request_deletion": "Are you sure you want to delete this request ?",
+  "Accept": "accept",
+  "Reject": "reject",
+  "accept": "accept",
+  "reject": "reject"
 }

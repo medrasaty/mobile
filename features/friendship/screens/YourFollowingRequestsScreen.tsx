@@ -12,13 +12,9 @@ import FilterOptionsView, {
   FilterOption,
 } from "@/components/FilterOptionsView";
 import { useTranslation } from "react-i18next";
-import {
-  YourFollowingRequestsScreenContext,
-  useYourFollowingScreenContext,
-} from "../contexts/YourFollowingScreenContexts";
-import { containerMargins } from "@/constants/styels";
+import { YourFollowingRequestsScreenContext } from "../contexts/YourFollowingScreenContexts";
 
-const YourFollowingRequestsScreen = () => {
+const FollowingRequestsFromMeScreen = () => {
   const { t } = useTranslation();
   const filterOptions = useMemo(
     () => [
@@ -111,4 +107,4 @@ const FollowingRequestList = ({
   );
 };
 
-export default YourFollowingRequestsScreen;
+export default FollowingRequestsFromMeScreen;

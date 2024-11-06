@@ -24,6 +24,7 @@ export interface BaseUser {
   profile_picture: string;
   token: string;
   avatar_thumbnail: string;
+  is_private: boolean;
 }
 
 export enum UserType {
@@ -39,8 +40,6 @@ export interface Student extends BaseUser {
 export interface Studentmore {
   grade: number;
   section: null | string;
-  profile_picture: null | string;
-  background_picture: null | string;
 }
 
 export interface Teacher extends BaseUser {
@@ -52,6 +51,4 @@ export interface TeacherMore {
   subjects: string[];
   grades: Grade["id"][];
   sections: string[];
-  bio: string;
-  profile_picture: null;
 }

@@ -40,8 +40,10 @@ export default function MaterialDrawerItemList({
   } = focusedOptions;
 
   // exclude routes
-  const routes = state.routes.filter(
-    (route) => !excludedRouteNames.includes(route.name)
+  const routes = React.useMemo(
+    () =>
+      state.routes.filter((route) => !excludedRouteNames.includes(route.name)),
+    [state.routes]
   );
 
   return routes.map((route, i) => {
@@ -72,8 +74,6 @@ export default function MaterialDrawerItemList({
       drawerItemStyle,
       drawerAllowFontScaling,
     } = descriptors[route.key].options;
-
-    
 
     return (
       <MaterialDrawerItem

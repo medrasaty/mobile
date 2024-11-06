@@ -1,12 +1,13 @@
 import { API_URL } from "@/constants";
 import { useStorageState } from "@/hooks/useStorageState";
-import { Student, Teacher, UserType } from "@/types/user.types";
+import { BaseUser, Student, Teacher, UserType } from "@/types/user.types";
 import { useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosRequestConfig } from "axios";
 import React from "react";
+import { jsx } from "react/jsx-runtime";
 
 export type Session = {
-  user: Student | Teacher;
+  user: BaseUser;
   token: string;
 };
 
@@ -28,13 +29,15 @@ export const AuthContext = React.createContext<AuthSession>({
 export function SessionProvider(props: React.PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState("session");
 
+  const [[_, user], setUser] = useStorageState("user");
+
   const queryClient = useQueryClient();
 
   return (
     <AuthContext.Provider
       value={{
         signIn: async (credentials: Credentials) =>
-          await signIn(credentials, setSession),
+          await signIn(credentials, setSession, setUser),
         signOut: () => {
           // remove profile data from cache
           queryClient.removeQueries({ queryKey: ["profile"] });
@@ -58,7 +61,8 @@ export type Credentials = {
 
 async function signIn(
   credentials: Credentials,
-  setSession: (session: string | null) => void
+  setSession: (session: string | null) => void,
+  setUser: (user: string | null) => void
 ): Promise<Session> {
   /**
    * This function should handle authenticating logic,
@@ -79,6 +83,7 @@ async function signIn(
 
     // convert user and token to serialized string
     const session = JSON.stringify({ user, token });
+    setUser(JSON.stringify(user));
     setSession(session);
     return { user, token };
   } catch (error) {

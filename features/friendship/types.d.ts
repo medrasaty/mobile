@@ -1,4 +1,5 @@
 import { BaseUser } from "@/types/user.types";
+import { FlashListProps } from "@shopify/flash-list";
 
 interface FriendUser extends BaseUser {
   is_following: boolean;
@@ -13,3 +14,8 @@ export interface FollowingRequest {
   created: Date;
   modified: Date;
 }
+
+export type FollowingRequestsListType = Omit<
+  Omit<FlashListProps<FollowingRequest>, "renderItem">,
+  "estimatedItemSize"
+>;

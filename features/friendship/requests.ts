@@ -1,6 +1,8 @@
 import { BaseUser } from "@/types/user.types";
 import { Axios } from "axios";
 import { FollowingRequest, FriendUser } from "./types";
+import { PaginatedResponse } from "@/types/requests";
+import { transformDates } from "../forum/utils";
 
 export async function follow(client: Axios, username: BaseUser["username"]) {
   /**
@@ -68,15 +70,15 @@ export async function getAllFollowing(client: Axios) {
   return response.data.results;
 }
 
-export async function getFollowingRequestFromUser(
+export async function getFollowingRequestsFromUser(
   client: Axios,
   params?: any
 ): Promise<FollowingRequest[]> {
-  const response = await client.get<{ results: FollowingRequest[] }>(
+  const response = await client.get<PaginatedResponse<FollowingRequest>>(
     "/following_requests/from_me/",
     { params }
   );
-  return response.data.results;
+  return response.data.results.map(transformDates);
 }
 
 export async function deleteFollowingRequest(
@@ -84,4 +86,19 @@ export async function deleteFollowingRequest(
   requestId: FollowingRequest["id"]
 ) {
   return await client.delete(`/following_requests/${requestId}/`);
+}
+
+export async function getFollowingRequestsToMe(client: Axios, params: any) {
+  const response = await client.get<PaginatedResponse<FollowingRequest>>(
+    `/following_requests/to_me/`,
+    { params }
+  );
+  return response.data.results.map(transformDates);
+}
+
+export async function acceptFollowingRequest(
+  client: Axios,
+  requestId: FollowingRequest["id"]
+) {
+  return await client.patch(`/following_requests/${requestId}/accept/`);
 }
