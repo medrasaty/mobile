@@ -8,10 +8,12 @@ import TabBarIcon, {
 import { useSession } from "@/hooks/useSession";
 import { Redirect, Tabs } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "react-native-paper";
 
 export default function TabsLayout() {
   const { session, isLoading } = useSession();
   const { t } = useTranslation();
+  const theme = useTheme();
 
   if (isLoading) {
     return <LoadingDialog visible={isLoading} />;
@@ -29,7 +31,12 @@ export default function TabsLayout() {
         // TODO: set custom AppBar here
         headerShown: false,
       }}
-      tabBar={BottomTabNavigationBar}
+      tabBar={(props) => (
+        <BottomTabNavigationBar
+          {...props}
+          style={{ backgroundColor: theme.colors.surface }}
+        />
+      )}
     >
       <Tabs.Screen
         name="index"

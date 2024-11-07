@@ -30,7 +30,11 @@ const SortingMenu = ({ onSelect, options, ...props }: SortingMenuProps) => {
       {...props}
     >
       {options.map((option) => (
-        <Menu.Item onPress={() => handleSelect(option)} title={option.label} />
+        <Menu.Item
+          key={option.key}
+          onPress={() => handleSelect(option)}
+          title={option.label}
+        />
       ))}
     </Menu>
   );

@@ -17,27 +17,38 @@ type FollowButtonsProps = {
 } & Omit<ButtonProps, "children">;
 
 const FollowButton = ({ username, ...props }: FollowButtonsProps) => {
-  const { mutate: follow } = useFollowMutation();
+  const { mutate: follow, isPending } = useFollowMutation();
   const handlePress = () => {
     // TODO: Follow user
     follow({ username });
   };
 
   return (
-    <Button onPress={handlePress} mode="contained" {...props}>
+    <Button
+      disabled={isPending}
+      loading={isPending}
+      onPress={handlePress}
+      mode="contained"
+      {...props}
+    >
       {t("follow")}
     </Button>
   );
 };
 
 const FollowBack = ({ username, ...props }: FollowButtonsProps) => {
-  const { mutate: followBack } = useFollowBackMutation();
+  const { mutate: followBack, isPending } = useFollowBackMutation();
   const handlePress = () => {
     followBack({ username });
   };
 
   return (
-    <Button onPress={handlePress} mode="contained" {...props}>
+    <Button
+      loading={isPending}
+      onPress={handlePress}
+      mode="contained"
+      {...props}
+    >
       {t("follow_back")}
     </Button>
   );
@@ -58,6 +69,7 @@ const UnfollowButton = ({ username, ...props }: FollowButtonsProps) => {
     <>
       <Button
         disabled={isPending}
+        loading={isPending}
         onPress={() => showConfirm()}
         mode="text"
         {...props}
@@ -79,9 +91,15 @@ export const FollowRequestButton = ({
   username,
   ...props
 }: FollowButtonsProps) => {
-  const { mutate: sendRequest } = useSendFollowingRequestMutation();
+  const { mutate: sendRequest, isPending } = useSendFollowingRequestMutation();
   return (
-    <Button onPress={() => sendRequest(username)} mode="contained" {...props}>
+    <Button
+      disabled={isPending}
+      loading={isPending}
+      onPress={() => sendRequest(username)}
+      mode="contained"
+      {...props}
+    >
       {t("send_follow_request")}
     </Button>
   );

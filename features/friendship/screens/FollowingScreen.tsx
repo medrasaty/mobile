@@ -5,6 +5,7 @@ import useFriendsQuery, { useFollowingQuery } from "../hooks/useFriendsQuery";
 import { useMemo } from "react";
 import FrienshipScreenActivityIndicator from "../components/FrienshipScreenActivityIndicator";
 import { FriendUser } from "../types";
+import NetworkError from "@/components/NetworkError";
 
 const FollowingScreen = () => {
   const query = useFollowingQuery();
@@ -14,7 +15,7 @@ const FollowingScreen = () => {
       {query.isPending ? (
         <FrienshipScreenActivityIndicator />
       ) : query.isError ? (
-        <ThemedText>Error</ThemedText>
+        <NetworkError onRetry={query.refetch} />
       ) : query.data ? (
         <UserGridList
           onRefresh={query.refetch}

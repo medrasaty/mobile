@@ -4,7 +4,7 @@ import { UserProfile } from "../types";
 import FastImage from "react-native-fast-image";
 import { StyleSheet, View, ViewProps } from "react-native";
 import { useMemo } from "react";
-import { useTheme } from "react-native-paper";
+import { Divider, useTheme } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { useProfileScreen } from "../contexts/ProfileScreenContext";
 import ProfileInfo from "./ProfileInfo";
@@ -35,6 +35,7 @@ export const ProfileBackgroundImage = ({
         colors={["transparent", "rgba(0,0,0,0.6)"]}
         style={styles.gradient}
       />
+      <Divider />
     </ThemedView>
   );
 };

@@ -55,5 +55,13 @@
   "Accept": "قبول",
   "Reject": "رفض",
   "accept": "قبول",
-  "reject": "رفض"
+  "reject": "رفض",
+  "success_accept_following_request": "تم القبول بنجاح",
+  "Black_list": "القائمة السوداء",
+  "black_list": "القائمة السوداء",
+  "retry": "إعادة المحاولة",
+  "Retry": "إعادة المحاولة",
+  "something_went_wrong!": "حصل خطأ ما!",
+  "Unblock": "رفع الحضر",
+  "unblock": "رفع الحضر"
 }

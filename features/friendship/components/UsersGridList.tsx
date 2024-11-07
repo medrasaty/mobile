@@ -19,16 +19,19 @@ export const UserGridList = ({
   /**
    * Render a grid of users compact cells.
    */
+  const numOfCells = 2;
   return (
     <ThemedView style={styles.container}>
       <Animated.FlatList
         renderItem={({ item, index }) => {
-          return <UserCompactCell key={index} user={item} />;
+          return (
+            <UserCompactCell numOfCells={numOfCells} key={index} user={item} />
+          );
         }}
         data={users}
         // estimatedItemSize={400}
         showsVerticalScrollIndicator={false}
-        numColumns={3}
+        numColumns={numOfCells}
         contentContainerStyle={{
           gap: 2 * DEFAULT_CONTAINER_SPACING,
           paddingTop: 10,

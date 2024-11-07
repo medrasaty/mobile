@@ -22,6 +22,8 @@ import {
 } from "../contexts/ProfileListContext";
 import { ProfileListItem } from "../components/ProfileListItem";
 import { transformToTypedData } from "@/features/profile/utils";
+import { StatusBar } from "expo-status-bar";
+import { useTheme } from "react-native-paper";
 
 interface UserProfileScreenProps {
   username: BaseUser["username"] | undefined;
@@ -29,6 +31,7 @@ interface UserProfileScreenProps {
 
 const UserProfileScreen = ({ username }: UserProfileScreenProps) => {
   // REFACTORME
+  const theme = useTheme();
   if (!username) return <UserProfileScreenError />;
 
   const q = useProfile(username);
@@ -42,6 +45,7 @@ const UserProfileScreen = ({ username }: UserProfileScreenProps) => {
         <ProfileListProvider>
           <UserProfileScreenContent onRefresh={q.refetch} />
         </ProfileListProvider>
+        <StatusBar backgroundColor={theme.colors.surface} />
       </ProfileScreenProvider>
     );
   }

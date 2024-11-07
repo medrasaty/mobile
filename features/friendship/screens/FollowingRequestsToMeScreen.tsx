@@ -2,12 +2,20 @@ import Page from "@/components/Page";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import useFollowingRequestsToMe from "../hooks/useFollowingRequestsToMe";
+import { useInfiniteFollwingRequestsToMe } from "../hooks/useFollowingRequestsToMe";
 import FullPageLoadingIndicator from "@/components/FullPageLoadingIndicator";
 import { FollowingRequest } from "../types";
 import FollowingRequestsToMeCell from "../components/FollowingRequestToMeCell";
 import Animated, { LinearTransition } from "react-native-reanimated";
-import { FlatListProps } from "react-native";
+import {
+  FlatListProps,
+  RefreshControl,
+  useWindowDimensions,
+} from "react-native";
+import { useMemo } from "react";
+import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
+import NetworkError from "@/components/NetworkError";
+import { SnackbarProvider } from "@/contexts/SnackbarContext";
 
 type FollowingRequestsToMeScreenProps = {};
 
@@ -17,15 +25,26 @@ const FollowingRequestsToMeScreen = ({}: FollowingRequestsToMeScreenProps) => {
 };
 
 export const FollowingRequestsToMe = () => {
-  const query = useFollowingRequestsToMe({ status: "pending" });
+  const q = useInfiniteFollwingRequestsToMe();
+
+  const data = useMemo(() => {
+    if (!q.data) return [];
+
+    return q.data.pages.map((page) => page.results).flat();
+  }, [q.data]);
+
   return (
     <Page>
-      {query.isPending ? (
+      {q.isPending ? (
         <FullPageLoadingIndicator />
-      ) : query.isSuccess ? (
-        <FollowingRequestsToMeList data={query.data} />
+      ) : q.isSuccess ? (
+        <FollowingRequestsToMeList
+          refreshing={q.isRefetching}
+          onRefresh={q.refetch}
+          data={data}
+        />
       ) : (
-        <Error />
+        <NetworkError onRetry={q.refetch} />
       )}
     </Page>
   );
@@ -40,13 +59,51 @@ const FollowingRequestsToMeList = ({
   data,
   ...props
 }: FollowingRequestsToMeListProps) => {
+  const q = useInfiniteFollwingRequestsToMe();
+  const { height } = useWindowDimensions();
+
+  const renderFooter = () => {
+    if (q.isFetchingNextPage) {
+      return <ListFooterActivityIndicator />;
+    }
+  };
+
+  const handleOnEndReached = () => {
+    q.fetchNextPage();
+  };
+
+  const renderEmptyList = () => {
+    return (
+      <ThemedView
+        style={{
+          marginTop: height / 2.6,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ThemedText>No items left</ThemedText>
+      </ThemedView>
+    );
+  };
+
   return (
     <Animated.FlatList
       renderItem={({ item, index }) => {
-        return <FollowingRequestsToMeCell request={item} />;
+        return <FollowingRequestsToMeCell key={index} request={item} />;
       }}
       // estimatedItemSize={120}
       data={data}
+      contentContainerStyle={{ paddingTop: 20, paddingBottom: 30 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={props.refreshing ?? false}
+          onRefresh={props.onRefresh ?? undefined}
+        />
+      }
+      ListFooterComponent={renderFooter}
+      onEndReachedThreshold={15}
+      ListEmptyComponent={renderEmptyList}
+      onEndReached={handleOnEndReached}
       itemLayoutAnimation={LinearTransition}
       {...props}
     />

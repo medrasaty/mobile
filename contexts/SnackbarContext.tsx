@@ -1,5 +1,5 @@
 import React, { useContext, createContext } from "react";
-import { Snackbar } from "react-native-paper";
+import { Snackbar, useTheme } from "react-native-paper";
 
 export type SnackbarContextType = {
   message: string;
@@ -15,6 +15,7 @@ export const SnackbarContext = createContext<SnackbarContextType>({
 
 export function SnackbarProvider({ children }: React.PropsWithChildren) {
   const [message, setMessage] = React.useState<string>("");
+  const theme = useTheme();
 
   const show = (message: string) => {
     setMessage(message);
@@ -26,10 +27,12 @@ export function SnackbarProvider({ children }: React.PropsWithChildren) {
 
   const seconds = 3;
   const duration = seconds * 1000; // 3 seconds
+
   return (
     <SnackbarContext.Provider value={{ message, show, hide }}>
       {children}
       <Snackbar
+        theme={theme}
         duration={duration}
         visible={message.length > 0}
         onDismiss={hide}

@@ -65,10 +65,10 @@ function useProfilePictureStyle() {
         width: AVATAR_SIZE,
         height: AVATAR_SIZE,
         borderRadius: AVATAR_SIZE / 2,
-        borderColor: theme.colors.surface,
+        borderColor: theme.colors.secondaryContainer,
         borderWidth: 3,
         shadowColor: theme.colors.shadow,
-        elevation: 10,
+        // elevation: theme.colors.elevation.level2,
       },
     });
   }, [theme]);

@@ -45,6 +45,8 @@ export default function useUnfollowMutation() {
           if (!oldData) {
             return oldData;
           }
+          console.log("updating following query");
+
           return oldData.filter((f) => f.username !== username);
         }
       );
@@ -57,6 +59,7 @@ export default function useUnfollowMutation() {
           }
           return oldData.map((friend) => {
             if (friend.username == username) {
+              console.log("updating follower query");
               return {
                 ...friend,
                 is_following: false,

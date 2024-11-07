@@ -18,7 +18,7 @@
   "Leaderboard": "Leaderboard",
   "You": "You",
   "follow": "follow",
-  "unfollow": "ufollow",
+  "unfollow": "Unfollow",
   "Unfollow": "Ufollow",
   "reputation": "reputation",
   "Reputation": "Reputation",
@@ -56,5 +56,13 @@
   "Accept": "accept",
   "Reject": "reject",
   "accept": "accept",
-  "reject": "reject"
+  "reject": "reject",
+  "success_accept_following_request": "Accept succeseed",
+  "Black_list": "Black list",
+  "black_list": "black list",
+  "retry": "retry",
+  "Retry": "Retry",
+  "something_went_wrong!": "Something went wrong!",
+  "unblock": "unblock",
+  "Unblock": "Unblock"
 }

@@ -1,11 +1,11 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { BaseUser } from "@/types/user.types";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import { Pressable, StyleSheet, useWindowDimensions } from "react-native";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
 import { useMemo } from "react";
 import UserAvatar from "@/components/UserAvatar";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import Row from "@/components/Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "react-native-paper";
@@ -15,23 +15,23 @@ import {
   FollowButton,
   UnfollowButton,
 } from "./FollowActionButtons";
+import { getExpoPushTokenAsync } from "expo-notifications";
 
 type UserCompactCellProps = {
   user: FriendUser;
+  numOfCells: number;
 };
 
-const UserCompactCell = ({ user }: UserCompactCellProps) => {
+const UserCompactCell = ({ user, numOfCells }: UserCompactCellProps) => {
   const { width } = useWindowDimensions();
 
-  const numOfCells = 3;
-  const cardWidth = useMemo(
-    () => (width - 2 * DEFAULT_CONTAINER_SPACING) / numOfCells,
-    [width]
-  );
+  const goToUser = () => {
+    router.push(`/users/${user.username}`);
+  };
 
   return (
-    <Link href={`/users/${user.username}`}>
-      <ThemedView style={[styles.container, { width: cardWidth }]}>
+    <Pressable style={styles.container} onPress={goToUser}>
+      <ThemedView style={[styles.container]}>
         <UserAvatar url={user.profile_picture} size={80} />
         <ThemedView style={styles.infoContainer}>
           <DisplayName name={user.short_name} />
@@ -43,7 +43,7 @@ const UserCompactCell = ({ user }: UserCompactCellProps) => {
           isFollowing={user.is_following}
         />
       </ThemedView>
-    </Link>
+    </Pressable>
   );
 };
 
@@ -99,6 +99,7 @@ const ActionButton = ({
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     gap: 10,
     alignItems: "center",
     height: 190,

@@ -3,6 +3,8 @@ import { Axios } from "axios";
 import { FollowingRequest, FriendUser } from "./types";
 import { PaginatedResponse } from "@/types/requests";
 import { transformDates } from "../forum/utils";
+import { resolvePlugin } from "@babel/core";
+import { CursorPaginatedResponse } from "@/types/responses";
 
 export async function follow(client: Axios, username: BaseUser["username"]) {
   /**
@@ -93,7 +95,27 @@ export async function getFollowingRequestsToMe(client: Axios, params: any) {
     `/following_requests/to_me/`,
     { params }
   );
-  return response.data.results.map(transformDates);
+  const value = {
+    ...response.data,
+    results: response.data.results.map(transformDates),
+  };
+  return value;
+}
+
+export async function getInfiniteFollowingRequestsToMe(
+  client: Axios,
+  queryParams: any,
+  pageParam: string // URL with required paginated.
+) {
+  const res = await client.get<CursorPaginatedResponse<FollowingRequest>>(
+    pageParam,
+    { params: queryParams }
+  );
+  // return full data, not just results
+  return {
+    ...res.data,
+    results: res.data.results.map(transformDates),
+  };
 }
 
 export async function acceptFollowingRequest(
@@ -101,4 +123,11 @@ export async function acceptFollowingRequest(
   requestId: FollowingRequest["id"]
 ) {
   return await client.patch(`/following_requests/${requestId}/accept/`);
+}
+
+export async function rejectFollowingRequest(
+  client: Axios,
+  requestId: FollowingRequest["id"]
+) {
+  return await client.patch(`/following_requests/${requestId}/reject/`);
 }

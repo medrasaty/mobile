@@ -11,6 +11,10 @@ import { StyleSheet } from "react-native";
 import { containerMargins } from "@/constants/styels";
 import { t } from "i18next";
 import useAcceptFollowingRequestMutation from "../hooks/useAcceptFollowingRequestMutation";
+import useRejectFollowingRequestMutation from "../hooks/useRejectFollowingRequestMutation";
+import { ConfirmDialog, ConfirmDialogV2 } from "@/components/ConfirmDialog";
+import { useVisibleV2 } from "@/hooks/useVisible";
+import LoadingDialog from "@/components/LoadingDialog";
 
 type FollowingRequestsToMeCellProps = {
   request: FollowingRequest;
@@ -26,7 +30,7 @@ const FollowingRequestsToMeCell = ({
   };
 
   return (
-    <Surface mode="flat" style={[styles.container]}>
+    <Surface style={[styles.container]}>
       <ThemedView style={{ padding: 10, gap: 16 }}>
         <Row style={{ justifyContent: "space-between" }}>
           <ThemedView
@@ -78,13 +82,30 @@ export const AcceptButton = ({ requestId }: ActionButtonsProps) => {
 
 export const RejectButton = ({ requestId }: ActionButtonsProps) => {
   const theme = useTheme();
+  const { mutate: reject, isPending } = useRejectFollowingRequestMutation();
+  const [visible, show, hide] = useVisibleV2(false);
+
+  const handleRejectionConfirm = () => {
+    hide();
+    reject(requestId);
+  };
+
   return (
-    <Button
-      theme={{ colors: { primary: theme.colors.error } }}
-      onPress={() => alert("reject")}
-    >
-      {t("reject")}
-    </Button>
+    <>
+      <Button
+        theme={{ colors: { primary: theme.colors.error } }}
+        onPress={show}
+      >
+        {t("reject")}
+      </Button>
+      <ConfirmDialogV2
+        message={t("confirm_following_request_rejection")}
+        visible={visible}
+        onCancel={hide}
+        onConfirm={handleRejectionConfirm}
+      />
+      <LoadingDialog message={t("rejecting") + "..."} visible={isPending} />
+    </>
   );
 };
 

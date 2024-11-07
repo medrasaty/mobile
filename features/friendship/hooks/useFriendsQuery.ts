@@ -14,7 +14,7 @@ export default function useFriendsQuery() {
   const client = useAuthClient();
 
   return useQuery({
-    queryKey: FRIENDS_QUERY_KEY,
+    queryKey: FriendsQueryKeys.all,
     queryFn: async () => await getFriends(client),
   });
 }

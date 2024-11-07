@@ -4,23 +4,24 @@ import UserGridList from "../components/UsersGridList";
 import { useFollowersQuery } from "../hooks/useFriendsQuery";
 import FrienshipScreenActivityIndicator from "../components/FrienshipScreenActivityIndicator";
 import FrienshipScreenError from "../components/FrienshipScreenError";
+import NetworkError from "@/components/NetworkError";
 
 type FollowerScreenProps = {};
 
 const FollowerScreen = ({}: FollowerScreenProps) => {
-  const query = useFollowersQuery();
+  const q = useFollowersQuery();
 
   return (
     <Page>
-      {query.isPending ? (
+      {q.isPending ? (
         <FrienshipScreenActivityIndicator />
-      ) : query.isError ? (
-        <FrienshipScreenError message="something went wrong!" />
-      ) : query.data ? (
+      ) : q.isError ? (
+        <NetworkError onRetry={q.refetch} message="something went wrong!" />
+      ) : q.data ? (
         <UserGridList
-          onRefresh={query.refetch}
-          isRefreshing={query.isRefetching}
-          users={query.data}
+          onRefresh={q.refetch}
+          isRefreshing={q.isRefetching}
+          users={q.data}
         />
       ) : (
         <ThemedText>Couldn't get the data</ThemedText>

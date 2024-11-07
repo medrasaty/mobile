@@ -5,17 +5,16 @@ import { AppBar } from "@/features/navigation/components/AppBar";
 import MaterialDrawerItemList from "@/features/navigation/components/MaterialDrawerItemList";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { IconProps } from "@expo/vector-icons/build/createIconSet";
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
+  DrawerHeaderProps,
 } from "@react-navigation/drawer";
 import { Drawer } from "expo-router/drawer";
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useWindowDimensions } from "react-native";
 import "react-native-gesture-handler";
-import { Drawer as MaterialDrawer } from "react-native-paper";
+import { Appbar, Drawer as MaterialDrawer } from "react-native-paper";
 
 export const MaterialDrawerContent = (props: DrawerContentComponentProps) => {
   const { height } = useWindowDimensions();
@@ -60,32 +59,23 @@ export default function DrawerLayout() {
     <Drawer
       drawerContent={MaterialDrawerContent}
       screenOptions={{
-        headerShown: false,
         drawerLabelStyle: {
           fontSize: 98,
         },
+        header: DrawerPagesAppbar,
       }}
       initialRouteName="(tabs)"
     >
       <Drawer.Screen
         name="(tabs)"
         options={{
+          headerShown: false,
           title: t("Home"),
           drawerIcon: HomeIcon,
         }}
       />
       <Drawer.Screen
         options={{
-          headerShown: true,
-          header(props) {
-            return (
-              <AppBar
-                //@ts-ignore
-                options={{ mode: "center-aligned" }}
-                title={t("bookmarks")}
-              />
-            );
-          },
           title: t("Bookmarks"),
           drawerIcon: BookmarksIcon,
         }}
@@ -94,16 +84,6 @@ export default function DrawerLayout() {
       <Drawer.Screen
         name="friends"
         options={{
-          headerShown: true,
-          header(props) {
-            return (
-              <AppBar
-                //@ts-ignore
-                options={{ mode: "center-aligned" }}
-                title={t("friends")}
-              />
-            );
-          },
           title: t("Friends"),
           drawerIcon: FriendsIcon,
         }}
@@ -111,16 +91,6 @@ export default function DrawerLayout() {
       <Drawer.Screen
         name="following_requests_to_me"
         options={{
-          headerShown: true,
-          header(props) {
-            return (
-              <AppBar
-                //@ts-ignore
-                options={{ mode: "center-aligned" }}
-                title={t("Following_requests")}
-              />
-            );
-          },
           title: t("Following_requests"),
           drawerIcon: FollowingRequestsIcon,
         }}
@@ -128,23 +98,28 @@ export default function DrawerLayout() {
       <Drawer.Screen
         name="following_requests_from_me"
         options={{
-          headerShown: true,
-          header(props) {
-            return (
-              <AppBar
-                //@ts-ignore
-                options={{ mode: "center-aligned" }}
-                title={t("Your_following_requests")}
-              />
-            );
-          },
           title: t("Your_following_requests"),
           drawerIcon: YourFollowingRequestsIcon,
+        }}
+      />
+      <Drawer.Screen
+        name="blacklist"
+        options={{
+          title: t("Black_list"),
+          drawerIcon: BlackListIcon,
         }}
       />
     </Drawer>
   );
 }
+
+export const DrawerPagesAppbar = (props: DrawerHeaderProps) => {
+  return (
+    <AppBar title={props.options.title}>
+      <Appbar.Action icon={"dots-vertical"} onPress={() => {}} />
+    </AppBar>
+  );
+};
 
 type IconProps = {
   color: string;
@@ -170,4 +145,9 @@ const FollowingRequestsIcon = (props: IconProps) => {
 
 const YourFollowingRequestsIcon = (props: IconProps) => {
   return <Ionicons name="send" {...props} />;
+};
+
+const BlackListIcon = (props: IconProps) => {
+  // TODO: choose better icon
+  return <Ionicons name="code-working" {...props} />;
 };
