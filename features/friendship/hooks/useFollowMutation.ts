@@ -10,6 +10,8 @@ import { follow, followBack } from "../requests";
 import * as Burnt from "burnt";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
+import { ProfileQueryKeys } from "@/features/profile/keys";
+import { FriendsQueryKeys } from "./useFriendsQuery";
 
 export type FollowMutateParams = {
   username: BaseUser["username"];
@@ -20,22 +22,24 @@ function useFollowMutationOptions(): UseMutationOptions<
   Error,
   FollowMutateParams
 > {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return {
     onSuccess: async (_data, variables) => {
       const { username } = variables;
-      const profile = queryClient.getQueryData<{ is_following: boolean }>([
+      const profile = qc.getQueryData<{ is_following: boolean }>([
         "profile",
         username,
       ]);
 
       if (profile) {
-        queryClient.setQueryData(["profile", username], {
+        qc.setQueryData(ProfileQueryKeys.withUsername(username), {
           ...profile,
           is_following: true,
         });
       }
+
+      qc.invalidateQueries({ queryKey: FriendsQueryKeys.all });
 
       Burnt.toast({
         title: t("success_follow"),
@@ -49,7 +53,7 @@ function useFollowMutationOptions(): UseMutationOptions<
       });
     },
     onSettled: (_data, _error, variables) => {
-      queryClient.invalidateQueries({
+      qc.invalidateQueries({
         queryKey: ["profile", variables.username],
       });
     },

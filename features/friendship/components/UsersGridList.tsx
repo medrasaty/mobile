@@ -1,6 +1,6 @@
 import { ThemedView } from "@/components/ThemedView";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
-import { RefreshControl, StyleSheet } from "react-native";
+import { FlatList, RefreshControl, StyleSheet } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
 import UserCompactCell from "./UserCompactCell";
 import { FriendUser } from "../types";
@@ -22,7 +22,7 @@ export const UserGridList = ({
   const numOfCells = 2;
   return (
     <ThemedView style={styles.container}>
-      <Animated.FlatList
+      <FlatList
         renderItem={({ item, index }) => {
           return (
             <UserCompactCell numOfCells={numOfCells} key={index} user={item} />
@@ -34,7 +34,8 @@ export const UserGridList = ({
         numColumns={numOfCells}
         contentContainerStyle={{
           gap: 2 * DEFAULT_CONTAINER_SPACING,
-          paddingTop: 10,
+          paddingTop: 20,
+          paddingBottom: 20,
         }}
         columnWrapperStyle={{ gap: DEFAULT_CONTAINER_SPACING }}
         refreshControl={
@@ -42,7 +43,6 @@ export const UserGridList = ({
         }
         onRefresh={onRefresh}
         refreshing={isRefreshing}
-        itemLayoutAnimation={LinearTransition}
       />
     </ThemedView>
   );

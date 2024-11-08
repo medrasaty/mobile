@@ -12,6 +12,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useProfileScreen } from "../contexts/ProfileScreenContext";
 import ProfileActionsSection from "./ProfileFollowingSection";
 import { debugStyle } from "@/constants/styels";
+import { useRouter } from "expo-router";
 
 type ProfileInfoProps = {} & ViewProps;
 
@@ -94,6 +95,7 @@ const UserInfo = ({
   schoolName,
   type,
 }: UserProfileProps) => {
+  const router = useRouter();
   return (
     <ThemedView>
       <ThemedText bold variant="displaySmall">

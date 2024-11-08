@@ -47,6 +47,7 @@ const UserProfileScreen = ({ username }: UserProfileScreenProps) => {
       <ProfileScreenProvider value={{ profile: q.data }}>
         <BottomSheetModalProvider>
           <ProfileListProvider>
+            <AppBar title={q.data.username + "@"} />
             <UserProfileScreenContent onRefresh={q.refetch} />
           </ProfileListProvider>
           <StatusBar backgroundColor={theme.colors.surface} />
