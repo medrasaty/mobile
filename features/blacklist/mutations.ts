@@ -7,6 +7,8 @@ import { BlackListKeys } from "./keys";
 import { BaseUser } from "@/types/user.types";
 import { ProfileQueryKeys } from "../profile/keys";
 import { UserProfile } from "../profile/types.types";
+import { FriendsQueryKeys } from "../friendship/hooks/useFriendsQuery";
+import { FriendUser } from "../friendship/types";
 
 export function useUnblockUserMutation(username: BaseUser["username"]) {
   const client = useAuthClient();
@@ -41,6 +43,15 @@ export function useUnblockUserMutation(username: BaseUser["username"]) {
             ...oldData,
             is_blocker: false,
           };
+        }
+      );
+
+      qc.setQueriesData(
+        { queryKey: FriendsQueryKeys.all },
+        (oldDate: FriendUser[] | undefined) => {
+          if (!oldDate) return oldDate;
+
+          return oldDate.filter((f) => f.username !== username);
         }
       );
 
@@ -82,6 +93,8 @@ export function useBlockUserMutation(username: BaseUser["username"]) {
           return {
             ...oldData,
             is_blocker: true,
+            is_follower: false,
+            is_following: false,
           };
         }
       );

@@ -64,5 +64,9 @@
   "Retry": "Retry",
   "something_went_wrong!": "Something went wrong!",
   "unblock": "unblock",
-  "Unblock": "Unblock"
+  "Unblock": "Unblock",
+  "Block": "Block",
+  "block": "block",
+  "Report": "Report",
+  "report": "report"
 }

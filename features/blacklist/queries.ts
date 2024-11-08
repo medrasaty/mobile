@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { BlackListKeys } from "./queryKeys";
+import { BlackListKeys } from "./keys";
 import useAuthClient from "@/hooks/useAuthClient";
 import { BlackListUser } from "./types";
 import { CursorPaginatedResponse, PaginatedResponse } from "@/types/responses";

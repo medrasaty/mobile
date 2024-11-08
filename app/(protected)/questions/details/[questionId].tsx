@@ -12,6 +12,7 @@ import { useQuestionAnswers } from "@/features/forum/hooks/useAnswers";
 import { useQuestion } from "@/features/forum/hooks/useQuestions";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { Answer } from "@/types/forum.types";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -21,9 +22,11 @@ import { ActivityIndicator, Divider } from "react-native-paper";
 
 export default function QuestionDetailPage() {
   return (
-    <Page>
-      <AnswersList />
-    </Page>
+    <BottomSheetModalProvider>
+      <Page>
+        <AnswersList />
+      </Page>
+    </BottomSheetModalProvider>
   );
 }
 
@@ -71,7 +74,7 @@ const AnswersList = () => {
     isRefetching: isAnswersRefetching,
     refetch: refetchAnswers,
   } = useQuestionAnswers(questionId as string);
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   const listRef = useRef<FlashList<Answer>>(null);
   useScrollToAnswer(answers, listRef);

@@ -63,5 +63,9 @@
   "Retry": "إعادة المحاولة",
   "something_went_wrong!": "حصل خطأ ما!",
   "Unblock": "رفع الحضر",
-  "unblock": "رفع الحضر"
+  "unblock": "رفع الحضر",
+  "Block": "حظر",
+  "block": "حظر",
+  "Report": "إبلاغ",
+  "report": "إبلاغ"
 }

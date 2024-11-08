@@ -1,9 +1,6 @@
 import Page from "@/components/Page";
 import { useBlackListUsers } from "../queries";
-import FullPageLoadingIndicator from "@/components/FullPageLoadingIndicator";
-import NetworkError from "@/components/NetworkError";
 import ScreenList from "@/components/ScreenFlatList";
-import { ThemedText } from "@/components/ThemedText";
 import BlackListUserCell from "../components/BlackListUserCell";
 
 type BlackListScreenProps = {};
@@ -13,13 +10,17 @@ const BlackListScreen = ({}: BlackListScreenProps) => {
   return (
     <Page>
       <ScreenList
-        renderItem={({ item }) => {
-          return <BlackListUserCell user={item} />;
+        renderItem={({ item, index }) => {
+          return <BlackListUserCell key={index} user={item} />;
         }}
         data={q.data}
+        estimatedItemSize={100}
+        keyExtractor={(item) => item.username}
         isPending={q.isPending}
         isError={q.isError}
         onRetry={q.refetch}
+        refreshing={q.isRefetching}
+        onRefresh={q.refetch}
       />
     </Page>
   );

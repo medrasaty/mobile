@@ -77,7 +77,9 @@ export type ProfileListTypedData = TypedData<ProfileListTypedDataChoices>;
 
 export const DEFAULT_EMTY_CELL_HEIGHT = 100;
 
-export const UserProfileScreenContent = ({}: UserProfileScreenContentProps) => {
+export const UserProfileScreenContent = ({
+  onRefresh,
+}: UserProfileScreenContentProps) => {
   const { selectedList } = useProfileListContext();
 
   const {
@@ -97,6 +99,7 @@ export const UserProfileScreenContent = ({}: UserProfileScreenContentProps) => {
   const handleRefresh = () => {
     setIsPullRefreshing(true);
     onRefreshProfileList();
+    onRefresh();
   };
 
   const mainData = useMemo(() => {

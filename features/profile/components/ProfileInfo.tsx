@@ -20,7 +20,7 @@ const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
 
   return (
     <ThemedView style={[style, styles.container]} {...props}>
-      <Row style={styles.row}>
+      <Row style={[styles.row]}>
         <ProfilePicture url={user.profile_picture} />
         {!user.is_self && (
           <ThemedView style={styles.follow}>
@@ -42,10 +42,14 @@ const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
   );
 };
 
-const ProfilePicture = ({ url }: { url: UserProfile["profile_picture"] }) => {
+const ProfilePicture = ({
+  url,
+  style,
+  ...props
+}: { url: UserProfile["profile_picture"] } & ViewProps) => {
   const styles = useProfilePictureStyle();
   return (
-    <ContainerView style={styles.container}>
+    <ContainerView {...props} style={[style, styles.container]}>
       <FastImage
         resizeMode={FastImage.resizeMode.cover}
         source={{ uri: url }}
@@ -210,6 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   follow: {
+    flex: 1,
     marginTop: 10,
   },
   statsInfoContainer: {

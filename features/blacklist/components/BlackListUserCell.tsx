@@ -13,7 +13,6 @@ import { useVisibleV2 } from "@/hooks/useVisible";
 import { useBlockUserMutation, useUnblockUserMutation } from "../mutations";
 import LoadingDialog from "@/components/LoadingDialog";
 import { BaseUser } from "@/types/user.types";
-import { useEffect } from "react";
 
 type BlackListUserCellProps = {
   user: BlackListUser;
@@ -64,6 +63,8 @@ export const UnblockButton = ({
   return (
     <>
       <Button
+        disabled={isPending}
+        loading={isPending}
         onPress={show}
         theme={{
           colors: {
@@ -80,7 +81,6 @@ export const UnblockButton = ({
         onCancel={hide}
         onConfirm={handleUnblockUser}
       />
-      <LoadingDialog message={t("Unblocking_user...")} visible={isPending} />
     </>
   );
 };
@@ -109,11 +109,11 @@ export const BlockButton = ({
         }}
         mode="outlined"
       >
-        {t("block")}
+        {t("Block")}
       </Button>
       <ConfirmDialogV2
         visible={visible}
-        message="are you sure you want to unblock this user?"
+        message="are you sure you want to block this user?"
         onCancel={hide}
         onConfirm={handleUnblockUser}
       />

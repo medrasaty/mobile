@@ -4,13 +4,14 @@ import FullPageLoadingIndicator from "./FullPageLoadingIndicator";
 import NetworkError, { NetworkErrorProps } from "./NetworkError";
 import Animated, { LinearTransition } from "react-native-reanimated";
 import { StyleSheet } from "react-native";
+import { FlashList, FlashListProps } from "@shopify/flash-list";
 
 type ScreenListProps<T> = {
   isPending: boolean;
   isError: boolean;
   errorMessage?: string;
   onRetry: () => void;
-} & FlatListProps<T>;
+} & FlashListProps<T>;
 
 export default function ScreenList<T>({
   isPending,
@@ -25,11 +26,7 @@ export default function ScreenList<T>({
       {isPending ? (
         <FullPageLoadingIndicator />
       ) : data ? (
-        <Animated.FlatList
-          data={data}
-          {...listProps}
-          itemLayoutAnimation={LinearTransition}
-        />
+        <FlashList data={data} {...listProps} />
       ) : (
         <ScreenError message={errorMessage} onRetry={onRetry} />
       )}
