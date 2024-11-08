@@ -1,19 +1,80 @@
 import {
-    FollowBack,
-    FollowButton,
-    FollowRequestButton,
-    FollowRequestStatusButton,
-    UnfollowButton,
+  FollowBack,
+  FollowButton,
+  FollowRequestButton,
+  FollowRequestStatusButton,
+  UnfollowButton,
 } from "@/features/friendship/components/FollowActionButtons";
 import { FollowingRequestStatus, UserProfile } from "../types.types";
+import { ButtonProps, IconButton, Portal, useTheme } from "react-native-paper";
+import Row from "@/components/Row";
+import SheetView, { useSheetViewRef } from "@/components/SheetView";
+import { useEffect } from "react";
+import { useProfileScreen } from "../contexts/ProfileScreenContext";
+import { BaseUser } from "@/types/user.types";
+import { ContainerView } from "@/components/styled";
+import { useVisibleV2 } from "@/hooks/useVisible";
+import { useBlockUserMutation } from "@/features/blacklist/mutations";
+import { useBottomSheetModal } from "@gorhom/bottom-sheet";
+import {
+  BlockButton,
+  UnblockButton,
+} from "@/features/blacklist/components/BlackListUserCell";
+import { useIsMutating, useMutationState } from "@tanstack/react-query";
+import { BlackListKeys } from "@/features/blacklist/keys";
 
 type ProfileFollowingSectionProps = {
   user: UserProfile;
 };
 
-const ProfileFollowingSection = ({ user }: ProfileFollowingSectionProps) => {
-  if (user.is_following)
-    return <UnfollowButton mode="outlined" username={user.username} />;
+const ProfileActionsSection = ({ user }: ProfileFollowingSectionProps) => {
+  return (
+    <Row alignItems="center">
+      <FollowingActions user={user} />
+      <MoreOptions />
+    </Row>
+  );
+};
+
+export const MoreOptions = () => {
+  const { profile } = useProfileScreen();
+  const sheetRef = useSheetViewRef();
+
+  return (
+    <>
+      <IconButton
+        onPress={() => {
+          sheetRef.current?.present();
+        }}
+        icon={"dots-vertical"}
+        mode="contained-tonal"
+      />
+      <SheetView ref={sheetRef} snapPoints={[180]}>
+        <ContainerView style={{ gap: 10 }}>
+          <ToggleBlockingButton username={profile.username} />
+        </ContainerView>
+      </SheetView>
+    </>
+  );
+};
+
+export const ToggleBlockingButton = ({
+  username,
+  onPress,
+  ...props
+}: { username: BaseUser["username"] } & Omit<ButtonProps, "children">) => {
+  const { profile } = useProfileScreen();
+  const { dismiss } = useBottomSheetModal();
+
+  return profile.is_blocker ? (
+    <UnblockButton username={username} />
+  ) : (
+    <BlockButton username={username} />
+  );
+};
+
+export const FollowingActions = ({ user }: { user: UserProfile }) => {
+  if (user.is_following) return <UnfollowButton username={user.username} />;
 
   if (user.is_follower) return <FollowBack username={user.username} />;
 
@@ -32,4 +93,4 @@ const ProfileFollowingSection = ({ user }: ProfileFollowingSectionProps) => {
   return <FollowButton username={user.username} />;
 };
 
-export default ProfileFollowingSection;
+export default ProfileActionsSection;

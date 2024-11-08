@@ -10,7 +10,8 @@ import { useTranslation } from "react-i18next";
 import Row from "@/components/Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useProfileScreen } from "../contexts/ProfileScreenContext";
-import ProfileFollowingSection from "./ProfileFollowingSection";
+import ProfileActionsSection from "./ProfileFollowingSection";
+import { debugStyle } from "@/constants/styels";
 
 type ProfileInfoProps = {} & ViewProps;
 
@@ -18,37 +19,39 @@ const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
   const { profile: user } = useProfileScreen();
 
   return (
-    <ContainerView style={[style, styles.container]} {...props}>
+    <ThemedView style={[style, styles.container]} {...props}>
       <Row style={styles.row}>
         <ProfilePicture url={user.profile_picture} />
         {!user.is_self && (
           <ThemedView style={styles.follow}>
-            <ProfileFollowingSection user={user} />
+            <ProfileActionsSection user={user} />
           </ThemedView>
         )}
       </Row>
-      <UserInfo
-        fullName={user.full_name}
-        username={user.username}
-        schoolName={user.school_name}
-        type={user.type}
-      />
-      <Bio bio={"لامكان لليأس في التطبيق"} />
-      <StatsInfo style={styles.statsInfoContainer} profile={user} />
-    </ContainerView>
+      <ContainerView>
+        <UserInfo
+          fullName={user.full_name}
+          username={user.username}
+          schoolName={user.school_name}
+          type={user.type}
+        />
+        <Bio bio={"لامكان لليأس في التطبيق"} />
+        <StatsInfo style={styles.statsInfoContainer} profile={user} />
+      </ContainerView>
+    </ThemedView>
   );
 };
 
 const ProfilePicture = ({ url }: { url: UserProfile["profile_picture"] }) => {
   const styles = useProfilePictureStyle();
   return (
-    <ThemedView style={styles.container}>
+    <ContainerView style={styles.container}>
       <FastImage
         resizeMode={FastImage.resizeMode.cover}
         source={{ uri: url }}
         style={styles.image}
       />
-    </ThemedView>
+    </ContainerView>
   );
 };
 

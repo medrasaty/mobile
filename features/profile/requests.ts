@@ -9,7 +9,7 @@ import { questionOrderKeys } from "./hooks/useProfileQuestions";
 export async function getProfile(
   client: Axios,
   username: BaseUser["username"]
-) {
+): Promise<UserProfile> {
   const response = await client.get(`/users/${username}/`);
   return transformProfile(response.data);
 }

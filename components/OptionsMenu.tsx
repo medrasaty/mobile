@@ -3,7 +3,12 @@ import { ThemedView } from "@/components/ThemedView";
 import useRoundedTheme from "@/hooks/useRoundedTheme";
 import useVisible from "@/hooks/useVisible";
 import React from "react";
-import { IconButton, Menu, MenuProps } from "react-native-paper";
+import {
+  IconButton,
+  IconButtonProps,
+  Menu,
+  MenuProps,
+} from "react-native-paper";
 import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 
 export type OptionType = {
@@ -15,11 +20,13 @@ export type OptionType = {
 type OptionsMenuProps = {
   options: OptionType[];
   onOptionPressed: (option: OptionType) => void;
+  iconButtonOptions?: Omit<IconButtonProps, "icon">;
 } & Omit<Omit<Omit<Omit<MenuProps, "children">, "anchor">, "visible">, "theme">;
 
 const OptionsMenu = ({
   options,
   onOptionPressed,
+  iconButtonOptions,
   ...props
 }: OptionsMenuProps) => {
   /**
@@ -41,7 +48,13 @@ const OptionsMenu = ({
 
   return (
     <Menu
-      anchor={<IconButton icon={"dots-vertical"} onPress={show} />}
+      anchor={
+        <IconButton
+          icon={"dots-vertical"}
+          onPress={show}
+          {...iconButtonOptions}
+        />
+      }
       visible={visible}
       onDismiss={hide}
       {...props}

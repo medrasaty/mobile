@@ -15,8 +15,8 @@ const NetworkError = ({
   style,
   ...props
 }: NetworkErrorProps) => {
-  const theme = useTheme();
   const { t } = useTranslation();
+
   return (
     <ThemedView style={[style, { gap: 9 }]} {...props}>
       <ThemedText>{message}</ThemedText>

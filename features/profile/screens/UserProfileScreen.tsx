@@ -23,7 +23,9 @@ import {
 import { ProfileListItem } from "../components/ProfileListItem";
 import { transformToTypedData } from "@/features/profile/utils";
 import { StatusBar } from "expo-status-bar";
-import { useTheme } from "react-native-paper";
+import { Appbar, useTheme } from "react-native-paper";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { AppBar } from "@/features/navigation/components/AppBar";
 
 interface UserProfileScreenProps {
   username: BaseUser["username"] | undefined;
@@ -32,6 +34,7 @@ interface UserProfileScreenProps {
 const UserProfileScreen = ({ username }: UserProfileScreenProps) => {
   // REFACTORME
   const theme = useTheme();
+
   if (!username) return <UserProfileScreenError />;
 
   const q = useProfile(username);
@@ -42,10 +45,12 @@ const UserProfileScreen = ({ username }: UserProfileScreenProps) => {
   if (q.data) {
     return (
       <ProfileScreenProvider value={{ profile: q.data }}>
-        <ProfileListProvider>
-          <UserProfileScreenContent onRefresh={q.refetch} />
-        </ProfileListProvider>
-        <StatusBar backgroundColor={theme.colors.surface} />
+        <BottomSheetModalProvider>
+          <ProfileListProvider>
+            <UserProfileScreenContent onRefresh={q.refetch} />
+          </ProfileListProvider>
+          <StatusBar backgroundColor={theme.colors.surface} />
+        </BottomSheetModalProvider>
       </ProfileScreenProvider>
     );
   }

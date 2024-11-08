@@ -59,10 +59,10 @@ const UnfollowButton = ({ username, ...props }: FollowButtonsProps) => {
   const { visible, hide, show: showConfirm } = useVisible(false);
 
   const handleConfirm = () => {
+    hide();
     unfollow({
       username: username,
     });
-    hide();
   };
 
   return (
@@ -71,7 +71,7 @@ const UnfollowButton = ({ username, ...props }: FollowButtonsProps) => {
         disabled={isPending}
         loading={isPending}
         onPress={() => showConfirm()}
-        mode="text"
+        mode="outlined"
         {...props}
       >
         {t("unfollow")}

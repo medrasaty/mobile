@@ -1,15 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { BlackListKyes } from "./queryKeys";
+import { BlackListKeys } from "./queryKeys";
 import useAuthClient from "@/hooks/useAuthClient";
 import { BlackListUser } from "./types";
+import { CursorPaginatedResponse, PaginatedResponse } from "@/types/responses";
 
 export function useBlackListUsers() {
   const client = useAuthClient();
   return useQuery({
-    queryKey: BlackListKyes.all,
+    queryKey: BlackListKeys.all,
     queryFn: async (): Promise<BlackListUser[]> => {
-      const res = await client.get<{ results: BlackListUser[] }>(`/blacklist/`);
-      return res.data.results;
+      const res = await client.get<PaginatedResponse<BlackListUser>>(
+        `/blacklist/`
+      );
+      return res.data.results.map((u) => ({
+        ...u,
+        created: new Date(u.created),
+      }));
     },
   });
 }

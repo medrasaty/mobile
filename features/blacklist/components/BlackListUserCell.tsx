@@ -10,8 +10,10 @@ import { BlackListUser } from "../types";
 import { t } from "i18next";
 import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
 import { useVisibleV2 } from "@/hooks/useVisible";
-import useUnblockUserMutation from "../mutations";
+import { useBlockUserMutation, useUnblockUserMutation } from "../mutations";
 import LoadingDialog from "@/components/LoadingDialog";
+import { BaseUser } from "@/types/user.types";
+import { useEffect } from "react";
 
 type BlackListUserCellProps = {
   user: BlackListUser;
@@ -45,12 +47,15 @@ const BlackListUserCell = ({ user }: BlackListUserCellProps) => {
 
 export const UnblockButton = ({
   username,
+  onSuccess = () => {},
 }: {
   username: BlackListUser["username"];
+  onSuccess?: () => void;
 }) => {
   const theme = useTheme();
-  const { mutate: unblock, isPending } = useUnblockUserMutation();
+  const { mutate: unblock, isPending } = useUnblockUserMutation(username);
   const [visible, show, hide] = useVisibleV2(false);
+
   const handleUnblockUser = () => {
     hide();
     unblock(username);
@@ -75,7 +80,44 @@ export const UnblockButton = ({
         onCancel={hide}
         onConfirm={handleUnblockUser}
       />
-      <LoadingDialog visible={isPending} />
+      <LoadingDialog message={t("Unblocking_user...")} visible={isPending} />
+    </>
+  );
+};
+
+export const BlockButton = ({
+  username,
+}: {
+  username: BaseUser["username"];
+}) => {
+  const theme = useTheme();
+  const { mutate: block, isPending } = useBlockUserMutation(username);
+  const [visible, show, hide] = useVisibleV2(false);
+  const handleUnblockUser = () => {
+    hide();
+    block(username);
+  };
+
+  return (
+    <>
+      <Button
+        onPress={show}
+        theme={{
+          colors: {
+            primary: theme.colors.error,
+          },
+        }}
+        mode="outlined"
+      >
+        {t("block")}
+      </Button>
+      <ConfirmDialogV2
+        visible={visible}
+        message="are you sure you want to unblock this user?"
+        onCancel={hide}
+        onConfirm={handleUnblockUser}
+      />
+      <LoadingDialog message={t("Blocking_user...")} visible={isPending} />
     </>
   );
 };
