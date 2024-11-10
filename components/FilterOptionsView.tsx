@@ -4,6 +4,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Chip, ChipProps } from "react-native-paper";
+import { ThemedView } from "./ThemedView";
 
 export type FilterOption = {
   label: string;
@@ -22,21 +23,23 @@ const FilterOptionsView: React.FC<FilterOptionsViewProps> = ({
   onFilterChange,
 }) => {
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.scrollContentContainer}
-    >
-      {filterOptions.map((option) => (
-        // @ts-ignore
-        <FilterChip
-          label={option.label}
-          key={option.value}
-          selected={currentFilter === option.value}
-          onPress={() => onFilterChange(option.value)}
-        />
-      ))}
-    </ScrollView>
+    <ThemedView>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContentContainer}
+      >
+        {filterOptions.map((option) => (
+          // @ts-ignore
+          <FilterChip
+            label={option.label}
+            key={option.value}
+            selected={currentFilter === option.value}
+            onPress={() => onFilterChange(option.value)}
+          />
+        ))}
+      </ScrollView>
+    </ThemedView>
   );
 };
 

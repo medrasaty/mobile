@@ -13,6 +13,7 @@ import FilterOptionsView, {
 } from "@/components/FilterOptionsView";
 import { useTranslation } from "react-i18next";
 import { YourFollowingRequestsScreenContext } from "../contexts/YourFollowingScreenContexts";
+import ScreenList from "@/components/ScreenFlatList";
 
 const FollowingRequestsFromMeScreen = () => {
   const { t } = useTranslation();
@@ -30,9 +31,45 @@ const FollowingRequestsFromMeScreen = () => {
     filterOptions[0]["value"]
   );
 
-  const query = useYourFollowingRequestQuery({
+  const q = useYourFollowingRequestQuery({
     params: { status: filter },
   });
+  const { height } = useWindowDimensions();
+
+  const emptyList = () => {
+    return (
+      <ThemedView style={{ marginTop: height / 2.5, alignItems: "center" }}>
+        <ThemedText variant="titleMedium">No requests yet.</ThemedText>
+      </ThemedView>
+    );
+  };
+
+  return (
+    <YourFollowingRequestsScreenContext.Provider
+      value={{ filter, setFilter, filterOptions }}
+    >
+      <Page>
+        <FilterOptionsView
+          filterOptions={filterOptions}
+          currentFilter={filter}
+          onFilterChange={(filter) => setFilter(filter)}
+        />
+        <ScreenList
+          renderItem={({ item, index }) => (
+            <FollowingRequestCell request={item} />
+          )}
+          onRetry={q.refetch}
+          estimatedItemSize={100}
+          refreshing={q.isRefetching}
+          onRefresh={q.refetch}
+          isPending={q.isPending}
+          isError={q.isError}
+          data={q.data}
+          ListEmptyComponent={emptyList}
+        />
+      </Page>
+    </YourFollowingRequestsScreenContext.Provider>
+  );
 
   return (
     <YourFollowingRequestsScreenContext.Provider
@@ -46,16 +83,16 @@ const FollowingRequestsFromMeScreen = () => {
             onFilterChange={(filter) => setFilter(filter)}
           />
         </ThemedView>
-        {query.isPending ? (
+        {q.isPending ? (
           <ActivityIndicator />
-        ) : query.isError ? (
+        ) : q.isError ? (
           <ThemedText>Error</ThemedText>
-        ) : query.data ? (
+        ) : q.data ? (
           <>
             <FollowingRequestList
-              data={query.data}
-              refreshing={query.isRefetching}
-              onRefresh={query.refetch}
+              data={q.data}
+              refreshing={q.isRefetching}
+              onRefresh={q.refetch}
             />
           </>
         ) : (
@@ -92,7 +129,6 @@ const FollowingRequestList = ({
         renderItem={({ item, index }) => (
           <FollowingRequestCell request={item} />
         )}
-        ItemSeparatorComponent={Divider}
         estimatedItemSize={120}
         refreshControl={
           <RefreshControl

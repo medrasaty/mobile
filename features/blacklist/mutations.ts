@@ -25,9 +25,6 @@ export function useUnblockUserMutation(username: BaseUser["username"]) {
     mutationFn: async (username: BlackListUser["username"]) =>
       await unblockUser(client, username),
     onSuccess: (_data, username) => {
-      // TODO: update blacklist users query
-      // show success message
-
       qc.setQueriesData(
         { queryKey: BlackListKeys.all },
         (
@@ -81,6 +78,9 @@ export function useUnblockUserMutation(username: BaseUser["username"]) {
         title: "Failed unblock user",
         haptic: "error",
       });
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: BlackListKeys.all });
     },
   });
 }
