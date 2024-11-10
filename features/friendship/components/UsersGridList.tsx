@@ -19,7 +19,7 @@ export const UserGridList = ({
   /**
    * Render a grid of users compact cells.
    */
-  const numOfCells = 2;
+  const numOfCells = 1;
   return (
     <ThemedView style={styles.container}>
       <FlatList
@@ -32,15 +32,6 @@ export const UserGridList = ({
         // estimatedItemSize={400}
         showsVerticalScrollIndicator={false}
         numColumns={numOfCells}
-        contentContainerStyle={{
-          gap: 2 * DEFAULT_CONTAINER_SPACING,
-          paddingTop: 20,
-          paddingBottom: 20,
-        }}
-        columnWrapperStyle={{ gap: DEFAULT_CONTAINER_SPACING }}
-        refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
-        }
         onRefresh={onRefresh}
         refreshing={isRefreshing}
       />

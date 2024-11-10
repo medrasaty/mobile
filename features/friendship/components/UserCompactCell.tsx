@@ -15,7 +15,6 @@ import {
   FollowButton,
   UnfollowButton,
 } from "./FollowActionButtons";
-import { getExpoPushTokenAsync } from "expo-notifications";
 
 type UserCompactCellProps = {
   user: FriendUser;
@@ -30,20 +29,23 @@ const UserCompactCell = ({ user, numOfCells }: UserCompactCellProps) => {
   };
 
   return (
-    <Pressable style={styles.container} onPress={goToUser}>
-      <ThemedView style={[styles.container]}>
-        <UserAvatar url={user.profile_picture} size={80} />
-        <ThemedView style={styles.infoContainer}>
-          <DisplayName name={user.short_name} />
-          <School name={user.school_name} />
-        </ThemedView>
+    <ThemedView style={{ padding: DEFAULT_CONTAINER_SPACING }}>
+      <ThemedView style={styles.rowContainer}>
+        <Row alignItems="center" style={{ gap: 10 }}>
+          <UserAvatar size={60} url={user.profile_picture} />
+          <Pressable onPress={goToUser}>
+            <ThemedText>{user.short_name}</ThemedText>
+            <School name={user.school_name} />
+          </Pressable>
+        </Row>
+
         <ActionButton
-          username={user.username}
           isFollower={user.is_follower}
           isFollowing={user.is_following}
+          username={user.username}
         />
       </ThemedView>
-    </Pressable>
+    </ThemedView>
   );
 };
 
@@ -68,7 +70,12 @@ export const School = ({ name }: { name: string }) => {
         name="school"
         color={theme.colors.primary}
       />
-      <ThemedText color="gray" numberOfLines={1} variant="labelSmall">
+      <ThemedText
+        color="gray"
+        style={{ width: 100 }}
+        numberOfLines={1}
+        variant="labelSmall"
+      >
         {name}
       </ThemedText>
     </Row>
@@ -100,6 +107,7 @@ const ActionButton = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "row",
     gap: 10,
     alignItems: "center",
     height: 190,
@@ -107,6 +115,11 @@ const styles = StyleSheet.create({
 
   infoContainer: {
     alignItems: "center",
+  },
+  rowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 });
 

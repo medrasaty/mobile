@@ -19,3 +19,10 @@ export function filterPage<T>(
     results: page.results.filter(filter),
   };
 }
+
+export function filterPages<T>(
+  pages: CursorPaginatedResponse<T>[],
+  filter: (item: T) => boolean
+) {
+  return pages.map((page) => filterPage(page, filter));
+}

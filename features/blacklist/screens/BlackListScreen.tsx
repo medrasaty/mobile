@@ -2,7 +2,7 @@ import Page from "@/components/Page";
 import { useInfiniteBlackListUsers } from "../queries";
 import ScreenList from "@/components/ScreenFlatList";
 import BlackListUserCell from "../components/BlackListUserCell";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Appbar, Searchbar, useTheme } from "react-native-paper";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -13,6 +13,7 @@ import {
 import { ThemedView } from "@/components/ThemedView";
 import { t } from "i18next";
 import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
+import { BackHandler } from "react-native";
 
 type BlackListScreenProps = {};
 
@@ -47,6 +48,12 @@ export const SearchAppbar = () => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
 
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      setIsSearch(false);
+    });
+  }, []);
+
   const handleClose = () => {
     setSearchValue("");
     setIsSearch(false);
@@ -59,7 +66,7 @@ export const SearchAppbar = () => {
         style={{ backgroundColor: theme.colors.surface }}
         icon={"arrow-right"}
         onIconPress={handleClose}
-        showDivider={false}
+        // showDivider={false}
         autoFocus
         mode="view"
         value={searchValue}

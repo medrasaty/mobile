@@ -1,5 +1,9 @@
 import useAuthClient from "@/hooks/useAuthClient";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  InfiniteData,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import * as Burnt from "burnt";
 import { BlackListUser } from "./types";
 import { blockUser, unblockUser } from "./requests";
@@ -9,6 +13,8 @@ import { ProfileQueryKeys } from "../profile/keys";
 import { UserProfile } from "../profile/types.types";
 import { FriendsQueryKeys } from "../friendship/hooks/useFriendsQuery";
 import { FriendUser } from "../friendship/types";
+import { CursorPaginatedResponse } from "@/types/responses";
+import { filterPage, filterPages } from "../friendship/utils";
 
 export function useUnblockUserMutation(username: BaseUser["username"]) {
   const client = useAuthClient();
@@ -21,13 +27,22 @@ export function useUnblockUserMutation(username: BaseUser["username"]) {
     onSuccess: (_data, username) => {
       // TODO: update blacklist users query
       // show success message
+
       qc.setQueriesData(
         { queryKey: BlackListKeys.all },
-        (oldData: BlackListUser[] | undefined) => {
+        (
+          oldData:
+            | InfiniteData<CursorPaginatedResponse<BlackListUser>>
+            | undefined
+        ) => {
           if (!oldData) {
             return oldData;
           }
-          return oldData.filter((u) => u.username !== username);
+
+          return {
+            ...oldData,
+            pages: filterPages(oldData.pages, (u) => u.username !== username),
+          };
         }
       );
 
