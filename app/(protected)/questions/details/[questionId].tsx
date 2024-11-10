@@ -35,6 +35,7 @@ function useScrollToAnswer(
   listRef: React.RefObject<FlashList<Answer>>
 ) {
   const { answerId } = useLocalSearchParams<{ answerId?: string }>();
+
   const [hasScrolled, setHasScrolled] = useState(false);
 
   const answerIndex = useMemo(

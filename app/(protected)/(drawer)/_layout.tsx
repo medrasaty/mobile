@@ -105,6 +105,7 @@ export default function DrawerLayout() {
       <Drawer.Screen
         name="blacklist"
         options={{
+          headerShown: false,
           title: t("Black_list"),
           drawerIcon: BlackListIcon,
         }}

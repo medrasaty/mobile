@@ -6,6 +6,7 @@ import { BaseUser } from "@/types/user.types";
 
 export const BlackListKeys = {
   all: ["blacklist"] as const,
+  withParams: (params: any) => [...BlackListKeys.all, params],
   mutate_blacklist: ["mutate_blacklist"] as const,
   block: (username: BaseUser["username"]) => [
     ...BlackListKeys.mutate_blacklist,

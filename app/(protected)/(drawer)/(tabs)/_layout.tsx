@@ -46,7 +46,13 @@ export default function TabsLayout() {
             return <IndexAppBar title={t("Home")} />;
           },
           tabBarLabel: t("Home"),
-          tabBarIcon: (props) => <TabBarIcon {...props} icon_name={"home"} />,
+          tabBarIcon: (props) => (
+            <TabBarIcon
+              {...props}
+              active_icon_name="home-outline"
+              icon_name={"home"}
+            />
+          ),
         }}
       />
 
@@ -55,22 +61,53 @@ export default function TabsLayout() {
         options={{
           tabBarLabel: t("notification"),
           tabBarIcon: (props) => (
-            <NotificationsTabBarIcon {...props} icon_name="bell" />
+            <NotificationsTabBarIcon
+              {...props}
+              active_icon_name="bell-outline"
+              icon_name="bell"
+            />
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="search"
+        options={{
+          tabBarLabel: t("Search"),
+          tabBarIcon: (props) => (
+            <TabBarIcon
+              {...props}
+              active_icon_name="twitter"
+              icon_name="magnify"
+            />
+          ),
+        }}
+      />
+
       <Tabs.Screen
         name="leader_board"
         options={{
           tabBarLabel: t("Leaderboard"),
-          tabBarIcon: (props) => <TabBarIcon {...props} icon_name="star" />,
+          tabBarIcon: (props) => (
+            <TabBarIcon
+              {...props}
+              active_icon_name="star-outline"
+              icon_name="star"
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           tabBarLabel: t("You"),
-          tabBarIcon: (props) => <TabBarIcon {...props} icon_name="account" />,
+          tabBarIcon: (props) => (
+            <TabBarIcon
+              active_icon_name="account-outline"
+              {...props}
+              icon_name="account"
+            />
+          ),
         }}
       />
     </Tabs>

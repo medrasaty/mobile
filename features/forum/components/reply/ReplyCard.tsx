@@ -3,10 +3,6 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Username from "@/components/Username";
 import { View, ViewProps } from "react-native";
-import { Divider, IconButton } from "react-native-paper";
-
-import Entypo from "@expo/vector-icons/Entypo";
-import { debugStyle } from "@/constants/styels";
 import { Reply } from "@/types/forum.types";
 import User from "@/components/User";
 import ReadMoreText from "@/components/ReadMoreText";

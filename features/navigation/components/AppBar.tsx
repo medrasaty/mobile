@@ -1,4 +1,5 @@
 import { useAnimatedAppBar } from "@/contexts";
+import { useSession } from "@/hooks/useSession";
 import { useNavigation } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
@@ -68,13 +69,12 @@ export function AnimatedAppBar({ title, children }: AppBarProps) {
 }
 
 export const IndexAppBar = ({ title }: { title: string }) => {
+  const { signOut } = useSession();
+
   return (
     <AnimatedAppBar backAction title={title}>
       <Appbar.Action icon="magnify" onPress={() => {}} />
-      <Appbar.Action
-        icon="dots-vertical"
-        onPress={() => alert("solo is menu")}
-      />
+      <Appbar.Action icon="logout" onPress={() => signOut()} />
     </AnimatedAppBar>
   );
 };

@@ -6,6 +6,7 @@ import { useUnreadNotificationsCount } from "@/features/notifications/hooks/useN
 
 export type TabBarIconProps = {
   icon_name: string;
+  active_icon_name: string;
   color: string;
   size: number;
   focused: boolean;
@@ -13,11 +14,12 @@ export type TabBarIconProps = {
 
 export default function TabBarIcon({
   icon_name,
+  active_icon_name,
   color,
   size,
   focused,
 }: TabBarIconProps) {
-  const name = focused ? icon_name : `${icon_name}-outline`;
+  const name = focused ? icon_name : active_icon_name;
   return <MaterialCommunityIcons name={name} size={size} color={color} />;
 }
 
@@ -45,4 +47,3 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
 });
-
