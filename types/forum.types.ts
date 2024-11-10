@@ -12,11 +12,22 @@ export interface BasicAnswer {
   modified: Date;
 }
 
-export interface BaseQuestionAnswer {
+interface BaseQuestionAnswer {
   owner: Teacher | Student;
   text: string;
   picture: string | null;
   ratings_value: number;
+  created: Date;
+  modified: Date;
+}
+
+export interface BaseQuestion {
+  id: string;
+  title: string;
+  owner: string;
+  subject: string;
+  text: string;
+  picture: null | string;
   created: Date;
   modified: Date;
 }

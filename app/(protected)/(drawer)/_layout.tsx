@@ -110,6 +110,14 @@ export default function DrawerLayout() {
           drawerIcon: BlackListIcon,
         }}
       />
+      <Drawer.Screen
+        name="watch_history"
+        options={{
+          headerShown: false,
+          title: t("Watch_history"),
+          drawerIcon: HistoryIcon,
+        }}
+      />
     </Drawer>
   );
 }
@@ -151,4 +159,9 @@ const YourFollowingRequestsIcon = (props: IconProps) => {
 const BlackListIcon = (props: IconProps) => {
   // TODO: choose better icon
   return <Ionicons name="code-working" {...props} />;
+};
+
+const HistoryIcon = (props: IconProps) => {
+  // TODO: choose better icon
+  return <Ionicons name="time-outline" {...props} />;
 };

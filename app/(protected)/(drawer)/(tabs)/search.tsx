@@ -1,12 +1,7 @@
-import Page from "@/components/Page";
-import { ThemedText } from "@/components/ThemedText";
+import MainSearchScreen from "@/features/search/screens/MainSearchScreen";
 
 const SearchPage = () => {
-  return (
-    <Page>
-      <ThemedText variant="titleLarge">SearchPage</ThemedText>
-    </Page>
-  );
+  return <MainSearchScreen />;
 };
 
 export default SearchPage;

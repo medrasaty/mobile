@@ -68,5 +68,9 @@
   "Block": "Block",
   "block": "block",
   "Report": "Report",
-  "report": "report"
+  "report": "report",
+  "Watch_history": "Watch history",
+  "watch_history": "watch history",
+  "Newest": "Newest",
+  "Oldest": "Oldest"
 }

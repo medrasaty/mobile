@@ -13,7 +13,8 @@ import {
 import { ThemedView } from "@/components/ThemedView";
 import { t } from "i18next";
 import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
-import { BackHandler } from "react-native";
+import { BackHandler, useWindowDimensions } from "react-native";
+import { MotiView } from "moti";
 
 type BlackListScreenProps = {};
 
@@ -36,17 +37,24 @@ export const BlackListAppbar = () => {
 export const OptionAppbar = () => {
   const { setIsSearch } = useSearchContext();
   return (
-    <AppBar title={t("blacklist")}>
-      <Appbar.Action icon="magnify" onPress={() => setIsSearch(true)} />
-      <Appbar.Action icon={"dots-vertical"} onPress={() => alert("options")} />
-    </AppBar>
+    <ThemedView style={{ marginTop: 8 }}>
+      <AppBar title={t("blacklist")}>
+        <Appbar.Action icon="magnify" onPress={() => setIsSearch(true)} />
+        <Appbar.Action
+          icon={"dots-vertical"}
+          onPress={() => alert("options")}
+        />
+      </AppBar>
+    </ThemedView>
   );
 };
 
 export const SearchAppbar = () => {
-  const { searchValue, setSearchValue, setIsSearch } = useSearchContext();
+  const { searchValue, setSearchValue, isSearch, setIsSearch } =
+    useSearchContext();
   const insets = useSafeAreaInsets();
   const theme = useTheme();
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", () => {
@@ -60,10 +68,13 @@ export const SearchAppbar = () => {
   };
 
   return (
-    <ThemedView style={{ marginTop: insets.top }}>
+    <MotiView
+      animate={{ width: isSearch ? width : 0 }}
+      style={{ backgroundColor: "red", marginTop: insets.top }}
+    >
       <Searchbar
         onChangeText={(text) => setSearchValue(text)}
-        style={{ backgroundColor: theme.colors.surface }}
+        style={{ width, backgroundColor: theme.colors.surface }}
         icon={"arrow-right"}
         onIconPress={handleClose}
         // showDivider={false}
@@ -71,7 +82,7 @@ export const SearchAppbar = () => {
         mode="view"
         value={searchValue}
       />
-    </ThemedView>
+    </MotiView>
   );
 };
 

@@ -6,6 +6,7 @@ import TabBarIcon, {
   NotificationsTabBarIcon,
 } from "@/features/navigation/components/TabBarIcon";
 import { useSession } from "@/hooks/useSession";
+import { Ionicons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "react-native-paper";
@@ -49,8 +50,8 @@ export default function TabsLayout() {
           tabBarIcon: (props) => (
             <TabBarIcon
               {...props}
-              active_icon_name="home-outline"
-              icon_name={"home"}
+              active_icon_name="home"
+              icon_name="home-outline"
             />
           ),
         }}
@@ -63,8 +64,8 @@ export default function TabsLayout() {
           tabBarIcon: (props) => (
             <NotificationsTabBarIcon
               {...props}
-              active_icon_name="bell-outline"
-              icon_name="bell"
+              active_icon_name="bell"
+              icon_name="bell-outline"
             />
           ),
         }}
@@ -75,24 +76,23 @@ export default function TabsLayout() {
         options={{
           tabBarLabel: t("Search"),
           tabBarIcon: (props) => (
-            <TabBarIcon
+            <Ionicons
               {...props}
-              active_icon_name="twitter"
-              icon_name="magnify"
+              name={props.focused ? "search" : "search-outline"}
             />
           ),
         }}
       />
 
       <Tabs.Screen
-        name="leader_board"
+        name="schools"
         options={{
-          tabBarLabel: t("Leaderboard"),
+          tabBarLabel: t("Schools"),
           tabBarIcon: (props) => (
             <TabBarIcon
               {...props}
-              active_icon_name="star-outline"
-              icon_name="star"
+              active_icon_name="school"
+              icon_name="school-outline"
             />
           ),
         }}
@@ -103,9 +103,9 @@ export default function TabsLayout() {
           tabBarLabel: t("You"),
           tabBarIcon: (props) => (
             <TabBarIcon
-              active_icon_name="account-outline"
+              active_icon_name="account"
               {...props}
-              icon_name="account"
+              icon_name="account-outline"
             />
           ),
         }}

@@ -19,7 +19,7 @@ export default function TabBarIcon({
   size,
   focused,
 }: TabBarIconProps) {
-  const name = focused ? icon_name : active_icon_name;
+  const name = focused ? active_icon_name : icon_name;
   return <MaterialCommunityIcons name={name} size={size} color={color} />;
 }
 

@@ -7,7 +7,7 @@ type FriendsLayoutProps = {};
 const FriendsLayout = ({}: FriendsLayoutProps) => {
   const screenOptions = useTopTabsScreenOptions();
   return (
-    <TopTabs screenOptions={screenOptions}>
+    <TopTabs layoutDirection={"rtl"} screenOptions={screenOptions}>
       <TopTabs.Screen name="followers" options={{ title: t("followers") }} />
       <TopTabs.Screen name="following" options={{ title: t("following") }} />
     </TopTabs>

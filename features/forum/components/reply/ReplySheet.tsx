@@ -22,9 +22,6 @@ import { useTheme } from "react-native-paper";
 import useReplies from "../../hooks/useReplies";
 import ReplyCard from "../reply/ReplyCard";
 import { ReplySheetFooter } from "./ReplySheetFooter";
-import Animated, { LinearTransition } from "react-native-reanimated";
-import { FlatList } from "react-native";
-import { HelloWorldSkeleton } from "@/app/(protected)/(drawer)/(tabs)/leader_board";
 
 type ReplySheetProps = {
   answer: Answer;
@@ -109,7 +106,7 @@ const ReplySheetContent = ({ answer }: { answer: Answer }) => {
   useScrollToReplyEffect({ replies: data ?? [], listRef });
 
   if (answer.replies_count === 0) return <EmptySheet />;
-  if (!isLoading) return <HelloWorldSkeleton />;
+  if (isLoading) return <ReplySheetLoading />;
 
   if (data)
     return (

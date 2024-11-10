@@ -80,6 +80,7 @@ export function useUnblockUserMutation(username: BaseUser["username"]) {
       });
     },
     onSettled: () => {
+      alert(BlackListKeys.withParams({ search: "hany" }));
       qc.invalidateQueries({ queryKey: BlackListKeys.all });
     },
   });
