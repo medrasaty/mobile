@@ -64,9 +64,9 @@ const NotificationTypeAvatar: React.FC<{ type: NotificationType }> = ({
   const theme = useTheme();
   const iconColor = useMemo(() => {
     const colors = {
-      [NotificationType.Question]: theme.colors.secondary,
+      [NotificationType.Question]: theme.colors.primary,
       [NotificationType.Answer]: theme.colors.primary,
-      [NotificationType.Reply]: theme.colors.primaryContainer,
+      [NotificationType.Reply]: theme.colors.primary,
       [NotificationType.Other]: theme.colors.secondaryContainer,
     };
     return colors[type] || colors[NotificationType.Other];
@@ -93,7 +93,7 @@ const NotificationTypeAvatar: React.FC<{ type: NotificationType }> = ({
 
     return (
       <MaterialCommunityIcons
-      // @ts-expect-error
+        // @ts-expect-error
         name={iconName}
         size={iconSize}
         color={iconColor}

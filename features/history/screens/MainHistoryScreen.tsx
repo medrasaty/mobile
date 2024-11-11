@@ -1,19 +1,11 @@
 import Page from "@/components/Page";
-import ScreenList, { ScreenListV2 } from "@/components/ScreenFlatList";
-import useHistory from "../queries";
+import { ScreenListV2 } from "@/components/ScreenFlatList";
+import useHistory, { useInfiniteHistory } from "../queries";
 import QuestionHistoryCell from "../components/QuestionHistoryCell";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { t } from "i18next";
 import FilterOptionsView from "@/components/FilterOptionsView";
-import {
-  Appbar,
-  Divider,
-  IconButton,
-  Menu,
-  MenuItemProps,
-  Searchbar,
-  useTheme,
-} from "react-native-paper";
+import { Appbar, IconButton, Menu, MenuItemProps } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import useClearWatchHistoryMutation from "../mutations";
 import useCurrentUser from "@/hooks/useCurrentUser";
@@ -27,11 +19,10 @@ import {
   SearchContextbar,
   useSearchContext,
 } from "@/contexts/SearchContext";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { BackHandler, View, useWindowDimensions } from "react-native";
-import { useEffect, useMemo } from "react";
-import { MotiView } from "moti";
+import { View } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
+import { useMemo } from "react";
+import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
 
 const MainHistoryScreen = () => {
   return (
@@ -64,7 +55,21 @@ export const WatchHistoryList = () => {
     );
   };
 
-  const q = useHistory({ ordering: currentFilter, search: searchValue });
+  const q = useInfiniteHistory({
+    ordering: currentFilter,
+    search: searchValue,
+  });
+
+  // FIXME: duplicate in FollowingRequestsToMe
+  const data = useMemo(() => {
+    if (!q.data) return [];
+
+    return q.data.pages.map((page) => page.results).flat();
+  }, [q.data]);
+
+  const renderFooter = () => {
+    if (q.isFetchingNextPage) return <ListFooterActivityIndicator />;
+  };
 
   return (
     <ScreenListV2
@@ -73,14 +78,17 @@ export const WatchHistoryList = () => {
       }}
       isPending={q.isPending}
       ListHeaderComponent={renderHeader}
+      ListFooterComponent={renderFooter}
       ListEmptyComponent={EmptyHistory}
+      onEndReachedThreshold={1}
+      onEndReached={q.fetchNextPage}
       estimatedItemSize={200}
       isError={q.isError}
       refreshing={q.isRefetching}
       onRefresh={q.refetch}
       onRetry={q.refetch}
       overScrollMode="always"
-      data={q.data}
+      data={data}
     />
   );
 };
