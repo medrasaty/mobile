@@ -1,78 +1,161 @@
 import Page from "@/components/Page";
-import ScreenList from "@/components/ScreenFlatList";
+import ScreenList, { ScreenListV2 } from "@/components/ScreenFlatList";
 import useHistory from "../queries";
 import QuestionHistoryCell from "../components/QuestionHistoryCell";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { t } from "i18next";
-import FilterOptionsView, {
-  FilterOption,
-} from "@/components/FilterOptionsView";
-import { useMemo, useState } from "react";
-import { Appbar, Divider } from "react-native-paper";
+import FilterOptionsView from "@/components/FilterOptionsView";
+import {
+  Appbar,
+  Divider,
+  IconButton,
+  Menu,
+  MenuItemProps,
+  Searchbar,
+  useTheme,
+} from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import OptionsMenu, { OptionType } from "@/components/OptionsMenu";
+import useClearWatchHistoryMutation from "../mutations";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import LoadingDialog from "@/components/LoadingDialog";
+import useFilterOptions from "@/hooks/useFilterOptions";
+import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
+import { useVisibleV2 } from "@/hooks/useVisible";
+import { SnackbarProvider } from "@/contexts/SnackbarContext";
+import {
+  SearchContextProvider,
+  SearchContextbar,
+  useSearchContext,
+} from "@/contexts/SearchContext";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BackHandler, View, useWindowDimensions } from "react-native";
+import { useEffect, useMemo } from "react";
+import { MotiView } from "moti";
+import { ThemedText } from "@/components/ThemedText";
 
 const MainHistoryScreen = () => {
-  const { t } = useTranslation();
-
-  const filterOptions = useMemo(() => {
-    return [
-      { label: t("Newest"), value: "-watched_at" },
-      { label: t("Oldest"), value: "watched_at" },
-    ] as FilterOption[];
-  }, []);
-
-  const [filter, setFilter] = useState<FilterOption["value"]>(
-    filterOptions[0]["value"]
+  return (
+    <SearchContextProvider>
+      <SnackbarProvider>
+        <Page>
+          <HistoryAppbar />
+          <WatchHistoryList />
+        </Page>
+      </SnackbarProvider>
+    </SearchContextProvider>
   );
+};
 
-  const q = useHistory({ ordering: filter });
+export const WatchHistoryList = () => {
+  const { t } = useTranslation();
+  const { options, currentFilter, onFilterChange } = useFilterOptions([
+    { label: t("Newest"), value: "-watched_at" },
+    { label: t("Oldest"), value: "watched_at" },
+  ]);
 
+  const { searchValue } = useSearchContext();
   const renderHeader = () => {
     return (
       <FilterOptionsView
-        currentFilter={filter}
-        filterOptions={filterOptions}
-        onFilterChange={(value) => setFilter(value)}
+        currentFilter={currentFilter}
+        filterOptions={options}
+        onFilterChange={onFilterChange}
       />
     );
   };
 
+  const q = useHistory({ ordering: currentFilter, search: searchValue });
+
   return (
-    <Page>
-      <HistoryAppbar />
-      <ScreenList
-        renderItem={({ item, index }) => {
-          return <QuestionHistoryCell history={item} key={index} />;
-        }}
-        isPending={q.isPending}
-        // ItemSeparatorComponent={Divider}
-        ListHeaderComponent={renderHeader}
-        estimatedItemSize={200}
-        isError={q.isError}
-        refreshing={q.isRefetching}
-        onRefresh={q.refetch}
-        onRetry={q.refetch}
-        data={q.data}
-      />
-    </Page>
+    <ScreenListV2
+      renderItem={({ item, index }) => {
+        return <QuestionHistoryCell history={item} key={index} />;
+      }}
+      isPending={q.isPending}
+      ListHeaderComponent={renderHeader}
+      ListEmptyComponent={EmptyHistory}
+      estimatedItemSize={200}
+      isError={q.isError}
+      refreshing={q.isRefetching}
+      onRefresh={q.refetch}
+      onRetry={q.refetch}
+      overScrollMode="always"
+      data={q.data}
+    />
   );
 };
 
 const HistoryAppbar = () => {
-  const options = [
-    { id: 1, title: "clear watch history", icon: "delete" },
-  ] as OptionType[];
+  const { isSearch } = useSearchContext();
+  return isSearch ? <SearchContextbar /> : <OptionsAppbar />;
+};
+
+export const OptionsAppbar = () => {
+  const { setIsSearch } = useSearchContext();
   return (
     <AppBar title={t("Watch_history")}>
-      <Appbar.Action icon="magnify" onPress={() => alert("search")} />
-      <OptionsMenu
-        onOptionPressed={(optoin) => alert(optoin.title)}
-        options={options}
-        anchorPosition="bottom"
-      />
+      <Appbar.Action icon="magnify" onPress={() => setIsSearch(true)} />
+      <HistoryAppbarOptions />
     </AppBar>
   );
+};
+
+export const HistoryAppbarOptions = () => {
+  const {
+    mutate: clear,
+    isPending,
+    isSuccess,
+  } = useClearWatchHistoryMutation();
+  const [confirmVisible, showConfirm, hideConfirm] = useVisibleV2(false);
+  const [menuVisible, showMenu, hideMenu] = useVisibleV2(false);
+  const user = useCurrentUser();
+
+  const handleClearHistoryConfirm = () => {
+    hideConfirm();
+    clear(user.username);
+  };
+
+  return (
+    <>
+      <Menu
+        visible={menuVisible}
+        anchor={<IconButton icon={"dots-vertical"} onPress={showMenu} />}
+        onDismiss={hideMenu}
+        anchorPosition="bottom"
+      >
+        <ClearHistoryMenuItem
+          onPress={() => {
+            hideMenu();
+            showConfirm();
+          }}
+        />
+      </Menu>
+      <ConfirmDialogV2
+        message="Are you sure you want to clear the histrory ?"
+        visible={confirmVisible}
+        onConfirm={handleClearHistoryConfirm}
+        onCancel={hideConfirm}
+      />
+      <LoadingDialog
+        message={t("clearing watch history ...")}
+        visible={isPending}
+      />
+    </>
+  );
+};
+
+export const EmptyHistory = () => {
+  return (
+    <View
+      style={{ justifyContent: "center", alignItems: "center", marginTop: 40 }}
+    >
+      <ThemedText variant="titleMedium">No history</ThemedText>
+    </View>
+  );
+};
+
+export const ClearHistoryMenuItem = (props: Omit<MenuItemProps, "title">) => {
+  return <Menu.Item title="clear history" leadingIcon={"delete"} {...props} />;
 };
 
 export default MainHistoryScreen;

@@ -1,9 +1,10 @@
 import { filterOptionType } from "@/types";
 import { DetailQuestion, Question } from "@/types/forum.types";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import useAuthClient from "../../../hooks/useAuthClient";
 import { transformDates } from "../utils";
+import { WatchHistoryKeys } from "@/features/history/keys";
 
 type useQuestionsProps = {
   params?: any;
@@ -72,6 +73,7 @@ function transformQuestion(
 
 export function useQuestion(questionId: string) {
   const client = useAuthClient();
+  const qc = useQueryClient();
 
   const fetchQuestion = async (): Promise<DetailQuestion> => {
     const response = await client.get(`/forum/questions/${questionId}/`, {
@@ -81,8 +83,13 @@ export function useQuestion(questionId: string) {
     return transformQuestion(response.data);
   };
 
-  return useQuery({
+  const q = useQuery({
     queryKey: ["question", questionId],
     queryFn: fetchQuestion,
   });
+
+  // invalidate watchhistory when retrieving single question
+  qc.invalidateQueries({ queryKey: WatchHistoryKeys.all });
+
+  return q;
 }

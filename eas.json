@@ -3,7 +3,7 @@
     "version": ">=11.0.3"
   },
   "build": {
-    "development": {
+    "dev": {
       "developmentClient": true,
       "distribution": "internal",
       "bun": "1.1.8"

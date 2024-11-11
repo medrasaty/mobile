@@ -1,14 +1,18 @@
 import Row from "@/components/Row";
-import { HistoryQuestion, WatchHistory } from "../types";
-import { Pressable, TouchableOpacity, View, ViewProps } from "react-native";
+import { WatchHistory } from "../types";
+import { Pressable, View, ViewProps } from "react-native";
 import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import UserInfo from "@/components/UserInfo";
-import { Card, IconButton, Surface, useTheme } from "react-native-paper";
+import { IconButton, Surface, useTheme } from "react-native-paper";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
-import { Container } from "@/components/styled";
 import { useCallback } from "react";
 import { useRouter } from "expo-router";
+import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
+import { useVisibleV2 } from "@/hooks/useVisible";
+import { useDeleteWatchHistoryMutation } from "../mutations";
+import LoadingDialog from "@/components/LoadingDialog";
+import { t } from "i18next";
 
 type QuestionHistoryCellProps = {
   history: WatchHistory;
@@ -18,14 +22,15 @@ const QuestionHistoryCell = ({ history }: QuestionHistoryCellProps) => {
   const { question } = history;
   const { owner } = question;
   const router = useRouter();
+  const theme = useTheme();
 
   const goToQuestion = useCallback(() => {
     router.push(`/questions/details/` + question.id);
-  }, []);
+  }, [history.id]);
 
   return (
     <Pressable onPress={goToQuestion}>
-      <Surface style={styles.container}>
+      <Surface style={[styles.container, { borderRadius: theme.roundness }]}>
         <Row style={{ gap: 20 }}>
           <View style={{ flex: 1 }}>
             <Title title={question.title} />
@@ -34,7 +39,7 @@ const QuestionHistoryCell = ({ history }: QuestionHistoryCellProps) => {
               <Description description={question.text} />
             </View>
           </View>
-          <MoreOptoins />
+          <MoreOptoins historyId={history.id} />
         </Row>
 
         <Row alignItems="center" style={{ justifyContent: "space-between" }}>
@@ -89,10 +94,28 @@ export const Description = ({
   );
 };
 
-export const MoreOptoins = () => {
+export const MoreOptoins = ({
+  historyId,
+}: {
+  historyId: WatchHistory["id"];
+}) => {
+  const [visible, show, hide] = useVisibleV2(false);
+  const { mutate, isPending } = useDeleteWatchHistoryMutation();
+
+  const handleHistoryDelete = () => {
+    hide();
+    mutate(historyId);
+  };
   return (
     <View>
-      <IconButton icon={"dots-vertical"} onPress={() => alert("Options")} />
+      <IconButton icon={"close"} onPress={show} />
+      <ConfirmDialogV2
+        visible={visible}
+        onCancel={hide}
+        onConfirm={handleHistoryDelete}
+        message="Clear this history record ?"
+      />
+      <LoadingDialog visible={isPending} message={t("Deleting...")} />
     </View>
   );
 };
@@ -116,7 +139,6 @@ const styles = StyleSheet.create({
     height: 210,
     justifyContent: "space-between",
     margin: 6,
-    borderRadius: 20,
   },
 });
 

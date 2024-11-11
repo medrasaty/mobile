@@ -20,13 +20,7 @@ import { RootSiblingParent } from "react-native-root-siblings";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 3 * 60 * 1000, // 3 minuts
-    },
-  },
-});
+const queryClient = new QueryClient();
 export default function RootLayout() {
   const colorscheme = useColorScheme();
   useReactQueryDevTools(queryClient);

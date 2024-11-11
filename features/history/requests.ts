@@ -12,3 +12,10 @@ export async function getHistory(client: Axios, params: any = {}) {
     watched_at: new Date(w.watched_at),
   }));
 }
+
+export async function deleteWatchHistory(
+  client: Axios,
+  historyId: WatchHistory["id"]
+) {
+  return await client.delete(`/activities/watch_history/${historyId}/`);
+}

@@ -1,20 +1,17 @@
 import Page from "@/components/Page";
 import { useInfiniteBlackListUsers } from "../queries";
-import ScreenList from "@/components/ScreenFlatList";
+import { ScreenListV2 } from "@/components/ScreenFlatList";
 import BlackListUserCell from "../components/BlackListUserCell";
-import { useEffect, useMemo } from "react";
-import { Appbar, Searchbar, useTheme } from "react-native-paper";
+import { useMemo } from "react";
+import { Appbar } from "react-native-paper";
 import { AppBar } from "@/features/navigation/components/AppBar";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   SearchContextProvider,
+  SearchContextbar,
   useSearchContext,
-} from "../contexts/SearchContexts";
-import { ThemedView } from "@/components/ThemedView";
+} from "@/contexts/SearchContext";
 import { t } from "i18next";
 import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
-import { BackHandler, useWindowDimensions } from "react-native";
-import { MotiView } from "moti";
 
 type BlackListScreenProps = {};
 
@@ -31,58 +28,16 @@ const BlackListScreen = ({}: BlackListScreenProps) => {
 
 export const BlackListAppbar = () => {
   const { isSearch } = useSearchContext();
-  return isSearch ? <SearchAppbar /> : <OptionAppbar />;
+  return isSearch ? <SearchContextbar /> : <OptionAppbar />;
 };
 
 export const OptionAppbar = () => {
   const { setIsSearch } = useSearchContext();
   return (
-    <ThemedView style={{ marginTop: 8 }}>
-      <AppBar title={t("blacklist")}>
-        <Appbar.Action icon="magnify" onPress={() => setIsSearch(true)} />
-        <Appbar.Action
-          icon={"dots-vertical"}
-          onPress={() => alert("options")}
-        />
-      </AppBar>
-    </ThemedView>
-  );
-};
-
-export const SearchAppbar = () => {
-  const { searchValue, setSearchValue, isSearch, setIsSearch } =
-    useSearchContext();
-  const insets = useSafeAreaInsets();
-  const theme = useTheme();
-  const { width } = useWindowDimensions();
-
-  useEffect(() => {
-    BackHandler.addEventListener("hardwareBackPress", () => {
-      setIsSearch(false);
-    });
-  }, []);
-
-  const handleClose = () => {
-    setSearchValue("");
-    setIsSearch(false);
-  };
-
-  return (
-    <MotiView
-      animate={{ width: isSearch ? width : 0 }}
-      style={{ backgroundColor: "red", marginTop: insets.top }}
-    >
-      <Searchbar
-        onChangeText={(text) => setSearchValue(text)}
-        style={{ width, backgroundColor: theme.colors.surface }}
-        icon={"arrow-right"}
-        onIconPress={handleClose}
-        // showDivider={false}
-        autoFocus
-        mode="view"
-        value={searchValue}
-      />
-    </MotiView>
+    <AppBar title={t("blacklist")}>
+      <Appbar.Action icon="magnify" onPress={() => setIsSearch(true)} />
+      <Appbar.Action icon={"dots-vertical"} onPress={() => alert("options")} />
+    </AppBar>
   );
 };
 
@@ -98,7 +53,7 @@ export const BlackListUsersList = () => {
   }, [q.data]);
 
   return (
-    <ScreenList
+    <ScreenListV2
       renderItem={({ item, index }) => {
         return <BlackListUserCell key={index} user={item} />;
       }}
