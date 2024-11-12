@@ -114,8 +114,8 @@ const QuestionsList = () => {
       <FlashList
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
-        ItemSeparatorComponent={Divider}
         contentContainerStyle={{ paddingTop: modeAppbarHeight["small"] }}
+        ItemSeparatorComponent={Divider}
         ListHeaderComponent={
           <QuestionsListHeader
             options={orderingOptions}

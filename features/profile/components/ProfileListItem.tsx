@@ -9,10 +9,12 @@ import {
   ProfileListTypedData,
   ProfileListTypedDataChoices,
 } from "../screens/UserProfileScreen";
-import { ViewProps } from "react-native";
+import { View, ViewProps } from "react-native";
 import { ProfileListSortingMenu } from "./ProfileListSortingMenu";
 import { ThemedView } from "@/components/ThemedView";
 import { DEFAULT_ICON_SIZE } from "@expo/vector-icons/build/createIconSet";
+import useFilterOptions from "@/hooks/useFilterOptions";
+import FilterOptionsView from "@/components/FilterOptionsView";
 
 type ProfileListItemProps = {
   item: ProfileListTypedData;

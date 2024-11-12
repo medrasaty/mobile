@@ -20,11 +20,12 @@ export interface BaseUser {
   school_name: string;
   gender: "M" | "F";
   is_superuser: boolean;
-  reputation_points: number;
   profile_picture: string;
-  token: string;
-  avatar_thumbnail: string;
   is_private: boolean;
+}
+
+export interface BaseSessionUser extends BaseUser {
+  token: string;
 }
 
 export enum UserType {

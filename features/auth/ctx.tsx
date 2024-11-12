@@ -1,13 +1,12 @@
 import { API_URL } from "@/constants";
 import { useStorageState } from "@/hooks/useStorageState";
-import { BaseUser, Student, Teacher, UserType } from "@/types/user.types";
+import { BaseSessionUser, UserType } from "@/types/user.types";
 import { useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosRequestConfig } from "axios";
 import React from "react";
-import { jsx } from "react/jsx-runtime";
 
 export type Session = {
-  user: BaseUser;
+  user: BaseSessionUser;
   token: string;
 };
 

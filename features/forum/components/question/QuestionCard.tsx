@@ -1,118 +1,188 @@
-import Text from "@/components/styled/Text";
-import View from "@/components/styled/View";
+import Row from "@/components/Row";
+import { Pressable, View, ViewProps } from "react-native";
+import { StyleSheet } from "react-native";
+import { ThemedText } from "@/components/ThemedText";
+import UserInfo from "@/components/UserInfo";
+import { IconButton, Surface, useTheme } from "react-native-paper";
+import { DEFAULT_CONTAINER_SPACING, debugStyle } from "@/constants/styels";
+import { useCallback, useMemo } from "react";
+import { useRouter } from "expo-router";
+import { t } from "i18next";
 import { Question } from "@/types/forum.types";
-import { ViewProps } from "react-native";
-import { Card } from "react-native-paper";
+import { Ionicons } from "@expo/vector-icons";
 
-import { ProfilePicture } from "@/components/Avatar";
-import { containerPaddings } from "@/constants/styels";
-import { translateDate, translateSubject } from "@/lib/translators";
-import { getSubjectColor } from "@/lib/utils";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { useTheme } from "react-native-paper";
-
-export type QuestionProps = {
+type QuestionCardProps = {
   question: Question;
-} & ViewProps;
+};
 
-export default function QuestionCard({ question, ...props }: QuestionProps) {
+const QuestionHistoryCell = ({ question }: QuestionCardProps) => {
+  const { owner } = question;
+  const router = useRouter();
   const theme = useTheme();
 
-  return (
-    <Card
-      onPress={() => router.push(`/questions/details/${question.id}`)}
-      elevation={0}
-      style={[
-        {
-          padding: 18,
-          backgroundColor: theme.colors.surface,
-          borderRadius: 0,
-        },
-        containerPaddings,
-      ]}
-    >
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text variant="bodySmall">{translateDate(question.created)}</Text>
-      </View>
+  const goToQuestion = useCallback(() => {
+    router.push(`/questions/details/` + question.id);
+  }, [question.id]);
 
-      <View style={{ marginTop: 12 }}>
-        <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
-          {question.title}
-        </Text>
-        <Text numberOfLines={3} variant="bodySmall" style={{ marginTop: 8 }}>
-          {question.text}
-        </Text>
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginTop: 30,
-        }}
+  return (
+    <Pressable onPress={goToQuestion}>
+      <Surface
+        mode="flat"
+        elevation={0}
+        style={[styles.container, { borderRadius: theme.roundness }]}
       >
-        <QuestionOwnerInfo owner={question.owner} />
-        <QuestionStatInfo question={question} />
-      </View>
-    </Card>
-  );
-}
+        <Row style={{ gap: 20 }}>
+          <View style={{ flex: 1 }}>
+            <Title title={question.title} />
+            <Subject subject="math" />
+            <View style={{ marginTop: 4 }}>
+              <Description description={question.text} />
+            </View>
+            <View style={{ marginTop: 5 }}>
+              <Statistics
+                views={question.views}
+                answers={question.answers_count}
+                rating={question.ratings_value}
+              />
+            </View>
+          </View>
+          <MoreOptoins questionId={question.id} />
+        </Row>
 
-type QuestionStatInfoProps = {
-  question: Question;
+        <Row
+          alignItems="center"
+          style={{ justifyContent: "space-between", marginTop: 10 }}
+        >
+          <UserInfo
+            name={owner.short_name}
+            username={owner.username}
+            schoolName={owner.family_name}
+            avatarUrl={owner.profile_picture}
+            avatarSize={45}
+          />
+        </Row>
+      </Surface>
+    </Pressable>
+  );
 };
 
-const QuestionStatInfo = ({ question }: QuestionStatInfoProps) => {
+export const Title = ({ title, ...props }: { title: string } & ViewProps) => {
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 9 }}>
-      <IconWithInfo icon="comment-outline" value={question.answers_count} />
-      <IconWithInfo icon="eye-outline" value={question.views} />
-      <RatingsInfo ratings_value={question.ratings_value} />
+    <View {...props}>
+      <ThemedText numberOfLines={2} bold variant="titleLarge">
+        {title}
+      </ThemedText>
     </View>
   );
 };
 
-const RatingsInfo = ({ ratings_value }: { ratings_value: number }) => {
+export const Subject = ({
+  subject,
+  ...props
+}: { subject: string } & ViewProps) => {
   const theme = useTheme();
-  if (ratings_value >= 0) {
-    return (
-      <IconWithInfo icon="trending-up" color={"green"} value={ratings_value} />
-    );
-  } else {
-    return (
-      <IconWithInfo icon="trending-down" color={"red"} value={ratings_value} />
-    );
-  }
+  return (
+    <View {...props}>
+      <ThemedText color={theme.colors.tertiary} variant="labelSmall">
+        {subject}
+      </ThemedText>
+    </View>
+  );
 };
 
-const IconWithInfo = ({
-  icon,
-  value = 0,
-  color,
-}: {
-  icon: string;
-  value: number;
-  color?: string;
-}) => {
+export const Description = ({
+  description,
+  ...props
+}: { description: string } & ViewProps) => {
+  return (
+    <View {...props}>
+      <ThemedText
+        style={{ opacity: 0.8 }}
+        numberOfLines={2}
+        variant="bodyMedium"
+      >
+        {description}
+      </ThemedText>
+    </View>
+  );
+};
+
+export const Statistics = ({
+  views,
+  answers,
+  rating,
+  style,
+  ...props
+}: ViewProps & { views: number; answers: number; rating: number }) => {
+  return (
+    <Row style={[style, { gap: 8 }]} alignItems="center" {...props}>
+      <ViewsCount views={views} />
+      <AnswersCount answers={answers} />
+      <RatingCount rating={rating} />
+    </Row>
+  );
+};
+
+export const Value = ({ value }: { value: number }) => {
+  return <ThemedText variant="labelSmall">{value}</ThemedText>;
+};
+
+export const ViewsCount = ({ views }: { views: number }) => {
   const theme = useTheme();
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-      <Text variant="labelSmall">{value}</Text>
-      <MaterialCommunityIcons
-        name={icon}
-        size={14}
-        color={color || theme.colors.secondary}
-      />
-    </View>
+    <Row style={{ gap: 4 }} alignItems="center">
+      <Value value={views} />
+      <ThemedText variant="labelMedium">{t("views")}</ThemedText>
+    </Row>
   );
 };
 
-const QuestionOwnerInfo = ({ owner }: { owner: Question["owner"] }) => {
+export const AnswersCount = ({ answers }: { answers: number }) => {
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-      <ProfilePicture size={26} source={owner.avatar_thumbnail} />
-      <Text>{owner.short_name}</Text>
-    </View>
+    <Row style={{ gap: 4 }} alignItems="center">
+      <Value value={answers} />
+      <ThemedText variant="labelMedium">{t("Answers")}</ThemedText>
+    </Row>
   );
 };
+
+export const RatingCount = ({ rating }: { rating: number }) => {
+  const theme = useTheme();
+  return (
+    <Row style={{ gap: 4 }} alignItems="center">
+      <Value value={rating} />
+      <RatingIcon rating={rating} />
+    </Row>
+  );
+};
+
+export const RatingIcon = ({ rating }: { rating: number }) => {
+  const theme = useTheme();
+  const isPositive = useMemo(() => rating >= 0, [rating]);
+  return (
+    <Ionicons
+      color={isPositive ? theme.colors.tertiary : theme.colors.error}
+      name={isPositive ? "arrow-up" : "arrow-down"}
+      size={12}
+    />
+  );
+};
+
+export const MoreOptoins = ({ questionId }: { questionId: Question["id"] }) => {
+  return (
+    <IconButton icon="dots-vertical" onPress={() => alert("more options")} />
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: DEFAULT_CONTAINER_SPACING,
+    paddingRight: 0,
+    height: 220,
+    justifyContent: "space-between",
+    margin: 6,
+  },
+});
+
+export default QuestionHistoryCell;

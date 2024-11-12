@@ -13,7 +13,7 @@ export interface BasicAnswer {
 }
 
 interface BaseQuestionAnswer {
-  owner: Teacher | Student;
+  owner: BaseUser;
   text: string;
   picture: string | null;
   ratings_value: number;
@@ -21,6 +21,9 @@ interface BaseQuestionAnswer {
   modified: Date;
 }
 
+/**
+ * Question without nested fields.
+ */
 export interface BaseQuestion {
   id: string;
   title: string;
@@ -32,6 +35,9 @@ export interface BaseQuestion {
   modified: Date;
 }
 
+/**
+ * Main Question type that should be used across the application.
+ */
 export interface Question extends BaseQuestionAnswer {
   id: string;
   tags: string[];
