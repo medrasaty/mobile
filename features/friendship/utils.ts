@@ -26,3 +26,7 @@ export function filterPages<T>(
 ) {
   return pages.map((page) => filterPage(page, filter));
 }
+
+export function clearPages<T>(pages: CursorPaginatedResponse<T>[]) {
+  return pages.map((page) => ({ ...page, results: [] }));
+}

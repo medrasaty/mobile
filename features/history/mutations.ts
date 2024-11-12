@@ -1,11 +1,17 @@
 import useAuthClient from "@/hooks/useAuthClient";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  InfiniteData,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { WatchHistoryKeys } from "./keys";
 import { BaseUser } from "@/types/user.types";
 import * as Burnt from "burnt";
 import { t } from "i18next";
 import { deleteWatchHistory } from "./requests";
 import { WatchHistory } from "./types";
+import { CursorPaginatedResponse } from "@/types/responses";
+import { clearPages, filterPage, filterPages } from "../friendship/utils";
 
 export default function useClearWatchHistoryMutation() {
   const client = useAuthClient();
@@ -21,7 +27,15 @@ export default function useClearWatchHistoryMutation() {
 
     onSuccess: async (_data, username) => {
       // Clear WatchHistory cache
-      qc.setQueriesData({ queryKey: WatchHistoryKeys.all }, (oldData) => []);
+      qc.setQueriesData(
+        { queryKey: WatchHistoryKeys.all },
+        (oldData: InfiniteData<CursorPaginatedResponse>) => {
+          return {
+            ...oldData,
+            pages: clearPages(oldData.pages),
+          };
+        }
+      );
 
       Burnt.toast({
         title: t("success_clear_history"),
@@ -47,10 +61,17 @@ export function useDeleteWatchHistoryMutation() {
     onSuccess: async (_data, historyId) => {
       qc.setQueriesData(
         { queryKey: WatchHistoryKeys.all },
-        (oldData: WatchHistory[] | undefined) => {
+        (
+          oldData:
+            | InfiniteData<CursorPaginatedResponse<WatchHistory>>
+            | undefined
+        ) => {
           if (!oldData) return oldData;
 
-          return oldData.filter((h) => h.id !== historyId);
+          return {
+            ...oldData,
+            pages: filterPages(oldData.pages, (h) => h.id !== historyId),
+          };
         }
       );
       Burnt.toast({
