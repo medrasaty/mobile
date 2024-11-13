@@ -5,7 +5,7 @@ export type UserProfile = BaseUser & {
   school: BaseSchool;
   school_name: string;
   date_joined: Date;
-  reputation_points: number;
+  reputation: number;
   followings_count: number;
   followers_count: number;
   reach: number;

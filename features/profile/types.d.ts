@@ -15,7 +15,7 @@ export interface UserProfile {
   school_name: string;
   date_joined: Date;
   gender: string;
-  reputation_points: number;
+  reputation: number;
   profile_picture: string;
   is_superuser: boolean;
   followings_count: number;

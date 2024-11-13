@@ -1,11 +1,14 @@
 import Page from "@/components/Page";
 import { SafeAreaView } from "@/components/styled";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 import { useState } from "react";
 import { Searchbar } from "react-native-paper";
+import useSearchQuery from "../hooks";
+import { t } from "i18next";
 
 const MainSearchScreen = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const searchQuery = useSearchQuery();
+  const [searchValue, setSearchValue] = useState(searchQuery);
 
   const hanldeSearchIconPress = () => {
     if (searchValue.trim() !== "")
@@ -24,7 +27,7 @@ const MainSearchScreen = () => {
           value={searchValue}
           onIconPress={hanldeSearchIconPress}
           onChangeText={(text) => setSearchValue(text)}
-          placeholder="Search"
+          placeholder={t("Search")}
           blurOnSubmit
           onKeyPress={(e) => console.log(e.nativeEvent.key)}
         />

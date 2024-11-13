@@ -12,7 +12,7 @@ export interface Admin {
     school_name:       string;
     gender:            Gender;
     is_superuser:      boolean;
-    reputation_points: number;
+    reputation: number;
 }
 
 export enum Gender {

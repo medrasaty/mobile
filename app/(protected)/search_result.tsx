@@ -1,7 +1,7 @@
-import SearchResultScreen from "@/features/search/screens/SearchResultScreen";
+import QuestionsSearchResultScreen from "@/features/search/screens/SearchResultScreen";
 
 const SearchResultPage = () => {
-  return <SearchResultScreen />;
+  return <QuestionsSearchResultScreen />;
 };
 
 export default SearchResultPage;

@@ -72,5 +72,6 @@
   "watch_history": "سجل المشاهداة",
   "Newest": "الأحدث",
   "Oldest": "الإقدم",
-  "views": "مشاهدة"
+  "views": "مشاهدة",
+  "no_questions_maches_your_query": "لم نعثر على نتائج بحث مطابقة"
 }

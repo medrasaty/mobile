@@ -147,7 +147,7 @@ const StatsInfo = ({ profile, style, ...props }: StatsInfoProps) => {
         <StatInfo
           valueColor="gold"
           label={t("Reputation")}
-          value={profile.reputation_points}
+          value={profile.reputation}
         />
         <StatInfo label={t("Reach")} value={profile.reach} />
         <StatInfo label={t("Total_views")} value={profile.total_views} />

@@ -5,6 +5,7 @@ import NetworkError, { NetworkErrorProps } from "./NetworkError";
 import { StyleSheet } from "react-native";
 import { FlashList, FlashListProps } from "@shopify/flash-list";
 import LoadingIndicator from "./LoadingIndicator";
+import { useCallback } from "react";
 
 type ScreenListProps<T> = {
   isPending: boolean;
@@ -42,6 +43,7 @@ type ScreenListV2Props<T> = {
   isError: boolean;
   errorMessage?: string;
   onRetry: () => void;
+  infinite?: boolean;
 } & FlashListProps<T>;
 
 export function ScreenListV2<T>({
@@ -51,6 +53,8 @@ export function ScreenListV2<T>({
   errorMessage,
   data,
   ListEmptyComponent,
+  infinite = false,
+  ListFooterComponent,
   ...listProps
 }: ScreenListV2Props<T>) {
   const renderEmptyList = () => {
@@ -66,10 +70,17 @@ export function ScreenListV2<T>({
     return ListEmptyComponent;
   };
 
+  const renderFooter = () => {
+    if (!infinite) {
+      return ListFooterComponent;
+    }
+  };
+
   return (
     <>
       <FlashList
         ListEmptyComponent={renderEmptyList()}
+        ListFooterComponent={renderFooter()}
         data={data ?? []}
         {...listProps}
       />

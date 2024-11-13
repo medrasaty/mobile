@@ -44,5 +44,5 @@ export interface BaseUser {
   school_name: string;
   gender: "M" | "F";
   is_superuser: boolean;
-  reputation_points: number;
+  reputation: number;
 }
