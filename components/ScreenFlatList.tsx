@@ -6,6 +6,7 @@ import { StyleSheet } from "react-native";
 import { FlashList, FlashListProps } from "@shopify/flash-list";
 import LoadingIndicator from "./LoadingIndicator";
 import { useCallback } from "react";
+import { UseQueryResult } from "@tanstack/react-query";
 
 type ScreenListProps<T> = {
   isPending: boolean;
@@ -81,6 +82,43 @@ export function ScreenListV2<T>({
       <FlashList
         ListEmptyComponent={renderEmptyList()}
         ListFooterComponent={renderFooter()}
+        data={data ?? []}
+        {...listProps}
+      />
+    </>
+  );
+}
+
+type ScreenListV3Props<T> = {
+  q: UseQueryResult<T>;
+} & Omit<FlashListProps<T>, "data">;
+
+export function ScreenListV3<T>({
+  q,
+  ListEmptyComponent,
+  ...listProps
+}: ScreenListV3Props<T>) {
+  const renderEmptyList = () => {
+    if (q.isPending) {
+      return <ScreenLoadingIndicator />;
+    }
+
+    if (q.isError) {
+      return (
+        <ScreenError message={"something went wrong"} onRetry={q.refetch} />
+      );
+    }
+
+    // Empty list provided by user
+    return ListEmptyComponent;
+  };
+
+  const { data } = q;
+
+  return (
+    <>
+      <FlashList
+        ListEmptyComponent={renderEmptyList()}
         data={data ?? []}
         {...listProps}
       />

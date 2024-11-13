@@ -12,7 +12,6 @@ import ProfileInfo from "./ProfileInfo";
 type ProfileBackgroundImageProps = {} & ViewProps;
 
 const DEFAULT_BACKGROUND_IMAGE_HEIGHT = 200;
-const AVATAR_SIZE = 84;
 
 export const ProfileBackgroundImage = ({
   style,

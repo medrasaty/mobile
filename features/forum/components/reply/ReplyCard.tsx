@@ -82,7 +82,7 @@ export const UserShort = () => {
       <ThemedView
         style={{ flexDirection: "row", gap: 4, alignItems: "center" }}
       >
-        <Avatar source={avatar} size={32} />
+        <Avatar url={avatar} size={32} />
         <ThemedView>
           <Username name={"solo shayea"} username="username" />
           <ThemedText variant="labelSmall">medrasaty</ThemedText>

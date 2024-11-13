@@ -35,6 +35,7 @@ export default function ProtectedLayout() {
         <Stack.Screen name="questions/new" />
         <Stack.Screen name="users/[username]" />
         <Stack.Screen name="search_result" />
+        <Stack.Screen name="school_detail" />
       </Stack>
     </AnimatedAppBarProvider>
   );

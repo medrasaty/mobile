@@ -1,12 +1,7 @@
-import Page from "@/components/Page";
-import { ThemedText } from "@/components/ThemedText";
+import MainSchoolScreen from "@/features/schools/screens/MainSchoolScreen";
 
 const SchoolsPage = () => {
-  return (
-    <Page>
-      <ThemedText>SchoolsPage</ThemedText>
-    </Page>
-  );
+  return <MainSchoolScreen />;
 };
 
 export default SchoolsPage;
