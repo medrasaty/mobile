@@ -1,19 +1,19 @@
 import { useTheme } from "react-native-paper";
-import { Text as BaseText, type TextProps } from "react-native-paper";
+import { Text as BaseText, TextProps } from "react-native-paper";
 
-export type ThemedTextProps = {
+export type ThemedTextProps<T> = {
   link?: boolean;
   color?: string;
   bold?: boolean;
-} & TextProps<any>;
+} & TextProps<T>;
 
-export function ThemedText({
+export function ThemedText<T>({
   link = false,
   color,
   bold = false,
   style,
   ...rest
-}: ThemedTextProps) {
+}: ThemedTextProps<T>) {
   const theme = useTheme();
   const fontWeight = bold ? "bold" : "normal";
   color = color ? color : theme.colors.onSurface;

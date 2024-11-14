@@ -18,12 +18,9 @@ import {
 
 type UserCompactCellProps = {
   user: FriendUser;
-  numOfCells: number;
 };
 
-const UserCompactCell = ({ user, numOfCells }: UserCompactCellProps) => {
-  const { width } = useWindowDimensions();
-
+const UserCompactCell = ({ user }: UserCompactCellProps) => {
   const goToUser = () => {
     router.push(`/users/${user.username}`);
   };

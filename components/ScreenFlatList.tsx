@@ -1,5 +1,11 @@
 import { ThemedView } from "@/components/ThemedView";
-import { ActivityIndicator, FlatListProps, FlatList, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatListProps,
+  FlatList,
+  View,
+  FlatListProperties,
+} from "react-native";
 import FullPageLoadingIndicator from "./FullPageLoadingIndicator";
 import NetworkError, { NetworkErrorProps } from "./NetworkError";
 import { StyleSheet } from "react-native";
@@ -81,6 +87,56 @@ export function ScreenListV2<T>({
   return (
     <>
       <FlashList
+        ListEmptyComponent={renderEmptyList()}
+        ListFooterComponent={renderFooter()}
+        data={data ?? []}
+        {...listProps}
+      />
+    </>
+  );
+}
+
+type ScreenFlatListV2Props<T> = {
+  isPending: boolean;
+  isError: boolean;
+  errorMessage?: string;
+  onRetry: () => void;
+  infinite?: boolean;
+} & FlatListProps<T>;
+
+export function ScreenFlatListV2<T>({
+  isPending,
+  isError,
+  onRetry,
+  errorMessage,
+  data,
+  ListEmptyComponent,
+  infinite = false,
+  ListFooterComponent,
+  ...listProps
+}: ScreenFlatListV2Props<T>) {
+  const renderEmptyList = () => {
+    if (isPending) {
+      return <ScreenLoadingIndicator />;
+    }
+
+    if (isError) {
+      return <ScreenError message={errorMessage} onRetry={onRetry} />;
+    }
+
+    // Empty list provided by user
+    return ListEmptyComponent;
+  };
+
+  const renderFooter = () => {
+    if (!infinite) {
+      return ListFooterComponent;
+    }
+  };
+
+  return (
+    <>
+      <FlatList
         ListEmptyComponent={renderEmptyList()}
         ListFooterComponent={renderFooter()}
         data={data ?? []}

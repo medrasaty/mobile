@@ -21,7 +21,6 @@ export default function Row({
         {
           flexDirection: "row",
           alignItems: alignItems ?? align,
-          gap: gap ?? 0,
         },
       ]}
       {...props}

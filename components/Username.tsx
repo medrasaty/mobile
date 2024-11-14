@@ -3,13 +3,13 @@ import Text from "./styled/Text";
 import { TextProps } from "react-native-paper";
 
 // FIXME
-interface UsernameProps extends TextProps<any> {
+type UsernameProps<T> = {
   username: string;
   name: string;
   children?: React.ReactNode;
-}
+} & Omit<TextProps<T>, "children">;
 
-export default function Username({ username, ...props }: UsernameProps) {
+export default function Username<T>({ username, ...props }: UsernameProps<T>) {
   const handlePress = () => {
     // console.log(
     //   reverse({

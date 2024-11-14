@@ -1,11 +1,8 @@
-import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { UserProfile } from "../types";
 import FastImage from "react-native-fast-image";
-import { StyleSheet, View, ViewProps } from "react-native";
+import { StyleSheet, ViewProps } from "react-native";
 import { useMemo } from "react";
 import { Divider, useTheme } from "react-native-paper";
-import { LinearGradient } from "expo-linear-gradient";
 import { useProfileScreen } from "../contexts/ProfileScreenContext";
 import ProfileInfo from "./ProfileInfo";
 
@@ -42,10 +39,13 @@ function useProfileBackgroundStyle() {
   return useMemo(() => {
     return StyleSheet.create({
       container: {
+        marginTop: 3,
         backgroundColor: theme.colors.surface,
         alignItems: "center",
       },
       image: {
+        borderWidth: 1,
+        borderColor: theme.colors.surfaceVariant,
         width: "96%",
         height: DEFAULT_BACKGROUND_IMAGE_HEIGHT,
         borderRadius: 18,
@@ -58,7 +58,7 @@ function useProfileBackgroundStyle() {
         height: 100,
       },
     });
-  }, []);
+  }, [theme]);
 }
 
 const ProfileHeader = () => {

@@ -1,5 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { BackHandler, StyleSheet, useWindowDimensions } from "react-native";
+import {
+  BackHandler,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import useProfile from "../hooks/useProfile";
 import { BaseUser } from "@/types/user.types";
 import UserProfileScreenLoading from "../components/UserProfileScreenLoading";
@@ -26,6 +31,7 @@ import { StatusBar } from "expo-status-bar";
 import { Appbar, useTheme } from "react-native-paper";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { AppBar } from "@/features/navigation/components/AppBar";
+import { ThemedText } from "@/components/ThemedText";
 
 interface UserProfileScreenProps {
   username: BaseUser["username"] | undefined;
@@ -199,6 +205,8 @@ export const ProfileFlashList = ({ ...props }: ProfileFlashListProps) => {
   return (
     <Page>
       <FlashList
+        overScrollMode="never"
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={listHeader}
         ListFooterComponent={listFooter}
         {...props}

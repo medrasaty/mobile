@@ -19,6 +19,7 @@ export default function ProtectedLayout() {
   if (session === null) {
     return <Redirect href={LOGIN_PAGE} />;
   }
+
   return (
     <AnimatedAppBarProvider>
       <Stack
@@ -35,7 +36,7 @@ export default function ProtectedLayout() {
         <Stack.Screen name="questions/new" />
         <Stack.Screen name="users/[username]" />
         <Stack.Screen name="search_result" />
-        <Stack.Screen name="school_detail" />
+        <Stack.Screen name="schools/[schoolId]" />
       </Stack>
     </AnimatedAppBarProvider>
   );

@@ -59,6 +59,7 @@ export default function BottomTabNavigationBar({
       <Divider />
       <BottomNavigation.Bar
         shifting
+        beled={false}
         style={style}
         navigationState={state}
         safeAreaInsets={insets}

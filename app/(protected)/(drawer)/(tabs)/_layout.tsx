@@ -72,6 +72,19 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen
+        name="leader_board"
+        options={{
+          tabBarLabel: t("Leader"),
+          tabBarIcon: (props) => (
+            <Ionicons
+              {...props}
+              name={props.focused ? "search" : "search-outline"}
+            />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
         name="search"
         options={{
           tabBarLabel: t("Search"),
