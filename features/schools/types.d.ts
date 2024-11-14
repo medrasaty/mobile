@@ -13,6 +13,8 @@ export interface School {
 export interface DetailSchool extends School {
   members_count: number;
   total_reputation: number;
+  total_reach: number;
+  total_views: number;
 }
 
 export type SchoolType = "paid" | "free";

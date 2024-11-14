@@ -23,8 +23,8 @@ const Header = ({ school }: { school: DetailSchool }) => {
       <ReputationInfo
         style={{ ...containerMargins, marginTop: 10 }}
         reputation={school.total_reputation}
-        views={10}
-        reach={90}
+        reach={school.total_reach}
+        views={school.total_views}
       />
     </>
   );
