@@ -8,6 +8,8 @@ import SchoolCell from "../components/SchoolCell";
 import { School } from "../types";
 import { Searchbar } from "react-native-paper";
 import { containerMargins } from "@/constants/styels";
+import CenterPage from "@/components/CenterPage";
+import { useRouter } from "expo-router";
 
 type MainSchoolScreenProps = {};
 
@@ -32,7 +34,14 @@ const MainSchoolScreen = ({}: MainSchoolScreenProps) => {
           style={[containerMargins, { marginBottom: 8 }]}
         />
         <Page>
-          <ScreenListV3 estimatedItemSize={100} renderItem={renderItem} q={q} />
+          <ScreenListV2
+            estimatedItemSize={100}
+            renderItem={renderItem}
+            data={q.data}
+            isPending={q.isPending}
+            isError={q.isError}
+            onRetry={q.refetch}
+          />
         </Page>
       </SafeAreaView>
     </SearchContextProvider>

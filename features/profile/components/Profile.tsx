@@ -11,14 +11,16 @@ import ProfileInfo from "./ProfileInfo";
 
 type ProfileBackgroundImageProps = {} & ViewProps;
 
-const DEFAULT_BACKGROUND_IMAGE_HEIGHT = 200;
+const DEFAULT_BACKGROUND_IMAGE_HEIGHT = 170;
 
 export const ProfileBackgroundImage = ({
   style,
   ...props
 }: ProfileBackgroundImageProps) => {
   const {
-    profile: { background_picture: url },
+    profile: {
+      profile: { background },
+    },
   } = useProfileScreen();
 
   const styles = useProfileBackgroundStyle();
@@ -27,12 +29,8 @@ export const ProfileBackgroundImage = ({
     <ThemedView style={[style, styles.container]} {...props}>
       <FastImage
         resizeMode={FastImage.resizeMode.cover}
-        source={{ uri: url }}
+        source={{ uri: background }}
         style={styles.image}
-      />
-      <LinearGradient
-        colors={["transparent", "rgba(0,0,0,0.6)"]}
-        style={styles.gradient}
       />
       <Divider />
     </ThemedView>
@@ -45,10 +43,12 @@ function useProfileBackgroundStyle() {
     return StyleSheet.create({
       container: {
         backgroundColor: theme.colors.surface,
+        alignItems: "center",
       },
       image: {
-        width: "100%",
+        width: "96%",
         height: DEFAULT_BACKGROUND_IMAGE_HEIGHT,
+        borderRadius: 18,
       },
       gradient: {
         position: "absolute",

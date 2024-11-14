@@ -32,6 +32,7 @@ export interface BaseProfile {
   user: string;
   is_private: boolean;
   background: string;
+  biography: string;
 }
 
 export enum ProfileListChoices {

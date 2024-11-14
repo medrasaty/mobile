@@ -33,7 +33,12 @@ export default function Avatar({
   }, [size, square]);
 
   return (
-    <FastImage style={[style, styles.image]} source={{ uri: url }} {...props} />
+    <FastImage
+      resizeMode={FastImage.resizeMode.cover}
+      style={[style, styles.image]}
+      source={{ uri: url }}
+      {...props}
+    />
   );
 }
 

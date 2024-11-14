@@ -4,15 +4,15 @@ import { UserProfile } from "../types";
 import FastImage from "react-native-fast-image";
 import { useTheme } from "react-native-paper";
 import React, { useMemo } from "react";
-import { StyleSheet, TouchableOpacity, ViewProps } from "react-native";
+import { StyleSheet, ViewProps } from "react-native";
 import { ContainerView } from "@/components/styled";
-import { useTranslation } from "react-i18next";
 import Row from "@/components/Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useProfileScreen } from "../contexts/ProfileScreenContext";
 import ProfileActionsSection from "./ProfileFollowingSection";
-import { debugStyle } from "@/constants/styels";
 import { useRouter } from "expo-router";
+import ReputationInfo from "@/components/ReputationInfo";
+import { containerMargins, debugStyle } from "@/constants/styels";
 
 type ProfileInfoProps = {} & ViewProps;
 
@@ -37,8 +37,13 @@ const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
           type={user.type}
         />
         <Bio bio={"لامكان لليأس في التطبيق"} />
-        <StatsInfo style={styles.statsInfoContainer} profile={user} />
       </ContainerView>
+      <ReputationInfo
+        style={styles.reputationInfo}
+        reputation={user.reputation}
+        reach={user.reach}
+        views={user.total_views}
+      />
     </ThemedView>
   );
 };
@@ -60,10 +65,10 @@ const ProfilePicture = ({
   );
 };
 
-function useProfilePictureStyle() {
+export function useProfilePictureStyle() {
   const theme = useTheme();
-  const AVATAR_SIZE = 100;
-  const marginTopFactor = 0.4;
+  const AVATAR_SIZE = 120;
+  const marginTopFactor = 0.2;
   return useMemo(() => {
     return StyleSheet.create({
       container: {
@@ -76,7 +81,7 @@ function useProfilePictureStyle() {
         borderColor: theme.colors.secondaryContainer,
         borderWidth: 3,
         shadowColor: theme.colors.shadow,
-        // elevation: theme.colors.elevation.level2,
+        elevation: 10,
       },
     });
   }, [theme]);
@@ -130,79 +135,6 @@ const Bio = ({ bio }: { bio: string }) => {
   return <ThemedText variant="bodyLarge">{bio}</ThemedText>;
 };
 
-type StatsInfoProps = {
-  profile: UserProfile;
-} & ViewProps;
-
-const StatsInfo = ({ profile, style, ...props }: StatsInfoProps) => {
-  const { t } = useTranslation();
-  const styles = useStatsInfoStyle();
-  return (
-    <TouchableOpacity
-      onPress={() => {}}
-      style={[style, styles.container]}
-      {...props}
-    >
-      <Row style={styles.row}>
-        <StatInfo
-          valueColor="gold"
-          label={t("Reputation")}
-          value={profile.reputation}
-        />
-        <StatInfo label={t("Reach")} value={profile.reach} />
-        <StatInfo label={t("Total_views")} value={profile.total_views} />
-      </Row>
-      {/*<Row style={styles.row}>
-        <StatInfo label={t("Followers")} value={profile.followers_count} />
-        <StatInfo label={t("Following")} value={profile.followings_count} />
-        </Row> */}
-    </TouchableOpacity>
-  );
-};
-
-function useStatsInfoStyle() {
-  const theme = useTheme();
-  return useMemo(() => {
-    return StyleSheet.create({
-      container: {
-        borderRadius: 10,
-        borderWidth: 3,
-        borderColor: theme.colors.surfaceVariant,
-        gap: 10,
-      },
-      row: {
-        justifyContent: "space-around",
-        paddingTop: 10,
-        paddingBottom: 10,
-      },
-    });
-  }, [theme]);
-}
-
-export const StatInfo = ({
-  label,
-  value,
-  valueColor,
-  labelColor,
-}: {
-  label: string;
-  value: number;
-  valueColor?: string;
-  labelColor?: string;
-}) => {
-  const theme = useTheme();
-  return (
-    <ThemedView style={{ alignItems: "center" }}>
-      <ThemedText color={valueColor} variant="titleLarge">
-        {value}
-      </ThemedText>
-      <ThemedText color={labelColor ?? "gray"} variant="labelMedium">
-        {label}
-      </ThemedText>
-    </ThemedView>
-  );
-};
-
 export default ProfileInfo;
 
 const statsInfoContainerMargins = 10;
@@ -210,7 +142,6 @@ const statsInfoContainerMargins = 10;
 const styles = StyleSheet.create({
   container: {
     gap: 16,
-    // marginTop: -50,
   },
   row: {
     justifyContent: "space-between",
@@ -219,7 +150,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 10,
   },
-  statsInfoContainer: {
+  reputationInfo: {
+    ...containerMargins,
     marginTop: statsInfoContainerMargins,
     marginBottom: statsInfoContainerMargins,
   },

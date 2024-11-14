@@ -18,7 +18,6 @@ import { Appbar, Drawer as MaterialDrawer } from "react-native-paper";
 
 export const MaterialDrawerContent = (props: DrawerContentComponentProps) => {
   const { height } = useWindowDimensions();
-  const user = useCurrentUser();
 
   return (
     <SafeAreaView>
@@ -89,6 +88,7 @@ export default function DrawerLayout() {
         }}
       />
       <Drawer.Screen
+        redirect={!user.is_private}
         name="following_requests_to_me"
         options={{
           title: t("Following_requests"),
@@ -149,7 +149,7 @@ const FriendsIcon = (props: IconProps) => {
 };
 
 const FollowingRequestsIcon = (props: IconProps) => {
-  return <MaterialCommunityIcons name="message-text-outline" {...props} />;
+  return <MaterialCommunityIcons name="mapbox" {...props} />;
 };
 
 const YourFollowingRequestsIcon = (props: IconProps) => {

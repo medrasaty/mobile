@@ -7,6 +7,7 @@ import { FlashList, FlashListProps } from "@shopify/flash-list";
 import LoadingIndicator from "./LoadingIndicator";
 import { useCallback } from "react";
 import { UseQueryResult } from "@tanstack/react-query";
+import { ThemedText } from "./ThemedText";
 
 type ScreenListProps<T> = {
   isPending: boolean;

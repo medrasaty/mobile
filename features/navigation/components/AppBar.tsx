@@ -80,7 +80,5 @@ export const IndexAppBar = ({ title }: { title: string }) => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    marginTop: 0,
-  },
+  header: {},
 });

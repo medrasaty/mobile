@@ -10,4 +10,9 @@ export interface School {
   type: SchoolType;
 }
 
+export interface DetailSchool extends School {
+  members_count: number;
+  total_reputation: number;
+}
+
 export type SchoolType = "paid" | "free";
