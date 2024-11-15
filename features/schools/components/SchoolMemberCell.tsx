@@ -3,12 +3,12 @@ import UserAvatar from "@/components/UserAvatar";
 import { BaseUser } from "@/types/user.types";
 import { useRouter } from "expo-router";
 import { Pressable, View, ViewProps } from "react-native";
-import { useTheme, TextProps, Icon } from "react-native-paper";
+import { useTheme, TextProps, Icon, TouchableRipple } from "react-native-paper";
 import { StyleSheet } from "react-native";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import Row from "@/components/Row";
 import SmallButton from "@/components/SmallButton";
-import { MaterialIcons } from "@expo/vector-icons";
-import { t } from "i18next";
-import WithCondition from "@/components/WithCondition";
+import ReputationInfo from "@/components/ReputationInfo";
 
 export const MEMBER_CELL_WIDTH = 120;
 
@@ -35,13 +35,12 @@ const SchoolMemberCell = ({ member }: SchoolMemberCellProps) => {
       >
         <Avatar url={member.profile_picture} />
         <Name>{member.short_name}</Name>
-        <WithCondition condition={false}>
-          <View style={{ marginTop: 6 }}>
-            <SmallButton onPress={goToUser} mode="ripple">
-              {t("view_user")}
-            </SmallButton>
-          </View>
-        </WithCondition>
+        <ReputationInfo
+          compact
+          reputation={member.reputation}
+          reach={member.reach}
+          views={member.total_views}
+        />
       </View>
     </Pressable>
   );

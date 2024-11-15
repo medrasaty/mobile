@@ -1,15 +1,22 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { TouchableOpacity, View, ViewProps } from "react-native";
+import {
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+  ViewProps,
+} from "react-native";
 import Row from "./Row";
-import { useTheme } from "react-native-paper";
+import { TouchableRipple, useTheme } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
+import { MaterialIcons } from "@expo/vector-icons";
 
 type ReputationInfoProps = {
   reputation: number;
   reach: number;
   views: number;
+  compact?: boolean;
 } & ViewProps;
 
 const ReputationInfo = ({
@@ -17,10 +24,24 @@ const ReputationInfo = ({
   reach,
   views,
   style,
+  compact = false,
   ...props
 }: ReputationInfoProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
+  if (compact) {
+    // Compact version
+    return (
+      <TouchableOpacity>
+        <Row style={{ gap: 10 }}>
+          <DotInfo color="gold" value={reputation} />
+          <DotInfo color="silver" value={reach} />
+          <DotInfo color="bronz" value={views} />
+        </Row>
+      </TouchableOpacity>
+    );
+  }
+
   return (
     <TouchableOpacity
       onPress={() => {}}
@@ -67,6 +88,20 @@ export const StatInfo = ({
         {label}
       </ThemedText>
     </ThemedView>
+  );
+};
+
+type DotInfoProps = {
+  color: string;
+  value: string | number;
+};
+
+export const DotInfo = ({ color, value }: DotInfoProps) => {
+  return (
+    <Row alignItems="center" style={{ gap: 2 }}>
+      <ThemedText variant="labelSmall">{value}</ThemedText>
+      <MaterialIcons color={color} size={6} name="circle" />
+    </Row>
   );
 };
 
