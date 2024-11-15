@@ -4,13 +4,13 @@ import { UserProfile } from "../types";
 import FastImage from "react-native-fast-image";
 import { useTheme } from "react-native-paper";
 import React, { useMemo } from "react";
-import { StyleSheet, ViewProps } from "react-native";
+import { Pressable, StyleSheet, ViewProps } from "react-native";
 import { ContainerView } from "@/components/styled";
 import Row from "@/components/Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useProfileScreen } from "../contexts/ProfileScreenContext";
 import ProfileActionsSection from "./ProfileFollowingSection";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import ReputationInfo from "@/components/ReputationInfo";
 import { containerMargins, debugStyle } from "@/constants/styels";
 
@@ -34,6 +34,7 @@ const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
           fullName={user.full_name}
           username={user.username}
           schoolName={user.school_name}
+          schoolId={user.school}
           type={user.type}
         />
         <Bio bio={"لامكان لليأس في التطبيق"} />
@@ -91,6 +92,7 @@ type UserProfileProps = {
   fullName: UserProfile["full_name"];
   username: UserProfile["username"];
   schoolName: UserProfile["school_name"];
+  schoolId: number;
   type: UserProfile["type"];
 };
 
@@ -98,6 +100,7 @@ const UserInfo = ({
   fullName,
   username,
   schoolName,
+  schoolId,
   type,
 }: UserProfileProps) => {
   const router = useRouter();
@@ -107,7 +110,7 @@ const UserInfo = ({
         {fullName}
       </ThemedText>
       <Username username={username} />
-      <School name={schoolName} />
+      <School id={schoolId} name={schoolName} />
     </ThemedView>
   );
 };
@@ -117,7 +120,7 @@ const Username = ({ username }: { username: string }) => {
   return <ThemedText variant={variant}>@{username}</ThemedText>;
 };
 
-export const School = ({ name }: { name: string }) => {
+export const School = ({ id, name }: { id: number; name: string }) => {
   const theme = useTheme();
   return (
     <Row alignItems="center" style={{ gap: 4 }}>
@@ -126,7 +129,9 @@ export const School = ({ name }: { name: string }) => {
         name="school"
         color={theme.colors.primary}
       />
-      <ThemedText variant="bodyMedium">{name}</ThemedText>
+      <Link href={`/schools/${id}/detail`}>
+        <ThemedText variant="bodyMedium">{name}</ThemedText>
+      </Link>
     </Row>
   );
 };

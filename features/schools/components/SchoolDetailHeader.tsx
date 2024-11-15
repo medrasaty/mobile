@@ -21,7 +21,7 @@ const Header = ({ school }: { school: DetailSchool }) => {
         <SchoolInfo school={school} />
       </View>
       <ReputationInfo
-        style={{ ...containerMargins, marginTop: 10 }}
+        style={{ ...containerMargins, marginTop: 20 }}
         reputation={school.total_reputation}
         reach={school.total_reach}
         views={school.total_views}

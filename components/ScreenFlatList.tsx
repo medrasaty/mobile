@@ -1,19 +1,12 @@
 import { ThemedView } from "@/components/ThemedView";
-import {
-  ActivityIndicator,
-  FlatListProps,
-  FlatList,
-  View,
-  FlatListProperties,
-} from "react-native";
+import { FlatListProps, FlatList, View } from "react-native";
 import FullPageLoadingIndicator from "./FullPageLoadingIndicator";
 import NetworkError, { NetworkErrorProps } from "./NetworkError";
 import { StyleSheet } from "react-native";
 import { FlashList, FlashListProps } from "@shopify/flash-list";
 import LoadingIndicator from "./LoadingIndicator";
-import { useCallback } from "react";
 import { UseQueryResult } from "@tanstack/react-query";
-import { ThemedText } from "./ThemedText";
+import { ScreenError, ScreenLoadingIndicator } from "./Screen";
 
 type ScreenListProps<T> = {
   isPending: boolean;
@@ -183,29 +176,39 @@ export function ScreenListV3<T>({
   );
 }
 
-export const ScreenError = (props: NetworkErrorProps) => {
-  return (
-    <ThemedView style={styles.screenErrorContainer}>
-      <NetworkError {...props} />
-    </ThemedView>
-  );
-};
+type ScreenFlatListV3Props<T> = {
+  q: UseQueryResult<T>;
+} & Omit<FlatListProps<T>, "data">;
 
-export const ScreenLoadingIndicator = () => {
-  return (
-    <View style={styles.loadingIndicator}>
-      <LoadingIndicator size={"large"} />
-    </View>
-  );
-};
+export function ScreenFlatListV3<T>({
+  q,
+  ListEmptyComponent,
+  ...props
+}: ScreenListV3Props<T>) {
+  const renderEmptyList = () => {
+    if (q.isPending) {
+      return <ScreenLoadingIndicator />;
+    }
 
-const styles = StyleSheet.create({
-  screenErrorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loadingIndicator: {
-    marginTop: 10,
-  },
-});
+    if (q.isError) {
+      return (
+        <ScreenError message={"something went wrong"} onRetry={q.refetch} />
+      );
+    }
+
+    // Empty list provided by user
+    return ListEmptyComponent;
+  };
+
+  const { data } = q;
+
+  return (
+    <>
+      <FlatList
+        ListEmptyComponent={renderEmptyList()}
+        data={data ?? []}
+        {...props}
+      />
+    </>
+  );
+}

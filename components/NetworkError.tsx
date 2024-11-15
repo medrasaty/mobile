@@ -1,12 +1,12 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useTranslation } from "react-i18next";
-import { TouchableOpacity, ViewProps } from "react-native";
+import { TouchableOpacity, View, ViewProps } from "react-native";
 import { Button, useTheme } from "react-native-paper";
 
 export type NetworkErrorProps = {
   message?: string;
-  onRetry: () => void;
+  onRetry?: () => void;
 } & ViewProps;
 
 const NetworkError = ({
@@ -18,10 +18,10 @@ const NetworkError = ({
   const { t } = useTranslation();
 
   return (
-    <ThemedView style={[style, { gap: 9 }]} {...props}>
+    <View style={[style, { gap: 9 }]} {...props}>
       <ThemedText>{message}</ThemedText>
       <Button onPress={onRetry}>{t("retry")}</Button>
-    </ThemedView>
+    </View>
   );
 };
 

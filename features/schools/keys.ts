@@ -8,3 +8,8 @@ export const SchoolQueryKeys = {
     "members",
   ],
 };
+
+export const UsersQueryKeys = {
+  all: ["users"] as const,
+  withParams: (params: any) => [...UsersQueryKeys.all, params],
+};

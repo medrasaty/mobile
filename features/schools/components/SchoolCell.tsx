@@ -12,7 +12,7 @@ type SchoolCellProps = {
 
 const SchoolCell = ({ school }: SchoolCellProps) => {
   const goToSchool = () => {
-    router.push(`/schools/${school.id}`);
+    router.push(`/schools/${school.id}/detail`);
   };
 
   return (

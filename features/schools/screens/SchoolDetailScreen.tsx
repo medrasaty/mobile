@@ -5,6 +5,16 @@ import Page from "@/components/Page";
 import { ScreenFlatListV2 } from "@/components/ScreenFlatList";
 import Header from "../components/SchoolDetailHeader";
 import SchoolMemberCell from "../components/SchoolMemberCell";
+import ScreenPage from "@/components/Screen";
+import { debugStyle } from "@/constants/styels";
+import TopReputation from "../components/TopReputation";
+import SmallButton from "@/components/SmallButton";
+import TopViews from "../components/TopViews";
+import { ScrollView, View } from "react-native";
+import { useMemo } from "react";
+import { router } from "expo-router";
+import { Button, useTheme } from "react-native-paper";
+import { Container } from "@/components/styled";
 
 const SchoolDetailScreen = () => {
   /**
@@ -39,23 +49,47 @@ const SchoolDetailScreen = () => {
     membersQuery,
   } = useSchoolDetail(schoolId);
 
+  const topReputationUsers = useMemo(() => {
+    return membersData.sort((a, b) => {
+      return b.reputation - a.reputation;
+    });
+  }, [membersQuery]);
+
+  const topViewsUsers = useMemo(() => {
+    return membersData.sort((a, b) => {
+      return b.total_views - a.total_views;
+    });
+  }, [membersQuery]);
+
   const renderHeader = () => {
     if (schoolData) return <Header school={schoolQuery.data} />;
     return null;
   };
 
+  const goToMembers = () => {
+    router.push(`/schools/${schoolId}/members`);
+  };
+  const theme = useTheme();
+
   return (
-    <Page>
-      <ScreenFlatListV2
-        renderItem={({ item }) => <SchoolMemberCell member={item} />}
-        ListHeaderComponent={renderHeader}
-        numColumns={3}
-        data={membersData}
-        isPending={isPending}
-        isError={isError}
-        onRetry={refetch}
-      />
-    </Page>
+    <ScreenPage onRetry={refetch} isPending={isPending} isError={isError}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+        <Header school={schoolData} />
+        <View style={{ marginTop: 30, gap: 30 }}>
+          <TopReputation members={topReputationUsers} />
+          <TopViews users={topViewsUsers} />
+        </View>
+        <Container style={{ marginTop: 40 }}>
+          <Button
+            style={{ borderColor: theme.colors.surfaceVariant }}
+            mode="outlined"
+            onPress={goToMembers}
+          >
+            All
+          </Button>
+        </Container>
+      </ScrollView>
+    </ScreenPage>
   );
 };
 

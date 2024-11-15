@@ -2,9 +2,8 @@ import useAuthClient from "@/hooks/useAuthClient";
 import { PaginatedResponse } from "@/types/requests";
 import { useQuery } from "@tanstack/react-query";
 import { School } from "./types";
-import { SchoolQueryKeys } from "./keys";
+import { SchoolQueryKeys, UsersQueryKeys } from "./keys";
 import { BaseUser, UserType } from "@/types/user.types";
-import { RefreshControl } from "react-native";
 
 export function useSchools() {
   const client = useAuthClient();
@@ -34,14 +33,14 @@ export function useSchool(schoolId: School["id"]) {
   });
 }
 
-export function useSchoolMembers(schoolId: School["id"]) {
+export function useSchoolMembers(params: any = {}) {
   const client = useAuthClient();
   return useQuery({
-    queryKey: SchoolQueryKeys.members(schoolId),
+    queryKey: UsersQueryKeys.withParams(params),
     queryFn: async () => {
       const res = await client.get<PaginatedResponse<BaseUser>>(`/users/`, {
         params: {
-          school: schoolId,
+          ...params,
         },
       });
       return res.data.results;
@@ -56,7 +55,7 @@ export function useSchoolDetail(schoolId: School["id"]) {
    */
 
   const schoolQuery = useSchool(schoolId);
-  const membersQuery = useSchoolMembers(schoolId);
+  const membersQuery = useSchoolMembers({ school: schoolId });
 
   const refetch = () => {
     schoolQuery.refetch();
@@ -69,7 +68,7 @@ export function useSchoolDetail(schoolId: School["id"]) {
     isSuccess: schoolQuery.isPending || membersQuery.isPending,
     isRefetching: schoolQuery.isRefetching || membersQuery.isRefetching,
     schoolData: schoolQuery.data,
-    membersData: membersQuery.data,
+    membersData: membersQuery.data ?? [],
     refetch: refetch,
     schoolQuery,
     membersQuery,

@@ -19,6 +19,9 @@ export interface BaseUser {
   school: number;
   school_name: string;
   gender: "M" | "F";
+  reputation: number;
+  total_views: number;
+  reach: number;
   is_superuser: boolean;
   profile_picture: string;
   is_private: boolean;
