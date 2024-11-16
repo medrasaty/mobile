@@ -36,7 +36,7 @@ const ReputationInfo = ({
         <Row style={{ gap: 10 }}>
           <DotInfo color="gold" value={reputation} />
           <DotInfo color="silver" value={reach} />
-          <DotInfo color="bronz" value={views} />
+          <DotInfo color={"#33ff22"} value={views} />
         </Row>
       </TouchableOpacity>
     );

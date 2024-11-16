@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     width: MEMBER_CELL_WIDTH,
-    gap: 10,
+    gap: 12,
     flex: 1,
     alignItems: "center",
   },

@@ -25,6 +25,7 @@ export interface BaseUser {
   is_superuser: boolean;
   profile_picture: string;
   is_private: boolean;
+  contenttype: number;
 }
 
 export interface BaseSessionUser extends BaseUser {

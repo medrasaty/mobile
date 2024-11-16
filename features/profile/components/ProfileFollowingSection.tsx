@@ -18,6 +18,8 @@ import {
 } from "@/features/blacklist/components/BlackListUserCell";
 import { Button } from "react-native-paper";
 import { t } from "i18next";
+import ReportDialog from "@/features/reports/components/ReportDialog";
+import { useVisibleV2 } from "@/hooks/useVisible";
 
 type ProfileFollowingSectionProps = {
   user: UserProfile;
@@ -70,14 +72,24 @@ export const ToggleBlockingButton = ({
 
 export const ReportUser = () => {
   const theme = useTheme();
+  const { profile } = useProfileScreen();
+  const [visible, show, hide] = useVisibleV2(false);
   return (
-    <Button
-      onPress={() => alert("reporting")}
-      theme={{ colors: { primary: theme.colors.error } }}
-      mode="outlined"
-    >
-      {t("Report")}
-    </Button>
+    <>
+      <Button
+        onPress={show}
+        theme={{ colors: { primary: theme.colors.error } }}
+        mode="outlined"
+      >
+        {t("Report")}
+      </Button>
+      <ReportDialog
+        visible={visible}
+        onDismiss={hide}
+        contentTypeId={profile.contenttype}
+        objectId={profile.id}
+      />
+    </>
   );
 };
 
