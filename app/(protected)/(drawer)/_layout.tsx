@@ -14,7 +14,7 @@ import { Drawer } from "expo-router/drawer";
 import { useTranslation } from "react-i18next";
 import { useWindowDimensions } from "react-native";
 import "react-native-gesture-handler";
-import { Appbar, Drawer as MaterialDrawer } from "react-native-paper";
+import { Appbar, Drawer as MaterialDrawer, useTheme } from "react-native-paper";
 
 export const MaterialDrawerContent = (props: DrawerContentComponentProps) => {
   const { height } = useWindowDimensions();

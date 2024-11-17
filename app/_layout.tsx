@@ -16,6 +16,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import AlertDialogProvider from "@/contexts/AlertDialogContext";
 import "@/localazation/i18n";
 import { RootSiblingParent } from "react-native-root-siblings";
+import { DarkColors, LightColors } from "@/features/theme/colors";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -46,12 +47,13 @@ export default function RootLayout() {
    */
 
   const theme = colorscheme === "dark" ? Darktheme : LightTheme;
+  const colors = colorscheme === "dark" ? DarkColors : LightColors;
 
   return (
     <GestureHandlerRootView>
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
-          <PaperProvider theme={theme}>
+          <PaperProvider theme={{ ...theme, colors: colors.green.colors }}>
             <RootSiblingParent>
               <BottomSheetModalProvider>
                 <SafeAreaProvider>
