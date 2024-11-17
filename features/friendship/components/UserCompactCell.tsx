@@ -2,13 +2,13 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { BaseUser } from "@/types/user.types";
 import { Pressable, StyleSheet, useWindowDimensions } from "react-native";
-import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
+import { DEFAULT_CONTAINER_SPACING, debugStyle } from "@/constants/styels";
 import { useMemo } from "react";
 import UserAvatar from "@/components/UserAvatar";
 import { Link, router } from "expo-router";
 import Row from "@/components/Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTheme } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import { FriendUser } from "../types";
 import {
   FollowBack,
@@ -61,18 +61,13 @@ const Username = ({ username }: { username: string }) => {
 export const School = ({ name }: { name: string }) => {
   const theme = useTheme();
   return (
-    <Row alignItems="center" style={{ gap: 4 }}>
+    <Row alignItems="center" style={{ gap: 4, ...debugStyle }}>
       <MaterialCommunityIcons
         size={18}
         name="school"
         color={theme.colors.primary}
       />
-      <ThemedText
-        color="gray"
-        style={{ width: 100 }}
-        numberOfLines={1}
-        variant="labelSmall"
-      >
+      <ThemedText style={{ width: 100 }} numberOfLines={1} variant="labelSmall">
         {name}
       </ThemedText>
     </Row>

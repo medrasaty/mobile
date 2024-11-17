@@ -13,6 +13,7 @@ import { useVisibleV2 } from "@/hooks/useVisible";
 import { useDeleteWatchHistoryMutation } from "../mutations";
 import LoadingDialog from "@/components/LoadingDialog";
 import { t } from "i18next";
+import { d } from "@/lib/dates";
 
 type QuestionHistoryCellProps = {
   history: WatchHistory;
@@ -50,7 +51,7 @@ const QuestionHistoryCell = ({ history }: QuestionHistoryCellProps) => {
             avatarUrl={owner.profile_picture}
             avatarSize={40}
           />
-          <TimeInfo time={history.watched_at.toLocaleDateString()} />
+          <Date date={history.watched_at} />
         </Row>
       </Surface>
     </Pressable>
@@ -120,12 +121,12 @@ export const MoreOptoins = ({
   );
 };
 
-export const TimeInfo = ({ time, ...props }: { time: string } & ViewProps) => {
+export const Date = ({ date, ...props }: { date: string } & ViewProps) => {
   const theme = useTheme();
   return (
     <View style={{ paddingRight: 20 }} {...props}>
       <ThemedText color={theme.colors.onPrimaryContainer} variant="labelSmall">
-        {time}
+        {d(date).fromNow()}
       </ThemedText>
     </View>
   );

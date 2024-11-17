@@ -68,7 +68,9 @@ export async function getAllFollowing(client: Axios) {
    * Get all followers of the current user.
    */
 
-  const response = await client.get(`/friendship/followings/`);
+  const response = await client.get<PaginatedResponse<FriendUser>>(
+    `/friendship/followings/`
+  );
   return response.data.results;
 }
 

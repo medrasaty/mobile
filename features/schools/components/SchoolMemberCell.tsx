@@ -3,11 +3,9 @@ import UserAvatar from "@/components/UserAvatar";
 import { BaseUser } from "@/types/user.types";
 import { useRouter } from "expo-router";
 import { Pressable, View, ViewProps } from "react-native";
-import { useTheme, TextProps, Icon, TouchableRipple } from "react-native-paper";
+import { useTheme, TextProps } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import Row from "@/components/Row";
-import SmallButton from "@/components/SmallButton";
+import { MaterialIcons } from "@expo/vector-icons";
 import ReputationInfo from "@/components/ReputationInfo";
 
 export const MEMBER_CELL_WIDTH = 120;

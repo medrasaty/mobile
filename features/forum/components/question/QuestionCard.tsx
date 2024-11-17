@@ -3,19 +3,25 @@ import { Pressable, View, ViewProps } from "react-native";
 import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import UserInfo from "@/components/UserInfo";
-import { IconButton, Surface, useTheme } from "react-native-paper";
+import { IconButton, Menu, Surface, useTheme } from "react-native-paper";
 import { DEFAULT_CONTAINER_SPACING, debugStyle } from "@/constants/styels";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useRouter } from "expo-router";
 import { t } from "i18next";
 import { Question } from "@/types/forum.types";
 import { Ionicons } from "@expo/vector-icons";
+import { useVisibleV2 } from "@/hooks/useVisible";
+import ReportDialog, {
+  BaseReportProps,
+} from "@/features/reports/components/ReportDialog";
+import ShareContentSheet from "@/features/share/components/ShareContentSheet";
+import { useSheetViewRef } from "@/components/SheetView";
 
 type QuestionCardProps = {
   question: Question;
 };
 
-const QuestionHistoryCell = ({ question }: QuestionCardProps) => {
+const QuestionCard = ({ question }: QuestionCardProps) => {
   const { owner } = question;
   const router = useRouter();
   const theme = useTheme();
@@ -46,7 +52,7 @@ const QuestionHistoryCell = ({ question }: QuestionCardProps) => {
               />
             </View>
           </View>
-          <MoreOptoins questionId={question.id} />
+          <MoreOptoins question={question} />
         </Row>
 
         <Row
@@ -168,11 +174,59 @@ export const RatingIcon = ({ rating }: { rating: number }) => {
   );
 };
 
-export const MoreOptoins = ({ questionId }: { questionId: Question["id"] }) => {
+export const MoreOptoins = ({ question }: { question: Question }) => {
+  /**
+   * Display a list of options in a menu
+   */
+
+  const [visible, show, hide] = useVisibleV2(false);
+
   return (
-    <IconButton icon="dots-vertical" onPress={() => alert("more options")} />
+    <Menu
+      anchor={<IconButton icon={"dots-vertical"} onPress={show} />}
+      visible={visible}
+      anchorPosition="bottom"
+      onDismiss={hide}
+    >
+      <ReportMenuItem
+        contentTypeId={question.contenttype}
+        objectId={question.id}
+      />
+      <ShareQuestionMenuItem />
+    </Menu>
   );
 };
+
+export const ReportMenuItem = ({
+  objectId,
+  contentTypeId,
+}: BaseReportProps) => {
+  const [visible, show, hide] = useVisibleV2(false);
+  return (
+    <>
+      <Menu.Item onPress={show} title="report" />
+      <ReportDialog
+        visible={visible}
+        onDismiss={hide}
+        contentTypeId={contentTypeId}
+        objectId={objectId}
+      />
+    </>
+  );
+};
+
+export const ShareQuestionMenuItem = () => {
+  return <></>;
+  const sheetRef = useSheetViewRef();
+  return (
+    <>
+      <Menu.Item onPress={() => sheetRef.current?.present()} title="report" />
+      <ShareContentSheet solo="Share this content" ref={sheetRef} />
+    </>
+  );
+};
+
+export const ReportQuestion = () => {};
 
 const styles = StyleSheet.create({
   container: {
@@ -185,4 +239,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuestionHistoryCell;
+export default QuestionCard;

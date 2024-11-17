@@ -1,22 +1,21 @@
-import CenterPage from "@/components/CenterPage";
 import Page from "@/components/Page";
-import ReportDialog from "@/features/reports/components/ReportDialog";
-import { useVisibleV2 } from "@/hooks/useVisible";
-import { Button } from "react-native";
+import { useSheetViewRef } from "@/components/SheetView";
+import ShareContentSheet from "@/features/share/components/ShareContentSheet";
+import { Button } from "react-native-paper";
 
 const Experments = () => {
-  const [visible, show, hide] = useVisibleV2(false);
+  const sheetRef = useSheetViewRef();
+
   return (
     <Page>
-      <CenterPage>
-        <Button onPress={show} title="report" />
-        <ReportDialog
-          onDismiss={hide}
-          objectId="objectId"
-          contentTypeId={4}
-          visible={visible}
-        />
-      </CenterPage>
+      <Button
+        style={{ marginTop: 329 }}
+        mode="contained"
+        onPress={() => sheetRef.current?.present()}
+      >
+        Share
+      </Button>
+      <ShareContentSheet solo="hany" ref={sheetRef} />
     </Page>
   );
 };

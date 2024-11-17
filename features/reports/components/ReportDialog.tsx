@@ -15,20 +15,25 @@ import useReportTypes from "../queries";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import { containerMargins } from "@/constants/styels";
 import useSendReport from "../mutations";
+import LoadingDialog from "@/components/LoadingDialog";
 
-type ReportDialogProps = {
+export type BaseReportProps = {
   contentTypeId: number;
   objectId: string | number;
-} & Omit<DialogProps, "children">;
+};
+
+type ReportDialogProps = BaseReportProps & Omit<DialogProps, "children">;
 
 const ReportDialog = ({
   contentTypeId,
   objectId,
   ...props
 }: ReportDialogProps) => {
-  const [currentChoice, setCurrentChoice] = useState("spam"); // Default value
+  const [currentTypeChoice, setCurrentTypeChoice] = useState<string | null>(
+    null
+  ); // Default value
   const reportTypes = useReportTypes(contentTypeId);
-  const { mutate: sendReport, isPending } = useSendReport();
+  const { mutate: sendReport, isPending: isSending } = useSendReport();
 
   const choices = useMemo((): RadioButtonGroupChoiceType[] | [] => {
     return reportTypes?.data?.map((type) => ({
@@ -38,8 +43,17 @@ const ReportDialog = ({
   }, [reportTypes.data]);
 
   const handleConfirm = () => {
-    sendReport("solo");
-    if (props.onDismiss) props.onDismiss();
+    if (currentTypeChoice) {
+      sendReport({
+        object_id: objectId,
+        content_type: contentTypeId,
+        report_type: currentTypeChoice,
+      });
+
+      setCurrentTypeChoice(null);
+
+      if (props.onDismiss) props.onDismiss();
+    }
   };
 
   return (
@@ -55,8 +69,8 @@ const ReportDialog = ({
             <LoadingIndicator />
           ) : (
             <RadioButtonGroup
-              onChoicePress={(choice) => setCurrentChoice(choice.value)}
-              currentValue={currentChoice}
+              onChoicePress={(choice) => setCurrentTypeChoice(choice.value)}
+              currentValue={currentTypeChoice}
               choices={choices}
               contentContainerStyle={{ gap: 10 }}
             />
@@ -64,7 +78,11 @@ const ReportDialog = ({
           <Divider bold />
         </Dialog.Content>
         <View style={styles.actionsContainer}>
-          <Button onPress={handleConfirm} mode="contained">
+          <Button
+            disabled={currentTypeChoice === null}
+            onPress={handleConfirm}
+            mode="contained"
+          >
             {t("report")}
           </Button>
           <Button onPress={props.onDismiss} mode="text">
@@ -72,6 +90,7 @@ const ReportDialog = ({
           </Button>
         </View>
       </Dialog>
+      <LoadingDialog visible={isSending} message={t("Sending_report...")} />
     </Portal>
   );
 };

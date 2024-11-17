@@ -46,6 +46,7 @@ export interface Question extends BaseQuestionAnswer {
   answers_count: number;
   answers: string[];
   views: number;
+  contenttype: number;
 }
 
 export interface DetailQuestion extends Question {
