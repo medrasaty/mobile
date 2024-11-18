@@ -4,30 +4,38 @@ import { FriendUser } from "@/features/friendship/types";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { Pressable, PressableProps, View } from "react-native";
 import { useTheme } from "react-native-paper";
-import { useShareContext } from "../contexts/ShareContentSheetContext";
 import { useMemo } from "react";
-import { d } from "@/lib/dates";
+import { useShareStore } from "../store";
 
 type UserShareCellProps = {
   user: FriendUser;
 } & PressableProps;
 
-const UserShareCell = ({ user, ...props }: UserShareCellProps) => {
+const UserShareCell = ({ user, style, ...props }: UserShareCellProps) => {
   const theme = useTheme();
-  const { sharedWith, addShare, removeShare } = useShareContext();
+
+  const { selectedUsers, addUser, removeUser } = useShareStore();
+
   const isSelected = useMemo(
-    () => (sharedWith.find((id) => id === user.id) ? true : false),
-    [sharedWith]
+    () => (selectedUsers.find((u) => u.id === user.id) ? true : false),
+    [selectedUsers]
   );
+
   const handlePress = () => {
-    // if this user is selected, remove it , add it otherwise
-    isSelected ? removeShare(user.id) : addShare(user.id);
+    isSelected ? removeUser(user) : addUser(user);
   };
-  console.log(isSelected);
 
   return (
-    <Pressable onPress={handlePress} {...props}>
-      <UserAvatarV2 user={user} size={85} />
+    <Pressable
+      onPress={handlePress}
+      style={{ opacity: isSelected ? 1 : 0.5, flex: 1, alignItems: "center" }}
+      {...props}
+    >
+      <UserAvatarV2
+        borderColor={isSelected ? theme.colors.primaryContainer : undefined}
+        user={user}
+        size={70}
+      />
       <ThemedText bold style={{ letterSpacing: 1 }} variant="titleMedium">
         {user.short_name}
       </ThemedText>
@@ -51,27 +59,6 @@ const UserShareCell = ({ user, ...props }: UserShareCellProps) => {
         </ThemedText>
       </View>
     </Pressable>
-  );
-};
-
-const Avatar = ({ url }: { url: string }) => {
-  const theme = useTheme();
-  return (
-    <View style={{ borderRadius: 100, overflow: "hidden" }}>
-      <MaterialIcons
-        style={{
-          backgroundColor: theme.colors.surfaceVariant,
-          borderRadius: 100,
-          position: "absolute",
-          padding: 2,
-          bottom: 4,
-          left: 4,
-        }}
-        size={14}
-        color={theme.colors.primary}
-        name="verified"
-      />
-    </View>
   );
 };
 

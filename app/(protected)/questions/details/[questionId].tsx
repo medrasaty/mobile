@@ -18,7 +18,9 @@ import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RefreshControl } from "react-native";
-import { ActivityIndicator, Divider } from "react-native-paper";
+import { ActivityIndicator, Appbar, Divider } from "react-native-paper";
+import ShareContentSheet from "@/features/share/components/ShareContentSheet";
+import { useSheetViewRef } from "@/components/SheetView";
 
 export default function QuestionDetailPage() {
   return (
@@ -111,7 +113,7 @@ const AnswersList = () => {
   };
 
   return (
-    <>
+    <BottomSheetModalProvider>
       <AppBar title={question.title} />
       <FlashList
         ref={listRef}
@@ -132,6 +134,6 @@ const AnswersList = () => {
         ListFooterComponent={renderFooter}
       />
       <CreateAnswer question={question} />
-    </>
+    </BottomSheetModalProvider>
   );
 };

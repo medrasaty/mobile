@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { Animated, StyleProp, ViewStyle } from "react-native";
-import { Button, Dialog, DialogProps } from "react-native-paper";
+import { Button, Dialog, DialogProps, Portal } from "react-native-paper";
 import { ThemeProp } from "react-native-paper/src/types";
 
 type AlertDialogProps = {
@@ -49,14 +49,16 @@ export default function AlertDialog({
   ...props
 }: AlertDialogProps) {
   return (
-    <Dialog onDismiss={onDismiss} {...props}>
-      {title && title?.length > 0 && <Dialog.Title>{title}</Dialog.Title>}
-      <Dialog.Content>
-        <ThemedText>{message}</ThemedText>
-      </Dialog.Content>
-      <Dialog.Actions>
-        <Button onPress={onDismiss}> تم </Button>
-      </Dialog.Actions>
-    </Dialog>
+    <Portal>
+      <Dialog onDismiss={onDismiss} {...props}>
+        {title && title?.length > 0 && <Dialog.Title>{title}</Dialog.Title>}
+        <Dialog.Content>
+          <ThemedText>{message}</ThemedText>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button onPress={onDismiss}> تم </Button>
+        </Dialog.Actions>
+      </Dialog>
+    </Portal>
   );
 }

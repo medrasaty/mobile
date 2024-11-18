@@ -1,8 +1,13 @@
 import React, { useContext, createContext, useState } from "react";
 import { BaseUser } from "@/types/user.types";
+import { useQueryClient } from "@tanstack/react-query";
+import { FriendUser } from "@/features/friendship/types";
+import { FriendsQueryKeys } from "@/features/friendship/hooks/useFriendsQuery";
+import { sharedWithKeys } from "../keys";
+import { UsersQueryKeys } from "@/features/schools/keys";
 
 export type ShareContentSheetContextProps = {
-  sharedWith: BaseUser["id"][];
+  selectedUsers: BaseUser["id"][];
   addShare: (id: BaseUser["id"]) => void;
   removeShare: (id: BaseUser["id"]) => void;
 };
@@ -13,19 +18,20 @@ export const ShareContentContext =
 export function ShareContentContextProvider({
   children,
 }: React.PropsWithChildren) {
-  const [sharedWith, setSharedWith] = useState<BaseUser["id"][]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<BaseUser["id"][]>([]);
 
   const addShare = (id: BaseUser["id"]) => {
-    setSharedWith([...sharedWith, id]);
+    setSelectedUsers([...selectedUsers, id]);
   };
+
   const removeShare = (id: BaseUser["id"]) => {
-    setSharedWith((state) => state.filter((s) => s !== id));
+    setSelectedUsers((state) => state.filter((s) => s !== id));
   };
 
   return (
     <ShareContentContext.Provider
       value={{
-        sharedWith,
+        selectedUsers: selectedUsers,
         addShare,
         removeShare,
       }}

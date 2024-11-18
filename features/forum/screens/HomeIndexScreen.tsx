@@ -13,12 +13,15 @@ import React, { useCallback, useState } from "react";
 import { ActivityIndicator, RefreshControl, ViewProps } from "react-native";
 import { Divider } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 export default function HomeIndexScreen() {
   return (
-    <SafeAreaView>
-      <QuestionsPage />
-    </SafeAreaView>
+    <BottomSheetModalProvider>
+      <SafeAreaView>
+        <QuestionsPage />
+      </SafeAreaView>
+    </BottomSheetModalProvider>
   );
 }
 

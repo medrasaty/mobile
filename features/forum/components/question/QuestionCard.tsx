@@ -16,6 +16,9 @@ import ReportDialog, {
 } from "@/features/reports/components/ReportDialog";
 import ShareContentSheet from "@/features/share/components/ShareContentSheet";
 import { useSheetViewRef } from "@/components/SheetView";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { d } from "@/lib/dates";
+import Date from "@/components/Date";
 
 type QuestionCardProps = {
   question: Question;
@@ -52,7 +55,7 @@ const QuestionCard = ({ question }: QuestionCardProps) => {
               />
             </View>
           </View>
-          <MoreOptoins question={question} />
+          <Date date={question.created} />
         </Row>
 
         <Row
@@ -171,58 +174,6 @@ export const RatingIcon = ({ rating }: { rating: number }) => {
       name={isPositive ? "arrow-up" : "arrow-down"}
       size={12}
     />
-  );
-};
-
-export const MoreOptoins = ({ question }: { question: Question }) => {
-  /**
-   * Display a list of options in a menu
-   */
-
-  const [visible, show, hide] = useVisibleV2(false);
-
-  return (
-    <Menu
-      anchor={<IconButton icon={"dots-vertical"} onPress={show} />}
-      visible={visible}
-      anchorPosition="bottom"
-      onDismiss={hide}
-    >
-      <ReportMenuItem
-        contentTypeId={question.contenttype}
-        objectId={question.id}
-      />
-      <ShareQuestionMenuItem />
-    </Menu>
-  );
-};
-
-export const ReportMenuItem = ({
-  objectId,
-  contentTypeId,
-}: BaseReportProps) => {
-  const [visible, show, hide] = useVisibleV2(false);
-  return (
-    <>
-      <Menu.Item onPress={show} title="report" />
-      <ReportDialog
-        visible={visible}
-        onDismiss={hide}
-        contentTypeId={contentTypeId}
-        objectId={objectId}
-      />
-    </>
-  );
-};
-
-export const ShareQuestionMenuItem = () => {
-  return <></>;
-  const sheetRef = useSheetViewRef();
-  return (
-    <>
-      <Menu.Item onPress={() => sheetRef.current?.present()} title="report" />
-      <ShareContentSheet solo="Share this content" ref={sheetRef} />
-    </>
   );
 };
 

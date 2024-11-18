@@ -4,6 +4,7 @@ import { useMemo } from "react";
 export function useQuestionInfoPropsMemo(question: DetailQuestion) {
   return useMemo(
     () => ({
+      id: question.id,
       title: question.title,
       subject: question.subject,
       text: question.text,

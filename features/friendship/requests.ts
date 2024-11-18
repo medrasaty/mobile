@@ -63,13 +63,14 @@ export async function getAllFollowers(client: Axios) {
   return response.data.results;
 }
 
-export async function getAllFollowing(client: Axios) {
+export async function getFollowings(client: Axios, params: any = {}) {
   /**
    * Get all followers of the current user.
    */
 
   const response = await client.get<PaginatedResponse<FriendUser>>(
-    `/friendship/followings/`
+    `/friendship/followings/`,
+    { params }
   );
   return response.data.results;
 }

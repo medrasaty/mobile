@@ -1,6 +1,6 @@
 import useAuthClient from "@/hooks/useAuthClient";
 import { useQuery } from "@tanstack/react-query";
-import { getAllFollowers, getAllFollowing, getFriends } from "../requests";
+import { getAllFollowers, getFollowings, getFriends } from "../requests";
 
 export const FRIENDS_QUERY_KEY = ["friends"];
 
@@ -8,6 +8,11 @@ export const FriendsQueryKeys = {
   all: FRIENDS_QUERY_KEY,
   followers: () => [...FriendsQueryKeys.all, "followers"],
   followings: () => [...FriendsQueryKeys.all, "followings"],
+  followingsWithParams: (params: any) => [
+    ...FriendsQueryKeys.all,
+    "followings",
+    params,
+  ],
 };
 
 export default function useFriendsQuery() {
@@ -28,10 +33,10 @@ export function useFollowersQuery() {
   });
 }
 
-export function useFollowingQuery() {
+export function useFollowingQuery(params: any = {}) {
   const client = useAuthClient();
   return useQuery({
-    queryKey: FriendsQueryKeys.followings(),
-    queryFn: async () => await getAllFollowing(client),
+    queryKey: FriendsQueryKeys.followingsWithParams(params),
+    queryFn: async () => await getFollowings(client, params),
   });
 }

@@ -18,7 +18,7 @@ const NetworkError = ({
   const { t } = useTranslation();
 
   return (
-    <View style={[style, { gap: 9 }]} {...props}>
+    <View style={[style, { gap: 9, alignItems: "center" }]} {...props}>
       <ThemedText>{message}</ThemedText>
       <Button onPress={onRetry}>{t("retry")}</Button>
     </View>

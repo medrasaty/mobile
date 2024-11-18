@@ -2,20 +2,20 @@ import Page from "@/components/Page";
 import { useSheetViewRef } from "@/components/SheetView";
 import ShareContentSheet from "@/features/share/components/ShareContentSheet";
 import { Button } from "react-native-paper";
+import { useShareStore } from "@features/share/store";
+import CenterPage from "@/components/CenterPage";
 
 const Experments = () => {
   const sheetRef = useSheetViewRef();
 
   return (
     <Page>
-      <Button
-        style={{ marginTop: 329 }}
-        mode="contained"
-        onPress={() => sheetRef.current?.present()}
-      >
-        Share
-      </Button>
-      <ShareContentSheet solo="hany" ref={sheetRef} />
+      <CenterPage>
+        <Button mode="contained" onPress={() => sheetRef.current?.present()}>
+          share
+        </Button>
+      </CenterPage>
+      <ShareContentSheet questionId="hany" ref={sheetRef} />
     </Page>
   );
 };

@@ -61,7 +61,7 @@ const Username = ({ username }: { username: string }) => {
 export const School = ({ name }: { name: string }) => {
   const theme = useTheme();
   return (
-    <Row alignItems="center" style={{ gap: 4, ...debugStyle }}>
+    <Row alignItems="center" style={{ gap: 4 }}>
       <MaterialCommunityIcons
         size={18}
         name="school"

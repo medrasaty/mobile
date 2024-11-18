@@ -1,9 +1,11 @@
+import { useSheetViewRef } from "@/components/SheetView";
 import Text from "@/components/styled/Text";
 import View from "@/components/styled/View";
 import Tag from "@/components/Tag";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { API_URL } from "@/constants";
+import ShareContentSheet from "@/features/share/components/ShareContentSheet";
 import { translateSubject } from "@/lib/utils";
 import { DetailQuestion, Question } from "@/types/forum.types";
 import { memo, useCallback, useMemo } from "react";
@@ -12,6 +14,7 @@ import FastImage from "react-native-fast-image";
 import { useTheme } from "react-native-paper";
 
 type QuestionDetailInfoProps = {
+  id: DetailQuestion["id"];
   title: DetailQuestion["title"];
   subject: DetailQuestion["subject"];
   text: DetailQuestion["text"];
@@ -25,6 +28,7 @@ type QuestionDetailInfoProps = {
 
 const QuestionDetailInfo = memo(
   ({
+    id,
     title,
     subject,
     text,
@@ -37,6 +41,7 @@ const QuestionDetailInfo = memo(
     style,
     ...props
   }: QuestionDetailInfoProps) => {
+    const shareRef = useSheetViewRef();
     return (
       <View
         style={{
@@ -57,9 +62,17 @@ const QuestionDetailInfo = memo(
           <ThemedView style={{ flexDirection: "row" }}>
             <ViewsCount views={views} />
             <AnswersCount answersCount={answersCount} />
+            <ThemedText
+              style={{ margin: 10 }}
+              link
+              onPress={() => shareRef.current?.present()}
+            >
+              share
+            </ThemedText>
           </ThemedView>
           <TimeInfo created={created} modified={modified} />
         </View>
+        <ShareContentSheet questionId={id} ref={shareRef} />
       </View>
     );
   }
@@ -171,4 +184,3 @@ export const Picture = memo(({ image }: { image?: string }) => {
 });
 
 export default QuestionDetailInfo;
-
