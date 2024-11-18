@@ -69,7 +69,7 @@ export const UserAvatarV2 = ({
   return (
     <View
       style={{
-        borderWidth: 4,
+        borderWidth: 3,
         borderColor: borderColor ?? theme.colors.surfaceVariant,
         borderRadius: 100,
         overflow: "hidden",

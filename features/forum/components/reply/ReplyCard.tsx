@@ -7,6 +7,7 @@ import { Reply } from "@/types/forum.types";
 import User from "@/components/User";
 import ReadMoreText from "@/components/ReadMoreText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { d } from "@/lib/dates";
 
 type ReplyCardProps = {
   reply: Reply;
@@ -54,8 +55,8 @@ export const ReplyCreatedDate = ({
   created: Reply["created"];
 }) => {
   return (
-    <ThemedText color="gray" variant="labelSmall">
-      {created.toLocaleTimeString()}
+    <ThemedText style={{ marginTop: 7 }} color="gray" variant="labelSmall">
+      {created.toLocaleTimeString() + ` (${d(created).fromNow()})`}
     </ThemedText>
   );
 };

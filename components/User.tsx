@@ -4,6 +4,7 @@ import UserVerificationBadge from "@/components/UserVerificationBadge";
 import Username from "@/components/Username";
 import { BaseUser } from "@/types/user.types";
 import { View } from "react-native";
+import { UserAvatarV2 } from "./UserAvatar";
 
 export const User = ({
   user,
@@ -14,11 +15,7 @@ export const User = ({
 }) => {
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-      <ProfilePicture
-        square={squarePicture}
-        size={30}
-        source={user.avatar_thumbnail}
-      />
+      <UserAvatarV2 size={39} user={user} />
 
       <View>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>

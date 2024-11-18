@@ -1,10 +1,8 @@
-import View, { Container } from "@/components/styled/View";
+import View from "@/components/styled/View";
 import QuestionDetailActions from "@/features/forum/components/question/detail/QuestionDetailActions";
 import QuestionDetailInfo from "@/features/forum/components/question/detail/QuestionDetailInfo";
 import { DetailQuestion } from "@/types/forum.types";
 import QuestionDetailOwner from "./Owner";
-import { QueryErrorResetBoundary } from "@tanstack/react-query";
-import { useMemo } from "react";
 import {
   useQuestionActionPropsMemo,
   useQuestionInfoPropsMemo,

@@ -27,7 +27,7 @@ export const CreateAnswerFAB = ({ onPress }: { onPress: () => void }) => {
         onPress={onPress}
         icon="plus"
         size="medium"
-        variant="secondary"
+        variant="surface"
         style={{
           position: "absolute",
           margin: 24,

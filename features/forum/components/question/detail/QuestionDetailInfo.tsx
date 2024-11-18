@@ -5,9 +5,12 @@ import Tag from "@/components/Tag";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { API_URL } from "@/constants";
+import { debugStyle } from "@/constants/styels";
 import ShareContentSheet from "@/features/share/components/ShareContentSheet";
+import { d } from "@/lib/dates";
 import { translateSubject } from "@/lib/utils";
 import { DetailQuestion, Question } from "@/types/forum.types";
+import { t } from "i18next";
 import { memo, useCallback, useMemo } from "react";
 import { ViewProps } from "react-native";
 import FastImage from "react-native-fast-image";
@@ -41,7 +44,6 @@ const QuestionDetailInfo = memo(
     style,
     ...props
   }: QuestionDetailInfoProps) => {
-    const shareRef = useSheetViewRef();
     return (
       <View
         style={{
@@ -59,20 +61,15 @@ const QuestionDetailInfo = memo(
         {picture && <Picture image={picture} />}
 
         <View style={{ flex: 0.1, gap: 9, marginTop: 4 }}>
-          <ThemedView style={{ flexDirection: "row" }}>
+          <ThemedView
+            style={{ gap: 8, flexDirection: "row", alignItems: "center" }}
+          >
             <ViewsCount views={views} />
             <AnswersCount answersCount={answersCount} />
-            <ThemedText
-              style={{ margin: 10 }}
-              link
-              onPress={() => shareRef.current?.present()}
-            >
-              share
-            </ThemedText>
+            <Share id={id} />
           </ThemedView>
           <TimeInfo created={created} modified={modified} />
         </View>
-        <ShareContentSheet questionId={id} ref={shareRef} />
       </View>
     );
   }
@@ -150,7 +147,7 @@ const TimeInfo = ({
         {created.toDateString()}
       </Text>
       <Text style={{ color: "gray" }} variant="labelSmall">
-        آخر تعديل {modified.toDateString()}
+        آخر تعديل {modified.toDateString()} {` (${d(modified).fromNow()})`}
       </Text>
     </View>
   );
@@ -182,5 +179,20 @@ export const Picture = memo(({ image }: { image?: string }) => {
     </View>
   );
 });
+
+export const Share = ({ id }: { id: Question["id"] }) => {
+  const shareRef = useSheetViewRef();
+  return (
+    <View>
+      <ThemedText
+        style={{ textDecorationLine: "underline" }}
+        onPress={() => shareRef.current?.present()}
+      >
+        {t("share")}
+      </ThemedText>
+      <ShareContentSheet questionId={id} ref={shareRef} />
+    </View>
+  );
+};
 
 export default QuestionDetailInfo;

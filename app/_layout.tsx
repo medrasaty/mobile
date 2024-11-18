@@ -53,7 +53,7 @@ export default function RootLayout() {
     <GestureHandlerRootView>
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
-          <PaperProvider theme={{ ...theme, colors: colors.yellow.colors }}>
+          <PaperProvider theme={{ ...theme, colors: colors.gray.colors }}>
             <RootSiblingParent>
               <BottomSheetModalProvider>
                 <SafeAreaProvider>

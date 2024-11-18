@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { FAB, AnimatedFAB, FABProps } from "react-native-paper";
+import { FAB, AnimatedFAB, FABProps, useTheme } from "react-native-paper";
 import { StyleSheet } from "react-native";
 
 export function AddQuestionFAB() {
@@ -21,6 +21,7 @@ type AddQuestionAnimatedFABProps = {
 export function AddQuestionAnimatedFAB({
   isExtended,
 }: AddQuestionAnimatedFABProps) {
+  const theme = useTheme();
   function handlePress() {
     router.push("/questions/new");
   }
@@ -28,12 +29,12 @@ export function AddQuestionAnimatedFAB({
   return (
     <AnimatedFAB
       icon="plus"
-      variant="primary"
+      variant="surface"
       label="سؤال جديد"
       extended={isExtended}
       iconMode="dynamic"
       onPress={handlePress}
-      style={styles.FABStyles}
+      style={[styles.FABStyles]}
     />
   );
 }
