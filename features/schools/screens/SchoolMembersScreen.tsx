@@ -72,8 +72,10 @@ export const MembersList = () => {
   return (
     <>
       {/* Return different List based on screen size */}
-      {width >= MEMBER_CELL_WIDTH + NUM_COLUMNS * DEFAULT_GAP ? (
+      {width >=
+      MEMBER_CELL_WIDTH * NUM_COLUMNS + (NUM_COLUMNS + 2) * DEFAULT_GAP ? (
         <ScreenFlatListV3
+          key={NUM_COLUMNS}
           columnWrapperStyle={{ gap: DEFAULT_GAP }}
           contentContainerStyle={{ alignItems: "center", gap: DEFAULT_GAP }}
           numColumns={NUM_COLUMNS}
@@ -82,10 +84,11 @@ export const MembersList = () => {
         />
       ) : (
         <ScreenFlatListV3
-          columnWrapperStyle={{ gap: DEFAULT_GAP - 5 }}
+          key={NUM_COLUMNS - 1}
+          columnWrapperStyle={{ gap: DEFAULT_GAP * 2 }}
           contentContainerStyle={{
             alignItems: "center",
-            gap: DEFAULT_GAP - 5,
+            gap: DEFAULT_GAP * 2,
           }}
           numColumns={NUM_COLUMNS - 1}
           renderItem={renderItem}

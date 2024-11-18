@@ -52,7 +52,7 @@ const Footer = ({
         borderTopLeftRadius: 12,
         alignItems: "center",
         padding: 8,
-        backgroundColor: theme.colors.primaryContainer,
+        backgroundColor: theme.colors.surface,
       }}
       {...props}
     >

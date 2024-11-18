@@ -6,7 +6,7 @@ export default function useActionsProps() {
   const theme = useTheme();
 
   return {
-    size: RatingButtonSize / 2, // half RatingButton size
+    size: RatingButtonSize / 1.7, // half RatingButton size
     color: theme.colors.primary,
   };
 }
