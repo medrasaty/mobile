@@ -14,7 +14,7 @@ import { Drawer } from "expo-router/drawer";
 import { useTranslation } from "react-i18next";
 import { useWindowDimensions } from "react-native";
 import "react-native-gesture-handler";
-import { Appbar, Drawer as MaterialDrawer, useTheme } from "react-native-paper";
+import { Appbar, Drawer as MaterialDrawer } from "react-native-paper";
 
 export const MaterialDrawerContent = (props: DrawerContentComponentProps) => {
   const { height } = useWindowDimensions();
@@ -118,6 +118,14 @@ export default function DrawerLayout() {
           drawerIcon: HistoryIcon,
         }}
       />
+      <Drawer.Screen
+        name="settings"
+        options={{
+          headerShown: false,
+          title: t("Settings"),
+          drawerIcon: SettingsIcon,
+        }}
+      />
     </Drawer>
   );
 }
@@ -164,4 +172,9 @@ const BlackListIcon = (props: IconProps) => {
 const HistoryIcon = (props: IconProps) => {
   // TODO: choose better icon
   return <Ionicons name="time-outline" {...props} />;
+};
+
+const SettingsIcon = (props: IconProps) => {
+  // TODO: choose better icon
+  return <Ionicons name="settings-outline" {...props} />;
 };

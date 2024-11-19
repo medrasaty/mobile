@@ -1,9 +1,6 @@
 import useAuthClient from "@/hooks/useAuthClient";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getFollowingRequestsFromUser } from "../requests";
-import { FilterOption } from "@/components/FilterOptionsView";
-import { useMemo } from "react";
-import { areListsEqual } from "@/lib/utils";
 
 type useYourFollowingRequestQueryProps = {
   params: any;

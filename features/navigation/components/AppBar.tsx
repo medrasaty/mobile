@@ -3,7 +3,7 @@ import { useSession } from "@/hooks/useSession";
 import { useNavigation } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Appbar, AppbarHeaderProps } from "react-native-paper";
+import { Appbar, AppbarHeaderProps, Divider } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
@@ -27,18 +27,20 @@ export function AppBar({
   const { canGoBack, goBack } = useNavigation();
 
   return (
-    <Appbar.Header
-      style={[styles.header, { opacity: opacity ?? 1 }]}
-      {...options}
-      {...props}
-    >
-      {/* TODO: write description */}
-      {backAction && canGoBack() && (
-        <Appbar.BackAction onPress={() => goBack()} />
-      )}
-      <Appbar.Content title={title} />
-      {props.children}
-    </Appbar.Header>
+    <>
+      <Appbar.Header
+        style={[styles.header, { opacity: opacity ?? 1 }]}
+        {...options}
+        {...props}
+      >
+        {/* TODO: write description */}
+        {backAction && canGoBack() && (
+          <Appbar.BackAction onPress={() => goBack()} />
+        )}
+        <Appbar.Content title={title} />
+        {props.children}
+      </Appbar.Header>
+    </>
   );
 }
 
@@ -72,10 +74,12 @@ export const IndexAppBar = ({ title }: { title: string }) => {
   const { signOut } = useSession();
 
   return (
-    <AnimatedAppBar backAction title={title}>
-      <Appbar.Action icon="magnify" onPress={() => {}} />
-      <Appbar.Action icon="logout" onPress={() => signOut()} />
-    </AnimatedAppBar>
+    <>
+      <AnimatedAppBar backAction title={title}>
+        <Appbar.Action icon="magnify" onPress={() => {}} />
+        <Appbar.Action icon="logout" onPress={() => signOut()} />
+      </AnimatedAppBar>
+    </>
   );
 };
 

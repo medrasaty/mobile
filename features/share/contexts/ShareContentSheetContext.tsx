@@ -1,10 +1,5 @@
 import React, { useContext, createContext, useState } from "react";
 import { BaseUser } from "@/types/user.types";
-import { useQueryClient } from "@tanstack/react-query";
-import { FriendUser } from "@/features/friendship/types";
-import { FriendsQueryKeys } from "@/features/friendship/hooks/useFriendsQuery";
-import { sharedWithKeys } from "../keys";
-import { UsersQueryKeys } from "@/features/schools/keys";
 
 export type ShareContentSheetContextProps = {
   selectedUsers: BaseUser["id"][];

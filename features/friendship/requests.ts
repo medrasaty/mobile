@@ -1,10 +1,9 @@
+import { PaginatedResponse } from "@/types/requests";
+import { CursorPaginatedResponse } from "@/types/responses";
 import { BaseUser } from "@/types/user.types";
 import { Axios } from "axios";
-import { FollowingRequest, FriendUser } from "./types";
-import { PaginatedResponse } from "@/types/requests";
 import { transformDates } from "../forum/utils";
-import { resolvePlugin } from "@babel/core";
-import { CursorPaginatedResponse } from "@/types/responses";
+import { FollowingRequest, FriendUser } from "./types";
 
 export async function follow(client: Axios, username: BaseUser["username"]) {
   /**

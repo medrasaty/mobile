@@ -5,6 +5,8 @@ type ShareStore = {
   selectedUsers: FriendUser[];
   addUser: (id: FriendUser) => void;
   removeUser: (id: FriendUser) => void;
+  /** Clear the entire store, selectedUsers, searchValue, etc
+   */
   clear: () => void;
   searchValue: string;
   updateSearchValue: (text: string) => void;
@@ -39,6 +41,7 @@ export const useShareStore = create<ShareStore>((set) => ({
   clear: () => {
     set((state) => {
       return {
+        ...state,
         selectedUsers: [],
         searchValue: "",
       };
