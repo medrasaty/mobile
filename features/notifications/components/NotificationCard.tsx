@@ -8,6 +8,7 @@ import React, { useCallback, useMemo } from "react";
 import { StyleSheet, ViewProps } from "react-native";
 import { Card, IconButton, useTheme } from "react-native-paper";
 import { parseNotificationRef } from "../lib/utils";
+import { questionDetail } from "@/lib/routing";
 
 const useNotificationStyle = (isRead: boolean) => {
   const theme = useTheme();
@@ -29,13 +30,13 @@ const NotificationCard: React.FC<
 
   const handleNotificationPress = () => {
     const ref = parseNotificationRef(notification);
-    router.push({
-      pathname: `/questions/details/${ref.question}`,
-      params: {
+    router.push(
+      questionDetail({
+        questionId: ref.question,
         answerId: ref.answer ?? undefined,
         replyId: ref.reply ?? undefined,
-      },
-    });
+      })
+    );
   };
 
   return (

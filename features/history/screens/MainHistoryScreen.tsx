@@ -1,6 +1,6 @@
 import Page from "@/components/Page";
 import { ScreenListV2 } from "@/components/ScreenFlatList";
-import useHistory, { useInfiniteHistory } from "../queries";
+import { useInfiniteHistory } from "../queries";
 import QuestionHistoryCell from "../components/QuestionHistoryCell";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { t } from "i18next";
@@ -57,7 +57,6 @@ export const WatchHistoryList = () => {
 
   const q = useInfiniteHistory({
     ordering: currentFilter,
-    search: searchValue,
   });
 
   // FIXME: duplicate in FollowingRequestsToMe

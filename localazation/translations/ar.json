@@ -76,5 +76,8 @@
   "no_questions_maches_your_query": "لم نعثر على نتائج بحث مطابقة",
   "Top_reputation": "الأكثر سمعة",
   "Members": "الأعضاء",
-  "share": "شارك"
+  "share": "شارك",
+  "username": "@{{username}}",
+  "network_error": "خطأ في الإتصال: تحقق من اتصال جهازك با الإنترنت ثم حاول مجدداً",
+  "successfully_created_answer": "تم اضافة الجواب بنجاح"
 }

@@ -11,9 +11,12 @@ const UserAnswersScreen = () => {
   const username = useUsernameParam();
   const q = useProfileAnswers(username);
 
-  const renderItem = useCallback(({ item }: { item: Answer }) => {
-    return <ForumAnswerCompactCard answer={item} />;
-  }, []);
+  const renderItem = useCallback(
+    ({ item }: { item: Answer }) => {
+      return <ForumAnswerCompactCard answer={item} />;
+    },
+    [q.status]
+  );
   return (
     <Page>
       <ScreenListV3

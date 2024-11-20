@@ -1,6 +1,5 @@
 import { AddQuestionAnimatedFAB } from "@/components/FAB";
 import FilteringOptions from "@/components/FilteringOptions";
-import QuestionCard from "@/features/forum/components/question/QuestionCard";
 import Text from "@/components/styled/Text";
 import View, { SafeAreaView } from "@/components/styled/View";
 import { useAnimatedAppBar } from "@/contexts";
@@ -14,6 +13,7 @@ import { ActivityIndicator, RefreshControl, ViewProps } from "react-native";
 import { Divider } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import ForumQuestionCard from "@forum/questions/components/QuestionsCard";
 
 export default function HomeIndexScreen() {
   return (
@@ -129,7 +129,7 @@ const QuestionsList = () => {
         refreshControl={
           <RefreshControl refreshing={q.isFetching} onRefresh={q.refetch} />
         }
-        renderItem={({ item }) => <QuestionCard question={item} />}
+        renderItem={({ item }) => <ForumQuestionCard question={item} />}
         estimatedItemSize={200}
         ListFooterComponent={renderFooter}
         ListEmptyComponent={renderEmptyComponent}

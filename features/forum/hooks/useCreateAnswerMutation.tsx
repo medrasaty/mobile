@@ -1,6 +1,9 @@
 import useAuthClient from "@/hooks/useAuthClient";
 import { Answer } from "@/types/forum.types";
+import { AnswersQueryKeys } from "@forum/answers/keys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as Burnt from "burnt";
+import { t } from "i18next";
 
 export default function useCreateAnswerMutation() {
   /**
@@ -18,8 +21,6 @@ export default function useCreateAnswerMutation() {
     return {
       ...response.data,
       ratings_value: 0,
-      created: new Date(response.data.created),
-      modified: new Date(response.data.modified),
     };
   };
 
@@ -27,12 +28,23 @@ export default function useCreateAnswerMutation() {
     mutationFn: createanswerRequest,
     onSuccess: (newAnswer: Answer | undefined, variables) => {
       qc.setQueryData(
-        ["answers", variables.question],
+        AnswersQueryKeys.withParams({ question: variables.question }),
+
         (oldAnswers: Answer[] | undefined) => {
           if (!oldAnswers) return [newAnswer];
           return [newAnswer, ...oldAnswers];
         }
       );
+      Burnt.toast({
+        title: t("successfully_created_answer"),
+        haptic: "success",
+      });
+    },
+    onError: (error) => {
+      Burnt.toast({
+        title: t("network_error"),
+        haptic: "error",
+      });
     },
   });
 

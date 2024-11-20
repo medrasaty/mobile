@@ -10,7 +10,7 @@ import {
   Surface,
   useTheme,
 } from "react-native-paper";
-import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
+import { DEFAULT_CONTAINER_SPACING, debugStyle } from "@/constants/styels";
 import { useCallback, useMemo } from "react";
 import { useRouter } from "expo-router";
 import { t } from "i18next";
@@ -29,8 +29,9 @@ const ForumAnswerCompactCard = ({ answer }: ForumAnswerCompactCardProps) => {
 
   const goToQuestion = useCallback(() => {
     router.push({
-      pathname: `/questions/details/${answer.question.id}`,
+      pathname: `/questions/details`,
       params: {
+        questionId: answer.question.id,
         answerId: answer.id ?? undefined,
       },
     });
@@ -45,7 +46,7 @@ const ForumAnswerCompactCard = ({ answer }: ForumAnswerCompactCardProps) => {
       >
         <Row style={{ gap: 20 }}>
           <View style={{ flex: 1 }}>
-            <View style={{ marginTop: 14 }}>
+            <View>
               <AnswerText text={answer.text} />
               <QuestionPreview preview={answer.question.title} />
             </View>
@@ -73,7 +74,7 @@ export const AnswerText = ({
     <View {...props}>
       <ThemedText
         style={{ opacity: 0.8 }}
-        numberOfLines={2}
+        numberOfLines={1}
         bold
         variant="bodyLarge"
       >
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
     padding: DEFAULT_CONTAINER_SPACING,
     paddingRight: 0,
     height: ANSWER_CARD_HEIGHT,
-    margin: 6,
+    margin: 8,
   },
   moreOptionsItem: {
     paddingLeft: 10,

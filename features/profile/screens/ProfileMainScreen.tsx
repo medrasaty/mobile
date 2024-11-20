@@ -1,25 +1,27 @@
 import { View, ViewProps } from "react-native";
 import useProfile from "../hooks/useProfile";
 import Page from "@/components/Page";
-import { ScreenListV2 } from "@/components/ScreenFlatList";
 import { useCallback } from "react";
-import useProfileQuestions from "../hooks/useProfileQuestions";
 import ProfileHeader from "../components/Profile";
 import { Appbar, Divider } from "react-native-paper";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { useTranslation } from "react-i18next";
 import { Question } from "@/types/forum.types";
-import QuestionCard from "@/features/forum/components/question/QuestionCard";
 import { useRouter } from "expo-router";
+import ForumQuestionCard, {
+  FORUM_QUESTION_CARD_HEIGHT,
+} from "@forum/questions/components/QuestionsCard";
+import MultiQueryScreenList from "@components/MultiQueryScreenList";
+import useUserQuestions from "../queries";
 
 type ProfileMainScreenProps = { username: string } & ViewProps;
 
 const ProfileMainScreen = ({ username, ...props }: ProfileMainScreenProps) => {
   const profileQ = useProfile(username);
-  const questionsQ = useProfileQuestions(username);
+  const questionsQ = useUserQuestions(username);
 
   const renderHeader = useCallback(() => {
-    if (profileQ.isSuccess) {
+    if (profileQ.data) {
       return (
         <View>
           <ProfileHeader profile={profileQ.data} />
@@ -31,7 +33,7 @@ const ProfileMainScreen = ({ username, ...props }: ProfileMainScreenProps) => {
 
   const renderItem = useCallback(
     ({ item, index }: { item: Question; index: number }) => {
-      return <QuestionCard question={item} />;
+      return <ForumQuestionCard question={item} />;
     },
     []
   );
@@ -39,15 +41,16 @@ const ProfileMainScreen = ({ username, ...props }: ProfileMainScreenProps) => {
   return (
     <Page>
       <ProfileAppbar username={profileQ.data?.username} />
-      <ScreenListV2
+      <MultiQueryScreenList
+        headerStatus={profileQ.status}
+        dataStatus={questionsQ.status}
         ListHeaderComponent={renderHeader}
+        showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={Divider}
         renderItem={renderItem}
-        estimatedItemSize={200}
+        estimatedItemSize={FORUM_QUESTION_CARD_HEIGHT}
         onRetry={profileQ.refetch}
-        isPending={profileQ.isPending || questionsQ.isPending}
-        isError={profileQ.isError || questionsQ.isError}
-        data={questionsQ.data ?? []}
+        data={questionsQ.data}
       />
     </Page>
   );
@@ -64,7 +67,7 @@ export const ProfileAppbar = ({
   }, [username]);
   const { t } = useTranslation();
   return (
-    <AppBar title={t("username", (username = username ?? ""))}>
+    <AppBar title={t("username", { username: username })}>
       <Appbar.Action icon="dots-vertical" onPress={goToContent} />
     </AppBar>
   );

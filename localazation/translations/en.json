@@ -75,5 +75,6 @@
   "Oldest": "Oldest",
   "Top_reputation": "Top reputation",
   "share": "share",
-  "username": "@{username}"
+  "username": "@{{username}}",
+  "network_error": "network error: check your internet connection than try again"
 }

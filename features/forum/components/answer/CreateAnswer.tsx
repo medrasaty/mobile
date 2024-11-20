@@ -1,40 +1,36 @@
-import { useState } from "react";
 import { FAB } from "react-native-paper";
-import { CreateAnswerSheet } from "./CreateAnswerSheet";
-import { DetailQuestion } from "@/types/forum.types";
-import { useSheetViewRef } from "@/components/SheetView";
+import { DetailQuestion, Question } from "@/types/forum.types";
+import { router } from "expo-router";
+
+export const CREATE_ANSWER_FAB_MARGIN = 30;
 
 export default function CreateAnswer({
   question,
 }: {
   question: DetailQuestion;
+  questionId: Question["id"] | undefined;
 }) {
-  const sheetRef = useSheetViewRef();
-  const show = () => sheetRef.current?.present();
+  const goToCreateAnswer = () => {
+    router.push({
+      pathname: `/answers/new`,
+      params: {
+        questionId: question.id,
+      },
+    });
+  };
 
   return (
-    <>
-      <CreateAnswerFAB onPress={show} />
-      <CreateAnswerSheet question={question} ref={sheetRef} />
-    </>
+    <FAB
+      onPress={goToCreateAnswer}
+      icon="plus"
+      size="medium"
+      variant="surface"
+      style={{
+        position: "absolute",
+        margin: CREATE_ANSWER_FAB_MARGIN,
+        right: 0,
+        bottom: 0,
+      }}
+    />
   );
 }
-
-export const CreateAnswerFAB = ({ onPress }: { onPress: () => void }) => {
-  return (
-    <>
-      <FAB
-        onPress={onPress}
-        icon="plus"
-        size="medium"
-        variant="surface"
-        style={{
-          position: "absolute",
-          margin: 24,
-          right: 0,
-          bottom: 0,
-        }}
-      />
-    </>
-  );
-};

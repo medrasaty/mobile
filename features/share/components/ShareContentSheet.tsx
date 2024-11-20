@@ -118,6 +118,7 @@ const FollowingList = (props: ViewProps) => {
       status={q.status}
     >
       <BottomSheetFlatList
+        showsVerticalScrollIndicator={false}
         keyExtractor={(i) => i.username}
         contentContainerStyle={{ gap: 20 }}
         columnWrapperStyle={{ gap: 20 }}

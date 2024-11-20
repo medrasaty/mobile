@@ -1,5 +1,5 @@
 import { Keyboard, StyleSheet } from "react-native";
-import { Answer } from "@/types/forum.types";
+import { Answer } from "@features/forum/answers/types";
 import {
   BottomSheetFooter,
   BottomSheetFooterProps,
@@ -34,23 +34,14 @@ export const ReplySheetFooter = ({
   );
 
   const { mutate, isPending, isSuccess, isError } = useCreateReplyMutation();
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    if (isSuccess) {
-      setReplyText("");
-    }
-  }, [isPending]);
 
   const handleSubmitReply = () => {
     if (isValidReplyText)
       mutate(
         { answer: answer.id, text: replyText },
         {
-          onSuccess: (data, variables) => {
-            queryClient.invalidateQueries({
-              queryKey: ["answers", answer.question],
-            });
+          onSuccess: () => {
+            setReplyText("");
           },
         }
       );

@@ -3,13 +3,7 @@ import { Pressable, View, ViewProps } from "react-native";
 import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import UserInfo from "@/components/UserInfo";
-import {
-  Divider,
-  IconButton,
-  Menu,
-  Surface,
-  useTheme,
-} from "react-native-paper";
+import { Surface, useTheme } from "react-native-paper";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
 import { useCallback, useMemo } from "react";
 import { useRouter } from "expo-router";
@@ -17,9 +11,6 @@ import { t } from "i18next";
 import { Question } from "@/types/forum.types";
 import { Ionicons } from "@expo/vector-icons";
 import Date from "@/components/Date";
-import { useVisibleV2 } from "@/hooks/useVisible";
-import ReportDialog from "@/features/reports/components/ReportDialog";
-import useCurrentUser from "@/hooks/useCurrentUser";
 import MoreOptions from "./QuestionCardOptionsMenu";
 
 type QuestionCardProps = {
@@ -32,7 +23,12 @@ const ForumQuestionCard = ({ question }: QuestionCardProps) => {
   const theme = useTheme();
 
   const goToQuestion = useCallback(() => {
-    router.push(`/questions/details/` + question.id);
+    router.push({
+      pathname: `/questions/details`,
+      params: {
+        questionId: question.id,
+      },
+    });
   }, [question.id]);
 
   return (
@@ -193,14 +189,14 @@ export const RatingIcon = ({ rating }: { rating: number }) => {
 
 export const ReportQuestion = () => {};
 
-export const QUESTION_CARD_HEIGHT = 220;
+export const FORUM_QUESTION_CARD_HEIGHT = 240;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: DEFAULT_CONTAINER_SPACING,
     paddingRight: 0,
-    height: QUESTION_CARD_HEIGHT,
+    height: FORUM_QUESTION_CARD_HEIGHT,
     justifyContent: "space-between",
     margin: 6,
   },

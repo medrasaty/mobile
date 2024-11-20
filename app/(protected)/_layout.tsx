@@ -26,7 +26,7 @@ export default function ProtectedLayout() {
         screenOptions={{
           headerShown: false,
           header: (props) => {
-            // you can customize only the title of Appbar
+            // you can only customize the title of Appbar
             return <AppBar title={props.options.headerTitle} {...props} />;
           },
         }}
@@ -37,6 +37,7 @@ export default function ProtectedLayout() {
         <Stack.Screen name="users/[username]" />
         <Stack.Screen name="search_result" />
         <Stack.Screen name="schools/[schoolId]" />
+        <Stack.Screen name="answers/new" />
       </Stack>
     </AnimatedAppBarProvider>
   );

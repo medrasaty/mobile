@@ -17,6 +17,7 @@ import { ThemedText } from "@/components/ThemedText";
 import useImageAssetState from "@/hooks/useImageAssetState";
 import { router } from "expo-router";
 import LoadingDialog from "@/components/LoadingDialog";
+import { questionDetail } from "@/lib/routing";
 
 export default function NewQuestionPage() {
   const {
@@ -48,7 +49,7 @@ export default function NewQuestionPage() {
         onSuccess: (data, variables) => {
           // replace route to clear all form state and start fresh
           // do not use 'push' or 'navigate'
-          router.replace(`/questions/details/${data.id}`);
+          router.replace(questionDetail({ questionId: data.id }));
         },
       });
     } catch (error) {

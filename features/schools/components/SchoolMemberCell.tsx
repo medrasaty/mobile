@@ -18,7 +18,7 @@ const SchoolMemberCell = ({ member }: SchoolMemberCellProps) => {
   const router = useRouter();
   const theme = useTheme();
   const goToUser = () => {
-    router.push(`/users/${member.username}`);
+    router.push(`/users/${member.username}/detail`);
   };
 
   return (

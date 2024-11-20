@@ -23,5 +23,3 @@ const Expoer = () => {
     </Page>
   );
 };
-
-export default Expoer;

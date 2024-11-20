@@ -85,18 +85,6 @@ export default function TabsLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="exper"
-        options={{
-          tabBarLabel: t("Exper"),
-          tabBarIcon: (props) => (
-            <Ionicons
-              {...props}
-              name={props.focused ? "radio" : "radio-outline"}
-            />
-          ),
-        }}
-      />
 
       <Tabs.Screen
         name="schools"

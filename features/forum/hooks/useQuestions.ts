@@ -86,13 +86,8 @@ export function useQuestion(questionId: string) {
     return transformQuestion(response.data);
   };
 
-  const q = useQuery({
+  return useQuery({
     queryKey: ["question", questionId],
     queryFn: fetchQuestion,
   });
-
-  // invalidate watchhistory when retrieving single question
-  qc.invalidateQueries({ queryKey: WatchHistoryKeys.all });
-
-  return q;
 }

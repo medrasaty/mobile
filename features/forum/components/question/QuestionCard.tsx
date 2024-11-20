@@ -33,7 +33,12 @@ const QuestionCard = ({ question }: QuestionCardProps) => {
   const theme = useTheme();
 
   const goToQuestion = useCallback(() => {
-    router.push(`/questions/details/` + question.id);
+    router.push({
+      pathname: `/questions/details`,
+      params: {
+        questionId: question.id,
+      },
+    });
   }, [question.id]);
 
   return (

@@ -4,10 +4,13 @@ import { router, useRouter } from "expo-router";
 import { useState } from "react";
 import { Searchbar } from "react-native-paper";
 import useSearchQuery from "../hooks";
-import { t } from "i18next";
+import CenterPage from "@components/CenterPage";
+import { ThemedText } from "@components/ThemedText";
+import { useTranslation } from "react-i18next";
 
 const MainSearchScreen = () => {
   const searchQuery = useSearchQuery();
+  const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState(searchQuery);
 
   const hanldeSearchIconPress = () => {
@@ -31,6 +34,9 @@ const MainSearchScreen = () => {
           blurOnSubmit
           onKeyPress={(e) => console.log(e.nativeEvent.key)}
         />
+        <CenterPage>
+          <ThemedText>{t("nested.greeting", { name: "ahmed" })}</ThemedText>
+        </CenterPage>
       </Page>
     </SafeAreaView>
   );

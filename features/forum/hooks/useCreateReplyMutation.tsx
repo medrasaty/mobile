@@ -3,6 +3,7 @@ import { Answer, Reply } from "@/types/forum.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Axios } from "axios";
 import { transformDates } from "../utils";
+import { AnswersQueryKeys } from "@forum/answers/keys";
 
 type replyData = {
   answer: Answer["id"];
@@ -13,9 +14,9 @@ export default function useCreateReplyMutation() {
   /**
    * handle creating and mutation replies for answer
    */
-
   const client = useAuthClient();
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
+
   return useMutation({
     mutationFn: async (data: replyData) => await createReply(client, data),
     onError: async (error, variables) => {
@@ -23,13 +24,14 @@ export default function useCreateReplyMutation() {
     },
     onSuccess: (data: Reply, variables) => {
       // update replies query
-      queryClient.setQueryData(
-        ["replies", data.answer],
-        (oldReplies: Reply[]) => {
-          if (!oldReplies) return data;
-          return [data, ...oldReplies];
-        }
-      );
+      qc.setQueryData(["replies", data.answer], (oldReplies: Reply[]) => {
+        if (!oldReplies) return data;
+        return [data, ...oldReplies];
+      });
+
+      qc.invalidateQueries({
+        queryKey: AnswersQueryKeys.all,
+      });
     },
   });
 }
