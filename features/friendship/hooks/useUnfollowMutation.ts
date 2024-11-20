@@ -7,7 +7,7 @@ import * as Burnt from "burnt";
 import { useTranslation } from "react-i18next";
 import { FriendUser } from "../types";
 import { FRIENDS_QUERY_KEY, FriendsQueryKeys } from "./useFriendsQuery";
-import { UserProfile } from "@/features/profile/types.types";
+import { UserProfile } from "@/features/profile/types";
 
 interface UnfollowMutateParams {
   username: BaseUser["username"];

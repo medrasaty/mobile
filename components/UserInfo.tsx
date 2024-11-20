@@ -19,8 +19,9 @@ const UserInfo = ({
 }: UserInfoProps) => {
   const router = useRouter();
   const gotToUser = () => {
-    router.push(`/users/` + username);
+    router.push(`/users/${username}/detail`);
   };
+
   return (
     <ThemedView style={styles.container}>
       <UserAvatar url={avatarUrl} size={avatarSize} />

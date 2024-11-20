@@ -20,14 +20,13 @@ import Date from "@/components/Date";
 import { useVisibleV2 } from "@/hooks/useVisible";
 import ReportDialog from "@/features/reports/components/ReportDialog";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import MoreOptions from "./QuestionCardOptionsMenu";
+
 type QuestionCardProps = {
   question: Question;
 };
 
-/**
- * @deprecated{use ForumQuestionCard instead}
- */
-const QuestionCard = ({ question }: QuestionCardProps) => {
+const ForumQuestionCard = ({ question }: QuestionCardProps) => {
   const { owner } = question;
   const router = useRouter();
   const theme = useTheme();
@@ -57,7 +56,11 @@ const QuestionCard = ({ question }: QuestionCardProps) => {
                 rating={question.ratings_value}
               />
               <Date
-                style={{ marginRight: DEFAULT_CONTAINER_SPACING }}
+                variant="labelMedium"
+                style={{
+                  marginRight: DEFAULT_CONTAINER_SPACING,
+                  marginTop: 6,
+                }}
                 date={question.created}
               />
             </View>
@@ -188,96 +191,6 @@ export const RatingIcon = ({ rating }: { rating: number }) => {
   );
 };
 
-const MoreOptions = ({
-  ownerUsername,
-  questionId,
-  contentTypeId,
-}: {
-  ownerUsername: Question["owner"]["username"];
-  questionId: Question["id"];
-  contentTypeId: number;
-}) => {
-  const theme = useTheme();
-  const [visible, show, hide] = useVisibleV2(false);
-  const user = useCurrentUser();
-  return (
-    <Menu
-      visible={visible}
-      onDismiss={hide}
-      anchorPosition="bottom"
-      style={{ marginTop: 20 }}
-      contentStyle={{
-        backgroundColor: theme.colors.surface,
-        borderRadius: 15,
-        borderWidth: 1,
-        borderColor: theme.colors.primary,
-      }}
-      anchor={<IconButton icon={"dots-vertical"} onPress={show} />}
-    >
-      <Menu.Item
-        style={styles.moreOptionsItem}
-        onPress={() => {}}
-        trailingIcon={"bookmark-outline"}
-        title="bookmark"
-      />
-      <Menu.Item
-        style={styles.moreOptionsItem}
-        onPress={() => {}}
-        trailingIcon={"bell-outline"}
-        title="register"
-      />
-      <Divider />
-      {ownerUsername === user.username ? (
-        <>
-          <Menu.Item
-            style={styles.moreOptionsItem}
-            onPress={() => {}}
-            trailingIcon={"delete"}
-            title="delete"
-          />
-          <Menu.Item
-            style={styles.moreOptionsItem}
-            onPress={() => {}}
-            trailingIcon={"circle"}
-            title="edit"
-          />
-        </>
-      ) : (
-        <ReportQuestionMenuItem
-          questionId={questionId}
-          contentTypeId={contentTypeId}
-        />
-      )}
-    </Menu>
-  );
-};
-
-const ReportQuestionMenuItem = ({
-  questionId,
-  contentTypeId,
-}: {
-  questionId: Question["id"];
-  contentTypeId: number;
-}) => {
-  const [visible, show, hide] = useVisibleV2(false);
-  return (
-    <>
-      <Menu.Item
-        style={styles.moreOptionsItem}
-        onPress={show}
-        trailingIcon={"share"}
-        title="report"
-      />
-      <ReportDialog
-        onDismiss={hide}
-        visible={visible}
-        contentTypeId={contentTypeId}
-        objectId={questionId}
-      />
-    </>
-  );
-};
-
 export const ReportQuestion = () => {};
 
 export const QUESTION_CARD_HEIGHT = 220;
@@ -297,4 +210,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuestionCard;
+export default ForumQuestionCard;

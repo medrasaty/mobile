@@ -11,6 +11,9 @@ type useQuestionsProps = {
   selectedOrdering: filterOptionType;
 };
 
+/**
+ * @deprecated{use useForumQuestions instead}
+ */
 export default function useQuestions({
   params,
   selectedOrdering,

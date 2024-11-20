@@ -12,13 +12,14 @@ export const enum questionOrderKeys {
   MOST_RATED = "ratings_value",
 }
 
+/**
+ * @deprecated{use useUserQuestions instead}
+ */
 export default function useProfileQuestions(username: BaseUser["username"]) {
   const client = useAuthClient();
-  const { questionsSelectedSort: selectedSort } = useProfileListContext();
 
   return useQuery({
-    queryKey: ["questions", username, selectedSort.key],
-    queryFn: async () =>
-      await getUserQuestions(client, username, selectedSort.key),
+    queryKey: [username, "questions"],
+    queryFn: async () => await getUserQuestions(client, username),
   });
 }

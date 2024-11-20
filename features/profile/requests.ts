@@ -10,26 +10,17 @@ export async function getProfile(
   client: Axios,
   username: BaseUser["username"]
 ): Promise<UserProfile> {
-  const response = await client.get(`/users/${username}/`);
-  return transformProfile(response.data);
-}
-
-function transformProfile(profile: UserProfile) {
-  return {
-    ...profile,
-    date_joined: new Date(profile.date_joined),
-  };
+  const response = await client.get<UserProfile>(`/users/${username}/`);
+  return response.data;
 }
 
 export async function getUserQuestions(
   client: Axios,
-  username: BaseUser["username"],
-  sort: SortingOption<questionOrderKeys>
+  username: BaseUser["username"]
 ): Promise<Question[]> {
   const response = await client.get("/forum/questions/", {
     params: {
       owner: username,
-      ordering: sort,
       extend: "subject",
     },
   });
@@ -39,13 +30,11 @@ export async function getUserQuestions(
 
 export async function getUserAnswers(
   client: Axios,
-  username: BaseUser["username"],
-  sortKey: string
+  username: BaseUser["username"]
 ): Promise<Answer[]> {
   const response = await client.get("/forum/answers/", {
     params: {
       owner: username,
-      ordering: sortKey,
     },
   });
 

@@ -19,7 +19,6 @@ type FollowButtonsProps = {
 const FollowButton = ({ username, ...props }: FollowButtonsProps) => {
   const { mutate: follow, isPending } = useFollowMutation();
   const handlePress = () => {
-    // TODO: Follow user
     follow({ username });
   };
 

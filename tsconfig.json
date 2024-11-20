@@ -4,8 +4,8 @@
     "strict": true,
 
     "paths": {
-      "@/*": [ 
-          "./*" 
+      "@forum/*" : [
+          "./features/forum/*"
       ],
       "@features/*": [
           "./features/*"
@@ -13,11 +13,11 @@
       "@components" : [
           "./components/*"
       ],
-      "@forum/*" : [
-          "./features/forum/*"
-      ],
       "@search/*" : [
           "./features/search/*"
+      ],
+      "@/*": [ 
+          "./*" 
       ]
     }
   },

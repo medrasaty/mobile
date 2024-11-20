@@ -12,37 +12,38 @@ import ProfileActionsSection from "./ProfileFollowingSection";
 import { Link, useRouter } from "expo-router";
 import ReputationInfo from "@/components/ReputationInfo";
 import { containerMargins, debugStyle } from "@/constants/styels";
+import WithCondition from "@/components/WithCondition";
 
 type ProfileInfoProps = {
   profile: UserProfile;
 } & ViewProps;
 
-const ProfileInfo = ({ profile: user, style, ...props }: ProfileInfoProps) => {
+const ProfileInfo = ({ profile, style, ...props }: ProfileInfoProps) => {
   return (
     <ThemedView style={[style, styles.container]} {...props}>
       <Row style={[styles.row]}>
-        <ProfilePicture url={user.profile_picture} />
-        {!user.is_self && (
+        <ProfilePicture url={profile.profile_picture} />
+        <WithCondition condition={!profile.is_self}>
           <ThemedView style={styles.follow}>
-            <ProfileActionsSection user={user} />
+            <ProfileActionsSection profile={profile} />
           </ThemedView>
-        )}
+        </WithCondition>
       </Row>
       <ContainerView>
         <UserInfo
-          fullName={user.full_name}
-          username={user.username}
-          schoolName={user.school_name}
-          schoolId={user.school}
-          type={user.type}
+          fullName={profile.full_name}
+          username={profile.username}
+          schoolName={profile.school_name}
+          schoolId={profile.school}
+          type={profile.type}
         />
-        <Bio bio={"لامكان لليأس في التطبيق"} />
+        <Bio bio={profile.profile.biography} />
       </ContainerView>
       <ReputationInfo
         style={styles.reputationInfo}
-        reputation={user.reputation}
-        reach={user.reach}
-        views={user.total_views}
+        reputation={profile.reputation}
+        reach={profile.reach}
+        views={profile.total_views}
       />
     </ThemedView>
   );
@@ -102,7 +103,6 @@ const UserInfo = ({
   schoolId,
   type,
 }: UserProfileProps) => {
-  const router = useRouter();
   return (
     <ThemedView>
       <ThemedText bold variant="displaySmall">
@@ -136,7 +136,12 @@ export const School = ({ id, name }: { id: number; name: string }) => {
 };
 
 const Bio = ({ bio }: { bio: string }) => {
-  return <ThemedText variant="bodyLarge">{bio}</ThemedText>;
+  const theme = useTheme();
+  return (
+    <ThemedText color={"gray"} variant="bodyMedium">
+      {bio}
+    </ThemedText>
+  );
 };
 
 export default ProfileInfo;

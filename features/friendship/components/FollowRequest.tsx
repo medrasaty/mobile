@@ -1,5 +1,5 @@
 import { useProfileScreen } from "@/features/profile/contexts/ProfileScreenContext";
-import { FollowingRequestStatus } from "@/features/profile/types.types";
+import { FollowingRequestStatus } from "@/features/profile/types";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "react-native-paper";

@@ -5,21 +5,19 @@ import { useMemo } from "react";
 import { Divider, useTheme } from "react-native-paper";
 import { useProfileScreen } from "../contexts/ProfileScreenContext";
 import ProfileInfo from "./ProfileInfo";
+import { UserProfile } from "../types";
 
-type ProfileBackgroundImageProps = {} & ViewProps;
+type ProfileBackgroundImageProps = {
+  background: UserProfile["profile"]["background"];
+} & ViewProps;
 
 const DEFAULT_BACKGROUND_IMAGE_HEIGHT = 170;
 
 export const ProfileBackgroundImage = ({
+  background,
   style,
   ...props
 }: ProfileBackgroundImageProps) => {
-  const {
-    profile: {
-      profile: { background },
-    },
-  } = useProfileScreen();
-
   const styles = useProfileBackgroundStyle();
 
   return (
@@ -61,11 +59,11 @@ function useProfileBackgroundStyle() {
   }, [theme]);
 }
 
-const ProfileHeader = () => {
+const ProfileHeader = ({ profile }: { profile: UserProfile }) => {
   return (
     <ThemedView>
-      <ProfileBackgroundImage />
-      <ProfileInfo />
+      <ProfileBackgroundImage background={profile.profile.background} />
+      <ProfileInfo profile={profile} />
     </ThemedView>
   );
 };

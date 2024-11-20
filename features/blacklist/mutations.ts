@@ -10,7 +10,7 @@ import { blockUser, unblockUser } from "./requests";
 import { BlackListKeys } from "./keys";
 import { BaseUser } from "@/types/user.types";
 import { ProfileQueryKeys } from "../profile/keys";
-import { UserProfile } from "../profile/types.types";
+import { UserProfile } from "../profile/types";
 import { FriendsQueryKeys } from "../friendship/hooks/useFriendsQuery";
 import { FriendUser } from "../friendship/types";
 import { CursorPaginatedResponse } from "@/types/responses";

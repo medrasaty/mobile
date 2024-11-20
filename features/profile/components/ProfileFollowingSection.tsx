@@ -5,11 +5,10 @@ import {
   FollowRequestStatusButton,
   UnfollowButton,
 } from "@/features/friendship/components/FollowActionButtons";
-import { FollowingRequestStatus, UserProfile } from "../types.types";
+import { UserProfile } from "../types";
 import { ButtonProps, IconButton, Tooltip, useTheme } from "react-native-paper";
 import Row from "@/components/Row";
 import SheetView, { useSheetViewRef } from "@/components/SheetView";
-import { useProfileScreen } from "../contexts/ProfileScreenContext";
 import { BaseUser } from "@/types/user.types";
 import { ContainerView } from "@/components/styled";
 import {
@@ -22,20 +21,19 @@ import ReportDialog from "@/features/reports/components/ReportDialog";
 import { useVisibleV2 } from "@/hooks/useVisible";
 
 type ProfileFollowingSectionProps = {
-  user: UserProfile;
+  profile: UserProfile;
 };
 
-const ProfileActionsSection = ({ user }: ProfileFollowingSectionProps) => {
+const ProfileActionsSection = ({ profile }: ProfileFollowingSectionProps) => {
   return (
     <Row style={{ justifyContent: "flex-end" }} alignItems="center">
-      <FollowingActions user={user} />
-      <MoreOptions />
+      <FollowingActions profile={profile} />
+      <MoreOptions profile={profile} />
     </Row>
   );
 };
 
-export const MoreOptions = () => {
-  const { profile } = useProfileScreen();
+export const MoreOptions = ({ profile }: { profile: UserProfile }) => {
   const sheetRef = useSheetViewRef();
 
   return (
@@ -48,8 +46,11 @@ export const MoreOptions = () => {
       />
       <SheetView ref={sheetRef} snapPoints={[140]}>
         <ContainerView style={{ gap: 6 }}>
-          <ToggleBlockingButton username={profile.username} />
-          <ReportUser />
+          <ToggleBlockingButton
+            isBlocker={profile.is_blocker}
+            username={profile.username}
+          />
+          <ReportUser userId={profile.id} contentTypeId={profile.contenttype} />
         </ContainerView>
       </SheetView>
     </>
@@ -58,21 +59,28 @@ export const MoreOptions = () => {
 
 export const ToggleBlockingButton = ({
   username,
+  isBlocker,
   onPress,
   ...props
-}: { username: BaseUser["username"] } & Omit<ButtonProps, "children">) => {
-  const { profile } = useProfileScreen();
-
-  return profile.is_blocker ? (
+}: { username: BaseUser["username"]; isBlocker: boolean } & Omit<
+  ButtonProps,
+  "children"
+>) => {
+  return isBlocker ? (
     <UnblockButton username={username} />
   ) : (
     <BlockButton username={username} />
   );
 };
 
-export const ReportUser = () => {
+export const ReportUser = ({
+  userId,
+  contentTypeId,
+}: {
+  userId: UserProfile["id"];
+  contentTypeId: UserProfile["contenttype"];
+}) => {
   const theme = useTheme();
-  const { profile } = useProfileScreen();
   const [visible, show, hide] = useVisibleV2(false);
   return (
     <>
@@ -86,28 +94,29 @@ export const ReportUser = () => {
       <ReportDialog
         visible={visible}
         onDismiss={hide}
-        contentTypeId={profile.contenttype}
-        objectId={profile.id}
+        contentTypeId={contentTypeId}
+        objectId={userId}
       />
     </>
   );
 };
 
-export const FollowingActions = ({ user }: { user: UserProfile }) => {
+export const FollowingActions = ({ profile }: { profile: UserProfile }) => {
   // TODO: refactor this component
-  if (user.is_blocked || user.is_blocker)
-    return <FollowButton disabled username={user.username} />;
+  if (profile.is_blocked || profile.is_blocker)
+    return <FollowButton disabled username={profile.username} />;
 
-  if (user.is_following) return <UnfollowButton username={user.username} />;
+  if (profile.is_following)
+    return <UnfollowButton username={profile.username} />;
 
-  if (user.is_follower) return <FollowBack username={user.username} />;
+  if (profile.is_follower) return <FollowBack username={profile.username} />;
 
-  if (user.profile.is_private) {
-    if (user.following_request_status !== FollowingRequestStatus.PENDING) {
+  if (profile.profile.is_private) {
+    if (profile.following_request_status !== "pending") {
       return (
         <FollowRequestButton
-          disabled={user.is_blocked}
-          username={user.username}
+          disabled={profile.is_blocked}
+          username={profile.username}
         />
       );
     }
@@ -115,7 +124,7 @@ export const FollowingActions = ({ user }: { user: UserProfile }) => {
     return <FollowRequestStatusButton />;
   }
 
-  return <FollowButton username={user.username} />;
+  return <FollowButton username={profile.username} />;
 };
 
 export default ProfileActionsSection;

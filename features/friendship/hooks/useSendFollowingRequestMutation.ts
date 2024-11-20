@@ -4,7 +4,7 @@ import { BaseUser } from "@/types/user.types";
 import { sendFollowingRequest } from "../requests";
 import * as Burnt from "burnt";
 import { useTranslation } from "react-i18next";
-import { FollowingRequestStatus } from "@/features/profile/types.types";
+import { FollowingRequestStatus } from "@/features/profile/types";
 
 export default function useSendFollowingRequestMutation() {
   const client = useAuthClient();

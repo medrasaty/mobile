@@ -33,7 +33,6 @@ export function AppBar({
         {...options}
         {...props}
       >
-        {/* TODO: write description */}
         {backAction && canGoBack() && (
           <Appbar.BackAction onPress={() => goBack()} />
         )}

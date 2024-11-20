@@ -74,5 +74,6 @@
   "Newest": "Newest",
   "Oldest": "Oldest",
   "Top_reputation": "Top reputation",
-  "share": "share"
+  "share": "share",
+  "username": "@{username}"
 }

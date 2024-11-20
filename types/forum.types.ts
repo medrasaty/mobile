@@ -68,9 +68,13 @@ export enum RatingValue {
   NEURAL = 0,
 }
 
+/**
+ * @deprecated{use Answer type from '@features/answers/types'}
+ */
+
 export interface Answer extends BaseQuestionAnswer {
   id: string;
-  question: string;
+  question: BaseQuestion;
   replies: string[]; // list of replies ids
   replies_count: number;
   user_rating: RatingValue;

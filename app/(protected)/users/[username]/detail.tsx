@@ -1,6 +1,4 @@
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import UserProfileScreen from "@/features/profile/screens/UserProfileScreen";
+import ProfileMainScreen from "@/features/profile/screens/ProfileMainScreen";
 import { BaseUser } from "@/types/user.types";
 import { useLocalSearchParams } from "expo-router";
 
@@ -11,7 +9,7 @@ const UserProfilePage = ({}: UserProfilePageProps) => {
     username: BaseUser["username"];
   }>();
 
-  return <UserProfileScreen username={username} />;
+  return <ProfileMainScreen username={username} />;
 };
 
 export default UserProfilePage;

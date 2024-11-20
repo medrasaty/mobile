@@ -1,9 +1,9 @@
-import UserProfileScreen from "@/features/profile/screens/UserProfileScreen";
+import ProfileMainScreen from "@/features/profile/screens/ProfileMainScreen";
 import useCurrentUser from "@/hooks/useCurrentUser";
 
 const Profile = () => {
   const user = useCurrentUser();
-  return <UserProfileScreen username={user?.username} />;
+  return <ProfileMainScreen username={user?.username} />;
 };
 
 export default Profile;

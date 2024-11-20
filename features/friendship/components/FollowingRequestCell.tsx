@@ -8,7 +8,7 @@ import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
 import UserAvatar from "@/components/UserAvatar";
 import { School } from "./UserCompactCell";
 import { t } from "i18next";
-import { FollowingRequestStatusType } from "@/features/profile/types.types";
+import { FollowingRequestStatusType } from "@/features/profile/types";
 import Row from "@/components/Row";
 import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
 import useVisible, { useVisibleV2 } from "@/hooks/useVisible";

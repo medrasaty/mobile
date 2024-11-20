@@ -1,7 +1,7 @@
 import { containerPaddings } from "@/constants/styels";
 import { NotificationType } from "@/types/notifications.type";
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View, ViewProps } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Chip, ChipProps } from "react-native-paper";
 import { ThemedView } from "./ThemedView";
@@ -15,15 +15,16 @@ type FilterOptionsViewProps = {
   filterOptions: FilterOption[];
   currentFilter: string | NotificationType;
   onFilterChange: (filter: string | NotificationType) => void;
-};
+} & ViewProps;
 
 const FilterOptionsView: React.FC<FilterOptionsViewProps> = ({
   filterOptions,
   currentFilter,
   onFilterChange,
+  ...props
 }) => {
   return (
-    <ThemedView>
+    <View {...props}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -39,7 +40,7 @@ const FilterOptionsView: React.FC<FilterOptionsViewProps> = ({
           />
         ))}
       </ScrollView>
-    </ThemedView>
+    </View>
   );
 };
 
