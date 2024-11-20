@@ -20,8 +20,6 @@ const Experments = () => {
   );
 };
 
-export default Experments;
-
 // import React, { useRef, useState } from "react";
 // import {
 //   View,

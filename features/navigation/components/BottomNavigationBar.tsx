@@ -1,9 +1,8 @@
 import { CommonActions } from "@react-navigation/native";
 import React from "react";
 import { BottomNavigation, Divider, useTheme } from "react-native-paper";
-import { MaterialBottomTabNavigatorProps } from "react-native-paper/lib/typescript/react-navigation/navigators/createMaterialBottomTabNavigator";
-import { GruvboxDarkCyan, GruvboxLightCyan } from "@/constants/Colors";
-import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
+import { debugStyle } from "@/constants/styels";
 
 export default function BottomTabNavigationBar({
   navigation,
@@ -11,6 +10,8 @@ export default function BottomTabNavigationBar({
   descriptors,
   insets,
   style,
+  activeLableColor,
+  inactiveLableColor,
 }) {
   function handleTabPress({ route, preventDefault }) {
     const event = navigation.emit({
@@ -58,8 +59,6 @@ export default function BottomTabNavigationBar({
     <>
       <Divider />
       <BottomNavigation.Bar
-        shifting
-        beled={false}
         style={style}
         navigationState={state}
         safeAreaInsets={insets}

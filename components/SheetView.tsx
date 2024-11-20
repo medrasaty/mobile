@@ -34,7 +34,7 @@ export const SheetView = forwardRef<BottomSheetModal, SheetViewProps>(
         ref={ref}
         {...props}
         enableDismissOnClose
-        backgroundStyle={{ backgroundColor: theme.colors.background }}
+        backgroundStyle={{ backgroundColor: theme.colors.surface }}
         backdropComponent={backdrop ? renderBackdrop : null}
       >
         {props.children}

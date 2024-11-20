@@ -35,6 +35,8 @@ export default function TabsLayout() {
       tabBar={(props) => (
         <BottomTabNavigationBar
           {...props}
+          activeLableColor={theme.colors.primary}
+          inactiveLableColor={theme.colors.onSurface}
           style={{ backgroundColor: theme.colors.surface }}
         />
       )}
@@ -66,19 +68,6 @@ export default function TabsLayout() {
               {...props}
               active_icon_name="bell"
               icon_name="bell-outline"
-            />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="leader_board"
-        options={{
-          tabBarLabel: t("Leader"),
-          tabBarIcon: (props) => (
-            <Ionicons
-              {...props}
-              name={props.focused ? "search" : "search-outline"}
             />
           ),
         }}

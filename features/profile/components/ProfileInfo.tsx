@@ -4,21 +4,20 @@ import { UserProfile } from "../types";
 import FastImage from "react-native-fast-image";
 import { useTheme } from "react-native-paper";
 import React, { useMemo } from "react";
-import { Pressable, StyleSheet, ViewProps } from "react-native";
+import { StyleSheet, ViewProps } from "react-native";
 import { ContainerView } from "@/components/styled";
 import Row from "@/components/Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useProfileScreen } from "../contexts/ProfileScreenContext";
 import ProfileActionsSection from "./ProfileFollowingSection";
 import { Link, useRouter } from "expo-router";
 import ReputationInfo from "@/components/ReputationInfo";
 import { containerMargins, debugStyle } from "@/constants/styels";
 
-type ProfileInfoProps = {} & ViewProps;
+type ProfileInfoProps = {
+  profile: UserProfile;
+} & ViewProps;
 
-const ProfileInfo = ({ style, ...props }: ProfileInfoProps) => {
-  const { profile: user } = useProfileScreen();
-
+const ProfileInfo = ({ profile: user, style, ...props }: ProfileInfoProps) => {
   return (
     <ThemedView style={[style, styles.container]} {...props}>
       <Row style={[styles.row]}>
