@@ -9,6 +9,7 @@ import { useAnswer } from "../../contexts/AnswerContext";
 import User from "@/components/User";
 import { useMemo } from "react";
 import { debugStyle } from "@/constants/styels";
+import { d } from "@/lib/dates";
 
 export default function Info({
   answer,
@@ -82,24 +83,27 @@ export const ReplyText = ({
 export const TimeInfo = ({ answer }: { answer: Answer }) => {
   // TODO: add modified time
   return (
-    <ThemedView style={{ flexDirection: "row", gap: 6 }}>
-      <Created answer={answer} />
+    <ThemedView style={{ gap: 6 }}>
+      <Created created={answer.created} />
+      <Modified modified={answer.modified} />
     </ThemedView>
   );
 };
 
-export const Created = ({ answer }: { answer: Answer }) => {
-  const formatedDate = useMemo(() => translateDate(answer.created), [answer]);
+export const Created = ({ created }: { created: Answer["created"] }) => {
   return (
     <ThemedText color="gray" variant="labelSmall">
-      {formatedDate}
+      {d(created).format("DD-MM-YY")} {d(created).fromNow()}
     </ThemedText>
   );
 };
 
-export const Modified = ({ answer }: { answer: Answer }) => {
+export const Modified = ({ modified }: { modified: Answer["modified"] }) => {
+  // TODO: fix the direction
   return (
-    <ThemedText variant="labelSmall">{new Date().toLocaleString()}</ThemedText>
+    <ThemedText color="gray" variant="labelSmall">
+      last modified: ({d(modified).fromNow()})
+    </ThemedText>
   );
 };
 

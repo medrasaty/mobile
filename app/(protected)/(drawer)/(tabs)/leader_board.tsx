@@ -4,18 +4,27 @@ import ShareContentSheet from "@/features/share/components/ShareContentSheet";
 import { Button } from "react-native-paper";
 import { useShareStore } from "@features/share/store";
 import CenterPage from "@/components/CenterPage";
+import { useRouter } from "expo-router";
 
 const Experments = () => {
-  const sheetRef = useSheetViewRef();
-
+  const router = useRouter();
   return (
     <Page>
       <CenterPage>
-        <Button mode="contained" onPress={() => sheetRef.current?.present()}>
-          share
+        <Button
+          mode="contained"
+          onPress={() => {
+            router.push({
+              pathname: `/questions/details`,
+              params: {
+                questionId: "solo is questionId",
+              },
+            });
+          }}
+        >
+          go to question
         </Button>
       </CenterPage>
-      <ShareContentSheet questionId="hany" ref={sheetRef} />
     </Page>
   );
 };

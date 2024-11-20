@@ -10,7 +10,7 @@
       "@features/*": [
           "./features/*"
       ],
-      "@components" : [
+      "@components/*" : [
           "./components/*"
       ],
       "@search/*" : [

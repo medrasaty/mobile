@@ -17,7 +17,7 @@ export default function Username<T>({ username, ...props }: UsernameProps<T>) {
     //     args: { username: username },
     //   })
     // );
-    router.push("/users/" + username);
+    router.push(`/users/${username}/detail`);
   };
 
   return (

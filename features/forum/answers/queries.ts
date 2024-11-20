@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAnswers } from "./requests";
 import { AnswersQueryKeys } from "./keys";
 
-export function useAnswers(params: any = {}) {
+export function useForumAnswers(params: any = {}) {
   const client = useAuthClient();
 
   return useQuery({
