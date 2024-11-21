@@ -3,7 +3,12 @@ import RadioTextButton from "@/components/RadioTextButton";
 import { ThemedText } from "@/components/ThemedText";
 import { translateSubject } from "@/lib/utils";
 import { Subject } from "@/types/school.types";
-import { ActivityIndicator, Dialog, DialogProps } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Dialog,
+  DialogProps,
+  Portal,
+} from "react-native-paper";
 import useSubjects from "../../hooks/useSubjects";
 import { ThemedView } from "@/components/ThemedView";
 
@@ -19,16 +24,15 @@ export type SelectSubjectDialogProps = {
 
 export default function SelectSubjectDialog({
   visible,
-
   ...props
 }: SelectSubjectDialogProps) {
   return (
-    <>
+    <Portal>
       <Dialog dismissable visible={visible} onDismiss={props.onDismiss}>
         <Dialog.Title>قائمة المواد</Dialog.Title>
         <SubjectsList {...props} />
       </Dialog>
-    </>
+    </Portal>
   );
 }
 
@@ -41,9 +45,10 @@ export const SubjectsList = ({
 
   const renderSubject = (subject: Subject) => {
     const handleSelect = () => {
-      onSelect(subject);
+      onSelect(subject as Subject);
       if (onDismiss) onDismiss();
     };
+
     return (
       <RadioTextButton
         key={subject.id}

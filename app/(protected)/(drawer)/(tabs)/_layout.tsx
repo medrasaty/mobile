@@ -112,6 +112,19 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="exper"
+        options={{
+          tabBarLabel: t("Exper"),
+          tabBarIcon: (props) => (
+            <TabBarIcon
+              active_icon_name="circle"
+              {...props}
+              icon_name="circle-outline"
+            />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

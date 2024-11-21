@@ -3,7 +3,6 @@ import { Divider, IconButton, Menu, useTheme } from "react-native-paper";
 import { Question } from "@/types/forum.types";
 import { useVisibleV2 } from "@/hooks/useVisible";
 import ReportDialog from "@/features/reports/components/ReportDialog";
-import useCurrentUser from "@/hooks/useCurrentUser";
 
 export const BookmarkQuestionItem = () => {
   return (

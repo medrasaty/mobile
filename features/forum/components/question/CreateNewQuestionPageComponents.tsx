@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { ViewProps } from "react-native";
+import { View, ViewProps } from "react-native";
 import {
   TextInput,
   TextInputProps,
@@ -23,19 +23,27 @@ import {
   SubjectInfo,
 } from "@/features/forum/components/question/detail/QuestionDetailInfo";
 import { Subject } from "@/types/school.types";
-import useVisible from "@/hooks/useVisible";
+import useVisible, { useVisibleV2 } from "@/hooks/useVisible";
 import { useState } from "react";
+import SelectSubjectDialog from "./SelectSubjectDialog";
+import Row from "@components/Row";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 export type BaseCreateQuestionInputProps = {
   onChangeText: TextInputProps["onChangeText"];
   value: TextInputProps["value"];
   title?: string;
+  showError?: boolean;
+  errorMessage?: string;
 } & ViewProps;
 
 export const TitleInput = ({
   value,
   onChangeText,
   title = "العنوان",
+  showError = false,
+  errorMessage,
   ...props
 }: BaseCreateQuestionInputProps) => {
   return (
@@ -47,7 +55,7 @@ export const TitleInput = ({
         mode="outlined"
         theme={{ roundness: 16 }}
       />
-      <HelperText type="info">كن محدداً </HelperText>
+      {errorMessage && <HelperText type="error">{errorMessage}</HelperText>}
     </ThemedView>
   );
 };
@@ -56,6 +64,8 @@ export const DescriptionInput = ({
   value,
   onChangeText,
   title = "التفاصيل",
+  showError,
+  errorMessage,
   ...props
 }: BaseCreateQuestionInputProps) => {
   return (
@@ -70,6 +80,9 @@ export const DescriptionInput = ({
         numberOfLines={6}
         mode="outlined"
       />
+      <HelperText style={{ opacity: showError ? 1 : 0 }} type="error">
+        {errorMessage}
+      </HelperText>
     </ThemedView>
   );
 };
@@ -82,7 +95,9 @@ export type BaseIconButtonProps = {
 };
 
 export type SelectSubjectButtonProps = {
-  onPress: IconButtonProps["onPress"];
+  subject: Subject | undefined;
+  onSelect: (subject: Subject) => void;
+  error?: string;
 } & BaseIconButtonProps;
 
 export type AddPictureProps = {
@@ -138,21 +153,35 @@ export const AddPictureButton = ({
   );
 };
 
-export const SelectSubjectButton = ({
-  onPress,
+export const SubjectInput = ({
   icon = "circle-outline",
-  lable = "اختر المادة",
+  lable,
+  onSelect,
+  subject,
+  error,
   ...props
 }: SelectSubjectButtonProps) => {
+  lable = lable?.length === 0 ? t("create_question.choose_subject") : lable;
+
+  const [visible, show, hide] = useVisibleV2(false);
+  const theme = useTheme();
   return (
     <ThemedView style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
       <IconButton
-        onPress={onPress}
+        onPress={show}
         icon={icon}
         mode="contained-tonal"
         {...props}
       />
-      <ThemedText>{lable}</ThemedText>
+      <View style={{ gap: 3 }}>
+        <ThemedText color={error && theme.colors.error}>{lable}</ThemedText>
+      </View>
+      <SelectSubjectDialog
+        subject={subject}
+        visible={visible}
+        onDismiss={hide}
+        onSelect={onSelect}
+      />
     </ThemedView>
   );
 };
@@ -171,42 +200,36 @@ export type PreviewProps = {
   title: string;
   subject?: Subject;
   description: string;
-  image?: string; // uri
+  picture?: string; // uri
 } & ViewProps;
 
 export const Preview = ({
   title,
   description,
   subject,
-  image,
+  picture,
   style,
   ...props
 }: PreviewProps) => {
   /**
-   * Show a preview for question , title, description , and image if any.
-   *
+   * Show a preview for question before creation.
    */
 
-  const { visible, show, hide } = useVisible(true); // preview visible by default
-
-  const handlePreviewToggle = () => {
-    visible ? hide() : show();
-  };
+  const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
-    <ThemedView style={[style]}>
-      <PreviewToggle visible={visible} onTogglePressed={handlePreviewToggle} />
-      {visible && (
-        <>
-          <Divider />
-          <PreviewContent
-            title={title ?? ""}
-            subject={subject}
-            description={description ?? ""}
-            image={image}
-          />
-        </>
-      )}
+    <ThemedView style={[style, { gap: 10 }]}>
+      <ThemedText color={theme.colors.secondary} variant="displaySmall">
+        {t("Preview")}
+      </ThemedText>
+      <Divider bold />
+      <PreviewContent
+        title={title ?? ""}
+        subject={subject}
+        description={description ?? ""}
+        picture={picture}
+      />
     </ThemedView>
   );
 };
@@ -216,7 +239,7 @@ export const PreviewContent = ({
   title,
   subject,
   description,
-  image,
+  picture,
   ...props
 }: PreviewProps) => {
   return (
@@ -224,30 +247,7 @@ export const PreviewContent = ({
       <TitlePreview title={title} />
       {subject && <SubjectInfo subject={subject} />}
       <DescriptionPreview description={description} />
-      <PicturePreview image={image} />
-    </ThemedView>
-  );
-};
-
-export const PreviewToggle = ({
-  title = "مراجعة",
-  onTogglePressed,
-  visible,
-}: {
-  title?: string;
-  onTogglePressed: () => void;
-  visible: boolean;
-}) => {
-  const theme = useTheme();
-  return (
-    <ThemedView style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
-      <ThemedText variant="titleLarge">{title}</ThemedText>
-      <IconButton
-        onPress={onTogglePressed}
-        iconColor={theme.colors.onSurface}
-        icon={visible ? "arrow-down" : "arrow-left"}
-        size={18}
-      />
+      <PicturePreview image={picture} />
     </ThemedView>
   );
 };

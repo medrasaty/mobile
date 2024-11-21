@@ -9,6 +9,8 @@ import {
   registerQuestion,
   unbookmarkQuestion,
   unregisterQuestion,
+  updateQuestion,
+  updateQuestionData,
 } from "./requests";
 import {
   rateQuestionData,
@@ -215,6 +217,66 @@ export function useRateQuestionMutation() {
       qc.invalidateQueries({
         queryKey: ForumQuestionKeys.detail(v.questionId),
       });
+    },
+  });
+}
+
+import { Subject } from "@/types/school.types";
+import { createQuestion } from "@forum/questions/requests";
+
+export type QuestionData = {
+  title: string;
+  text: string;
+  subject: Subject;
+  picture: string | undefined; // picture system path
+  tags: string[];
+};
+
+export function useCreateQuestionMutation() {
+  /**
+   * handle creating and validating question data
+   */
+
+  const client = useAuthClient();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["create_question"],
+    mutationFn: async (data: QuestionData) => createQuestion(client, data),
+    onError: (error) => {
+      console.error(error);
+    },
+    onSuccess: (data: Question) => {
+      // Set question to the catch
+      qc.setQueryData(ForumQuestionKeys.detail(data.id), data);
+    },
+  });
+}
+
+export function useUpdateQuestionMutation() {
+  /**
+   * handle creating and validating question data
+   */
+
+  const client = useAuthClient();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["update_question"],
+    mutationFn: async ({
+      questionId,
+      data,
+    }: {
+      questionId: Question["id"];
+      data: QuestionData;
+    }) => await updateQuestion(client, questionId, data),
+
+    onError: (error) => {
+      console.error(error);
+    },
+    onSuccess: (data: Question) => {
+      // Set question to the catch
+      qc.setQueryData(ForumQuestionKeys.detail(data.id), data);
     },
   });
 }

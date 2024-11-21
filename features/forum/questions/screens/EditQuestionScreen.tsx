@@ -1,24 +1,24 @@
 import Page from "@/components/Page";
 import { containerMargins, containerPaddings } from "@/constants/styels";
 import { ScrollView, ViewProps } from "react-native";
-import * as CreateQuestion from "@/features/forum/components/question/CreateNewQuestionPageComponents";
 import { Button } from "react-native-paper";
 import { ThemedView } from "@/components/ThemedView";
-import { useCreateQuestionMutation } from "@/features/forum/questions/mutations";
 import { router } from "expo-router";
 import LoadingDialog from "@/components/LoadingDialog";
 import { questionDetail } from "@/lib/routing";
 import * as yup from "yup";
 import { t } from "i18next";
 import { Formik } from "formik";
+import { useForumQuestion } from "../queries";
+import { Question } from "@/types/forum.types";
+import { useUpdateQuestionMutation } from "../mutations";
+import * as QF from "@/features/forum/components/question/CreateNewQuestionPageComponents";
+import ServerView from "@components/ServerView";
+import FullPageLoadingIndicator from "@components/FullPageLoadingIndicator";
 
-interface CreateQuestionScreenProps extends ViewProps {
-  edit?: boolean;
-}
-
-const validationSchema = yup.object().shape({
+const updateQuestionSchema = yup.object().shape({
   title: yup.string().required(t("title must not be empty")),
-  description: yup
+  text: yup
     .string()
     .min(10, t("description must be more than 10 characters"))
     .required(t("description must not be empty")),
@@ -33,37 +33,50 @@ const validationSchema = yup.object().shape({
   tags: yup.array(),
 });
 
-export default function CreateQuestionScreen({
-  edit = false,
+interface EditQuestionScreenProps extends ViewProps {
+  questionId: Question["id"];
+}
+
+export default function EditQuestionScreen({
+  questionId,
   ...props
-}: CreateQuestionScreenProps) {
+}: EditQuestionScreenProps) {
+  const q = useForumQuestion(questionId);
+
+  console.log(q.data);
+
   const initialValues = {
-    title: "",
-    description: "",
-    subject: undefined,
-    picture: "",
-    tags: [],
+    title: q.data?.title,
+    text: q.data?.text,
+    subject: q.data?.subject,
+    picture: q.data?.picture,
+    tags: q.data?.tags,
   };
 
-  const { mutate } = useCreateQuestionMutation();
+  if (q.isPending) return <FullPageLoadingIndicator />;
+
+  const { mutate: update } = useUpdateQuestionMutation();
 
   return (
-    <>
+    <Page>
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
+        validationSchema={updateQuestionSchema}
         onSubmit={(values, { setSubmitting }) => {
           // TODO handle form submittion
-          mutate(values, {
-            onSuccess: (data, variables) => {
-              // replace route to clear all form state and start fresh
-              // do not use 'push' or 'navigate'
-              router.replace(questionDetail({ questionId: data.id }));
-            },
-            onSettled: () => {
-              setSubmitting(false);
-            },
-          });
+          update(
+            { questionId, data: values },
+            {
+              onSuccess: (data, variables) => {
+                router.replace(
+                  questionDetail({ questionId: variables.questionId })
+                );
+              },
+              onSettled: () => {
+                setSubmitting(false);
+              },
+            }
+          );
         }}
       >
         {({
@@ -86,16 +99,16 @@ export default function CreateQuestionScreen({
                 showsVerticalScrollIndicator={false}
               >
                 <>
-                  <CreateQuestion.TitleInput
+                  <QF.TitleInput
                     value={values.title}
                     onChangeText={handleChange("title")}
                     errorMessage={errors.title}
                   />
-                  <CreateQuestion.DescriptionInput
-                    value={values.description}
-                    onChangeText={handleChange("description")}
-                    showError={touched.description && errors.description}
-                    errorMessage={errors.description}
+                  <QF.DescriptionInput
+                    value={values.text}
+                    onChangeText={handleChange("text")}
+                    showError={touched.text && errors.text}
+                    errorMessage={errors.text}
                   />
                   <ThemedView
                     style={{
@@ -104,7 +117,7 @@ export default function CreateQuestionScreen({
                       justifyContent: "space-evenly",
                     }}
                   >
-                    <CreateQuestion.AddPictureButton
+                    <QF.AddPictureButton
                       onImageSelected={(image) => {
                         setFieldValue("picture", image.uri);
                       }}
@@ -112,7 +125,7 @@ export default function CreateQuestionScreen({
                         setFieldValue("picture", "");
                       }}
                     />
-                    <CreateQuestion.SubjectInput
+                    <QF.SubjectInput
                       icon={values.subject ? "circle" : "circle-outline"}
                       lable={t(values?.subject?.name)}
                       subject={values.subject}
@@ -121,7 +134,7 @@ export default function CreateQuestionScreen({
                     />
                   </ThemedView>
                 </>
-                <CreateQuestion.Preview {...values} picture={values.picture} />
+                <QF.Preview {...values} picture={values.picture} />
               </ScrollView>
 
               <Button
@@ -139,6 +152,6 @@ export default function CreateQuestionScreen({
           </>
         )}
       </Formik>
-    </>
+    </Page>
   );
 }

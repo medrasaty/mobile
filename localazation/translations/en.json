@@ -76,5 +76,10 @@
   "Top_reputation": "Top reputation",
   "share": "share",
   "username": "@{{username}}",
-  "network_error": "network error: check your internet connection than try again"
+  "network_error": "network error: check your internet connection than try again",
+  "new_question": "New question",
+  "create_question": {
+    "choose_subject": "اختر المادة",
+    "new_question": "New question"
+  }
 }

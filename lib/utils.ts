@@ -4,6 +4,7 @@ import { useSession } from "@/hooks/useSession";
 import { Subject } from "@/types/school.types";
 import { BaseUser, UserType } from "@/types/user.types";
 import { useTheme } from "react-native-paper";
+import { fileUploadType } from "@/types";
 
 export function parseSession(session: string | null): Session {
   try {
@@ -97,4 +98,20 @@ export function areListsEqual(list1: any[], list2: any[]): boolean {
     // Handle primitives
     return item === item2;
   });
+}
+
+export function genFileUploadFromPath(path: string): fileUploadType {
+  /**
+   * generate file upload type from system file path
+   * path: system path , file:///some/path/to/image.png
+   */
+  const fileSegments = path.split("/").pop()?.split(".");
+  const extension = fileSegments?.pop() ?? "*";
+  const filename = fileSegments?.at(0) ?? "file";
+
+  return {
+    name: `${filename ?? "image"}.${extension ?? "*"}`,
+    type: `image/${extension ?? "*"}`,
+    uri: path,
+  };
 }

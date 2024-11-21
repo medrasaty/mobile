@@ -5,6 +5,7 @@ import { AppBar } from "@/features/navigation/components/AppBar";
 import usePushNotificationFeature from "@/features/notifications/hooks/usePushNotificationFeature";
 import { useSession } from "@/hooks/useSession";
 import { Redirect, Stack } from "expo-router";
+import { t } from "i18next";
 import * as React from "react";
 
 export default function ProtectedLayout() {
@@ -33,8 +34,14 @@ export default function ProtectedLayout() {
       >
         <Stack.Screen name="(drawer)" />
         <Stack.Screen name="questions/details/[questionId]" />
-        <Stack.Screen name="questions/new" />
-        <Stack.Screen name="questions/edit" />
+        <Stack.Screen
+          name="questions/new"
+          options={{ headerShown: true, headerTitle: t("new_question") }}
+        />
+        <Stack.Screen
+          name="questions/edit"
+          options={{ headerShown: true, headerTitle: t("edit_question") }}
+        />
         <Stack.Screen name="users/[username]" />
         <Stack.Screen name="search_result" />
         <Stack.Screen name="schools/[schoolId]" />

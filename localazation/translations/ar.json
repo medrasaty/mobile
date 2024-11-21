@@ -79,5 +79,10 @@
   "share": "شارك",
   "username": "@{{username}}",
   "network_error": "خطأ في الإتصال: تحقق من اتصال جهازك با الإنترنت ثم حاول مجدداً",
-  "successfully_created_answer": "تم اضافة الجواب بنجاح"
+  "successfully_created_answer": "تم اضافة الجواب بنجاح",
+  "math": "حساب",
+  "create_question": {
+    "choose_subject": "اختر المادة",
+    "new_question": "سؤال جديد"
+  }
 }

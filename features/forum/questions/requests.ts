@@ -1,6 +1,10 @@
+import { genFileUploadFromPath } from "@/lib/utils";
 import { DetailQuestion, Question } from "@/types/forum.types";
 import { PaginatedResponse } from "@/types/requests";
+import { Subject } from "@/types/school.types";
+import { QuestionData } from "@forum/hooks/useCreateQuestionMutation";
 import { Axios } from "axios";
+import { parseQuestionFormData } from "./utils";
 
 export async function getForumQuestions(client: Axios, params?: any) {
   console.log(params);
@@ -37,4 +41,41 @@ export async function registerQuestion(c: Axios, questionId: Question["id"]) {
 
 export async function unregisterQuestion(c: Axios, questionId: Question["id"]) {
   await c.delete(`/forum/questions/${questionId}/unregister/`);
+}
+
+export async function createQuestion(client: Axios, data: QuestionData) {
+  const formData = parseQuestionFormData(data);
+  const response = await client.post("/forum/questions/", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    transformRequest: (data, headers) => {
+      return formData;
+    },
+  });
+
+  return response.data;
+}
+
+export async function updateQuestion(
+  client: Axios,
+  questionId: Question["id"],
+  data: QuestionData
+) {
+  const formData = parseQuestionFormData(data);
+
+  const response = await client.patch(
+    `/forum/questions/${questionId}/`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      transformRequest: (data, headers) => {
+        return formData;
+      },
+    }
+  );
+
+  return response.data;
 }

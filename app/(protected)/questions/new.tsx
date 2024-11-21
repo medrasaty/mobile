@@ -18,8 +18,13 @@ import useImageAssetState from "@/hooks/useImageAssetState";
 import { router } from "expo-router";
 import LoadingDialog from "@/components/LoadingDialog";
 import { questionDetail } from "@/lib/routing";
+import CreateQuestionScreen from "@forum/questions/screens/CreateQuestionScreen";
 
-export default function NewQuestionPage() {
+export default function CreateQuestionPage() {
+  return <CreateQuestionScreen />;
+}
+
+export function NewQuestionPage() {
   const {
     visible: subjectDialogVisible,
     show: showSubjectDialog,
@@ -92,7 +97,7 @@ export default function NewQuestionPage() {
                 setPicture(null);
               }}
             />
-            <CreateQuestion.SelectSubjectButton
+            <CreateQuestion.SubjectInput
               icon={subject ? "circle" : "circle-outline"}
               lable={subject ? translateSubject(subject.name) : "اختر المادة"}
               onPress={showSubjectDialog}

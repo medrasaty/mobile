@@ -17,12 +17,13 @@ import useCreateAnswerMutation from "@forum/hooks/useCreateAnswerMutation";
 import LoadingDialog from "@components/LoadingDialog";
 import { router } from "expo-router";
 import { Keyboard } from "react-native";
+import { useForumQuestion } from "@forum/questions/queries";
 
 const { height, width } = Dimensions.get("screen");
 
 const CreateNewAnswerScreen = () => {
   const questionId = useQuestionIdParams();
-  const questionQuery = useQuestion(questionId);
+  const questionQuery = useForumQuestion(questionId);
 
   const theme = useTheme();
 
