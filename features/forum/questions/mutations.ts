@@ -154,3 +154,68 @@ export function useRegisterQuestionMutation(questionId: Question["id"]) {
     data: registerMutation.data || unregisterMutation.data,
   };
 }
+
+import { rateQuestion as rateQuestionRequest } from "@/requests/forum/question";
+import { RatingValue } from "@/types/forum.types";
+import { calcNewRatingsValue } from "../utils";
+
+export const useRateQuestionMutation = () => {
+  const c = useAuthClient();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      questionId,
+      value,
+    }: {
+      questionId: Question["id"];
+      value: RatingValue;
+    }) => rateQuestionRequest(questionId, value, c),
+
+    onMutate: async ({ questionId, value: newRating }) => {
+      await qc.cancelQueries({
+        queryKey: ForumQuestionKeys.detail(questionId),
+      });
+      // qc.setQueryData(
+      //   ForumQuestionKeys.detail(questionId),
+      //   (previousQuestion: DetailQuestion) => {
+      //     // previous user_rating must be null if it's a new rating
+
+      //     console.log("getting previous question");
+      //     console.log(previousQuestion?.title);
+
+      //     const previousRatingsValue = previousQuestion?.ratings_value ?? 0;
+      //     const previousUserRating = previousQuestion?.user_rating ?? 0;
+      //     const currentRating = newRating;
+
+      //     const newRatingsValue = calcNewRatingsValue(
+      //       previousRatingsValue,
+      //       previousUserRating,
+      //       currentRating
+      //     );
+      //     console.log("new rating value calcNewRatingsValue");
+      //     console.log(newRatingsValue);
+      //     console.log(newRating);
+
+      //     console.log("updating query manually");
+      //     console.log(previousQuestion);
+      //     return {
+      //       ...previousQuestion,
+      //       ratings_value: newRatingsValue,
+      //       user_rating: newRating,
+      //     };
+      //   }
+      // );
+    },
+
+    onError: (err, { questionId, value: newRating }) => {
+      // Reset question when error accure
+      alert("on error");
+      qc.invalidateQueries({ queryKey: ForumQuestionKeys.detail(questionId) });
+
+      Burnt.alert({
+        title: t("failed_rating_question"),
+      });
+    },
+  });
+};

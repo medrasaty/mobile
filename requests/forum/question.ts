@@ -8,6 +8,9 @@ export async function rateQuestion(
 ): Promise<Rating> {
   // if user has rated the question, update the rating,
   // otherwise, create a new rating
+  //
+  //
+  console.log("rate question");
 
   return await client.post(`/forum/questions/${questionID}/rate/`, {
     value: ratingValue,
