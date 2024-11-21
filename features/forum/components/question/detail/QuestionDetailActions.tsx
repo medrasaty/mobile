@@ -11,6 +11,8 @@ import useQuestionRatingMutation from "@/features/forum/hooks/useQuestionRatingM
 import { memo } from "react";
 import { ViewProps } from "react-native";
 import RatingComponent from "../../Rating";
+import { useRateQuestionMutation } from "@forum/questions/mutations";
+import { ThemedText } from "@components/ThemedText";
 
 export const ACTIONS_GAP = 12;
 
@@ -45,42 +47,36 @@ const QuestionDetailActions = ({
   );
 };
 
-const RatingActions = memo(
-  ({
-    questionID,
-    ratingsValue,
-    userRating,
-  }: {
-    questionID: DetailQuestion["id"];
-    userRating: DetailQuestion["user_rating"];
-    ratingsValue: DetailQuestion["ratings_value"];
-  }) => {
-    const { mutate: rateQuestion } = useQuestionRatingMutation(questionID);
+const RatingActions = ({
+  questionID,
+  ratingsValue,
+  userRating,
+}: {
+  questionID: DetailQuestion["id"];
+  userRating: DetailQuestion["user_rating"];
+  ratingsValue: DetailQuestion["ratings_value"];
+}) => {
+  const { mutate } = useRateQuestionMutation();
 
-    const handlePositivePressed = () => {
-      // check if previous ratings is positive ( delete it )
-      if (userRating === RatingValue.POSITIVE) {
-        rateQuestion(RatingValue.NEURAL);
-      }
-      rateQuestion(RatingValue.POSITIVE);
-    };
+  const handleRating = (value: RatingValue) => {
+    console.log({ userRating, value });
 
-    const handleNegativePressed = () => {
-      if (userRating === RatingValue.NEGATIVE) {
-        rateQuestion(RatingValue.NEURAL);
-      }
-      rateQuestion(RatingValue.NEGATIVE);
-    };
+    if (userRating === value) {
+      mutate({ questionId: questionID, value: RatingValue.NEURAL });
+      // Don't remove it at any cost
+      return;
+    }
+    mutate({ questionId: questionID, value: value });
+  };
 
-    return (
-      <RatingComponent
-        ratingsValue={ratingsValue}
-        currentRating={userRating}
-        onPositivePressed={handlePositivePressed}
-        onNegativePressed={handleNegativePressed}
-      />
-    );
-  }
-);
+  return (
+    <RatingComponent
+      ratingsValue={ratingsValue}
+      currentRating={userRating}
+      onPositivePressed={() => handleRating(RatingValue.POSITIVE)}
+      onNegativePressed={() => handleRating(RatingValue.NEGATIVE)}
+    />
+  );
+};
 
 export default QuestionDetailActions;

@@ -9,6 +9,8 @@ import {
   RegisterQuestionItem,
   ReportQuestionMenuItem,
 } from "./MoreOptionsMenuItems";
+import { useRouter } from "expo-router";
+import { editQuestion } from "@/lib/routing";
 
 const MoreOptions = ({
   ownerUsername,
@@ -22,6 +24,7 @@ const MoreOptions = ({
   const theme = useTheme();
   const [visible, show, hide] = useVisibleV2(false);
   const user = useCurrentUser();
+  const router = useRouter();
   return (
     <Menu
       visible={visible}
@@ -49,7 +52,10 @@ const MoreOptions = ({
           />
           <Menu.Item
             style={styles.item}
-            onPress={() => {}}
+            onPress={() => {
+              hide();
+              router.push(editQuestion({ questionId: questionId }));
+            }}
             trailingIcon={"circle"}
             title="edit"
           />

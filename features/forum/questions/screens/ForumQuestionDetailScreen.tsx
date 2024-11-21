@@ -28,7 +28,7 @@ export default function ForumQuestionDetailScreen() {
     question: questionId,
   });
 
-  const renderHeader = useCallback(() => {
+  const renderHeader = () => {
     if (questionQuery.data) {
       return (
         <Container style={{ gap: 12 }}>
@@ -38,7 +38,7 @@ export default function ForumQuestionDetailScreen() {
         </Container>
       );
     }
-  }, [questionQuery.status, questionQuery.data]);
+  };
 
   const renderItem = useCallback(
     ({ item }: { item: Answer }) => {

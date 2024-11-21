@@ -1,11 +1,13 @@
 import { ThemedView } from "@/components/ThemedView";
 import RatingButton from "./RatingButton";
 import { ThemedText } from "@/components/ThemedText";
-import { Rating as RatingType, RatingValue } from "@/types/forum.types";
+import { RatingValue } from "@/types/forum.types";
 type RatingProps = {
   ratingsValue: number;
   onPositivePressed: () => void;
   onNegativePressed: () => void;
+  positiveLoading?: boolean;
+  negativeLoading?: boolean;
   currentRating: RatingValue;
 };
 
