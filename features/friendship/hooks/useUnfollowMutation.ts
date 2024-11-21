@@ -1,7 +1,6 @@
 import useAuthClient from "@/hooks/useAuthClient";
 import { BaseUser } from "@/types/user.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
 import { follow, unfollow } from "../requests";
 import * as Burnt from "burnt";
 import { useTranslation } from "react-i18next";
@@ -20,6 +19,7 @@ export default function useUnfollowMutation() {
   const client = useAuthClient();
   const qc = useQueryClient();
   const { t } = useTranslation();
+
   return useMutation({
     mutationFn: async (params: UnfollowMutateParams) =>
       await unfollow(client, params.username),
@@ -59,7 +59,6 @@ export default function useUnfollowMutation() {
           }
           return oldData.map((friend) => {
             if (friend.username == username) {
-              console.log("updating follower query");
               return {
                 ...friend,
                 is_following: false,

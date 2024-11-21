@@ -14,7 +14,7 @@ export default function AnswerCard({ answer }: { answer: Answer }) {
   const highlightAnimatedStyle = useHighlightAnswerAnimatedStyle(answer.id);
 
   return (
-    <Animated.View style={[highlightAnimatedStyle, styles.container]}>
+    <Animated.View style={[styles.container]}>
       <ThemedView>
         <ThemedView style={{ flexDirection: "row", gap: QUESTION_LAYOUT_GAP }}>
           <Actions answer={answer} />

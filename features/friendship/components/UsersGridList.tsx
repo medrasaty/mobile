@@ -24,9 +24,7 @@ export const UserGridList = ({
     <ThemedView style={styles.container}>
       <FlatList
         renderItem={({ item, index }) => {
-          return (
-            <UserCompactCell numOfCells={numOfCells} key={index} user={item} />
-          );
+          return <UserCompactCell key={index} user={item} />;
         }}
         data={users}
         // estimatedItemSize={400}

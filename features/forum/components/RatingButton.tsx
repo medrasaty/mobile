@@ -1,11 +1,13 @@
-import { useQuestionRegistryMutation } from "@/features/notifications/hooks/registryMutation";
-import { DetailQuestion, Question } from "@/types/forum.types";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { DetailQuestion } from "@/types/forum.types";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { ViewProps } from "react-native";
 import { TouchableRipple, useTheme } from "react-native-paper";
 import View from "@/components/styled/View";
-import useQuestionBookmarkMutation from "../hooks/useQuestionBookmarkMutation";
+import {
+  useBookmarkQuestionMutation,
+  useRegisterQuestionMutation,
+  useUnbookmarkQuestionMutation,
+} from "@forum/questions/mutations";
 import Bookmark from "./Bookmark";
 import useActionsProps from "../hooks/useIconProps";
 import { RatingButtonSize } from "../hooks/useIconProps";
@@ -73,7 +75,9 @@ export function BookmarkQuestion({
   questionID: DetailQuestion["id"];
   isBookmarked: DetailQuestion["is_bookmarked"];
 }) {
-  const { bookmark, unbookmark } = useQuestionBookmarkMutation(questionID);
+  const { mutate: bookmark } = useBookmarkQuestionMutation();
+  const { mutate: unbookmark } = useUnbookmarkQuestionMutation();
+
   const handlePress = () => {
     isBookmarked ? unbookmark(questionID) : bookmark(questionID);
   };
@@ -88,7 +92,7 @@ export function RegisterQuestion({
   questionID: DetailQuestion["id"];
   isRegistered: DetailQuestion["is_registered"];
 }) {
-  const { register, unregister } = useQuestionRegistryMutation(questionID);
+  const { register, unregister } = useRegisterQuestionMutation(questionID);
 
   return (
     <>

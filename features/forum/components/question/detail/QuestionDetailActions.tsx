@@ -1,4 +1,3 @@
-import Text from "@/components/styled/Text";
 import View from "@/components/styled/View";
 
 import { DetailQuestion, RatingValue } from "@/types/forum.types";
@@ -15,33 +14,32 @@ import RatingComponent from "../../Rating";
 
 export const ACTIONS_GAP = 12;
 
-type QuestionDetailActionsProps = {
-  questionID: DetailQuestion["id"];
-  userRating: DetailQuestion["user_rating"];
-  ratingsValue: DetailQuestion["ratings_value"];
-  isBookmarked: DetailQuestion["is_bookmarked"];
-  isRegistered: DetailQuestion["is_registered"];
-} & ViewProps;
+type QuestionDetailActionsProps = { question: DetailQuestion } & ViewProps;
 
 const QuestionDetailActions = ({
-  questionID,
-  userRating,
-  ratingsValue,
-  isBookmarked,
-  isRegistered,
+  question,
   style,
   ...props
 }: QuestionDetailActionsProps) => {
   return (
     <>
-      <View style={{ gap: ACTIONS_GAP, alignItems: "center" }} {...props}>
+      <View
+        style={[style, { gap: ACTIONS_GAP, alignItems: "center" }]}
+        {...props}
+      >
         <RatingActions
-          questionID={questionID}
-          userRating={userRating}
-          ratingsValue={ratingsValue}
+          questionID={question.id}
+          userRating={question.user_rating}
+          ratingsValue={question.ratings_value}
         />
-        <BookmarkQuestion questionID={questionID} isBookmarked={isBookmarked} />
-        <RegisterQuestion questionID={questionID} isRegistered={isRegistered} />
+        <BookmarkQuestion
+          questionID={question.id}
+          isBookmarked={question.is_bookmarked}
+        />
+        <RegisterQuestion
+          questionID={question.id}
+          isRegistered={question.is_registered}
+        />
       </View>
     </>
   );

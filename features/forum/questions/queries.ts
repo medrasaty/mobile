@@ -1,7 +1,7 @@
 import useAuthClient from "@/hooks/useAuthClient";
 import { useQuery } from "@tanstack/react-query";
 import { ForumQuestionKeys } from "./keys";
-import { getForumQuestions } from "./requests";
+import { getForumQuestion, getForumQuestions } from "./requests";
 import { Question } from "@/types/forum.types";
 
 export function useForumQuestions(params: any = {}) {
@@ -14,8 +14,10 @@ export function useForumQuestions(params: any = {}) {
 }
 
 export function useForumQuestion(questionId: Question["id"], params: any = {}) {
-  return useForumQuestion({
-    ...params,
-    id: questionId,
+  const client = useAuthClient();
+
+  return useQuery({
+    queryKey: ForumQuestionKeys.detail(questionId),
+    queryFn: async () => getForumQuestion(client, questionId, params),
   });
 }

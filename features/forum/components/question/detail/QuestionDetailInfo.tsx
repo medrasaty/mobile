@@ -4,14 +4,12 @@ import View from "@/components/styled/View";
 import Tag from "@/components/Tag";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { API_URL } from "@/constants";
-import { debugStyle } from "@/constants/styels";
 import ShareContentSheet from "@/features/share/components/ShareContentSheet";
 import { d } from "@/lib/dates";
 import { translateSubject } from "@/lib/utils";
 import { DetailQuestion, Question } from "@/types/forum.types";
 import { t } from "i18next";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useMemo } from "react";
 import { ViewProps } from "react-native";
 import FastImage from "react-native-fast-image";
 import { useTheme } from "react-native-paper";
@@ -56,7 +54,7 @@ const QuestionDetailInfo = memo(
           <Title title={title} />
           <SubjectInfo subject={subject} />
           <Description description={text} />
-          <TagsList tags={tags} />
+          <TagsList style={{ marginTop: 5, marginBottom: 5 }} tags={tags} />
         </ThemedView>
         {picture && <Picture image={picture} />}
 
@@ -87,15 +85,21 @@ export const Description = ({
   return <ThemedText variant="bodyLarge">{description}</ThemedText>;
 };
 
-const TagsList = ({ tags }: { tags: DetailQuestion["tags"] }) => {
+const TagsList = ({
+  tags,
+  style,
+  ...props
+}: { tags: DetailQuestion["tags"] } & ViewProps) => {
   return (
     <View
-      style={{
-        marginTop: 10,
-        flexDirection: "row",
-        flexWrap: "wrap",
-        gap: 4,
-      }}
+      style={[
+        style,
+        {
+          flexDirection: "row",
+          flexWrap: "wrap",
+          gap: 4,
+        },
+      ]}
     >
       {tags.map((tag) => (
         <Tag key={tag} name={tag} />
@@ -144,10 +148,10 @@ const TimeInfo = ({
   return (
     <View {...props}>
       <Text style={{ color: "gray" }} variant="labelSmall">
-        {created.toDateString()}
+        {d(created).toString()} {d(created).fromNow()}
       </Text>
       <Text style={{ color: "gray" }} variant="labelSmall">
-        آخر تعديل {modified.toDateString()} {` (${d(modified).fromNow()})`}
+        آخر تعديل {d(modified).toString()} {` (${d(modified).fromNow()})`}
       </Text>
     </View>
   );

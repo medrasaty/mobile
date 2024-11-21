@@ -88,7 +88,7 @@ const useOpenReplySheetEffect = ({
 export const Reply = ({ answer }: { answer: Answer }) => {
   const sheetRef = useSheetViewRef();
   const show = () => sheetRef.current?.present();
-  useOpenReplySheetEffect({ answer, sheetRef });
+  // useOpenReplySheetEffect({ answer, sheetRef });
 
   return (
     <>

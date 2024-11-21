@@ -6,24 +6,24 @@ import CreateAnswer, {
   CREATE_ANSWER_FAB_MARGIN,
 } from "@forum/components/answer/CreateAnswer";
 import QuestionDetail from "@forum/components/question/detail/QuestionDetail";
-import { useQuestion } from "@forum/hooks/useQuestions";
 import { AppBar } from "@features/navigation/components/AppBar";
 import { Question } from "@/types/forum.types";
 import { Answer } from "@forum/answers/types";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Appbar, Divider } from "react-native-paper";
+import { Divider } from "react-native-paper";
 import { useQuestionIdParams } from "../hooks";
 import { MultiQueryScreenList, Page } from "@/components";
 import { useForumAnswers } from "@forum/answers/queries";
 import { View } from "react-native";
 import MoreOptions from "../components/QuestionCardOptionsMenu";
+import { useForumQuestion } from "../queries";
 
 export default function ForumQuestionDetailScreen() {
   const { t } = useTranslation();
   const questionId = useQuestionIdParams();
-  const questionQuery = useQuestion(questionId);
+  const questionQuery = useForumQuestion(questionId);
   const answersQuery = useForumAnswers({
     question: questionId,
   });
@@ -34,11 +34,11 @@ export default function ForumQuestionDetailScreen() {
         <Container style={{ gap: 12 }}>
           <QuestionDetail question={questionQuery.data} />
           <Divider bold />
-          <Text variant="headlineSmall">{t("Answers")}</Text>
+          <Text variant="headlineMedium">{t("Answers")}</Text>
         </Container>
       );
     }
-  }, [questionQuery.status]);
+  }, [questionQuery.status, questionQuery.data]);
 
   const renderItem = useCallback(
     ({ item }: { item: Answer }) => {

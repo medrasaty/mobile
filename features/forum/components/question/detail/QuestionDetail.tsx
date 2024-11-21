@@ -12,12 +12,11 @@ export const QUESTION_LAYOUT_GAP = 16;
 
 export const QuestionDetail = ({ question }: { question: DetailQuestion }) => {
   const infoProps = useQuestionInfoPropsMemo(question);
-  const actionProps = useQuestionActionPropsMemo(question);
 
   return (
     <View style={{ gap: 20, justifyContent: "center" }}>
       <View style={{ flexDirection: "row", gap: QUESTION_LAYOUT_GAP }}>
-        <QuestionDetailActions {...actionProps} />
+        <QuestionDetailActions question={question} />
         <QuestionDetailInfo {...infoProps} />
       </View>
       <QuestionDetailOwner owner={question.owner} />
