@@ -84,5 +84,9 @@
   "create_question": {
     "choose_subject": "اختر المادة",
     "new_question": "سؤال جديد"
-  }
+  },
+  "submit": "نشر",
+  "Submit": "نشر",
+  "edit": "تعديل",
+  "Edit": "تعديل"
 }

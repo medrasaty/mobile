@@ -1,7 +1,8 @@
 import { genFileUploadFromPath } from "@/lib/utils";
 import { QuestionData } from "./mutations";
+import { questionSchemaType } from "./schemas";
 
-export function parseQuestionFormData(data: QuestionData) {
+export function parseQuestionFormData(data: questionSchemaType) {
   const formData = new FormData();
 
   formData.append("title", data.title);

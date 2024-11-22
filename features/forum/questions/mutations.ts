@@ -223,6 +223,7 @@ export function useRateQuestionMutation() {
 
 import { Subject } from "@/types/school.types";
 import { createQuestion } from "@forum/questions/requests";
+import { questionSchemaType } from "./schemas";
 
 export type QuestionData = {
   title: string;
@@ -242,7 +243,8 @@ export function useCreateQuestionMutation() {
 
   return useMutation({
     mutationKey: ["create_question"],
-    mutationFn: async (data: QuestionData) => createQuestion(client, data),
+    mutationFn: async (data: questionSchemaType) =>
+      createQuestion(client, data),
     onError: (error) => {
       console.error(error);
     },

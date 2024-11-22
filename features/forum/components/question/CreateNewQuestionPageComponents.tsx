@@ -29,13 +29,14 @@ import SelectSubjectDialog from "./SelectSubjectDialog";
 import Row from "@components/Row";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
+import TextError from "@components/TextError";
 
 export type BaseCreateQuestionInputProps = {
   onChangeText: TextInputProps["onChangeText"];
   value: TextInputProps["value"];
   title?: string;
   showError?: boolean;
-  errorMessage?: string;
+  error?: string;
 } & ViewProps;
 
 export const TitleInput = ({
@@ -43,11 +44,11 @@ export const TitleInput = ({
   onChangeText,
   title = "العنوان",
   showError = false,
-  errorMessage,
+  error,
   ...props
 }: BaseCreateQuestionInputProps) => {
   return (
-    <ThemedView style={{ gap: 2 }} {...props}>
+    <View style={{ gap: 6 }} {...props}>
       <ThemedText variant="titleLarge">{title}</ThemedText>
       <TextInput
         value={value}
@@ -55,8 +56,8 @@ export const TitleInput = ({
         mode="outlined"
         theme={{ roundness: 16 }}
       />
-      {errorMessage && <HelperText type="error">{errorMessage}</HelperText>}
-    </ThemedView>
+      <TextError condition={showError}>{error}</TextError>
+    </View>
   );
 };
 
@@ -65,11 +66,11 @@ export const DescriptionInput = ({
   onChangeText,
   title = "التفاصيل",
   showError,
-  errorMessage,
+  error,
   ...props
 }: BaseCreateQuestionInputProps) => {
   return (
-    <ThemedView style={{ gap: 2 }} {...props}>
+    <View style={{ gap: 2 }} {...props}>
       <ThemedText variant="titleLarge">{title}</ThemedText>
       <TextInput
         value={value}
@@ -80,10 +81,8 @@ export const DescriptionInput = ({
         numberOfLines={6}
         mode="outlined"
       />
-      <HelperText style={{ opacity: showError ? 1 : 0 }} type="error">
-        {errorMessage}
-      </HelperText>
-    </ThemedView>
+      <TextError condition={showError}>{error}</TextError>
+    </View>
   );
 };
 

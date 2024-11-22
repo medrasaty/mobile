@@ -1,10 +1,8 @@
-import { genFileUploadFromPath } from "@/lib/utils";
 import { DetailQuestion, Question } from "@/types/forum.types";
 import { PaginatedResponse } from "@/types/requests";
-import { Subject } from "@/types/school.types";
-import { QuestionData } from "@forum/hooks/useCreateQuestionMutation";
 import { Axios } from "axios";
 import { parseQuestionFormData } from "./utils";
+import { questionSchemaType } from "./schemas";
 
 export async function getForumQuestions(client: Axios, params?: any) {
   console.log(params);
@@ -43,7 +41,7 @@ export async function unregisterQuestion(c: Axios, questionId: Question["id"]) {
   await c.delete(`/forum/questions/${questionId}/unregister/`);
 }
 
-export async function createQuestion(client: Axios, data: QuestionData) {
+export async function createQuestion(client: Axios, data: questionSchemaType) {
   const formData = parseQuestionFormData(data);
   const response = await client.post("/forum/questions/", formData, {
     headers: {
@@ -60,7 +58,7 @@ export async function createQuestion(client: Axios, data: QuestionData) {
 export async function updateQuestion(
   client: Axios,
   questionId: Question["id"],
-  data: QuestionData
+  data: questionSchemaType
 ) {
   const formData = parseQuestionFormData(data);
 

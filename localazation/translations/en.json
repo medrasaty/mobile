@@ -81,5 +81,9 @@
   "create_question": {
     "choose_subject": "اختر المادة",
     "new_question": "New question"
-  }
+  },
+  "submit": "submit",
+  "Submit": "Submit",
+  "edit": "edit",
+  "Edit": "Edit"
 }

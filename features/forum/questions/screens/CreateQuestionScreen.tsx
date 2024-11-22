@@ -1,144 +1,38 @@
-import Page from "@/components/Page";
-import { containerMargins, containerPaddings } from "@/constants/styels";
-import { ScrollView, ViewProps } from "react-native";
-import * as CreateQuestion from "@/features/forum/components/question/CreateNewQuestionPageComponents";
-import { Button } from "react-native-paper";
-import { ThemedView } from "@/components/ThemedView";
 import { useCreateQuestionMutation } from "@/features/forum/questions/mutations";
 import { router } from "expo-router";
-import LoadingDialog from "@/components/LoadingDialog";
 import { questionDetail } from "@/lib/routing";
-import * as yup from "yup";
-import { t } from "i18next";
-import { Formik } from "formik";
+import QuestionForm from "../components/forms/QuestionForm";
+import Page from "@components/Page";
+import { Keyboard } from "react-native";
 
-interface CreateQuestionScreenProps extends ViewProps {
-  edit?: boolean;
-}
-
-const validationSchema = yup.object().shape({
-  title: yup.string().required(t("title must not be empty")),
-  description: yup
-    .string()
-    .min(10, t("description must be more than 10 characters"))
-    .required(t("description must not be empty")),
-  subject: yup
-    .object({
-      id: yup.string().required(),
-      name: yup.string().required(),
-      catagory: yup.string().required(),
-    })
-    .required(t("Subject is required")),
-  picture: yup.string(),
-  tags: yup.array(),
-});
-
-export default function CreateQuestionScreen({
-  edit = false,
-  ...props
-}: CreateQuestionScreenProps) {
+export default function CreateQuestionScreen() {
   const initialValues = {
     title: "",
-    description: "",
+    text: "",
     subject: undefined,
     picture: "",
     tags: [],
   };
 
-  const { mutate } = useCreateQuestionMutation();
+  const { mutate: create } = useCreateQuestionMutation();
 
   return (
-    <>
-      <Formik
+    <Page>
+      <QuestionForm
         initialValues={initialValues}
-        validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          // TODO handle form submittion
-          mutate(values, {
+          Keyboard.dismiss();
+          create(values, {
             onSuccess: (data, variables) => {
-              // replace route to clear all form state and start fresh
-              // do not use 'push' or 'navigate'
-              router.replace(questionDetail({ questionId: data.id }));
+              // navigate to question detail page
+              router.push(questionDetail({ questionId: data.id }));
             },
             onSettled: () => {
               setSubmitting(false);
             },
           });
         }}
-      >
-        {({
-          handleChange,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-          setFieldValue,
-          isSubmitting,
-        }) => (
-          <>
-            <Page>
-              <ScrollView
-                contentContainerStyle={{
-                  ...containerPaddings,
-                  gap: 20,
-                  paddingBottom: 30,
-                }}
-                showsVerticalScrollIndicator={false}
-              >
-                <>
-                  <CreateQuestion.TitleInput
-                    value={values.title}
-                    onChangeText={handleChange("title")}
-                    errorMessage={errors.title}
-                  />
-                  <CreateQuestion.DescriptionInput
-                    value={values.description}
-                    onChangeText={handleChange("description")}
-                    showError={touched.description && errors.description}
-                    errorMessage={errors.description}
-                  />
-                  <ThemedView
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-evenly",
-                    }}
-                  >
-                    <CreateQuestion.AddPictureButton
-                      onImageSelected={(image) => {
-                        setFieldValue("picture", image.uri);
-                      }}
-                      onImageUnselected={() => {
-                        setFieldValue("picture", "");
-                      }}
-                    />
-                    <CreateQuestion.SubjectInput
-                      icon={values.subject ? "circle" : "circle-outline"}
-                      lable={t(values?.subject?.name)}
-                      subject={values.subject}
-                      error={errors.subject}
-                      onSelect={(subject) => setFieldValue("subject", subject)}
-                    />
-                  </ThemedView>
-                </>
-                <CreateQuestion.Preview {...values} picture={values.picture} />
-              </ScrollView>
-
-              <Button
-                style={{ marginBottom: 8, marginTop: 8, ...containerMargins }}
-                onPress={() => handleSubmit()}
-                mode="contained"
-              >
-                {t("submit")}
-              </Button>
-            </Page>
-            <LoadingDialog
-              visible={isSubmitting}
-              message="جاري نشر السؤال..."
-            />
-          </>
-        )}
-      </Formik>
-    </>
+      />
+    </Page>
   );
 }
