@@ -4,15 +4,26 @@ import View from "@/components/styled/View";
 import Tag from "@/components/Tag";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { debugStyle } from "@/constants/styels";
 import ShareContentSheet from "@/features/share/components/ShareContentSheet";
+import { useVisibleV2 } from "@/hooks/useVisible";
 import { d } from "@/lib/dates";
 import { translateSubject } from "@/lib/utils";
 import { DetailQuestion, Question } from "@/types/forum.types";
+import CenterPage from "@components/CenterPage";
+import WithCondition from "@components/WithCondition";
 import { t } from "i18next";
 import { memo, useMemo } from "react";
-import { ViewProps } from "react-native";
+import { Pressable, useWindowDimensions, ViewProps } from "react-native";
 import FastImage from "react-native-fast-image";
-import { useTheme } from "react-native-paper";
+import { Portal, useTheme } from "react-native-paper";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { ImageViewer } from "react-native-image-zoom-viewer";
+import Gallery from "react-native-awesome-gallery";
 
 type QuestionDetailInfoProps = {
   id: DetailQuestion["id"];
@@ -25,6 +36,7 @@ type QuestionDetailInfoProps = {
   answersCount: DetailQuestion["answers_count"];
   created: DetailQuestion["created"];
   modified: DetailQuestion["modified"];
+  question: DetailQuestion;
 } & ViewProps;
 
 const QuestionDetailInfo = memo(
@@ -39,6 +51,7 @@ const QuestionDetailInfo = memo(
     answersCount,
     created,
     modified,
+    question,
     style,
     ...props
   }: QuestionDetailInfoProps) => {
@@ -167,20 +180,22 @@ export const Picture = memo(({ image }: { image?: string }) => {
       backgroundColor: theme.colors.surfaceVariant,
       borderRadius: theme.roundness + 6,
     }),
-    [theme.colors?.surfaceVariant, theme.roundness]
+    [theme]
   );
 
   return (
-    <View>
-      <FastImage
-        style={style}
-        source={{
-          uri: image,
-          priority: FastImage.priority.high,
-        }}
-        resizeMode={FastImage.resizeMode.cover}
-      />
-    </View>
+    <>
+      <Pressable onPress={() => alert("bigger")}>
+        <FastImage
+          style={[style, { height: 160 }]}
+          source={{
+            uri: image,
+            priority: FastImage.priority.high,
+          }}
+          resizeMode={FastImage.resizeMode.cover}
+        />
+      </Pressable>
+    </>
   );
 });
 

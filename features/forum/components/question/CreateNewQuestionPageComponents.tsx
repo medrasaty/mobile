@@ -116,6 +116,7 @@ export const AddPictureButton = ({
    */
 
   const [selected, setSelected] = useState(false);
+  const theme = useTheme();
 
   const pickImage = async () => {
     let result = await launchImageLibraryAsync({
@@ -144,9 +145,15 @@ export const AddPictureButton = ({
         mode="contained-tonal"
         {...props}
       />
-      <ThemedText>{selected ? "تعديل الصورة" : "اضاقة صورة"}</ThemedText>
+      <ThemedText variant="bodyLarge">
+        {selected ? "تعديل الصورة" : "اضافة صورة"}
+      </ThemedText>
       {selected && (
-        <IconButton icon="trash-can-outline" onPress={handleUnselect} />
+        <IconButton
+          iconColor={theme.colors.error}
+          icon="trash-can-outline"
+          onPress={handleUnselect}
+        />
       )}
     </ThemedView>
   );

@@ -17,7 +17,7 @@ export const QuestionDetail = ({ question }: { question: DetailQuestion }) => {
     <View style={{ gap: 20, justifyContent: "center" }}>
       <View style={{ flexDirection: "row", gap: QUESTION_LAYOUT_GAP }}>
         <QuestionDetailActions question={question} />
-        <QuestionDetailInfo {...infoProps} />
+        <QuestionDetailInfo {...infoProps} question={question} />
       </View>
       <QuestionDetailOwner owner={question.owner} />
     </View>

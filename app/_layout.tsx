@@ -22,6 +22,7 @@ import { DarkColors, LightColors } from "@/features/theme/colors";
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
+
 export default function RootLayout() {
   const colorscheme = useColorScheme();
   useReactQueryDevTools(queryClient);
@@ -59,7 +60,10 @@ export default function RootLayout() {
                 <SafeAreaProvider>
                   <AlertDialogProvider>
                     <StatusBar style="auto" />
-                    <Stack screenOptions={{ headerShown: false }}>
+                    <Stack
+                      initialRouteName={HOME_PAGE}
+                      screenOptions={{ headerShown: false }}
+                    >
                       <Stack.Screen name={HOME_PAGE} />
                       <Stack.Screen name="login" />
                       <Stack.Screen name="index" />

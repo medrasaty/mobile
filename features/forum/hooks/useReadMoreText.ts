@@ -24,7 +24,7 @@ export default function useReadMoreText({
     } else {
       setModifiedText(defaultText);
     }
-  }, [isReadMore]);
+  }, [isReadMore, defaultText]);
 
   const toggleIsReadMore = () => {
     setIsReadMore(!isReadMore);

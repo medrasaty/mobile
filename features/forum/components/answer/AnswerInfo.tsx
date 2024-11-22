@@ -1,15 +1,14 @@
 import ReadMoreText from "@/components/ReadMoreText";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { translateDate } from "@/lib/utils";
 import { Answer } from "@/types/forum.types";
 import { View, ViewProps } from "react-native";
 import { useTheme } from "react-native-paper";
-import { useAnswer } from "../../contexts/AnswerContext";
 import User from "@/components/User";
-import { useMemo } from "react";
-import { debugStyle } from "@/constants/styels";
 import { d } from "@/lib/dates";
+import { Picture } from "../question/detail/QuestionDetailInfo";
+import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 export default function Info({
   answer,
@@ -22,8 +21,11 @@ export default function Info({
       {...props}
     >
       <View>
-        <AnswerText text={answer.text} />
-        <StatInfo answer={answer} />
+        <View style={{ gap: 8 }}>
+          <AnswerText text={answer.text} />
+          {answer.picture && <Picture image={answer.picture} />}
+          <StatInfo answer={answer} />
+        </View>
       </View>
       <View
         style={{
@@ -38,7 +40,25 @@ export default function Info({
 }
 
 export const StatInfo = ({ answer }: { answer: Answer }) => {
-  return <TimeInfo answer={answer} />;
+  const router = useRouter();
+  const { t } = useTranslation();
+  const goToEditAnswerPage = () => {
+    router.push({
+      pathname: "/answers/edit",
+      params: {
+        questionId: answer.question.id ?? answer.question,
+        answerId: answer.id,
+      },
+    });
+  };
+  return (
+    <>
+      <TimeInfo answer={answer} />
+      <ThemedText onPress={goToEditAnswerPage} link variant="labelSmall">
+        {t("edit")}
+      </ThemedText>
+    </>
+  );
 };
 
 export const ReplyText = ({

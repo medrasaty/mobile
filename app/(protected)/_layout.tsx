@@ -45,7 +45,14 @@ export default function ProtectedLayout() {
         <Stack.Screen name="users/[username]" />
         <Stack.Screen name="search_result" />
         <Stack.Screen name="schools/[schoolId]" />
-        <Stack.Screen name="answers/new" />
+        <Stack.Screen
+          name="answers/new"
+          options={{ headerShown: true, headerTitle: t("new_answer") }}
+        />
+        <Stack.Screen
+          name="answers/edit"
+          options={{ headerShown: true, headerTitle: t("edit_answer") }}
+        />
       </Stack>
     </AnimatedAppBarProvider>
   );

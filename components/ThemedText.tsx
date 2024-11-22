@@ -16,7 +16,10 @@ export function ThemedText<T>({
 }: ThemedTextProps<T>) {
   const theme = useTheme();
   const fontWeight = bold ? "bold" : "normal";
+
   color = color ? color : theme.colors.onSurface;
+
+  color = !link ? color : theme.colors.primary;
 
   return (
     <BaseText
@@ -26,6 +29,7 @@ export function ThemedText<T>({
           fontFamily: theme.fonts.default.fontFamily,
           color: color,
           fontWeight: fontWeight,
+          textDecorationLine: link ? "underline" : "none",
         },
       ]}
       {...rest}

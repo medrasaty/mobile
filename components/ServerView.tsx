@@ -2,6 +2,9 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { View, ViewProps } from "react-native";
 import LoadingIndicator from "./LoadingIndicator";
 import NetworkError from "./NetworkError";
+import Page from "./Page";
+import CenterPage from "./CenterPage";
+import FullPageLoadingIndicator from "./FullPageLoadingIndicator";
 
 type ServerViewProps = {
   status: UseQueryResult["status"];
@@ -30,6 +33,30 @@ const ServerView = ({
         props.children
       )}
     </View>
+  );
+};
+
+/**
+ *
+ * @returns full page server view
+ */
+
+export const ServerPage = ({
+  status,
+  onRetry,
+  errorMessage,
+  ...props
+}: ServerViewProps) => {
+  return (
+    <Page {...props}>
+      {status === "pending" ? (
+        <FullPageLoadingIndicator />
+      ) : status === "error" ? (
+        <NetworkError onRetry={onRetry} message={errorMessage} />
+      ) : (
+        props.children
+      )}
+    </Page>
   );
 };
 

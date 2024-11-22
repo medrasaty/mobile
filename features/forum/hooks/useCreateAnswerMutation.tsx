@@ -1,6 +1,8 @@
 import useAuthClient from "@/hooks/useAuthClient";
 import { Answer } from "@/types/forum.types";
-import { AnswersQueryKeys } from "@forum/answers/keys";
+import { AnswersQK } from "@forum/answers/keys";
+import { createAnswer } from "@forum/answers/requests";
+import { answerSchemaType } from "@forum/answers/schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Burnt from "burnt";
 import { t } from "i18next";
@@ -13,25 +15,18 @@ export default function useCreateAnswerMutation() {
    * - optemistic updates for questions answer list
    * - error handling in case no internet connection or something
    */
-  const client = useAuthClient();
+  const c = useAuthClient();
   const qc = useQueryClient();
 
-  const createanswerRequest = async (data: any): Promise<Answer> => {
-    const response = await client.post(`/forum/answers/`, data);
-    return {
-      ...response.data,
-      ratings_value: 0,
-    };
-  };
-
   const mutation = useMutation({
-    mutationFn: createanswerRequest,
+    mutationFn: async (data: answerSchemaType) => createAnswer(c, data),
     onSuccess: (newAnswer: Answer | undefined, variables) => {
       qc.setQueryData(
-        AnswersQueryKeys.withParams({ question: variables.question }),
+        AnswersQK.withParams({ question: variables.question }),
 
         (oldAnswers: Answer[] | undefined) => {
           if (!oldAnswers) return [newAnswer];
+          // At the beginning of list
           return [newAnswer, ...oldAnswers];
         }
       );

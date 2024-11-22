@@ -3,7 +3,7 @@ import { Answer, Reply } from "@/types/forum.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Axios } from "axios";
 import { transformDates } from "../utils";
-import { AnswersQueryKeys } from "@forum/answers/keys";
+import { AnswersQK } from "@forum/answers/keys";
 
 type replyData = {
   answer: Answer["id"];
@@ -30,7 +30,7 @@ export default function useCreateReplyMutation() {
       });
 
       qc.invalidateQueries({
-        queryKey: AnswersQueryKeys.all,
+        queryKey: AnswersQK.all,
       });
     },
   });

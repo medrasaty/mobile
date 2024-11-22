@@ -1,4 +1,4 @@
-export const AnswersQueryKeys = {
+export const AnswersQK = {
   all: ["answers"] as const,
-  withParams: (params: any) => [...AnswersQueryKeys.all, params],
+  withParams: (params: any) => [...AnswersQK.all, params],
 };

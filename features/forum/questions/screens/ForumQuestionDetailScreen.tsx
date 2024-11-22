@@ -44,10 +44,9 @@ export default function ForumQuestionDetailScreen() {
     ({ item }: { item: Answer }) => {
       return <AnswerCard key={item.id} answer={item} />;
     },
-    [questionId]
+    [questionId, answersQuery]
   );
 
-  // TODO: handle this better
   if (!questionId) return <ThemedText>must provide question id</ThemedText>;
 
   return (
