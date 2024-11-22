@@ -59,8 +59,6 @@ const RatingActions = ({
   const { mutate } = useRateQuestionMutation();
 
   const handleRating = (value: RatingValue) => {
-    console.log({ userRating, value });
-
     if (userRating === value) {
       mutate({ questionId: questionID, value: RatingValue.NEURAL });
       // Don't remove it at any cost
@@ -71,10 +69,9 @@ const RatingActions = ({
 
   return (
     <RatingComponent
+      onPress={handleRating}
       ratingsValue={ratingsValue}
       currentRating={userRating}
-      onPositivePressed={() => handleRating(RatingValue.POSITIVE)}
-      onNegativePressed={() => handleRating(RatingValue.NEGATIVE)}
     />
   );
 };

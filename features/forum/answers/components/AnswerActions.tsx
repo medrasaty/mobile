@@ -26,25 +26,19 @@ const RatingActions = ({ answer }: { answer: Answer }) => {
   const { user_rating } = answer;
   const { mutate } = useAnswerRatingMutation(answer);
 
-  const isPositivePressed = user_rating === RatingValue.POSITIVE;
-  const isNegativePressed = user_rating === RatingValue.NEGATIVE;
-  const { POSITIVE, NEGATIVE, NEURAL } = RatingValue;
+  const { NEURAL } = RatingValue;
 
-  const handlePositivePressed = () => {
-    const value = isPositivePressed ? NEURAL : POSITIVE;
-    return mutate(value);
-  };
-
-  const handleNegativePressed = () => {
-    const value = isNegativePressed ? NEURAL : NEGATIVE;
+  const handleRating = (value: RatingValue) => {
+    if (value === user_rating) {
+      return mutate(NEURAL);
+    }
     return mutate(value);
   };
 
   return (
     <Rating
+      onPress={handleRating}
       ratingsValue={answer.ratings_value}
-      onPositivePressed={handlePositivePressed}
-      onNegativePressed={handleNegativePressed}
       currentRating={answer.user_rating}
     />
   );

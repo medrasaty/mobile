@@ -4,17 +4,15 @@ import { ThemedText } from "@/components/ThemedText";
 import { RatingValue } from "@/types/forum.types";
 type RatingProps = {
   ratingsValue: number;
-  onPositivePressed: () => void;
-  onNegativePressed: () => void;
   positiveLoading?: boolean;
   negativeLoading?: boolean;
+  onPress: (value: RatingValue) => void;
   currentRating: RatingValue;
 };
 
 export default function RatingComponent({
   ratingsValue,
-  onPositivePressed,
-  onNegativePressed,
+  onPress,
   currentRating = 0,
 }: RatingProps) {
   return (
@@ -22,12 +20,16 @@ export default function RatingComponent({
       <RatingButton
         isPressed={currentRating === RatingValue.POSITIVE}
         direction="up"
-        onPress={onPositivePressed}
+        onPress={() => {
+          onPress(RatingValue.POSITIVE);
+        }}
       />
       <RatingValueText value={ratingsValue} />
       <RatingButton
         isPressed={currentRating === RatingValue.NEGATIVE}
-        onPress={onNegativePressed}
+        onPress={() => {
+          onPress(RatingValue.NEGATIVE);
+        }}
         direction="down"
       />
     </RatingContainer>
