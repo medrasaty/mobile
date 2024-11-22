@@ -1,9 +1,11 @@
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import useAuthClient from "@/hooks/useAuthClient";
-import { Answer, RatingValue } from "@/types/forum.types";
+import { RatingValue } from "@/types/forum.types";
+import { Answer } from "@forum/answers/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Axios } from "axios";
 import { calcNewRatingsValue } from "../utils";
+import { AnswersQK } from "@forum/answers/keys";
 
 async function RateAnswer(client: Axios, answer: Answer, value: RatingValue) {
   const data = { value: value };
@@ -12,15 +14,17 @@ async function RateAnswer(client: Axios, answer: Answer, value: RatingValue) {
 
 export default function useAnswerRatingMutation(answer: Answer) {
   const client = useAuthClient();
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const { show: showSnackbark } = useSnackbar();
 
   return useMutation({
     mutationFn: (userRating: RatingValue) =>
       RateAnswer(client, answer, userRating),
     onMutate: (userRating: RatingValue) => {
-      const queryKey = ["answers", answer.question];
-      queryClient.cancelQueries({ queryKey: queryKey });
+      const queryKey = AnswersQK.withParams({
+        question: answer.question.id ?? answer.question,
+      });
+      qc.cancelQueries({ queryKey: queryKey });
 
       const updater = (oldDate: Answer[]) => {
         // I want to grap the specific answer and update its ratings_value and user_rating accordingly
@@ -45,7 +49,7 @@ export default function useAnswerRatingMutation(answer: Answer) {
         });
       };
 
-      queryClient.setQueryData(queryKey, updater);
+      qc.setQueryData(queryKey, updater);
     },
 
     onError: async (error) => {
@@ -53,6 +57,12 @@ export default function useAnswerRatingMutation(answer: Answer) {
       showSnackbark("something went wrong!");
       // TODO resetRating
     },
+    onSettled: (_data, _error, variables) => {
+      qc.invalidateQueries({
+        queryKey: AnswersQK.withParams({
+          question: answer.question.id ?? answer.question,
+        }),
+      });
+    },
   });
 }
-

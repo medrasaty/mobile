@@ -4,6 +4,7 @@ import { Axios, AxiosRequestConfig } from "axios";
 import { answerSchemaType } from "./schema";
 import { genFileUploadFromPath } from "@/lib/utils";
 import { parse } from "react-native-svg";
+import { RatingValue } from "@/types/forum.types";
 
 export async function getAnswers(client: Axios, params: any = {}) {
   return (
@@ -52,4 +53,13 @@ export async function mutateAnswer(
 
   const res = await c.request(config);
   return res.data;
+}
+
+export async function RateAnswer(
+  client: Axios,
+  answer: Answer,
+  value: RatingValue
+) {
+  const data = { value: value };
+  return await client.post(`/forum/answers/${answer.id}/rate/`, data);
 }

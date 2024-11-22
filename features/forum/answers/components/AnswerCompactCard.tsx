@@ -2,19 +2,12 @@ import Row from "@/components/Row";
 import { Pressable, View, ViewProps } from "react-native";
 import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import UserInfo from "@/components/UserInfo";
-import {
-  Divider,
-  IconButton,
-  Menu,
-  Surface,
-  useTheme,
-} from "react-native-paper";
+import { Surface, useTheme } from "react-native-paper";
 import { DEFAULT_CONTAINER_SPACING, debugStyle } from "@/constants/styels";
 import { useCallback, useMemo } from "react";
 import { useRouter } from "expo-router";
 import { t } from "i18next";
-import { Answer } from "@/types/forum.types";
+import { Answer } from "@forum/answers/types";
 import { Ionicons } from "@expo/vector-icons";
 import RelativeDate from "@/components/Date";
 import { d } from "@/lib/dates";

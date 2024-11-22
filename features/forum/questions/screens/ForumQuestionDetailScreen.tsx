@@ -1,7 +1,7 @@
 import Text from "@/components/styled/Text";
 import { Container } from "@/components/styled/View";
 import { ThemedText } from "@/components/ThemedText";
-import AnswerCard from "@forum/components/answer/AnswerCard";
+import AnswerCard from "@forum/answers/components/AnswerCard";
 import CreateAnswer, {
   CREATE_ANSWER_FAB_MARGIN,
 } from "@forum/components/answer/CreateAnswer";
