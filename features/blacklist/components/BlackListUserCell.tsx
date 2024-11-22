@@ -20,7 +20,7 @@ type BlackListUserCellProps = {
 
 const BlackListUserCell = ({ user }: BlackListUserCellProps) => {
   const gotToUser = () => {
-    router.push(`/users/${user.username}`);
+    router.push(`/users/${user.username}/detail`);
   };
 
   return (

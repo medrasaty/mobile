@@ -35,9 +35,9 @@ export default function EditQuestionScreen({
     tags: q.data?.tags ?? [],
   };
 
-  if (q.isPending) return <FullPageLoadingIndicator />;
-
   const { mutate: update } = useUpdateQuestionMutation();
+
+  if (q.isPending) return <FullPageLoadingIndicator />;
 
   return (
     <Page>
@@ -50,7 +50,7 @@ export default function EditQuestionScreen({
             { questionId: questionId, data: values },
             {
               onSuccess: () => {
-                router.push(questionDetail({ questionId }));
+                router.replace(questionDetail({ questionId }));
               },
               onSettled: () => {
                 setSubmitting(false);

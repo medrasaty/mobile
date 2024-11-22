@@ -25,7 +25,7 @@ export default function CreateQuestionScreen() {
           create(values, {
             onSuccess: (data, variables) => {
               // navigate to question detail page
-              router.push(questionDetail({ questionId: data.id }));
+              router.replace(questionDetail({ questionId: data.id }));
             },
             onSettled: () => {
               setSubmitting(false);

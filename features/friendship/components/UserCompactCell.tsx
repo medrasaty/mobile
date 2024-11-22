@@ -1,11 +1,10 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { BaseUser } from "@/types/user.types";
-import { Pressable, StyleSheet, useWindowDimensions } from "react-native";
-import { DEFAULT_CONTAINER_SPACING, debugStyle } from "@/constants/styels";
-import { useMemo } from "react";
+import { Pressable, StyleSheet } from "react-native";
+import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
 import UserAvatar from "@/components/UserAvatar";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import Row from "@/components/Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, useTheme } from "react-native-paper";
@@ -22,7 +21,7 @@ type UserCompactCellProps = {
 
 const UserCompactCell = ({ user }: UserCompactCellProps) => {
   const goToUser = () => {
-    router.push(`/users/${user.username}`);
+    router.push(`/users/${user.username}/detail`);
   };
 
   return (

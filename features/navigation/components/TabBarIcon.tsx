@@ -3,6 +3,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Badge } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { useUnreadNotificationsCount } from "@/features/notifications/hooks/useNotifications";
+import { ThemedText } from "@components/ThemedText";
 
 export type TabBarIconProps = {
   icon_name: string;
