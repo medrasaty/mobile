@@ -1,10 +1,9 @@
-import Page from "@components/Page";
 import ServerView, { ServerPage } from "@components/ServerView";
 import { ThemedText } from "@components/ThemedText";
 import { useQuestionIdParams } from "@forum/questions/hooks";
 import Animated from "react-native-reanimated";
 import { Container } from "@components/styled";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import QuestionDetailInfo from "@forum/components/question/detail/QuestionDetailInfo";
 import { router } from "expo-router";
 import { Keyboard } from "react-native";
@@ -31,15 +30,6 @@ const EditAnswerScreen = () => {
   const ref = useRef<Animated.ScrollView>(null);
 
   const { mutate: edit } = useMutateAnswer(answerId);
-
-  useEffect(() => {
-    {
-      /* fix glitch in response , maybe use keyboard avoiding view properly */
-    }
-    Keyboard.addListener("keyboardDidShow", () => {
-      ref.current?.scrollToEnd({ animated: true });
-    });
-  }, []);
 
   const initialValues = {
     question: questionId ?? "",

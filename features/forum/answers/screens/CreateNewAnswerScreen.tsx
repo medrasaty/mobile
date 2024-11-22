@@ -4,7 +4,7 @@ import { ThemedText } from "@components/ThemedText";
 import { useQuestionIdParams } from "@forum/questions/hooks";
 import Animated from "react-native-reanimated";
 import { Container } from "@components/styled";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import QuestionDetailInfo from "@forum/components/question/detail/QuestionDetailInfo";
 import { router } from "expo-router";
 import { Keyboard } from "react-native";
@@ -20,15 +20,6 @@ const CreateNewAnswerScreen = () => {
   if (!questionId) return <ThemedText>you can not view this screen</ThemedText>;
 
   const ref = useRef<Animated.ScrollView>(null);
-
-  useEffect(() => {
-    {
-      /* fix glitch in response , maybe use keyboard avoiding view properly */
-    }
-    Keyboard.addListener("keyboardDidShow", () => {
-      ref.current?.scrollToEnd({ animated: true });
-    });
-  }, []);
 
   const { mutate: create } = useMutateAnswer();
 
