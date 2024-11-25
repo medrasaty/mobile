@@ -12,39 +12,68 @@ import { Question } from "@/types/forum.types";
 import { Ionicons } from "@expo/vector-icons";
 import Date from "@/components/Date";
 import MoreOptions from "./QuestionCardOptionsMenu";
+import { questionDetail } from "@/lib/routing";
 
 type QuestionCardProps = {
   question: Question;
+  compact?: boolean;
 };
 
-const ForumQuestionCard = ({ question }: QuestionCardProps) => {
+const ForumQuestionCard = ({
+  question,
+  compact = false,
+}: QuestionCardProps) => {
   const { owner } = question;
   const router = useRouter();
   const theme = useTheme();
 
   const goToQuestion = useCallback(() => {
-    router.push({
-      pathname: `/questions/details`,
-      params: {
-        questionId: question.id,
-      },
-    });
+    router.push(questionDetail({ questionId: question.id }));
   }, [question.id]);
 
   return (
-    <Pressable onPress={goToQuestion}>
+    <Pressable
+      style={{ height: FORUM_QUESTION_CARD_HEIGHT }}
+      onPress={goToQuestion}
+    >
       <Surface
         mode="flat"
-        elevation={0}
-        style={[styles.container, { borderRadius: theme.roundness }]}
+        elevation={compact ? 1 : 0}
+        style={[
+          styles.container,
+          {
+            borderRadius: theme.roundness,
+            width: compact ? FORUM_QUESTION_CARD_HEIGHT : "auto",
+          },
+        ]}
       >
         <Row style={{ gap: 20 }}>
           <View style={{ flex: 1 }}>
-            <Title title={question.title} />
-            <Subject subject="math" />
+            {/* Title */}
+            <ThemedText
+              numberOfLines={2}
+              bold
+              variant={compact ? "titleSmall" : "titleLarge"}
+            >
+              {question.title}
+            </ThemedText>
+
+            {/* Subject */}
+            <ThemedText color={theme.colors.tertiary} variant="labelSmall">
+              {question.subject.name}
+            </ThemedText>
+
+            {/* Description */}
             <View style={{ marginTop: 4 }}>
-              <Description description={question.text} />
+              <ThemedText
+                style={{ opacity: 0.8 }}
+                numberOfLines={2}
+                variant={compact ? "bodySmall" : "bodyMedium"}
+              >
+                {question.text}
+              </ThemedText>
             </View>
+
             <View style={{ marginTop: 5 }}>
               <Statistics
                 views={question.views}
@@ -52,7 +81,7 @@ const ForumQuestionCard = ({ question }: QuestionCardProps) => {
                 rating={question.ratings_value}
               />
               <Date
-                variant="labelMedium"
+                variant={compact ? "labelSmall" : "labelMedium"}
                 style={{
                   marginRight: DEFAULT_CONTAINER_SPACING,
                   marginTop: 6,
@@ -61,11 +90,13 @@ const ForumQuestionCard = ({ question }: QuestionCardProps) => {
               />
             </View>
           </View>
-          <MoreOptions
-            ownerUsername={question.owner.username}
-            contentTypeId={question.contenttype}
-            questionId={question.id}
-          />
+          {!compact && (
+            <MoreOptions
+              ownerUsername={question.owner.username}
+              contentTypeId={question.contenttype}
+              questionId={question.id}
+            />
+          )}
         </Row>
 
         <Row
@@ -77,52 +108,11 @@ const ForumQuestionCard = ({ question }: QuestionCardProps) => {
             username={owner.username}
             schoolName={owner.family_name}
             avatarUrl={owner.profile_picture}
-            avatarSize={45}
+            avatarSize={compact ? 35 : 45}
           />
         </Row>
       </Surface>
     </Pressable>
-  );
-};
-
-export const Title = ({ title, ...props }: { title: string } & ViewProps) => {
-  return (
-    <View {...props}>
-      <ThemedText numberOfLines={2} bold variant="titleLarge">
-        {title}
-      </ThemedText>
-    </View>
-  );
-};
-
-export const Subject = ({
-  subject,
-  ...props
-}: { subject: string } & ViewProps) => {
-  const theme = useTheme();
-  return (
-    <View {...props}>
-      <ThemedText color={theme.colors.tertiary} variant="labelSmall">
-        {subject}
-      </ThemedText>
-    </View>
-  );
-};
-
-export const Description = ({
-  description,
-  ...props
-}: { description: string } & ViewProps) => {
-  return (
-    <View {...props}>
-      <ThemedText
-        style={{ opacity: 0.8 }}
-        numberOfLines={2}
-        variant="bodyMedium"
-      >
-        {description}
-      </ThemedText>
-    </View>
   );
 };
 

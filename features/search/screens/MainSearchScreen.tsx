@@ -1,44 +1,94 @@
-import Page from "@/components/Page";
 import { SafeAreaView } from "@/components/styled";
-import { router, useRouter } from "expo-router";
-import { useState } from "react";
+import { router } from "expo-router";
 import { Searchbar } from "react-native-paper";
-import useSearchQuery from "../hooks";
-import CenterPage from "@components/CenterPage";
-import { ThemedText } from "@components/ThemedText";
 import { useTranslation } from "react-i18next";
+import { useSearchStore } from "../store";
+import { ThemedText } from "@components/ThemedText";
+import { FlatList, ScrollView, View } from "react-native";
+import { useForumQuestions } from "@forum/queries";
+import ForumQuestionCard, {
+  FORUM_QUESTION_CARD_HEIGHT,
+} from "@forum/questions/components/QuestionsCard";
+import {
+  containerMargins,
+  containerPaddings,
+  debugStyle,
+} from "@/constants/styels";
+import LoadingIndicator from "@components/LoadingIndicator";
 
 const MainSearchScreen = () => {
-  const searchQuery = useSearchQuery();
+  console.log("main rendering");
+
+  return (
+    <SafeAreaView>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Search />
+        {/* Latest Questions */}
+        <View style={{ gap: 20, marginTop: 20 }}>
+          <HSection />
+          <HSection />
+          <HSection />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+export type HSectionProps = {};
+
+export const HSection = () => {
+  const q = useForumQuestions();
+  return (
+    <View>
+      <ThemedText style={containerMargins} variant="displaySmall">
+        احدث الأسئلة
+      </ThemedText>
+      {q.data ? (
+        <FlatList
+          contentContainerStyle={containerPaddings}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={q.data}
+          renderItem={({ item }) => {
+            return <ForumQuestionCard compact question={item} />;
+          }}
+        />
+      ) : (
+        <View
+          style={{
+            justifyContent: "center",
+            height: FORUM_QUESTION_CARD_HEIGHT,
+            ...debugStyle,
+          }}
+        >
+          <LoadingIndicator size={"large"} />
+        </View>
+      )}
+    </View>
+  );
+};
+
+export const Search = () => {
+  const { query, setQuery } = useSearchStore();
   const { t } = useTranslation();
-  const [searchValue, setSearchValue] = useState(searchQuery);
+  console.log("search rendering");
 
   const hanldeSearchIconPress = () => {
-    if (searchValue.trim() !== "")
+    if (query.trim() !== "")
       router.push({
-        pathname: "/search_result",
-        params: {
-          q: searchValue.trim(), // clean query
-        },
+        pathname: "/search/questions",
       });
   };
 
   return (
-    <SafeAreaView>
-      <Page container>
-        <Searchbar
-          value={searchValue}
-          onIconPress={hanldeSearchIconPress}
-          onChangeText={(text) => setSearchValue(text)}
-          placeholder={t("Search")}
-          blurOnSubmit
-          onKeyPress={(e) => console.log(e.nativeEvent.key)}
-        />
-        <CenterPage>
-          <ThemedText>{t("nested.greeting", { name: "ahmed" })}</ThemedText>
-        </CenterPage>
-      </Page>
-    </SafeAreaView>
+    <Searchbar
+      value={query}
+      onIconPress={hanldeSearchIconPress}
+      onChangeText={(text) => setQuery(text)}
+      placeholder={t("Search")}
+      blurOnSubmit
+      onKeyPress={(e) => console.log(e.nativeEvent.key)}
+    />
   );
 };
 

@@ -3,7 +3,6 @@ import { SafeAreaView } from "@/components/styled";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import useSearch from "../queries";
 import { ScreenListV2 } from "@/components/ScreenFlatList";
-import QuestionCard from "@/features/forum/components/question/QuestionCard";
 import { Question } from "@/types/forum.types";
 import { Searchbar, useTheme } from "react-native-paper";
 import { containerMargins } from "@/constants/styels";
@@ -13,16 +12,17 @@ import { View, ViewProps } from "react-native";
 import useSearchQuery from "../hooks";
 import { ThemedText } from "@/components/ThemedText";
 import { t } from "i18next";
+import ForumQuestionCard from "@forum/questions/components/QuestionsCard";
 
 type SearchResultScreenProps = {};
 
 const QuestionsSearchResultScreen = ({}: SearchResultScreenProps) => {
   const searchQuery = useSearchQuery();
 
-  const q = useSearch(searchQuery);
+  const q = useSearch({ query: searchQuery ?? "", type: "questions" });
 
   const renderItem = ({ item, index }: { item: Question; index: number }) => {
-    return <QuestionCard question={item} />;
+    return <ForumQuestionCard question={item} />;
   };
 
   const renderEmptyList = () => {
