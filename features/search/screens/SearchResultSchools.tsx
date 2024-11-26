@@ -5,7 +5,8 @@ import useSearch from "../queries";
 import { ScreenListV2 } from "@/components/ScreenFlatList";
 import { ThemedText } from "@/components/ThemedText";
 import { t } from "i18next";
-import { School } from "@/types/school.types";
+import SchoolCell from "@features/schools/components/SchoolCell";
+import { School } from "@features/schools/types";
 
 type SearchResultSchoolsScreenProps = {} & ViewProps;
 
@@ -17,7 +18,7 @@ const SearchResultSchoolsScreen = ({
   const q = useSearch<School>({ query, type: "schools" });
 
   const renderItem = ({ item, index }: { item: School; index: number }) => {
-    return <ThemedText style={{ margin: 20 }}>{item.name}</ThemedText>;
+    return <SchoolCell school={item} />;
   };
 
   const renderEmptyList = () => {

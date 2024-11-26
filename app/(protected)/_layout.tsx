@@ -6,7 +6,6 @@ import usePushNotificationFeature from "@/features/notifications/hooks/usePushNo
 import { useSession } from "@/hooks/useSession";
 import { Redirect, Stack } from "expo-router";
 import { t } from "i18next";
-import * as React from "react";
 
 export default function ProtectedLayout() {
   const { session, isLoading } = useSession();
@@ -43,10 +42,12 @@ export default function ProtectedLayout() {
           options={{ headerShown: true, headerTitle: t("edit_question") }}
         />
         <Stack.Screen name="users/[username]" />
-        <Stack.Screen name="search_result" />
         <Stack.Screen
           name="search"
-          options={{ headerShown: true, headerTitle: t("result") }}
+          options={{
+            headerShown: true,
+            headerTitle: t("result"),
+          }}
         />
         <Stack.Screen name="schools/[schoolId]" />
         <Stack.Screen

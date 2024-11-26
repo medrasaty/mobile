@@ -1,4 +1,6 @@
 import { Question } from "@/types/forum.types";
+import { School } from "@/types/school.types";
+import { router } from "expo-router";
 
 type questionDetailRouteParams = {
   questionId: Question["id"];
@@ -18,3 +20,12 @@ export function editQuestion(params: { questionId: Question["id"] }) {
     params: params,
   };
 }
+
+export const schools = {
+  detail: (schoolId: School["id"]) => `/schools/${schoolId}/detail`,
+};
+
+// Experminent
+export const goToSchool = (schoolId: School["id"]) => {
+  router.push(schools.detail(schoolId));
+};

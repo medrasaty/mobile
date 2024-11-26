@@ -1,11 +1,12 @@
 import useTopTabsScreenOptions from "@/features/navigation/hooks/useTopTabsScreenOptions";
 import TopTabs from "@/features/navigation/layouts/TopTabs";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 type FriendsLayoutProps = {};
 
 const FriendsLayout = ({}: FriendsLayoutProps) => {
   const screenOptions = useTopTabsScreenOptions();
+  const { t } = useTranslation();
   return (
     <TopTabs layoutDirection={"rtl"} screenOptions={screenOptions}>
       <TopTabs.Screen name="followers" options={{ title: t("followers") }} />

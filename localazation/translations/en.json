@@ -86,5 +86,7 @@
   "Submit": "Submit",
   "edit": "edit",
   "Edit": "Edit",
-  "required": "required"
+  "required": "required",
+  "users": "users",
+  "schools": "schools"
 }
