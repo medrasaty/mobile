@@ -11,6 +11,7 @@ import ForumQuestionCard from "@forum/questions/components/QuestionsCard";
 import { School } from "@/types/school.types";
 import SchoolMemberCell from "@features/schools/components/SchoolMemberCell";
 import { BaseUser } from "@/types/user.types";
+import BaseUserCell from "@components/UserCell";
 
 type SearchResultUsersScreenProps = {} & ViewProps;
 
@@ -22,7 +23,7 @@ const SearchResultUsersScreen = ({
   const q = useSearch<BaseUser>({ query, type: "users" });
 
   const renderItem = ({ item, index }: { item: BaseUser; index: number }) => {
-    return <SchoolMemberCell member={item} />;
+    return <BaseUserCell user={item} />;
   };
 
   const renderEmptyList = () => {

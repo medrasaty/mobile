@@ -15,7 +15,7 @@ type UserAvatarProps = {
 };
 
 /**
- * @deprecated
+ * @deprecated:{use UserAvatarV2 instead}
  */
 const UserAvatar = ({ url, size, style }: UserAvatarProps) => {
   return (

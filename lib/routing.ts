@@ -1,5 +1,6 @@
 import { Question } from "@/types/forum.types";
 import { School } from "@/types/school.types";
+import { BaseUser } from "@/types/user.types";
 import { router } from "expo-router";
 
 type questionDetailRouteParams = {
@@ -28,4 +29,8 @@ export const schools = {
 // Experminent
 export const goToSchool = (schoolId: School["id"]) => {
   router.push(schools.detail(schoolId));
+};
+
+export const users = {
+  details: (username: BaseUser["username"]) => `/users/${username}/detail`,
 };
