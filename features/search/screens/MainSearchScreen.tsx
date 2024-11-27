@@ -11,7 +11,9 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import ForumQuestionCard from "@forum/questions/components/QuestionsCard";
+import ForumQuestionCard, {
+  FORUM_QUESTION_CARD_HEIGHT,
+} from "@forum/questions/components/QuestionsCard";
 import { containerMargins, containerPaddings } from "@/constants/styels";
 import LoadingIndicator from "@components/LoadingIndicator";
 import {
@@ -20,8 +22,11 @@ import {
   useLatestUsers,
 } from "../queries";
 import SchoolCell from "@features/schools/components/SchoolCell";
-import SchoolMemberCell from "@features/schools/components/SchoolMemberCell";
+import SchoolMemberCell, {
+  MEMBER_CELL_HEIGHT,
+} from "@features/schools/components/SchoolMemberCell";
 import { UseQueryResult } from "@tanstack/react-query";
+import { FlashList, FlashListProps } from "@shopify/flash-list";
 
 const MainSearchScreen = () => {
   console.log("main rendering");
@@ -54,6 +59,7 @@ export const LatestQuestions = () => {
       title={"احدث السؤالات"}
       data={q.data}
       status={q.status}
+      estimatedItemHeight={FORUM_QUESTION_CARD_HEIGHT}
       renderItem={({ item }) => <ForumQuestionCard compact question={item} />}
     />
   );
@@ -66,6 +72,7 @@ export const LatestSchools = () => {
       title={"احدث المدارس"}
       data={q.data}
       status={q.status}
+      estimatedItemHeight={150}
       renderItem={({ item }) => <SchoolCell school={item} />}
     />
   );
@@ -78,6 +85,7 @@ export const LatestUsers = () => {
       title={"احدث المستخدمين"}
       data={q.data}
       status={q.status}
+      estimatedItemHeight={MEMBER_CELL_HEIGHT}
       renderItem={({ item }) => <SchoolMemberCell member={item} />}
     />
   );
@@ -86,6 +94,7 @@ export const LatestUsers = () => {
 type LatestSectionProps<T> = {
   title: string;
   status: UseQueryResult["status"];
+  estimatedItemHeight: number;
 } & FlatListProps<T>;
 
 const LatestSection = <T,>({
@@ -93,6 +102,7 @@ const LatestSection = <T,>({
   data,
   status,
   renderItem,
+  estimatedItemHeight: estimatedItemSize,
   ...props
 }: LatestSectionProps<T>) => {
   return (
@@ -102,7 +112,6 @@ const LatestSection = <T,>({
       </ThemedText>
       {status === "success" && data ? (
         <FlatList
-          contentContainerStyle={containerPaddings}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={data}
@@ -114,7 +123,10 @@ const LatestSection = <T,>({
           {...props}
         />
       ) : (
-        <LoadingIndicator />
+        // placeholder the same size as the item to avoid UI jumping
+        <View style={{ height: estimatedItemSize, justifyContent: "center" }}>
+          <LoadingIndicator />
+        </View>
       )}
     </View>
   );
