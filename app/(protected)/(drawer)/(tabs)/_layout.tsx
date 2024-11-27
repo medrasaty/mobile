@@ -1,6 +1,5 @@
 import LoadingDialog from "@/components/LoadingDialog";
 import { LOGIN_PAGE } from "@/constants/routes";
-import { IndexAppBar } from "@/features/navigation/components/AppBar";
 import BottomTabNavigationBar from "@/features/navigation/components/BottomNavigationBar";
 import TabBarIcon, {
   NotificationsTabBarIcon,
@@ -44,10 +43,6 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          headerShown: true,
-          header: (props) => {
-            return <IndexAppBar title={t("Home")} />;
-          },
           tabBarLabel: t("Home"),
           tabBarIcon: (props) => (
             <TabBarIcon

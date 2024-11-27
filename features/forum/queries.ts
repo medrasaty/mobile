@@ -8,7 +8,8 @@ export function useForumQuestions(params: any = {}) {
   const client = useAuthClient();
 
   return useQuery({
-    queryKey: QuestionsQueryKeys.withParams(params),
-    queryFn: async () => getForumQuestions(client, params),
+    queryKey: QuestionsQueryKeys.withParams({ expands: "subject", ...params }),
+    queryFn: async () =>
+      getForumQuestions(client, { expands: "subject", ...params }),
   });
 }

@@ -166,13 +166,11 @@ export function ScreenListV3<T>({
   const { data } = q;
 
   return (
-    <>
-      <FlashList
-        ListEmptyComponent={renderEmptyList()}
-        data={data ?? []}
-        {...listProps}
-      />
-    </>
+    <FlashList
+      ListEmptyComponent={renderEmptyList()}
+      data={data ?? []}
+      {...listProps}
+    />
   );
 }
 

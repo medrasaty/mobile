@@ -14,6 +14,9 @@ import Date from "@/components/Date";
 import MoreOptions from "./QuestionCardOptionsMenu";
 import { questionDetail } from "@/lib/routing";
 
+export const FORUM_QUESTION_CARD_HEIGHT = 240;
+export const COMPACT_QUESTION_CARD_HEIGHT = 200;
+
 type QuestionCardProps = {
   question: Question;
   compact?: boolean;
@@ -33,7 +36,11 @@ const ForumQuestionCard = ({
 
   return (
     <Pressable
-      style={{ height: FORUM_QUESTION_CARD_HEIGHT }}
+      style={{
+        height: compact
+          ? COMPACT_QUESTION_CARD_HEIGHT
+          : FORUM_QUESTION_CARD_HEIGHT,
+      }}
       onPress={goToQuestion}
     >
       <Surface
@@ -43,6 +50,7 @@ const ForumQuestionCard = ({
           styles.container,
           {
             borderRadius: theme.roundness,
+            // rectangular card when compact
             width: compact ? FORUM_QUESTION_CARD_HEIGHT : "auto",
           },
         ]}
@@ -51,9 +59,9 @@ const ForumQuestionCard = ({
           <View style={{ flex: 1 }}>
             {/* Title */}
             <ThemedText
-              numberOfLines={2}
+              numberOfLines={compact ? 1 : 2}
               bold
-              variant={compact ? "titleSmall" : "titleLarge"}
+              variant={"titleLarge"}
             >
               {question.title}
             </ThemedText>
@@ -67,7 +75,7 @@ const ForumQuestionCard = ({
             <View style={{ marginTop: 4 }}>
               <ThemedText
                 style={{ opacity: 0.8 }}
-                numberOfLines={2}
+                numberOfLines={compact ? 1 : 2}
                 variant={compact ? "bodySmall" : "bodyMedium"}
               >
                 {question.text}
@@ -176,10 +184,6 @@ export const RatingIcon = ({ rating }: { rating: number }) => {
     />
   );
 };
-
-export const ReportQuestion = () => {};
-
-export const FORUM_QUESTION_CARD_HEIGHT = 240;
 
 const styles = StyleSheet.create({
   container: {

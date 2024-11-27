@@ -2,13 +2,21 @@ import { useAnimatedAppBar } from "@/contexts";
 import { useSession } from "@/hooks/useSession";
 import { useNavigation } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
-import { Appbar, AppbarHeaderProps, Divider } from "react-native-paper";
+import {
+  Appbar,
+  AppbarContentProps,
+  AppbarHeaderProps,
+  Divider,
+  useTheme,
+} from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
 type AppBarProps = React.PropsWithChildren<{
   title: string | undefined;
+  titleStyle?: AppbarContentProps["titleStyle"];
   backAction?: boolean;
   opacity?: number;
   options?: AppbarHeaderProps;
@@ -19,6 +27,7 @@ const APPBAR_HEIGHT = modeAppbarHeight[APPBAR_MODE];
 
 export function AppBar({
   title,
+  titleStyle,
   backAction = true,
   opacity,
   options,
@@ -36,7 +45,10 @@ export function AppBar({
         {backAction && canGoBack() && (
           <Appbar.BackAction onPress={() => goBack()} />
         )}
-        <Appbar.Content title={title} />
+        <Appbar.Content
+          titleStyle={[titleStyle, { fontSize: 27 }]}
+          title={title}
+        />
         {props.children}
       </Appbar.Header>
     </>
@@ -69,15 +81,22 @@ export function AnimatedAppBar({ title, children }: AppBarProps) {
   );
 }
 
-export const IndexAppBar = ({ title }: { title: string }) => {
+export const HomeAppBar = () => {
   const { signOut } = useSession();
+  const { t } = useTranslation();
+  const theme = useTheme();
 
   return (
     <>
-      <AnimatedAppBar backAction title={title}>
+      <AppBar
+        titleStyle={{ color: theme.colors.secondary }}
+        backAction={false}
+        title={t("Home")}
+      >
         <Appbar.Action icon="magnify" onPress={() => {}} />
-        <Appbar.Action icon="logout" onPress={() => signOut()} />
-      </AnimatedAppBar>
+        <Appbar.Action icon="dots-vertical" onPress={() => signOut()} />
+      </AppBar>
+      <Divider style={{ backgroundColor: theme.colors.primary }} />
     </>
   );
 };

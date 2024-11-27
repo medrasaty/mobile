@@ -10,14 +10,61 @@ import { FlashList } from "@shopify/flash-list";
 import { useFocusEffect } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { ActivityIndicator, RefreshControl, ViewProps } from "react-native";
-import { Divider } from "react-native-paper";
+import { Appbar, Divider } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import ForumQuestionCard from "@forum/questions/components/QuestionsCard";
+import ForumQuestionCard, {
+  FORUM_QUESTION_CARD_HEIGHT,
+} from "@forum/questions/components/QuestionsCard";
 import PlaceholderPage from "@components/PlaceholderPage";
+import { useForumQuestions } from "@forum/queries";
+import Page from "@components/Page";
+import { ScreenListV2, ScreenListV3 } from "@components/ScreenFlatList";
+import { AppBar, HomeAppBar } from "@features/navigation/components/AppBar";
+import FilterOptionsView from "@components/FilterOptionsView";
+import useFilterOptions from "@/hooks/useFilterOptions";
+import { t } from "i18next";
 
 export default function HomeScreen() {
-  return <PlaceholderPage title="home" />;
+  const q = useForumQuestions();
+  const { options, onFilterChange, currentFilter } = useFilterOptions([
+    // TODO: impolement this filtering
+    { label: "for you", value: "foryou" },
+    { label: "following", value: "followings" },
+  ]);
+
+  const renderItem = ({ item, index }: { item: Question; index: number }) => {
+    return <ForumQuestionCard question={item} />;
+  };
+
+  const renderHeader = () => {
+    return (
+      <FilterOptionsView
+        filterOptions={options}
+        onFilterChange={onFilterChange}
+        currentFilter={currentFilter}
+      />
+    );
+  };
+
+  return (
+    <Page>
+      <HomeAppBar />
+      <ScreenListV2
+        ListHeaderComponent={renderHeader}
+        estimatedItemSize={FORUM_QUESTION_CARD_HEIGHT}
+        contentContainerStyle={{ paddingTop: 20, paddingBottom: 40 }}
+        showsVerticalScrollIndicator={false}
+        renderItem={renderItem}
+        ItemSeparatorComponent={Divider}
+        data={q.data}
+        isPending={q.isPending}
+        isError={q.isError}
+        onRetry={q.refetch}
+        errorMessage="error"
+      />
+    </Page>
+  );
 }
 
 export function HomeIndexScreen() {

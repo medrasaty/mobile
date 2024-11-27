@@ -11,6 +11,7 @@ import Row from "@/components/Row";
 import ReputationInfo from "@/components/ReputationInfo";
 import { Ionicons } from "@expo/vector-icons";
 import { AppBar } from "@/features/navigation/components/AppBar";
+import SchoolName from "./SchoolName";
 
 const Header = ({ school }: { school: DetailSchool }) => {
   return (
@@ -76,10 +77,7 @@ export const SchoolInfo = ({
     <View style={{ alignItems: "center", marginTop: -40 }} {...props}>
       <SchoolLogo logo={school.logo} />
       <View style={{ marginTop: 10, alignItems: "center" }}>
-        <Row style={{ gap: 10 }} alignItems="center">
-          <ThemedText variant="displaySmall">{school.name}</ThemedText>
-          <Ionicons color={theme.colors.error} name="school-sharp" size={22} />
-        </Row>
+        <SchoolName lableProps={{ variant: "titleLarge" }} name={school.name} />
         <ThemedText color="gray" variant="titleSmall">
           {school.biography}
         </ThemedText>
