@@ -14,8 +14,13 @@ import { Divider } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import ForumQuestionCard from "@forum/questions/components/QuestionsCard";
+import PlaceholderPage from "@components/PlaceholderPage";
 
-export default function HomeIndexScreen() {
+export default function HomeScreen() {
+  return <PlaceholderPage title="home" />;
+}
+
+export function HomeIndexScreen() {
   return (
     <BottomSheetModalProvider>
       <SafeAreaView>
