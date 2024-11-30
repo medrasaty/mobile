@@ -1,27 +1,16 @@
 import { router } from "expo-router";
-import React, { useState } from "react";
-import { FAB, AnimatedFAB, FABProps, useTheme } from "react-native-paper";
+import { FAB } from "react-native-paper";
 import { StyleSheet } from "react-native";
-
-export function AddQuestionFAB() {
-  return (
-    <FAB
-      icon="plus"
-      variant="primary"
-      onPress={() => router.push("questions/new/index")}
-      style={styles.FABStyles}
-    />
-  );
-}
+import { path } from "@/lib/routing";
 
 export function NewQuestionFAB() {
   function handlePress() {
-    router.push("/questions/new");
+    router.push(path.questions.new);
   }
 
   return (
     <FAB
-      icon="plus"
+      icon={"message"}
       variant="surface"
       onPress={handlePress}
       style={[styles.FABStyles]}

@@ -91,5 +91,10 @@
   "Edit": "تعديل",
   "required": "مطلوب",
   "users": "الأشخاص",
-  "schools": "المدارس"
+  "schools": "المدارس",
+  "edit_your_answer": "تعديل",
+  "Preview": "مراجعة",
+  "settings": {
+    "settings": "الإعدادات"
+  }
 }

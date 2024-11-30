@@ -46,9 +46,9 @@ export const path = {
       },
     }),
 
-    goToUser: (id: BaseUser['id']) => {
-      router.push(path.users.details(id))
-    }
+    goToUser: (id: BaseUser["id"]) => {
+      router.push(path.users.details(id));
+    },
   },
   schools: {
     detail: (schoolId: School["id"]) => `/schools/${schoolId}/detail`,
@@ -57,5 +57,10 @@ export const path = {
   questions: {
     detail: (id: Question["id"], params?: any) =>
       questionDetail({ ...params, questionId: id }),
+    new: `/questions/new`,
+  },
+
+  settings: {
+    main: `/settings/`,
   },
 };

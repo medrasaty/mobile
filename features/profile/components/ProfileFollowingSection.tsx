@@ -19,18 +19,37 @@ import { Button } from "react-native-paper";
 import { t } from "i18next";
 import ReportDialog from "@/features/reports/components/ReportDialog";
 import { useVisibleV2 } from "@/hooks/useVisible";
+import { debugStyle } from "@/constants/styels";
+import { Ionicons } from "@expo/vector-icons";
+import { path } from "@/lib/routing";
+import { router } from "expo-router";
 
 type ProfileFollowingSectionProps = {
   profile: UserProfile;
 };
 
 const ProfileActionsSection = ({ profile }: ProfileFollowingSectionProps) => {
-  return (
-    <Row style={{ justifyContent: "flex-end" }} alignItems="center">
-      <FollowingActions profile={profile} />
-      <MoreOptions profile={profile} />
-    </Row>
-  );
+  if (profile.is_self)
+    return (
+      <Row style={{ justifyContent: "flex-end" }} alignItems="center">
+        {profile.is_self ? (
+          <Button
+            mode="contained"
+            icon={(props) => {
+              return <Ionicons name="settings-outline" {...props} />;
+            }}
+            onPress={() => router.push(path.settings.main)}
+          >
+            {t("settings")}
+          </Button>
+        ) : (
+          <>
+            <FollowingActions profile={profile} />
+            <MoreOptions profile={profile} />
+          </>
+        )}
+      </Row>
+    );
 };
 
 export const MoreOptions = ({ profile }: { profile: UserProfile }) => {

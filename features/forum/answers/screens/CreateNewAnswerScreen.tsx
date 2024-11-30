@@ -7,7 +7,7 @@ import { Container } from "@components/styled";
 import { useRef } from "react";
 import QuestionDetailInfo from "@forum/components/question/detail/QuestionDetailInfo";
 import { router } from "expo-router";
-import { Keyboard } from "react-native";
+import { Keyboard, View } from "react-native";
 import { useForumQuestion } from "@forum/questions/queries";
 import AnswerForm from "../components/forms/AnswerForm";
 import useMutateAnswer from "../mutations";

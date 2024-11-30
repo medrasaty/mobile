@@ -19,6 +19,7 @@ type AppBarProps = React.PropsWithChildren<{
   titleStyle?: AppbarContentProps["titleStyle"];
   backAction?: boolean;
   opacity?: number;
+  divider?: boolean;
   options?: AppbarHeaderProps;
 }>;
 
@@ -30,10 +31,12 @@ export function AppBar({
   titleStyle,
   backAction = true,
   opacity,
+  divider = false,
   options,
   ...props
 }: AppBarProps) {
   const { canGoBack, goBack } = useNavigation();
+  const theme = useTheme();
 
   return (
     <>
@@ -51,6 +54,9 @@ export function AppBar({
         />
         {props.children}
       </Appbar.Header>
+      {divider && (
+        <Divider bold style={{ backgroundColor: theme.colors.primary }} />
+      )}
     </>
   );
 }

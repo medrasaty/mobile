@@ -1,7 +1,7 @@
 import { answerSchema, answerSchemaType } from "@forum/answers/schema";
 import { FormikConfig } from "formik";
 import { ThemedText } from "@components/ThemedText";
-import Animated from "react-native-reanimated";
+import Animated, { useAnimatedKeyboard } from "react-native-reanimated";
 import {
   Button,
   HelperText,
@@ -42,16 +42,24 @@ const AnswerForm = ({ edit, ...props }: AnswerFormProps) => {
           <Animated.View>
             {/* answer text */}
             <View style={styles.container}>
-              <ThemedText color={theme.colors.secondary} variant="displaySmall">
+              <ThemedText color={theme.colors.secondary} variant="titleLarge">
                 {edit ? t("edit_your_answer") : t("wirte_your_answer")}
               </ThemedText>
-              <View style={{ gap: 10 }}>
+              <Animated.View
+                style={{
+                  gap: 10,
+                }}
+              >
                 <TextInput
                   theme={{ roundness: 20 }}
                   value={values.text}
                   onChangeText={handleChange("text")}
                   placeholder={t("your_answer")}
-                  style={{ paddingTop: 8, paddingBottom: 8, marginTop: 10 }}
+                  style={{
+                    paddingTop: 8,
+                    paddingBottom: 8,
+                    marginTop: 10,
+                  }}
                   mode="outlined"
                   numberOfLines={4}
                   multiline
@@ -66,14 +74,14 @@ const AnswerForm = ({ edit, ...props }: AnswerFormProps) => {
                   }
                   onImageUnselected={() => setFieldValue("picture", "")}
                 />
-              </View>
+              </Animated.View>
 
               {/* Preview */}
               <View>
                 <ThemedText
                   style={{ marginTop: 15 }}
                   color={theme.colors.secondary}
-                  variant="displaySmall"
+                  variant="titleLarge"
                 >
                   {t("Preview")}
                 </ThemedText>

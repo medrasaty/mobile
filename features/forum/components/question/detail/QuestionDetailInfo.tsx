@@ -56,10 +56,13 @@ const QuestionDetailInfo = memo(
         >
           <ThemedView style={{ flex: 1 }}>
             {/* Title */}
-            <Text variant="headlineMedium">{title}</Text>
+            <Text variant="headlineMedium">{question.title}</Text>
             <SubjectInfo subject={subject} />
             <Description description={text} />
-            <TagsList style={{ marginTop: 5, marginBottom: 5 }} tags={tags} />
+            <TagsList
+              style={{ marginTop: 5, marginBottom: 5 }}
+              tags={question.tags}
+            />
           </ThemedView>
           {picture && <Picture image={picture} />}
 

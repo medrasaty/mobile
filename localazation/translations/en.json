@@ -88,5 +88,8 @@
   "Edit": "Edit",
   "required": "required",
   "users": "users",
-  "schools": "schools"
+  "schools": "schools",
+  "settings": {
+    "settings": "الإعدادات"
+  }
 }

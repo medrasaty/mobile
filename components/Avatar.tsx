@@ -41,7 +41,3 @@ export default function Avatar({
     />
   );
 }
-
-export function ProfilePicture({ ...props }: AvatarProps) {
-  return <Avatar {...props} />;
-}

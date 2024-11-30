@@ -21,13 +21,11 @@ type ProfileInfoProps = {
 const ProfileInfo = ({ profile, style, ...props }: ProfileInfoProps) => {
   return (
     <ThemedView style={[style, styles.container]} {...props}>
-      <Row style={[styles.row]}>
+      <Row>
         <ProfilePicture url={profile.profile_picture} />
-        <WithCondition condition={!profile.is_self}>
-          <ThemedView style={styles.follow}>
-            <ProfileActionsSection profile={profile} />
-          </ThemedView>
-        </WithCondition>
+        <ThemedView style={styles.actionSection}>
+          <ProfileActionsSection profile={profile} />
+        </ThemedView>
       </Row>
       <ContainerView>
         <UserInfo
@@ -49,11 +47,11 @@ const ProfileInfo = ({ profile, style, ...props }: ProfileInfoProps) => {
   );
 };
 
-const ProfilePicture = ({
+export const ProfilePicture = ({
   url,
   style,
   ...props
-}: { url: UserProfile["profile_picture"] } & ViewProps) => {
+}: { url: UserProfile["profile_picture"] | undefined } & ViewProps) => {
   const styles = useProfilePictureStyle();
   return (
     <ContainerView {...props} style={[style, styles.container]}>
@@ -80,6 +78,7 @@ export function useProfilePictureStyle() {
         height: AVATAR_SIZE,
         borderRadius: AVATAR_SIZE / 2,
         borderColor: theme.colors.secondaryContainer,
+        backgroundColor: theme.colors.secondary,
         borderWidth: 3,
         shadowColor: theme.colors.shadow,
         elevation: 10,
@@ -154,10 +153,11 @@ const styles = StyleSheet.create({
   },
   row: {
     justifyContent: "space-between",
+    ...debugStyle,
   },
-  follow: {
+  actionSection: {
     flex: 1,
-    marginTop: 10,
+    margin: 10,
   },
   reputationInfo: {
     ...containerMargins,

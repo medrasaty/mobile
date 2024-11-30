@@ -46,6 +46,7 @@ function useProfileBackgroundStyle() {
         borderColor: theme.colors.surfaceVariant,
         width: "96%",
         height: DEFAULT_BACKGROUND_IMAGE_HEIGHT,
+        backgroundColor: theme.colors.surfaceVariant,
         borderRadius: 18,
       },
       gradient: {
