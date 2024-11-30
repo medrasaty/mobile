@@ -37,21 +37,25 @@ export const users = {
 
 export const path = {
   users: {
-    details: (id: BaseUser["id"]) => ({
-      pathname: `/users/[id]/detail`,
-      params: {
-        id: id,
-      }
-    }),
+    details: (id: BaseUser["id"]) => `/users/${id}/detail`,
 
     content: (id: BaseUser["id"]) => ({
       pathname: `/users/[id]/content`,
       params: {
         id: id,
-      }
+      },
     }),
+
+    goToUser: (id: BaseUser['id']) => {
+      router.push(path.users.details(id))
+    }
   },
   schools: {
     detail: (schoolId: School["id"]) => `/schools/${schoolId}/detail`,
+  },
+
+  questions: {
+    detail: (id: Question["id"], params?: any) =>
+      questionDetail({ ...params, questionId: id }),
   },
 };

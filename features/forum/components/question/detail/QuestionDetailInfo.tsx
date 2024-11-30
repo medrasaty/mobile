@@ -56,7 +56,7 @@ const QuestionDetailInfo = memo(
         >
           <ThemedView style={{ flex: 1 }}>
             {/* Title */}
-            <Text variant="headlineMedium">{title}</Text>;
+            <Text variant="headlineMedium">{title}</Text>
             <SubjectInfo subject={subject} />
             <Description description={text} />
             <TagsList style={{ marginTop: 5, marginBottom: 5 }} tags={tags} />

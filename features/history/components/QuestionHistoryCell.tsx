@@ -1,19 +1,19 @@
+import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
+import LoadingDialog from "@/components/LoadingDialog";
 import Row from "@/components/Row";
-import { WatchHistory } from "../types";
-import { Pressable, View, ViewProps } from "react-native";
-import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import UserInfo from "@/components/UserInfo";
-import { IconButton, Surface, useTheme } from "react-native-paper";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
-import { useCallback } from "react";
-import { useRouter } from "expo-router";
-import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
 import { useVisibleV2 } from "@/hooks/useVisible";
-import { useDeleteWatchHistoryMutation } from "../mutations";
-import LoadingDialog from "@/components/LoadingDialog";
-import { t } from "i18next";
 import { d } from "@/lib/dates";
+import { useRouter } from "expo-router";
+import { t } from "i18next";
+import { useCallback } from "react";
+import { Pressable, StyleSheet, View, ViewProps } from "react-native";
+import { IconButton, Surface, useTheme } from "react-native-paper";
+import { useDeleteWatchHistoryMutation } from "../mutations";
+import { WatchHistory } from "../types";
+import { path } from "@/lib/routing";
 
 type QuestionHistoryCellProps = {
   history: WatchHistory;
@@ -26,12 +26,7 @@ const QuestionHistoryCell = ({ history }: QuestionHistoryCellProps) => {
   const theme = useTheme();
 
   const goToQuestion = useCallback(() => {
-    router.push({
-      pathname: `/questions/details`,
-      params: {
-        questionId: question.id,
-      },
-    });
+    router.push(path.questions.detail(question.id));
   }, [history.id]);
 
   return (
@@ -49,13 +44,7 @@ const QuestionHistoryCell = ({ history }: QuestionHistoryCellProps) => {
         </Row>
 
         <Row alignItems="center" style={{ justifyContent: "space-between" }}>
-          <UserInfo
-            name={owner.short_name}
-            username={owner.username}
-            schoolName={owner.family_name}
-            avatarUrl={owner.profile_picture}
-            avatarSize={40}
-          />
+          <UserInfo showSchool={false} user={owner} />
           <Date date={history.watched_at} />
         </Row>
       </Surface>
@@ -126,7 +115,10 @@ export const MoreOptoins = ({
   );
 };
 
-export const Date = ({ date, ...props }: { date: string } & ViewProps) => {
+export const Date = ({
+  date,
+  ...props
+}: { date: string | Date } & ViewProps) => {
   const theme = useTheme();
   return (
     <View style={{ paddingRight: 20 }} {...props}>

@@ -22,10 +22,6 @@ type UserCompactCellProps = {
 };
 
 const UserCompactCell = ({ user }: UserCompactCellProps) => {
-  const goToUser = () => {
-    router.push(path.users.details(user.id));
-  };
-
   return (
     <ThemedView style={{ padding: DEFAULT_CONTAINER_SPACING }}>
       <ThemedView style={styles.rowContainer}>
