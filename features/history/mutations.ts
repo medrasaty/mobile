@@ -5,13 +5,12 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { WatchHistoryKeys } from "./keys";
-import { BaseUser } from "@/types/user.types";
 import * as Burnt from "burnt";
 import { t } from "i18next";
 import { deleteWatchHistory } from "./requests";
 import { WatchHistory } from "./types";
 import { CursorPaginatedResponse } from "@/types/responses";
-import { clearPages, filterPage, filterPages } from "../friendship/utils";
+import { clearPages, filterPages } from "../friendship/utils";
 
 export default function useClearWatchHistoryMutation() {
   const client = useAuthClient();
@@ -19,7 +18,7 @@ export default function useClearWatchHistoryMutation() {
 
   return useMutation({
     mutationKey: WatchHistoryKeys.clearHisory,
-    mutationFn: async (username: BaseUser["username"]) => {
+    mutationFn: async () => {
       // clear user watch history
 
       return await client.delete(`/activities/watch_history/clear/`);

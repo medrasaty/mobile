@@ -2,11 +2,7 @@ import View from "@/components/styled/View";
 import QuestionDetailActions from "@/features/forum/components/question/detail/QuestionDetailActions";
 import QuestionDetailInfo from "@/features/forum/components/question/detail/QuestionDetailInfo";
 import { DetailQuestion } from "@/types/forum.types";
-import QuestionDetailOwner from "./Owner";
-import {
-  useQuestionActionPropsMemo,
-  useQuestionInfoPropsMemo,
-} from "@/features/forum/hooks/useQuestionInfoMemo";
+import { useQuestionInfoPropsMemo } from "@/features/forum/hooks/useQuestionInfoMemo";
 
 export const QUESTION_LAYOUT_GAP = 16;
 
@@ -19,7 +15,6 @@ export const QuestionDetail = ({ question }: { question: DetailQuestion }) => {
         <QuestionDetailActions question={question} />
         <QuestionDetailInfo {...infoProps} question={question} />
       </View>
-      <QuestionDetailOwner owner={question.owner} />
     </View>
   );
 };

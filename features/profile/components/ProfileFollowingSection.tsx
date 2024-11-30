@@ -48,7 +48,7 @@ export const MoreOptions = ({ profile }: { profile: UserProfile }) => {
         <ContainerView style={{ gap: 6 }}>
           <ToggleBlockingButton
             isBlocker={profile.is_blocker}
-            username={profile.username}
+            pk={profile.pk}
           />
           <ReportUser userId={profile.id} contentTypeId={profile.contenttype} />
         </ContainerView>
@@ -58,19 +58,15 @@ export const MoreOptions = ({ profile }: { profile: UserProfile }) => {
 };
 
 export const ToggleBlockingButton = ({
-  username,
+  pk,
   isBlocker,
   onPress,
   ...props
-}: { username: BaseUser["username"]; isBlocker: boolean } & Omit<
+}: { pk: BaseUser["pk"]; isBlocker: boolean } & Omit<
   ButtonProps,
   "children"
 >) => {
-  return isBlocker ? (
-    <UnblockButton username={username} />
-  ) : (
-    <BlockButton username={username} />
-  );
+  return isBlocker ? <UnblockButton pk={pk} /> : <BlockButton pk={pk} />;
 };
 
 export const ReportUser = ({
@@ -104,27 +100,23 @@ export const ReportUser = ({
 export const FollowingActions = ({ profile }: { profile: UserProfile }) => {
   // TODO: refactor this component
   if (profile.is_blocked || profile.is_blocker)
-    return <FollowButton disabled username={profile.username} />;
+    return <FollowButton disabled pk={profile.pk} />;
 
-  if (profile.is_following)
-    return <UnfollowButton username={profile.username} />;
+  if (profile.is_following) return <UnfollowButton pk={profile.pk} />;
 
-  if (profile.is_follower) return <FollowBack username={profile.username} />;
+  if (profile.is_follower) return <FollowBack pk={profile.pk} />;
 
   if (profile.profile.is_private) {
     if (profile.following_request_status !== "pending") {
       return (
-        <FollowRequestButton
-          disabled={profile.is_blocked}
-          username={profile.username}
-        />
+        <FollowRequestButton disabled={profile.is_blocked} pk={profile.pk} />
       );
     }
 
     return <FollowRequestStatusButton />;
   }
 
-  return <FollowButton username={profile.username} />;
+  return <FollowButton pk={profile.pk} />;
 };
 
 export default ProfileActionsSection;

@@ -1,11 +1,10 @@
 import { BaseUser } from "@/types/user.types";
 import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
 import { getProfile } from "../requests";
 import useAuthClient from "@/hooks/useAuthClient";
 import { ProfileQueryKeys } from "../keys";
 
-export default function useProfile(username: BaseUser["username"]) {
+export default function useProfile(pk: BaseUser["pk"]) {
   /**
    * Return the user profile
    */
@@ -13,7 +12,7 @@ export default function useProfile(username: BaseUser["username"]) {
   const client = useAuthClient();
 
   return useQuery({
-    queryKey: ProfileQueryKeys.withUsername(username),
-    queryFn: async () => await getProfile(client, username),
+    queryKey: ProfileQueryKeys.detail(pk),
+    queryFn: async () => await getProfile(client, pk),
   });
 }

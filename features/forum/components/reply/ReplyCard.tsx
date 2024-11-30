@@ -1,13 +1,11 @@
-import Avatar from "@/components/Avatar";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import Username from "@/components/Username";
 import { View, ViewProps } from "react-native";
 import { Reply } from "@/types/forum.types";
-import User from "@/components/User";
 import ReadMoreText from "@/components/ReadMoreText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { d } from "@/lib/dates";
+import UserInfo from "@components/UserInfo";
 
 type ReplyCardProps = {
   reply: Reply;
@@ -41,7 +39,7 @@ export const Header = ({ reply }: { reply: Reply }) => {
       }}
     >
       <View style={{ flexDirection: "row", gap: 4 }}>
-        <User user={reply.owner} />
+        <UserInfo showSchool={false} avatarSize={30} user={reply.owner} />
         <ReplyCreatedDate created={reply.created} />
       </View>
       <MaterialCommunityIcons name="dots-vertical" size={18} color="black" />
@@ -73,22 +71,5 @@ export const ReplyContent = ({ reply }: { reply: Reply }) => {
         {reply.text}
       </ReadMoreText>
     </ThemedView>
-  );
-};
-
-export const UserShort = () => {
-  const avatar = require("@/assets/images/splash.png");
-  return (
-    <>
-      <ThemedView
-        style={{ flexDirection: "row", gap: 4, alignItems: "center" }}
-      >
-        <Avatar url={avatar} size={32} />
-        <ThemedView>
-          <Username name={"solo shayea"} username="username" />
-          <ThemedText variant="labelSmall">medrasaty</ThemedText>
-        </ThemedView>
-      </ThemedView>
-    </>
   );
 };

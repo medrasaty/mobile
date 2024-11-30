@@ -4,26 +4,16 @@ import View from "@/components/styled/View";
 import Tag from "@/components/Tag";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { debugStyle } from "@/constants/styels";
 import ShareContentSheet from "@/features/share/components/ShareContentSheet";
-import { useVisibleV2 } from "@/hooks/useVisible";
 import { d } from "@/lib/dates";
 import { translateSubject } from "@/lib/utils";
 import { DetailQuestion, Question } from "@/types/forum.types";
-import CenterPage from "@components/CenterPage";
-import WithCondition from "@components/WithCondition";
 import { t } from "i18next";
 import { memo, useMemo } from "react";
-import { Pressable, useWindowDimensions, ViewProps } from "react-native";
+import { Pressable, ViewProps } from "react-native";
 import FastImage from "react-native-fast-image";
-import { Portal, useTheme } from "react-native-paper";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import { ImageViewer } from "react-native-image-zoom-viewer";
-import Gallery from "react-native-awesome-gallery";
+import { useTheme } from "react-native-paper";
+import UserInfo from "@components/UserInfo";
 
 type QuestionDetailInfoProps = {
   id: DetailQuestion["id"];
@@ -56,31 +46,35 @@ const QuestionDetailInfo = memo(
     ...props
   }: QuestionDetailInfoProps) => {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "space-between",
-        }}
-        {...props}
-      >
-        <ThemedView style={{ flex: 1 }}>
-          <Title title={title} />
-          <SubjectInfo subject={subject} />
-          <Description description={text} />
-          <TagsList style={{ marginTop: 5, marginBottom: 5 }} tags={tags} />
-        </ThemedView>
-        {picture && <Picture image={picture} />}
-
-        <View style={{ flex: 0.1, gap: 9, marginTop: 4 }}>
-          <ThemedView
-            style={{ gap: 8, flexDirection: "row", alignItems: "center" }}
-          >
-            <ViewsCount views={views} />
-            <AnswersCount answersCount={answersCount} />
-            <Share id={id} />
+      <View style={{ flex: 1, gap: 30 }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+          {...props}
+        >
+          <ThemedView style={{ flex: 1 }}>
+            {/* Title */}
+            <Text variant="headlineMedium">{title}</Text>;
+            <SubjectInfo subject={subject} />
+            <Description description={text} />
+            <TagsList style={{ marginTop: 5, marginBottom: 5 }} tags={tags} />
           </ThemedView>
-          <TimeInfo created={created} modified={modified} />
+          {picture && <Picture image={picture} />}
+
+          <View style={{ flex: 0.1, gap: 9, marginTop: 4 }}>
+            <ThemedView
+              style={{ gap: 8, flexDirection: "row", alignItems: "center" }}
+            >
+              <ViewsCount views={views} />
+              <AnswersCount answersCount={answersCount} />
+              <Share id={id} />
+            </ThemedView>
+            <TimeInfo created={created} modified={modified} />
+          </View>
         </View>
+        <UserInfo avatarSize={45} user={question.owner} />
       </View>
     );
   }

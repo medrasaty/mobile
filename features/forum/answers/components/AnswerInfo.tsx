@@ -4,11 +4,11 @@ import { ThemedView } from "@/components/ThemedView";
 import { Answer } from "@/types/forum.types";
 import { View, ViewProps } from "react-native";
 import { useTheme } from "react-native-paper";
-import User from "@/components/User";
 import { d } from "@/lib/dates";
 import { Picture } from "@forum/components/question/detail/QuestionDetailInfo";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+import UserInfo from "@components/UserInfo";
 
 export default function Info({
   answer,
@@ -33,7 +33,7 @@ export default function Info({
           marginTop: 20,
         }}
       >
-        <User user={answer.owner} />
+        <UserInfo avatarSize={40} user={answer.owner} />
       </View>
     </ThemedView>
   );

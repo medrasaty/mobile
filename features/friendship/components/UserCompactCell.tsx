@@ -7,13 +7,15 @@ import UserAvatar from "@/components/UserAvatar";
 import { router } from "expo-router";
 import Row from "@/components/Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Text, useTheme } from "react-native-paper";
+import { useTheme } from "react-native-paper";
 import { FriendUser } from "../types";
 import {
   FollowBack,
   FollowButton,
   UnfollowButton,
 } from "./FollowActionButtons";
+import { path } from "@/lib/routing";
+import UserInfo from "@components/UserInfo";
 
 type UserCompactCellProps = {
   user: FriendUser;
@@ -21,40 +23,21 @@ type UserCompactCellProps = {
 
 const UserCompactCell = ({ user }: UserCompactCellProps) => {
   const goToUser = () => {
-    router.push(`/users/${user.username}/detail`);
+    router.push(path.users.details(user.id));
   };
 
   return (
     <ThemedView style={{ padding: DEFAULT_CONTAINER_SPACING }}>
       <ThemedView style={styles.rowContainer}>
-        <Row alignItems="center" style={{ gap: 10 }}>
-          <UserAvatar size={60} url={user.profile_picture} />
-          <Pressable onPress={goToUser}>
-            <ThemedText>{user.short_name}</ThemedText>
-            <School name={user.school_name} />
-          </Pressable>
-        </Row>
-
+        <UserInfo user={user} />
         <ActionButton
           isFollower={user.is_follower}
           isFollowing={user.is_following}
-          username={user.username}
+          pk={user.pk}
         />
       </ThemedView>
     </ThemedView>
   );
-};
-
-const DisplayName = ({ name }: { name: string }) => {
-  return (
-    <ThemedText numberOfLines={1} variant="bodyLarge">
-      {name}
-    </ThemedText>
-  );
-};
-
-const Username = ({ username }: { username: string }) => {
-  return <ThemedText variant="labelSmall">@{username}</ThemedText>;
 };
 
 export const School = ({ name }: { name: string }) => {
@@ -74,25 +57,24 @@ export const School = ({ name }: { name: string }) => {
 };
 
 type ActionButtonProps = {
-  username: BaseUser["username"];
+  pk: BaseUser["pk"];
   isFollower: boolean;
   isFollowing: boolean;
 };
 
-const ActionButton = ({
-  username,
-  isFollower,
-  isFollowing,
-}: ActionButtonProps) => {
+const ActionButton = ({ pk, isFollower, isFollowing }: ActionButtonProps) => {
+  console.log("ActionButton");
+  console.log(pk);
+
   if (isFollowing) {
-    return <UnfollowButton username={username} />;
+    return <UnfollowButton pk={pk} />;
   }
 
   if (isFollower) {
-    return <FollowBack username={username} />;
+    return <FollowBack pk={pk} />;
   }
 
-  return <FollowButton username={username} />;
+  return <FollowButton pk={pk} />;
 };
 
 const styles = StyleSheet.create({

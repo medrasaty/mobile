@@ -3,11 +3,11 @@ import UserAvatar from "@/components/UserAvatar";
 import { BaseUser } from "@/types/user.types";
 import { useRouter } from "expo-router";
 import { Pressable, View, ViewProps } from "react-native";
-import { useTheme, TextProps, TouchableRipple } from "react-native-paper";
+import { useTheme, TextProps } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import ReputationInfo from "@/components/ReputationInfo";
-import { debugStyle } from "@/constants/styels";
+import { path } from "@/lib/routing";
 
 export const MEMBER_CELL_WIDTH = 120;
 export const MEMBER_CELL_HEIGHT = 135;
@@ -21,15 +21,12 @@ const SchoolMemberCell = ({ member }: SchoolMemberCellProps) => {
   const router = useRouter();
   const theme = useTheme();
   const goToUser = () => {
-    router.push(`/users/${member.username}/detail`);
+    router.push(path.users.details(member.id));
   };
 
   return (
     <View style={{ borderRadius: DEFAULT_BORDER_RADIOUS, overflow: "hidden" }}>
-      <TouchableRipple
-        rippleColor={theme.colors.primaryContainer}
-        onPress={goToUser}
-      >
+      <Pressable onPress={goToUser}>
         <View
           style={[
             styles.container,
@@ -47,7 +44,7 @@ const SchoolMemberCell = ({ member }: SchoolMemberCellProps) => {
             views={member.total_views}
           />
         </View>
-      </TouchableRipple>
+      </Pressable>
     </View>
   );
 };

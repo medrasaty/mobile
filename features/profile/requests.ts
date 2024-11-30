@@ -8,19 +8,19 @@ import { questionOrderKeys } from "./hooks/useProfileQuestions";
 
 export async function getProfile(
   client: Axios,
-  username: BaseUser["username"]
+  pk: BaseUser["pk"]
 ): Promise<UserProfile> {
-  const response = await client.get<UserProfile>(`/users/${username}/`);
+  const response = await client.get<UserProfile>(`/users/${pk}/`);
   return response.data;
 }
 
 export async function getUserQuestions(
   client: Axios,
-  username: BaseUser["username"]
+  userId: BaseUser["id"]
 ): Promise<Question[]> {
   const response = await client.get("/forum/questions/", {
     params: {
-      owner: username,
+      owner: userId,
       extend: "subject",
     },
   });
@@ -30,11 +30,11 @@ export async function getUserQuestions(
 
 export async function getUserAnswers(
   client: Axios,
-  username: BaseUser["username"]
+  userId: BaseUser["id"]
 ): Promise<Answer[]> {
   const response = await client.get("/forum/answers/", {
     params: {
-      owner: username,
+      owner: userId,
     },
   });
 

@@ -1,24 +1,26 @@
-import { View, ViewProps } from "react-native";
-import useProfile from "../hooks/useProfile";
 import Page from "@/components/Page";
-import { useCallback } from "react";
-import ProfileHeader from "../components/Profile";
-import { Appbar, Divider } from "react-native-paper";
 import { AppBar } from "@/features/navigation/components/AppBar";
-import { useTranslation } from "react-i18next";
+import { path } from "@/lib/routing";
 import { Question } from "@/types/forum.types";
-import { useRouter } from "expo-router";
+import { BaseUser } from "@/types/user.types";
+import MultiQueryScreenList from "@components/MultiQueryScreenList";
 import ForumQuestionCard, {
   FORUM_QUESTION_CARD_HEIGHT,
 } from "@forum/questions/components/QuestionsCard";
-import MultiQueryScreenList from "@components/MultiQueryScreenList";
+import { useRouter } from "expo-router";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { View, ViewProps } from "react-native";
+import { Appbar, Divider } from "react-native-paper";
+import ProfileHeader from "../components/Profile";
+import useProfile from "../hooks/useProfile";
 import useUserQuestions from "../queries";
 
-type ProfileMainScreenProps = { username: string } & ViewProps;
+type ProfileMainScreenProps = { id: BaseUser["id"] } & ViewProps;
 
-const ProfileMainScreen = ({ username, ...props }: ProfileMainScreenProps) => {
-  const profileQ = useProfile(username);
-  const questionsQ = useUserQuestions(username);
+const ProfileMainScreen = ({ id, ...props }: ProfileMainScreenProps) => {
+  const profileQ = useProfile(id);
+  const questionsQ = useUserQuestions(id);
 
   const renderHeader = useCallback(() => {
     if (profileQ.data) {
@@ -40,7 +42,7 @@ const ProfileMainScreen = ({ username, ...props }: ProfileMainScreenProps) => {
 
   return (
     <Page>
-      <ProfileAppbar username={profileQ.data?.username} />
+      <ProfileAppbar userId={profileQ.data?.id} />
       <MultiQueryScreenList
         headerStatus={profileQ.status}
         dataStatus={questionsQ.status}
@@ -56,18 +58,15 @@ const ProfileMainScreen = ({ username, ...props }: ProfileMainScreenProps) => {
   );
 };
 
-export const ProfileAppbar = ({
-  username,
-}: {
-  username: string | undefined;
-}) => {
+export const ProfileAppbar = ({ userId }: { userId: string | undefined }) => {
   const router = useRouter();
   const goToContent = useCallback(() => {
-    router.push(`/users/${username}/content`);
-  }, [username]);
+    router.push(path.users.content(userId));
+  }, [userId]);
+
   const { t } = useTranslation();
   return (
-    <AppBar title={t("username", { username: username })}>
+    <AppBar title={t("username", { username: userId })}>
       <Appbar.Action icon="dots-vertical" onPress={goToContent} />
     </AppBar>
   );

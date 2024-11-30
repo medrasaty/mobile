@@ -14,25 +14,15 @@ export function AddQuestionFAB() {
   );
 }
 
-type AddQuestionAnimatedFABProps = {
-  isExtended: boolean;
-};
-
-export function AddQuestionAnimatedFAB({
-  isExtended,
-}: AddQuestionAnimatedFABProps) {
-  const theme = useTheme();
+export function NewQuestionFAB() {
   function handlePress() {
     router.push("/questions/new");
   }
 
   return (
-    <AnimatedFAB
+    <FAB
       icon="plus"
       variant="surface"
-      label="سؤال جديد"
-      extended={isExtended}
-      iconMode="dynamic"
       onPress={handlePress}
       style={[styles.FABStyles]}
     />

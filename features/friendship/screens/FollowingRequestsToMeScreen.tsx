@@ -15,11 +15,8 @@ import {
 import { useMemo } from "react";
 import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
 import NetworkError from "@/components/NetworkError";
-import { SnackbarProvider } from "@/contexts/SnackbarContext";
 
-type FollowingRequestsToMeScreenProps = {};
-
-const FollowingRequestsToMeScreen = ({}: FollowingRequestsToMeScreenProps) => {
+const FollowingRequestsToMeScreen = () => {
   const user = useCurrentUser();
   return user.is_private ? <FollowingRequestsToMe /> : <NotPrivateAccount />;
 };

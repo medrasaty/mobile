@@ -1,10 +1,6 @@
 import { useMemo } from "react";
-import {
-  FriendsQueryKeys,
-  useFollowingQuery,
-} from "../friendship/hooks/useFriendsQuery";
+import { useFollowingQuery } from "../friendship/queries";
 import { useShareStore } from "./store";
-import { useQueryClient } from "@tanstack/react-query";
 
 export default function useShareUsers(params: any = {}) {
   const q = useFollowingQuery(params);

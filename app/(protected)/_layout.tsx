@@ -27,12 +27,13 @@ export default function ProtectedLayout() {
           headerShown: false,
           header: (props) => {
             // you can only customize the title of Appbar
-            return <AppBar title={props.options.headerTitle} {...props} />;
+            return (
+              <AppBar title={props.options.headerTitle ?? ""} {...props} />
+            );
           },
         }}
       >
         <Stack.Screen name="(drawer)" />
-        <Stack.Screen name="questions/details/[questionId]" />
         <Stack.Screen
           name="questions/new"
           options={{ headerShown: true, headerTitle: t("new_question") }}
@@ -41,7 +42,7 @@ export default function ProtectedLayout() {
           name="questions/edit"
           options={{ headerShown: true, headerTitle: t("edit_question") }}
         />
-        <Stack.Screen name="users/[username]" />
+        <Stack.Screen name="users/[id]" />
         <Stack.Screen
           name="search"
           options={{

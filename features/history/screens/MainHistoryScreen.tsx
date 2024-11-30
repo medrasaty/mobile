@@ -119,7 +119,7 @@ export const HistoryAppbarOptions = () => {
 
   const handleClearHistoryConfirm = () => {
     hideConfirm();
-    clear(user.username);
+    clear();
   };
 
   return (

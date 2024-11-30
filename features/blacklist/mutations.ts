@@ -14,17 +14,17 @@ import { UserProfile } from "../profile/types";
 import { FriendsQueryKeys } from "../friendship/hooks/useFriendsQuery";
 import { FriendUser } from "../friendship/types";
 import { CursorPaginatedResponse } from "@/types/responses";
-import { filterPage, filterPages } from "../friendship/utils";
+import { filterPages } from "../friendship/utils";
 
-export function useUnblockUserMutation(username: BaseUser["username"]) {
+export function useUnblockUserMutation(pk: BaseUser["pk"]) {
   const client = useAuthClient();
   const qc = useQueryClient();
 
   return useMutation({
-    mutationKey: BlackListKeys.block(username),
-    mutationFn: async (username: BlackListUser["username"]) =>
-      await unblockUser(client, username),
-    onSuccess: (_data, username) => {
+    mutationKey: BlackListKeys.block(pk),
+    mutationFn: async (pk: BlackListUser["pk"]) =>
+      await unblockUser(client, pk),
+    onSuccess: (_data, pk) => {
       qc.setQueriesData(
         { queryKey: BlackListKeys.all },
         (
@@ -38,13 +38,13 @@ export function useUnblockUserMutation(username: BaseUser["username"]) {
 
           return {
             ...oldData,
-            pages: filterPages(oldData.pages, (u) => u.username !== username),
+            pages: filterPages(oldData.pages, (u) => u.pk !== pk),
           };
         }
       );
 
       qc.setQueryData(
-        ProfileQueryKeys.withUsername(username),
+        ProfileQueryKeys.detail(pk),
         (oldData: UserProfile | undefined) => {
           if (!oldData) {
             return oldData;
@@ -63,7 +63,7 @@ export function useUnblockUserMutation(username: BaseUser["username"]) {
         (oldDate: FriendUser[] | undefined) => {
           if (!oldDate) return oldDate;
 
-          return oldDate.filter((f) => f.username !== username);
+          return oldDate.filter((f) => f.pk !== pk);
         }
       );
 
@@ -85,23 +85,22 @@ export function useUnblockUserMutation(username: BaseUser["username"]) {
   });
 }
 
-export function useBlockUserMutation(username: BaseUser["username"]) {
+export function useBlockUserMutation(pk: BaseUser["pk"]) {
   const client = useAuthClient();
   const qc = useQueryClient();
 
   return useMutation({
-    mutationKey: BlackListKeys.unblock(username),
-    mutationFn: async (username: BaseUser["username"]) =>
-      await blockUser(client, username),
+    mutationKey: BlackListKeys.unblock(pk),
+    mutationFn: async (pk: BaseUser["pk"]) => await blockUser(client, pk),
 
-    onSuccess: async (_data, username) => {
+    onSuccess: async (_data, pk) => {
       // invalidate blacklist users
       qc.invalidateQueries({
         queryKey: BlackListKeys.all,
       });
 
       qc.setQueryData(
-        ProfileQueryKeys.withUsername(username),
+        ProfileQueryKeys.detail(pk),
         (oldData: UserProfile | undefined) => {
           if (!oldData) return oldData;
 

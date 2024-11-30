@@ -32,5 +32,26 @@ export const goToSchool = (schoolId: School["id"]) => {
 };
 
 export const users = {
-  details: (username: BaseUser["username"]) => `/users/${username}/detail`,
+  details: (id: BaseUser["id"]) => `/users/${id}/detail`,
+};
+
+export const path = {
+  users: {
+    details: (id: BaseUser["id"]) => ({
+      pathname: `/users/[id]/detail`,
+      params: {
+        id: id,
+      }
+    }),
+
+    content: (id: BaseUser["id"]) => ({
+      pathname: `/users/[id]/content`,
+      params: {
+        id: id,
+      }
+    }),
+  },
+  schools: {
+    detail: (schoolId: School["id"]) => `/schools/${schoolId}/detail`,
+  },
 };

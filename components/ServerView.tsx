@@ -1,7 +1,7 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { View, ViewProps } from "react-native";
 import LoadingIndicator from "./LoadingIndicator";
-import NetworkError from "./NetworkError";
+import NetworkError, { FullPageNetworkError } from "./NetworkError";
 import Page from "./Page";
 import CenterPage from "./CenterPage";
 import FullPageLoadingIndicator from "./FullPageLoadingIndicator";
@@ -52,7 +52,7 @@ export const ServerPage = ({
       {status === "pending" ? (
         <FullPageLoadingIndicator />
       ) : status === "error" ? (
-        <NetworkError onRetry={onRetry} message={errorMessage} />
+        <FullPageNetworkError onRetry={onRetry} message={errorMessage} />
       ) : (
         props.children
       )}

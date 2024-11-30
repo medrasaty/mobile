@@ -1,25 +1,23 @@
-import ConfirmDialog, {
-  ConfirmDialogV2,
-  confirmStatus,
-} from "@/components/ConfirmDialog";
-import { useFollowMutation } from "@/features/friendship/hooks/useFollowMutation";
-import useUnfollowMutation from "@/features/friendship/hooks/useUnfollowMutation";
-import useVisible from "@/hooks/useVisible";
+import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
+import {
+  useFollowMutation,
+  useUnfollowMutation,
+} from "@/features/friendship/mutations";
+import { useVisibleV2 } from "@/hooks/useVisible";
 import { BaseUser } from "@/types/user.types";
 import { t } from "i18next";
 import { Button, ButtonProps } from "react-native-paper";
 import useFollowBackMutation from "../hooks/useFollowBackMutation";
 import useSendFollowingRequestMutation from "../hooks/useFollowRequestMutation";
-import LoadingDialog from "@/components/LoadingDialog";
 
 type FollowButtonsProps = {
-  username: BaseUser["username"];
+  pk: BaseUser["pk"];
 } & Omit<ButtonProps, "children">;
 
-const FollowButton = ({ username, ...props }: FollowButtonsProps) => {
+const FollowButton = ({ pk, ...props }: FollowButtonsProps) => {
   const { mutate: follow, isPending } = useFollowMutation();
   const handlePress = () => {
-    follow({ username });
+    follow({ pk });
   };
 
   return (
@@ -35,10 +33,10 @@ const FollowButton = ({ username, ...props }: FollowButtonsProps) => {
   );
 };
 
-const FollowBack = ({ username, ...props }: FollowButtonsProps) => {
+const FollowBack = ({ pk, ...props }: FollowButtonsProps) => {
   const { mutate: followBack, isPending } = useFollowBackMutation();
   const handlePress = () => {
-    followBack({ username });
+    followBack({ pk });
   };
 
   return (
@@ -53,14 +51,14 @@ const FollowBack = ({ username, ...props }: FollowButtonsProps) => {
   );
 };
 
-const UnfollowButton = ({ username, ...props }: FollowButtonsProps) => {
+const UnfollowButton = ({ pk, ...props }: FollowButtonsProps) => {
   const { mutate: unfollow, isPending } = useUnfollowMutation();
-  const { visible, hide, show: showConfirm } = useVisible(false);
+  const [visible, showConfirm, hide] = useVisibleV2(false);
 
   const handleConfirm = () => {
     hide();
     unfollow({
-      username: username,
+      pk,
     });
   };
 
@@ -86,16 +84,13 @@ const UnfollowButton = ({ username, ...props }: FollowButtonsProps) => {
   );
 };
 
-export const FollowRequestButton = ({
-  username,
-  ...props
-}: FollowButtonsProps) => {
+export const FollowRequestButton = ({ pk, ...props }: FollowButtonsProps) => {
   const { mutate: sendRequest, isPending } = useSendFollowingRequestMutation();
   return (
     <Button
       disabled={isPending}
       loading={isPending}
-      onPress={() => sendRequest(username)}
+      onPress={() => sendRequest(pk)}
       mode="contained"
       {...props}
     >

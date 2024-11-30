@@ -17,5 +17,5 @@ export default function useCurrentUser(): BaseUser {
 
   const { user } = parseSession(session);
 
-  return user as Teacher | Student;
+  return user as BaseUser;
 }

@@ -3,7 +3,7 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 
 const Profile = () => {
   const user = useCurrentUser();
-  return <ProfileMainScreen username={user?.username} />;
+  return <ProfileMainScreen id={user.id} />;
 };
 
 export default Profile;

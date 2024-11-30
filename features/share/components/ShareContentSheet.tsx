@@ -1,30 +1,26 @@
+import LoadingDialog from "@/components/LoadingDialog";
 import ServerView from "@/components/ServerView";
 import SheetView from "@/components/SheetView";
 import { Container } from "@/components/styled";
 import { containerPaddings } from "@/constants/styels";
 import { SearchContextProvider } from "@/contexts/SearchContext";
 import { FriendUser } from "@/features/friendship/types";
+import useDismisBottomSheetModal from "@/hooks/useDismisBottomSheetModal";
 import {
   BottomSheetFlatList,
   BottomSheetFooterProps,
-  BottomSheetModal,
-  useBottomSheetModal,
-  useBottomSheetModalInternal,
+  BottomSheetModal
 } from "@gorhom/bottom-sheet";
 import { t } from "i18next";
-import { forwardRef, useEffect, useMemo } from "react";
-import { ViewProps, TextInput } from "react-native";
-import { StyleSheet } from "react-native";
-import { Button, useTheme } from "react-native-paper";
-import UserShareCell from "./UserShareCell";
+import { forwardRef, useMemo } from "react";
+import { StyleSheet, TextInput, ViewProps } from "react-native";
+import { useTheme } from "react-native-paper";
 import { ShareContentContextProvider } from "../contexts/ShareContentSheetContext";
+import useShareQuestionMutation from "../mutations";
 import useShareUsers from "../queries";
 import { useShareStore } from "../store";
 import Footer from "./SheetFooter";
-import useShareQuestionMutation from "../mutations";
-import LoadingDialog from "@/components/LoadingDialog";
-import AlertDialog from "@/components/AlertDialog";
-import useDismisBottomSheetModal from "@/hooks/useDismisBottomSheetModal";
+import UserShareCell from "./UserShareCell";
 
 type ShareContentSheetProps = {
   questionId: string | number;
@@ -119,7 +115,7 @@ const FollowingList = (props: ViewProps) => {
     >
       <BottomSheetFlatList
         showsVerticalScrollIndicator={false}
-        keyExtractor={(i) => i.username}
+        keyExtractor={(i) => i.pk}
         contentContainerStyle={{ gap: 20 }}
         columnWrapperStyle={{ gap: 20 }}
         numColumns={3}

@@ -8,14 +8,14 @@ export const BlackListKeys = {
   all: ["blacklist"] as const,
   withParams: (params: any) => [...BlackListKeys.all, params],
   mutate_blacklist: ["mutate_blacklist"] as const,
-  block: (username: BaseUser["username"]) => [
+  block: (pk: BaseUser["pk"]) => [
     ...BlackListKeys.mutate_blacklist,
     "block",
-    username,
+    pk,
   ],
-  unblock: (username: BaseUser["username"]) => [
+  unblock: (pk: BaseUser["pk"]) => [
     ...BlackListKeys.mutate_blacklist,
     "unblock",
-    username,
+    pk,
   ],
 };

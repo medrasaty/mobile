@@ -1,10 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FollowingRequestStatus } from "@/features/profile/types";
 import useAuthClient from "@/hooks/useAuthClient";
 import { BaseUser } from "@/types/user.types";
-import { sendFollowingRequest } from "../requests";
+import { ProfileQueryKeys } from "@features/profile/keys";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Burnt from "burnt";
 import { useTranslation } from "react-i18next";
-import { FollowingRequestStatus } from "@/features/profile/types";
+import { sendFollowingRequest } from "../requests";
 
 export default function useSendFollowingRequestMutation() {
   const client = useAuthClient();
@@ -13,14 +14,15 @@ export default function useSendFollowingRequestMutation() {
 
   return useMutation({
     mutationKey: ["follow_request"],
-    mutationFn: async (username: BaseUser["username"]) =>
-      sendFollowingRequest(client, username),
+    mutationFn: async (pk: BaseUser["pk"]) => sendFollowingRequest(client, pk),
 
-    onSuccess: async (data, username, context) => {
+    onSuccess: async (data, pk, context) => {
       // update profile
-      const profile = await queryClient.getQueryData(["profile", username]);
+      const profile = await queryClient.getQueryData(
+        ProfileQueryKeys.detail(pk)
+      );
       if (profile) {
-        queryClient.setQueryData(["profile", username], {
+        queryClient.setQueryData(ProfileQueryKeys.detail(pk), {
           ...profile,
           following_request_status: FollowingRequestStatus.PENDING,
         });
@@ -40,9 +42,9 @@ export default function useSendFollowingRequestMutation() {
       });
     },
 
-    onSettled: (data, error, username) => {
+    onSettled: (data, error, pk) => {
       // Invalidate query at the end.
-      queryClient.invalidateQueries({ queryKey: ["profile", username] });
+      queryClient.invalidateQueries({ queryKey: ProfileQueryKeys.detail(pk) });
     },
   });
 }

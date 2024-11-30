@@ -1,17 +1,17 @@
+import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
 import Page from "@/components/Page";
-import { useInfiniteBlackListUsers } from "../queries";
 import { ScreenListV2 } from "@/components/ScreenFlatList";
-import BlackListUserCell from "../components/BlackListUserCell";
-import { useMemo } from "react";
-import { Appbar } from "react-native-paper";
-import { AppBar } from "@/features/navigation/components/AppBar";
 import {
   SearchContextProvider,
   SearchContextbar,
   useSearchContext,
 } from "@/contexts/SearchContext";
+import { AppBar } from "@/features/navigation/components/AppBar";
 import { t } from "i18next";
-import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
+import { useMemo } from "react";
+import { Appbar } from "react-native-paper";
+import BlackListUserCell from "../components/BlackListUserCell";
+import { useInfiniteBlackListUsers } from "../queries";
 
 type BlackListScreenProps = {};
 
@@ -63,7 +63,7 @@ export const BlackListUsersList = () => {
       ListFooterComponent={
         <ListFooterActivityIndicator loading={q.isFetchingNextPage} />
       }
-      keyExtractor={(item) => item.username}
+      keyExtractor={(item) => item.pk}
       isPending={q.isPending}
       isError={q.isError}
       onRetry={q.refetch}

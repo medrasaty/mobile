@@ -1,17 +1,7 @@
 import useAuthClient from "@/hooks/useAuthClient";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { WatchHistoryKeys } from "./keys";
-import { getHistory, getInfiniteHistory } from "./requests";
-import { Circle } from "react-native-svg";
-
-export default function useHistory(params: any = {}) {
-  const client = useAuthClient();
-
-  return useQuery({
-    queryKey: WatchHistoryKeys.withParams(params),
-    queryFn: async () => await getHistory(client, params),
-  });
-}
+import { getInfiniteHistory } from "./requests";
 
 export function useInfiniteHistory(params: any = {}) {
   const client = useAuthClient();

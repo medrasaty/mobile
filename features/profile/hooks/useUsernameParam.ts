@@ -1,16 +1,7 @@
 import { BaseUser } from "@/types/user.types";
-import {
-  useGlobalSearchParams,
-  useLocalSearchParams,
-  useRouter,
-  useSegments,
-} from "expo-router";
-import { useState, useEffect } from "react";
+import { useGlobalSearchParams } from "expo-router";
 
-export default function useUsernameParam() {
-  const { username } = useGlobalSearchParams<{
-    username: BaseUser["username"];
-  }>();
-
-  return username;
+export default function useUserIdParams() {
+  const params = useGlobalSearchParams<{ id: BaseUser["id"] }>();
+  return params.id;
 }

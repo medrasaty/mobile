@@ -5,40 +5,34 @@ import { Axios } from "axios";
 import { transformDates } from "../forum/utils";
 import { FollowingRequest, FriendUser } from "./types";
 
-export async function follow(client: Axios, username: BaseUser["username"]) {
+export async function follow(client: Axios, pk: BaseUser["pk"]) {
   /**
    * Follow the user.
    */
-  const response = await client.post(`/users/${username}/follow/`);
+  const response = await client.post(`/users/${pk}/follow/`);
   return response;
 }
 
-export async function followBack(
-  client: Axios,
-  username: BaseUser["username"]
-) {
-  const response = await client.post(`/users/${username}/follow_back/`);
+export async function followBack(client: Axios, pk: BaseUser["pk"]) {
+  const response = await client.post(`/users/${pk}/follow_back/`);
   return response;
 }
 
-export async function unfollow(client: Axios, username: BaseUser["username"]) {
+export async function unfollow(client: Axios, pk: BaseUser["pk"]) {
   /**
    * Follow the user.
    */
-  const response = await client.delete(`/users/${username}/unfollow/`);
+  const response = await client.delete(`/users/${pk}/unfollow/`);
   return response;
 }
 
-export async function sendFollowingRequest(
-  client: Axios,
-  username: BaseUser["username"]
-) {
+export async function sendFollowingRequest(client: Axios, pk: BaseUser["pk"]) {
   /**
    * Send following request to user
    */
 
   const data = {
-    to_user: username,
+    to_user: pk,
   };
 
   const response = await client.post("/following_requests/", data);

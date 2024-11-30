@@ -111,13 +111,7 @@ const ForumQuestionCard = ({
           alignItems="center"
           style={{ justifyContent: "space-between", marginTop: 10 }}
         >
-          <UserInfo
-            name={owner.short_name}
-            username={owner.username}
-            schoolName={owner.family_name}
-            avatarUrl={owner.profile_picture}
-            avatarSize={compact ? 35 : 45}
-          />
+          <UserInfo user={question.owner} avatarSize={compact ? 35 : 45} />
         </Row>
       </Surface>
     </Pressable>

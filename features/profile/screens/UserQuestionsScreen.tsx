@@ -1,24 +1,18 @@
 import Page from "@/components/Page";
 import { ScreenListV3 } from "@/components/ScreenFlatList";
-import { ThemedText } from "@/components/ThemedText";
 import useUsernameParam from "@/features/profile/hooks/useUsernameParam";
 import { useCallback } from "react";
-import { useTheme } from "react-native-paper";
-import useProfileQuestions from "../hooks/useProfileQuestions";
-import QuestionCard, {
-  QUESTION_CARD_HEIGHT,
-} from "@/features/forum/components/question/QuestionCard";
+import { FORUM_QUESTION_CARD_HEIGHT } from "@forum/questions/components/QuestionsCard";
 import { Question } from "@/types/forum.types";
 import FullPageLoadingIndicator from "@/components/FullPageLoadingIndicator";
 import useFilterOptions from "@/hooks/useFilterOptions";
 import { t } from "i18next";
 import FilterOptionsView from "@/components/FilterOptionsView";
-import { useForumQuestions } from "@/features/forum/queries";
 import useUserQuestions from "../queries";
 import ForumQuestionCard from "@forum/questions/components/QuestionsCard";
 
 const UserQuestionsScreen = () => {
-  const username = useUsernameParam();
+  const userId = useUsernameParam();
 
   const { currentFilter, options, onFilterChange } = useFilterOptions([
     {
@@ -35,7 +29,7 @@ const UserQuestionsScreen = () => {
     },
   ]);
 
-  const q = useUserQuestions(username, { ordering: currentFilter });
+  const q = useUserQuestions(userId, { ordering: currentFilter });
 
   const renderItem = useCallback(({ item }: { item: Question }) => {
     return <ForumQuestionCard question={item} />;
@@ -56,14 +50,14 @@ const UserQuestionsScreen = () => {
     q.refetch();
   }, []);
 
-  if (!username) return <FullPageLoadingIndicator />;
+  if (!userId) return <FullPageLoadingIndicator />;
   return (
     <Page>
       <ScreenListV3
         ListHeaderComponent={renderHeader}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingTop: 10 }}
-        estimatedItemSize={QUESTION_CARD_HEIGHT}
+        estimatedItemSize={FORUM_QUESTION_CARD_HEIGHT}
         onRefresh={handleRefresh}
         refreshing={q.isRefetching}
         q={q}

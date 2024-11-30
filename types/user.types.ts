@@ -7,6 +7,7 @@ export interface Session {
 
 export interface BaseUser {
   id: number;
+  pk: string;
   username: string;
   email: string;
   name: string;

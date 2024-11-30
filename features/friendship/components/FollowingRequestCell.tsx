@@ -1,39 +1,26 @@
-import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import React, { useMemo } from "react";
+import React from "react";
 import { FollowingRequest } from "../types";
-import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
 import { Chip, IconButton, useTheme } from "react-native-paper";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
-import UserAvatar from "@/components/UserAvatar";
-import { School } from "./UserCompactCell";
 import { t } from "i18next";
 import { FollowingRequestStatusType } from "@/features/profile/types";
 import Row from "@/components/Row";
 import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
-import useVisible, { useVisibleV2 } from "@/hooks/useVisible";
+import { useVisibleV2 } from "@/hooks/useVisible";
 import { Ionicons } from "@expo/vector-icons";
 import useDeleteFollowingRequestMutation from "../hooks/useDeleteFollowingRequestMutaiton";
 import LoadingDialog from "@/components/LoadingDialog";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
+import UserInfo from "@components/UserInfo";
+import { path } from "@/lib/routing";
 
 const FollowingRequestCell = ({ request }: { request: FollowingRequest }) => {
-  const gotToUser = () => {
-    router.push(`/users/${request.to_user.username}`);
-  };
   return (
     <ThemedView style={[styles.container]}>
       <ThemedView style={styles.rowContainer}>
-        <ThemedView
-          style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-        >
-          <UserAvatar url={request.to_user.profile_picture} size={60} />
-          <Pressable onPress={gotToUser} style={{ gap: 5 }}>
-            <ThemedText>{request.to_user.short_name}</ThemedText>
-            <School name={request.to_user.school_name} />
-          </Pressable>
-        </ThemedView>
-
+        <UserInfo user={request.to_user} />
         <Row alignItems="center">
           <Status status={request.status} />
           <DeleteRequest requestId={request.id} />

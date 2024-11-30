@@ -1,9 +1,8 @@
 import Page from "@/components/Page";
 import { ThemedText } from "@/components/ThemedText";
 import UserGridList from "../components/UsersGridList";
-import { useFollowersQuery } from "../hooks/useFriendsQuery";
+import { useFollowersQuery } from "../queries";
 import FrienshipScreenActivityIndicator from "../components/FrienshipScreenActivityIndicator";
-import FrienshipScreenError from "../components/FrienshipScreenError";
 import NetworkError from "@/components/NetworkError";
 
 type FollowerScreenProps = {};

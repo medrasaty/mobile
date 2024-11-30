@@ -3,7 +3,8 @@ import SheetView from "@/components/SheetView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { containerPaddings } from "@/constants/styels";
-import { Answer, Reply } from "@/types/forum.types";
+import { Reply } from "@/types/forum.types";
+import { Answer } from "@forum/answers/types";
 import {
   BottomSheetFlatList,
   BottomSheetFooterProps,

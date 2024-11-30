@@ -6,23 +6,24 @@ import { FRIENDS_QUERY_KEY, FriendsQueryKeys } from "./useFriendsQuery";
 import * as Burnt from "burnt";
 import { followBack } from "../requests";
 import { BaseUser } from "@/types/user.types";
+import { ProfileQueryKeys } from "@features/profile/keys";
 
 export default function useFollowBackMutation() {
   const client = useAuthClient();
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ username }: { username: BaseUser["username"] }) =>
-      await followBack(client, username),
+    mutationFn: async ({ pk }: { pk: BaseUser["pk"] }) =>
+      await followBack(client, pk),
     onSuccess: async (data, variables) => {
       /** Updates for the following queries
        */
-      const { username } = variables;
+      const { pk } = variables;
 
       // set is_following to true
-      const profile = await qc.getQueryData(["profile", username]);
+      const profile = await qc.getQueryData(ProfileQueryKeys.detail(pk));
       if (profile) {
-        qc.setQueryData(["profile", username], {
+        qc.setQueryData(ProfileQueryKeys.detail(pk), {
           ...profile,
           is_following: true,
         });
@@ -35,7 +36,7 @@ export default function useFollowBackMutation() {
         (oldData: FriendUser[] | undefined) => {
           if (oldData) {
             return oldData.map((friend) => {
-              if (friend.username === username) {
+              if (friend.pk === pk) {
                 newFriend = {
                   ...friend,
                   is_following: true,
@@ -73,9 +74,9 @@ export default function useFollowBackMutation() {
     },
 
     onSettled: (_data, _error, variables) => {
-      const { username } = variables;
+      const { pk } = variables;
       qc.invalidateQueries({
-        queryKey: ["profile", username],
+        queryKey: ProfileQueryKeys.detail(pk),
       });
     },
   });
