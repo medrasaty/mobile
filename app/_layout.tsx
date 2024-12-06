@@ -17,6 +17,7 @@ import AlertDialogProvider from "@/contexts/AlertDialogContext";
 import "@/localazation/i18n";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { DarkColors, LightColors } from "@/features/theme/colors";
+import PaperThemeProvider from "@features/theme/providers";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -24,7 +25,6 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
-  const colorscheme = useColorScheme();
   useReactQueryDevTools(queryClient);
 
   const [loaded] = useFonts({
@@ -47,14 +47,11 @@ export default function RootLayout() {
    * checking internet connectivity and fetching user info from the server.
    */
 
-  const theme = colorscheme === "dark" ? Darktheme : LightTheme;
-  const colors = colorscheme === "dark" ? DarkColors : LightColors;
-
   return (
     <GestureHandlerRootView>
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
-          <PaperProvider theme={{ ...theme, colors: colors.gray.colors }}>
+          <PaperThemeProvider>
             <RootSiblingParent>
               <BottomSheetModalProvider>
                 <SafeAreaProvider>
@@ -72,7 +69,7 @@ export default function RootLayout() {
                 </SafeAreaProvider>
               </BottomSheetModalProvider>
             </RootSiblingParent>
-          </PaperProvider>
+          </PaperThemeProvider>
         </SessionProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>
