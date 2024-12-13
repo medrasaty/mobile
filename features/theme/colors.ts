@@ -357,4 +357,10 @@ const LightColors = {
   },
 };
 
+const colors = {
+  dark: DarkColors.gray.colors,
+  light: LightColors.gray.colors,
+};
+
+export default colors;
 export { LightColors, DarkColors };

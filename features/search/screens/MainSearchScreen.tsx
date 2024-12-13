@@ -112,6 +112,7 @@ const LatestSection = <T,>({
       </ThemedText>
       {status === "success" && data ? (
         <FlatList
+          fadingEdgeLength={50}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={data}

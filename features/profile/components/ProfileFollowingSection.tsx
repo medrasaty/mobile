@@ -29,27 +29,26 @@ type ProfileFollowingSectionProps = {
 };
 
 const ProfileActionsSection = ({ profile }: ProfileFollowingSectionProps) => {
-  if (profile.is_self)
-    return (
-      <Row style={{ justifyContent: "flex-end" }} alignItems="center">
-        {profile.is_self ? (
-          <Button
-            mode="contained"
-            icon={(props) => {
-              return <Ionicons name="settings-outline" {...props} />;
-            }}
-            onPress={() => router.push(path.settings.main)}
-          >
-            {t("settings")}
-          </Button>
-        ) : (
-          <>
-            <FollowingActions profile={profile} />
-            <MoreOptions profile={profile} />
-          </>
-        )}
-      </Row>
-    );
+  return (
+    <Row style={{ justifyContent: "flex-end" }} alignItems="center">
+      {profile.is_self ? (
+        <Button
+          mode="contained"
+          icon={(props) => {
+            return <Ionicons name="settings-outline" {...props} />;
+          }}
+          onPress={() => router.push(path.settings.main)}
+        >
+          {t("settings")}
+        </Button>
+      ) : (
+        <>
+          <FollowingActions profile={profile} />
+          <MoreOptions profile={profile} />
+        </>
+      )}
+    </Row>
+  );
 };
 
 export const MoreOptions = ({ profile }: { profile: UserProfile }) => {

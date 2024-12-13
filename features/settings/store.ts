@@ -1,8 +1,16 @@
 import { create } from "zustand";
+import { SettingsType } from "./types";
+import { DEFAULT_SETTINGS } from "./defaults";
 type SettingsStore = {
-    theme: "dark" | "light" | "system";
+  settings: SettingsType;
+  setSettingStore: (settings: SettingsType) => void;
 };
 
 export const useSettingsStore = create<SettingsStore>((set) => ({
-    theme: "system" 
-})
+  settings: DEFAULT_SETTINGS,
+  setSettingStore: (settings) => {
+    // update current settings
+    // update local settings ( use storage state )
+    set({ settings });
+  },
+}));

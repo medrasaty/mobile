@@ -18,6 +18,9 @@ import "@/localazation/i18n";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { DarkColors, LightColors } from "@/features/theme/colors";
 import PaperThemeProvider from "@features/theme/providers";
+import { useSettingsStore } from "@features/settings/store";
+import { useStorageState } from "@/hooks/useStorageState";
+import { useLoadSettingsAsync } from "@features/settings/hooks";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -27,26 +30,26 @@ const queryClient = new QueryClient();
 export default function RootLayout() {
   useReactQueryDevTools(queryClient);
 
-  const [loaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     Cairo: require("../assets/fonts/Cairo-Regular.ttf"),
     NotoSansArabic: require("../assets/fonts/NotoSansArabic-Regular.ttf"),
   });
 
+  const [settingsLoaded] = useLoadSettingsAsync();
+
   useEffect(() => {
-    if (loaded) {
+    if (fontsLoaded && settingsLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [fontsLoaded]);
 
-  if (!loaded) {
+  if (!fontsLoaded) {
     return null;
   }
 
   /** the main purpose of root layout is to show login screen if not logged in
-   * and the main application if the user is logged in, and also loading fonts,
-   * checking internet connectivity and fetching user info from the server.
+   * and the main application if the user is logged in, and also loading state ( fonts, settings, authstate, etc),
    */
-
   return (
     <GestureHandlerRootView>
       <QueryClientProvider client={queryClient}>
