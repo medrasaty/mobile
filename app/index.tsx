@@ -2,14 +2,14 @@ import { Container } from "@/components/styled";
 import View, { SafeAreaView } from "@/components/styled/View";
 import { HOME_PAGE, LOGIN_PAGE } from "@/constants/routes";
 import { ThemedText } from "@components/ThemedText";
-import { useUpdateSettings } from "@features/settings/hooks";
-import { useSettingsStore } from "@features/settings/store";
+import { useUpdateClientSettings } from "@features/settings/hooks";
+import { useLocalSettingsStore } from "@features/settings/store";
 import { router } from "expo-router";
 import { Button } from "react-native-paper";
 
 export default function IndexPage() {
-  const storeSettings = useSettingsStore((state) => state.settings);
-  const update = useUpdateSettings();
+  const storeSettings = useLocalSettingsStore((state) => state.settings);
+  const update = useUpdateClientSettings();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

@@ -1,12 +1,12 @@
 import { create } from "zustand";
-import { SettingsType } from "./types";
+import { ClientSettings } from "./types";
 import { DEFAULT_SETTINGS } from "./defaults";
 type SettingsStore = {
-  settings: SettingsType;
-  setSettingStore: (settings: SettingsType) => void;
+  settings: ClientSettings;
+  setSettingStore: (settings: ClientSettings) => void;
 };
 
-export const useSettingsStore = create<SettingsStore>((set) => ({
+export const useLocalSettingsStore = create<SettingsStore>((set) => ({
   settings: DEFAULT_SETTINGS,
   setSettingStore: (settings) => {
     // update current settings

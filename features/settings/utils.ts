@@ -1,5 +1,5 @@
-import { SettingsType } from "./types";
+import { ClientSettings } from "./types";
 
-export function parseSettings(settings: string): SettingsType {
-  return JSON.parse(settings) as SettingsType;
+export function parseClientSettings(settings: string): ClientSettings {
+  return JSON.parse(settings) as ClientSettings;
 }

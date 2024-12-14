@@ -3,7 +3,7 @@ import { View, ViewProps, useColorScheme } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import { Darktheme, LightTheme } from "@/constants/theme";
 import { DarkColors, LightColors } from "@/features/theme/colors";
-import { useSettingsStore } from "@features/settings/store";
+import { useLocalSettingsStore } from "@features/settings/store";
 
 type PaperThemeProviderProps = {} & React.PropsWithChildren;
 
@@ -13,7 +13,7 @@ const PaperThemeProvider = ({
 }: PaperThemeProviderProps) => {
   // System color Scheam
 
-  const settings = useSettingsStore((state) => state.settings);
+  const settings = useLocalSettingsStore((state) => state.settings);
 
   const colorscheme = useColorScheme();
   // TODO: refactor this mess

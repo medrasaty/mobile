@@ -1,12 +1,9 @@
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { useColorScheme } from "react-native";
-import { PaperProvider } from "react-native-paper";
 
 import { SessionProvider } from "@/features/auth/ctx";
 import { HOME_PAGE } from "@/constants/routes";
-import { Darktheme, LightTheme } from "@/constants/theme";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -16,11 +13,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import AlertDialogProvider from "@/contexts/AlertDialogContext";
 import "@/localazation/i18n";
 import { RootSiblingParent } from "react-native-root-siblings";
-import { DarkColors, LightColors } from "@/features/theme/colors";
 import PaperThemeProvider from "@features/theme/providers";
-import { useSettingsStore } from "@features/settings/store";
-import { useStorageState } from "@/hooks/useStorageState";
-import { useLoadSettingsAsync } from "@features/settings/hooks";
+import { useLoadClientSettingsAsync } from "@features/settings/hooks";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -35,7 +29,7 @@ export default function RootLayout() {
     NotoSansArabic: require("../assets/fonts/NotoSansArabic-Regular.ttf"),
   });
 
-  const [settingsLoaded] = useLoadSettingsAsync();
+  const [settingsLoaded] = useLoadClientSettingsAsync();
 
   useEffect(() => {
     if (fontsLoaded && settingsLoaded) {
