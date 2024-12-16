@@ -1,6 +1,6 @@
 import View from "@/components/styled/View";
+import { Image } from "expo-image";
 import { ViewProps, useColorScheme } from "react-native";
-import FastImage from "react-native-fast-image";
 
 const MedrasatyLogo = ({ style, ...props }: ViewProps) => {
   const dark_logo = require(`@/assets/images/logo_dark.png`);
@@ -10,9 +10,10 @@ const MedrasatyLogo = ({ style, ...props }: ViewProps) => {
 
   return (
     <View style={[style]} {...props}>
-      <FastImage 
+      <Image
         source={colorscheme === "dark" ? dark_logo : light_logo}
-        resizeMode={FastImage.resizeMode.contain}
+        contentFit="contain"
+        transition={0}
         style={{ width: 200, height: 100 }}
 
       />

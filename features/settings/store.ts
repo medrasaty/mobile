@@ -1,6 +1,12 @@
 import { create } from "zustand";
 import { ClientSettings } from "./types";
 import { DEFAULT_SETTINGS } from "./defaults";
+import { MMKV } from "react-native-mmkv";
+
+const storage = new MMKV({
+  id: "settings-storage",
+});
+
 type SettingsStore = {
   settings: ClientSettings;
   setSettingStore: (settings: ClientSettings) => void;
