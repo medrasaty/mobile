@@ -8,12 +8,12 @@ import ShareContentSheet from "@/features/share/components/ShareContentSheet";
 import { d } from "@/lib/dates";
 import { translateSubject } from "@/lib/utils";
 import { DetailQuestion, Question } from "@/types/forum.types";
+import UserInfo from "@components/UserInfo";
+import { Image } from "expo-image";
 import { t } from "i18next";
 import { memo, useMemo } from "react";
 import { Pressable, ViewProps } from "react-native";
-import FastImage from "react-native-fast-image";
 import { useTheme } from "react-native-paper";
-import UserInfo from "@components/UserInfo";
 
 type QuestionDetailInfoProps = {
   id: DetailQuestion["id"];
@@ -183,13 +183,12 @@ export const Picture = memo(({ image }: { image?: string }) => {
   return (
     <>
       <Pressable onPress={() => alert("bigger")}>
-        <FastImage
+        <Image
           style={[style, { height: 160 }]}
           source={{
             uri: image,
-            priority: FastImage.priority.high,
           }}
-          resizeMode={FastImage.resizeMode.cover}
+          contentFit="cover"
         />
       </Pressable>
     </>

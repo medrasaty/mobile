@@ -1,11 +1,10 @@
 import { ThemedView } from "@/components/ThemedView";
-import FastImage from "react-native-fast-image";
-import { StyleSheet, ViewProps } from "react-native";
+import { Image } from "expo-image";
 import { useMemo } from "react";
+import { StyleSheet, ViewProps } from "react-native";
 import { Divider, useTheme } from "react-native-paper";
-import { useProfileScreen } from "../contexts/ProfileScreenContext";
-import ProfileInfo from "./ProfileInfo";
 import { UserProfile } from "../types";
+import ProfileInfo from "./ProfileInfo";
 
 type ProfileBackgroundImageProps = {
   background: UserProfile["profile"]["background"];
@@ -22,8 +21,8 @@ export const ProfileBackgroundImage = ({
 
   return (
     <ThemedView style={[style, styles.container]} {...props}>
-      <FastImage
-        resizeMode={FastImage.resizeMode.cover}
+      <Image
+        contentFit="cover"
         source={{ uri: background }}
         style={styles.image}
       />

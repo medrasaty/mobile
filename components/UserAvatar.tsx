@@ -1,17 +1,16 @@
-import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { BaseUser } from "@/types/user.types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { IconProps } from "@expo/vector-icons/build/createIconSet";
+import { Image, ImageProps } from "expo-image";
 import { useMemo } from "react";
 import { View, ViewProps } from "react-native";
-import FastImage, { FastImageProps } from "react-native-fast-image";
-import { IconButtonProps, useTheme } from "react-native-paper";
+import { useTheme } from "react-native-paper";
 
 type UserAvatarProps = {
   url: BaseUser["profile_picture"];
   size: number;
-  style?: FastImageProps["style"];
+  style?: ImageProps["style"];
 };
 
 /**
@@ -20,8 +19,8 @@ type UserAvatarProps = {
 const UserAvatar = ({ url, size, style }: UserAvatarProps) => {
   return (
     <ThemedView>
-      <FastImage
-        resizeMode={FastImage.resizeMode.cover}
+      <Image
+      contentFit="cover"
         source={{ uri: url }}
         style={[
           style,
@@ -39,7 +38,7 @@ const UserAvatar = ({ url, size, style }: UserAvatarProps) => {
 export type UserAvatarV2Props = {
   user: BaseUser;
   size: number;
-  imageStyle?: FastImageProps["style"];
+  imageStyle?: ImageProps["style"];
   borderColor?: string;
   badge?: IconProps<any>["name"];
 } & ViewProps;
@@ -76,8 +75,8 @@ export const UserAvatarV2 = ({
       }}
       {...props}
     >
-      <FastImage
-        resizeMode={FastImage.resizeMode.cover}
+      <Image
+        contentFit="cover"
         source={{ uri: user.profile_picture }}
         style={[
           imageStyle,

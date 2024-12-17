@@ -1,18 +1,17 @@
+import ReputationInfo from "@/components/ReputationInfo";
+import Row from "@/components/Row";
+import { ContainerView } from "@/components/styled";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { UserProfile } from "../types";
-import FastImage from "react-native-fast-image";
-import { useTheme } from "react-native-paper";
+import { containerMargins, debugStyle } from "@/constants/styels";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import { Link } from "expo-router";
 import React, { useMemo } from "react";
 import { StyleSheet, ViewProps } from "react-native";
-import { ContainerView } from "@/components/styled";
-import Row from "@/components/Row";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTheme } from "react-native-paper";
+import { UserProfile } from "../types";
 import ProfileActionsSection from "./ProfileFollowingSection";
-import { Link, useRouter } from "expo-router";
-import ReputationInfo from "@/components/ReputationInfo";
-import { containerMargins, debugStyle } from "@/constants/styels";
-import WithCondition from "@/components/WithCondition";
 
 type ProfileInfoProps = {
   profile: UserProfile;
@@ -55,8 +54,8 @@ export const ProfilePicture = ({
   const styles = useProfilePictureStyle();
   return (
     <ContainerView {...props} style={[style, styles.container]}>
-      <FastImage
-        resizeMode={FastImage.resizeMode.cover}
+      <Image
+        contentFit="cover"
         source={{ uri: url }}
         style={styles.image}
       />

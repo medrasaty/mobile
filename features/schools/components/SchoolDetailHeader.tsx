@@ -1,16 +1,13 @@
-import { ThemedText } from "@/components/ThemedText";
-import { DetailSchool, School } from "../types";
-import { View, ViewProps } from "react-native";
-import FastImage from "react-native-fast-image";
 import Avatar from "@/components/Avatar";
-import { StyleSheet } from "react-native";
-import { Surface, useTheme } from "react-native-paper";
-import { useMemo } from "react";
-import { containerMargins } from "@/constants/styels";
-import Row from "@/components/Row";
 import ReputationInfo from "@/components/ReputationInfo";
-import { Ionicons } from "@expo/vector-icons";
+import { ThemedText } from "@/components/ThemedText";
+import { containerMargins } from "@/constants/styels";
 import { AppBar } from "@/features/navigation/components/AppBar";
+import { Image } from "expo-image";
+import { useMemo } from "react";
+import { StyleSheet, View, ViewProps } from "react-native";
+import { Surface, useTheme } from "react-native-paper";
+import { DetailSchool, School } from "../types";
 import SchoolName from "./SchoolName";
 
 const Header = ({ school }: { school: DetailSchool }) => {
@@ -37,8 +34,8 @@ export const BackgroundImage = ({
 }: { url: School["background"] } & ViewProps) => {
   return (
     <View style={{ alignItems: "center" }} {...props}>
-      <FastImage
-        resizeMode={FastImage.resizeMode.cover}
+      <Image
+        contentFit="cover"
         source={{ uri: url }}
         style={styles.backgroundImage}
       />

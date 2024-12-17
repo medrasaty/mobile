@@ -1,7 +1,13 @@
-import { answerSchema, answerSchemaType } from "@forum/answers/schema";
-import { FormikConfig } from "formik";
+import { containerMargins, containerPaddings } from "@/constants/styels";
+import LoadingDialog from "@components/LoadingDialog";
 import { ThemedText } from "@components/ThemedText";
-import Animated, { useAnimatedKeyboard } from "react-native-reanimated";
+import { answerSchema, answerSchemaType } from "@forum/answers/schema";
+import { AddPictureButton } from "@forum/components/question/CreateNewQuestionPageComponents";
+import useForumPictureStyle from "@forum/hooks";
+import { Image } from "expo-image";
+import { Formik, FormikConfig } from "formik";
+import { t } from "i18next";
+import { StyleSheet, View } from "react-native";
 import {
   Button,
   HelperText,
@@ -9,15 +15,7 @@ import {
   TextInput,
   useTheme,
 } from "react-native-paper";
-import { t } from "i18next";
-import { View } from "react-native";
-import { StyleSheet } from "react-native";
-import { containerMargins, containerPaddings } from "@/constants/styels";
-import LoadingDialog from "@components/LoadingDialog";
-import { Formik } from "formik";
-import { AddPictureButton } from "@forum/components/question/CreateNewQuestionPageComponents";
-import FastImage from "react-native-fast-image";
-import useForumPictureStyle from "@forum/hooks";
+import Animated from "react-native-reanimated";
 
 type AnswerFormProps = {
   edit?: boolean;
@@ -87,9 +85,9 @@ const AnswerForm = ({ edit, ...props }: AnswerFormProps) => {
                 </ThemedText>
                 <View style={{ gap: 10 }}>
                   <ThemedText variant="titleMedium">{values.text}</ThemedText>
-                  <FastImage
+                  <Image
                     style={pictureStyle}
-                    resizeMode={FastImage.resizeMode.cover}
+                    contentFit="cover"
                     source={{ uri: values.picture }}
                   />
                 </View>
