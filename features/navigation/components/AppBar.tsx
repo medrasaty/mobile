@@ -49,7 +49,7 @@ export function AppBar({
           <Appbar.BackAction onPress={() => goBack()} />
         )}
         <Appbar.Content
-          titleStyle={[titleStyle, { fontSize: 27 }]}
+          titleStyle={[titleStyle, { fontSize: 24 }]}
           title={title}
         />
         {props.children}

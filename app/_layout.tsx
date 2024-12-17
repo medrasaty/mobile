@@ -53,7 +53,6 @@ export default function RootLayout() {
               <BottomSheetModalProvider>
                 <SafeAreaProvider>
                   <AlertDialogProvider>
-                    <StatusBar style="auto" />
                     <Stack
                       initialRouteName={HOME_PAGE}
                       screenOptions={{ headerShown: false }}

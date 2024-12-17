@@ -53,6 +53,7 @@ export const ProfilePicture = ({
 }: { url: UserProfile["profile_picture"] | undefined } & ViewProps) => {
   const styles = useProfilePictureStyle();
   const theme = useTheme();
+
   return (
     <ContainerView {...props} style={[style, styles.container]}>
       <View

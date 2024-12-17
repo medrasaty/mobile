@@ -17,9 +17,7 @@ type MultiQueryScreenListProps<T> = {
 
 /** Handle rendering list with two async queries, header, and the actual data,
  * The entire list will not be rendered untile the header query is loaded.
- # data will also be in loading state until fully loaded
- * 
- *
+ * data will also be in loading state until fully loaded
  */
 export default function MultiQueryScreenList<T>({
   headerStatus,
