@@ -86,7 +86,8 @@ const AnswerForm = ({ edit, ...props }: AnswerFormProps) => {
                 <View style={{ gap: 10 }}>
                   <ThemedText variant="titleMedium">{values.text}</ThemedText>
                   <Image
-                    style={pictureStyle}
+                    
+                    style={[pictureStyle]}
                     contentFit="cover"
                     source={{ uri: values.picture }}
                   />

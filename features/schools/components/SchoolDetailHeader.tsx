@@ -35,6 +35,8 @@ export const BackgroundImage = ({
   return (
     <View style={{ alignItems: "center" }} {...props}>
       <Image
+        cachePolicy={"memory" }
+        transition={0}
         contentFit="cover"
         source={{ uri: url }}
         style={styles.backgroundImage}

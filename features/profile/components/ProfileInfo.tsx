@@ -8,7 +8,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
 import React, { useMemo } from "react";
-import { StyleSheet, ViewProps } from "react-native";
+import { StyleSheet, View, ViewProps } from "react-native";
 import { useTheme } from "react-native-paper";
 import { UserProfile } from "../types";
 import ProfileActionsSection from "./ProfileFollowingSection";
@@ -52,13 +52,24 @@ export const ProfilePicture = ({
   ...props
 }: { url: UserProfile["profile_picture"] | undefined } & ViewProps) => {
   const styles = useProfilePictureStyle();
+  const theme = useTheme();
   return (
     <ContainerView {...props} style={[style, styles.container]}>
-      <Image
-        contentFit="cover"
-        source={{ uri: url }}
-        style={styles.image}
-      />
+      <View
+        style={{
+          borderRadius: 100,
+          borderWidth: 2,
+          borderColor: theme.colors.secondaryContainer,
+        }}
+      >
+        <Image
+          contentFit="cover"
+          source={{ uri: url }}
+          transition={0}
+          cachePolicy={"memory"}
+          style={styles.image}
+        />
+      </View>
     </ContainerView>
   );
 };
@@ -66,7 +77,7 @@ export const ProfilePicture = ({
 export function useProfilePictureStyle() {
   const theme = useTheme();
   const AVATAR_SIZE = 120;
-  const marginTopFactor = 0.2;
+  const marginTopFactor = 0.4;
   return useMemo(() => {
     return StyleSheet.create({
       container: {
@@ -78,7 +89,6 @@ export function useProfilePictureStyle() {
         borderRadius: AVATAR_SIZE / 2,
         borderColor: theme.colors.secondaryContainer,
         backgroundColor: theme.colors.secondary,
-        borderWidth: 3,
         shadowColor: theme.colors.shadow,
         elevation: 10,
       },

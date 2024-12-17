@@ -21,6 +21,8 @@ const UserAvatar = ({ url, size, style }: UserAvatarProps) => {
     <ThemedView>
       <Image
       contentFit="cover"
+       cachePolicy={"memory"}
+       transition={0}
         source={{ uri: url }}
         style={[
           style,
@@ -77,6 +79,8 @@ export const UserAvatarV2 = ({
     >
       <Image
         contentFit="cover"
+        transition={0}
+        cachePolicy={"memory"}
         source={{ uri: user.profile_picture }}
         style={[
           imageStyle,

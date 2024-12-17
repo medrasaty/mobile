@@ -23,6 +23,8 @@ export const ProfileBackgroundImage = ({
     <ThemedView style={[style, styles.container]} {...props}>
       <Image
         contentFit="cover"
+        transition={0}
+        cachePolicy={"memory"}
         source={{ uri: background }}
         style={styles.image}
       />

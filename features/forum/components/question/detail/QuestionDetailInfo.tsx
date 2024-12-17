@@ -184,6 +184,7 @@ export const Picture = memo(({ image }: { image?: string }) => {
     <>
       <Pressable onPress={() => alert("bigger")}>
         <Image
+          
           style={[style, { height: 160 }]}
           source={{
             uri: image,
