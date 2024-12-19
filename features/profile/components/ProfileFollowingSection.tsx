@@ -19,7 +19,6 @@ import { Button } from "react-native-paper";
 import { t } from "i18next";
 import ReportDialog from "@/features/reports/components/ReportDialog";
 import { useVisibleV2 } from "@/hooks/useVisible";
-import { debugStyle } from "@/constants/styels";
 import { Ionicons } from "@expo/vector-icons";
 import { path } from "@/lib/routing";
 import { router } from "expo-router";
@@ -39,7 +38,7 @@ const ProfileActionsSection = ({ profile }: ProfileFollowingSectionProps) => {
           }}
           onPress={() => router.push(path.settings.main)}
         >
-          {t("settings")}
+          {t("settings.settings")}
         </Button>
       ) : (
         <>

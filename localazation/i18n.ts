@@ -2,31 +2,31 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { ar, en } from "./translations";
+import { useSettingStore } from "@features/settings/store";
 
 const STORE_LANGUAGE_KEY = "setting.lang";
 
 const DEFAULT_LANGUAGE = "ar";
 
 interface I18nLanguageDetectorModule {
-  type: 'languageDetector';
+  type: "languageDetector";
   init?(): void;
   detect(): string | readonly string[] | undefined;
   cacheUserLanguage?(lng: string): void;
 }
 
 export const LanguageDetector: I18nLanguageDetectorModule = {
-  type: 'languageDetector',
+  type: "languageDetector",
   init: () => {},
   detect: () => {
     // return language code name ( use mmkv to get it from settings) )
-    return "en"
+    return "en";
   },
   cacheUserLanguage: (lng: string) => {
     // set language code name
     // TODO
   },
 };
-
 
 const languageDetectorPlugin = {
   type: "languageDetector",

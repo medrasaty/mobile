@@ -14,7 +14,6 @@ import AlertDialogProvider from "@/contexts/AlertDialogContext";
 import "@/localazation/i18n";
 import { RootSiblingParent } from "react-native-root-siblings";
 import PaperThemeProvider from "@features/theme/providers";
-import { useLoadClientSettingsAsync } from "@features/settings/hooks";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -29,10 +28,8 @@ export default function RootLayout() {
     NotoSansArabic: require("../assets/fonts/NotoSansArabic-Regular.ttf"),
   });
 
-  const [settingsLoaded] = useLoadClientSettingsAsync();
-
   useEffect(() => {
-    if (fontsLoaded && settingsLoaded) {
+    if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);

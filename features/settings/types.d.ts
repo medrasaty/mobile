@@ -2,9 +2,6 @@ import { ThemeType } from "@features/theme/types";
 
 export type Language = "en" | "ar";
 
-/** @deprecated */
-export interface SettingsType {}
-
 export interface ClientSettings {
   theme: ThemeType;
   language: Language;
@@ -16,3 +13,5 @@ export interface ServerSettings {
   display_gender: boolean;
   push_notification: boolean;
 }
+
+export interface SettingsType extends ClientSettings, ServerSettings {}

@@ -2,7 +2,7 @@ import Page from "@/components/Page";
 import { ThemedText } from "@/components/ThemedText";
 import { containerMargins } from "@/constants/styels";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import { ServerPage } from "@components/ServerView";
+import ServerView, { ServerPage } from "@components/ServerView";
 import { ContainerView } from "@components/styled";
 import { Ionicons } from "@expo/vector-icons";
 import { AppBar } from "@features/navigation/components/AppBar";
@@ -14,10 +14,10 @@ import { t } from "i18next";
 import { View, ViewProps } from "react-native";
 import { Divider, IconButton, useTheme } from "react-native-paper";
 import Animated from "react-native-reanimated";
-import React, { useState } from "react";
-import { ScrollView, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { Avatar, Button, Switch, TextInput, Text } from "react-native-paper";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import SwitchOption from "../components/ToggleOption";
+import { useSettingStore } from "../store";
+import { useSettings } from "../hooks";
 
 const MainSettingScreen = () => {
   const user = useCurrentUser();
@@ -29,41 +29,54 @@ const MainSettingScreen = () => {
         <Animated.ScrollView>
           <BackgroundImage background={q.data?.background_picture} />
           <ProfilePicture url={q.data?.profile_picture} />
-          <ContainerView style={{ marginTop: 10 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <ThemedText>username</ThemedText>
-              <IconButton icon={"pencil"} onPress={() => alert("editing")} />
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <ThemedText>display name</ThemedText>
-              <IconButton icon={"pencil"} onPress={() => alert("editing")} />
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <ThemedText>full name</ThemedText>
-              <IconButton icon={"pencil"} onPress={() => alert("editing")} />
-            </View>
+          <ContainerView style={{ marginTop: 40 }}>
+            <ToggleDarkTheme />
+            <TogglePushNotification />
           </ContainerView>
         </Animated.ScrollView>
       </ServerPage>
     </Page>
+  );
+};
+
+const ToggleDarkTheme = () => {
+  const theme = useSettingStore((state) => state.theme);
+  const setTheme = useSettingStore((state) => state.setTheme);
+  return (
+    <SwitchOption
+      onChange={() => {
+        if (theme !== "dark") setTheme("dark");
+        else setTheme("light");
+      }}
+      label={t("theme.dark")}
+      value={theme === "dark"}
+    />
+  );
+};
+
+const TogglePushNotification = () => {
+  // FIXME: refactor this
+  const [value, setValue] = useState(false);
+  const { status, serverSettings, isRefetching, updateSettings } =
+    useSettings();
+
+  useEffect(() => {
+    setValue(serverSettings?.push_notification ?? false);
+  }, [serverSettings, isRefetching]);
+
+  return (
+    <ServerView status={status}>
+      <SwitchOption
+        onChange={() => {
+          setValue(!value);
+          updateSettings({
+            push_notification: !serverSettings?.push_notification,
+          });
+        }}
+        label={t("push_notification")}
+        value={value}
+      />
+    </ServerView>
   );
 };
 

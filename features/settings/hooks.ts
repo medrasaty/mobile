@@ -1,36 +1,11 @@
-import { useStorageState } from "@/hooks/useStorageState";
-import { useState, useEffect } from "react";
-import { LocalStorageKeys as Local } from "@/lib/localstorage";
-import { DEFAULT_SETTINGS } from "./defaults";
-import { useLocalSettingsStore } from "./store";
-import { parseClientSettings } from "./utils";
-import { ClientSettings } from "./types";
-
-/**
- * Load settings from local storage, set default settings if loaded settings are empty ( first time run the app or has deleted all app data )
- */
-
-type useLoadSettingsAsyncHook = [loaded: boolean, settings: ClientSettings];
-
-export function useLoadClientSettingsAsync(): useLoadSettingsAsyncHook {
-  const [[isLoading, settings], setSettings] = useStorageState(Local.settings);
-  const setSettingStore = useLocalSettingsStore(
-    (state) => state.setSettingStore
-  );
-
-  // check if settings are empty
-  if (!settings && !isLoading) {
-    // set default settings
-    setSettings(JSON.stringify(DEFAULT_SETTINGS));
-  }
-
-  // set global settings store value
-  useEffect(() => {
-    setSettingStore(parseClientSettings(settings));
-  }, [isLoading, settings]);
-
-  return [!isLoading, parseClientSettings(settings)];
-}
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getServerSettings } from "./requests";
+import useAuthClient from "@/hooks/useAuthClient";
+import { SQKeys } from "./keys";
+import { useSettingStore } from "./store";
+import { ServerSettings, SettingsType } from "./types";
+import { useServerSettingsQuery } from "./queries";
+import useServerSettingsMutation from "./mutations";
 
 export function useUpdateClientSettings() {
   /**
@@ -56,19 +31,19 @@ export function useUpdateClientSettings() {
    *        - server settings will be loaded "later when needed"
    *
    */
-  const [[_isLoading, _localSettings], setSettings] = useStorageState(
-    Local.settings
-  );
-  const setSettingStore = useLocalSettingsStore(
-    (state) => state.setSettingStore
-  );
-  const settingsStore = useLocalSettingsStore((state) => state.settings);
-  const update = (settings: ClientSettings) => {
-    // update both,  global store and local store after mergin them
-    const newSettings = { ...settingsStore, ...settings };
-    setSettingStore(newSettings);
-    setSettings(JSON.stringify(newSettings));
-  };
-
-  return update;
 }
+
+export const useSettings = () => {
+  const {
+    data: serverSettings,
+    status,
+    isRefetching,
+  } = useServerSettingsQuery();
+  const { mutate: updateSettings } = useServerSettingsMutation();
+  return {
+    serverSettings,
+    status,
+    isRefetching,
+    updateSettings,
+  };
+};

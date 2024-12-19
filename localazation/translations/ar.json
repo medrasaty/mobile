@@ -96,5 +96,11 @@
   "Preview": "مراجعة",
   "settings": {
     "settings": "الإعدادات"
+  },
+  "theme": {
+    "theme": "المضهر",
+    "dark": "داكن",
+    "light": "فاتح",
+    "system": "النضام"
   }
 }

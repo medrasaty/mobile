@@ -1,12 +1,12 @@
 import useAuthClient from "@/hooks/useAuthClient";
 import { useQuery } from "@tanstack/react-query";
-import { getPreferences } from "./requests";
+import { getServerSettings } from "./requests";
 
-export function useServerPreferences() {
+export function useServerSettingsQuery() {
   const client = useAuthClient();
 
   return useQuery({
     queryKey: ["preferecnes"],
-    queryFn: async () => getPreferences(client),
+    queryFn: async () => getServerSettings(client),
   });
 }

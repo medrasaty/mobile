@@ -91,5 +91,11 @@
   "schools": "schools",
   "settings": {
     "settings": "الإعدادات"
+  },
+  "theme": {
+    "theme": "theme",
+    "dark": "dark",
+    "light": "light",
+    "system": "system"
   }
 }

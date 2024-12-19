@@ -1,10 +1,11 @@
 import { ThemedView } from "@/components/ThemedView";
 import { Image } from "expo-image";
 import { useMemo } from "react";
-import { StyleSheet, ViewProps } from "react-native";
+import { StyleSheet, View, ViewProps } from "react-native";
 import { Divider, useTheme } from "react-native-paper";
 import { UserProfile } from "../types";
 import ProfileInfo from "./ProfileInfo";
+import { debugStyle } from "@/constants/styels";
 
 type ProfileBackgroundImageProps = {
   background: UserProfile["profile"]["background"];
@@ -21,13 +22,15 @@ export const ProfileBackgroundImage = ({
 
   return (
     <ThemedView style={[style, styles.container]} {...props}>
-      <Image
-        contentFit="cover"
-        transition={0}
-        cachePolicy={"memory"}
-        source={{ uri: background }}
-        style={styles.image}
-      />
+      <View style={styles.imageContainer}>
+        <Image
+          contentFit="cover"
+          transition={0}
+          cachePolicy={"memory"}
+          source={{ uri: background }}
+          style={styles.image}
+        />
+      </View>
       <Divider />
     </ThemedView>
   );
@@ -39,13 +42,16 @@ function useProfileBackgroundStyle() {
     return StyleSheet.create({
       container: {
         marginTop: 3,
-        backgroundColor: theme.colors.surface,
         alignItems: "center",
+      },
+      imageContainer: {
+        width: "96%",
+        borderRadius: 18,
+        backgroundColor: theme.colors.surfaceVariant,
       },
       image: {
         borderWidth: 1,
         borderColor: theme.colors.surfaceVariant,
-        width: "96%",
         height: DEFAULT_BACKGROUND_IMAGE_HEIGHT,
         backgroundColor: theme.colors.surfaceVariant,
         borderRadius: 18,
