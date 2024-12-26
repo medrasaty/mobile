@@ -1,9 +1,3 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getServerSettings } from "./requests";
-import useAuthClient from "@/hooks/useAuthClient";
-import { SQKeys } from "./keys";
-import { useSettingStore } from "./store";
-import { ServerSettings, SettingsType } from "./types";
 import { useServerSettingsQuery } from "./queries";
 import useServerSettingsMutation from "./mutations";
 
@@ -33,6 +27,10 @@ export function useUpdateClientSettings() {
    */
 }
 
+/**
+ * Main interface for interfacting with settings in the system.
+ * @returns
+ */
 export const useSettings = () => {
   const {
     data: serverSettings,
@@ -40,6 +38,7 @@ export const useSettings = () => {
     isRefetching,
   } = useServerSettingsQuery();
   const { mutate: updateSettings } = useServerSettingsMutation();
+
   return {
     serverSettings,
     status,

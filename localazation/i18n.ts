@@ -3,6 +3,7 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { ar, en } from "./translations";
 import { useSettingStore } from "@features/settings/store";
+import { Language } from "@features/settings/types";
 
 const STORE_LANGUAGE_KEY = "setting.lang";
 
@@ -17,14 +18,20 @@ interface I18nLanguageDetectorModule {
 
 export const LanguageDetector: I18nLanguageDetectorModule = {
   type: "languageDetector",
-  init: () => {},
-  detect: () => {
-    // return language code name ( use mmkv to get it from settings) )
-    return "en";
+  init: () => {
+    // TODO: remove me
+    console.log("init Language Detector");
   },
-  cacheUserLanguage: (lng: string) => {
+  detect: () => {
+    /**
+     * Detect language used by the user,
+     * you just need to get it from zustand setting store
+     */
+    return useSettingStore.getState().language;
+  },
+  cacheUserLanguage: (lng: Language) => {
     // set language code name
-    // TODO
+    return useSettingStore.setState({ language: lng });
   },
 };
 
@@ -32,6 +39,7 @@ const languageDetectorPlugin = {
   type: "languageDetector",
   async: true,
   init: () => {},
+
   detect: async function (callback: (lang: string) => void) {
     try {
       // get stored language from Async storage
@@ -47,7 +55,7 @@ const languageDetectorPlugin = {
       console.error("Error reading language", error);
     }
   },
-  cacheUserLanguage: async function (language: string) {
+  cacheUserLanguage: async function (language: Language) {
     try {
       // Save a user's language choice in Async Storage
       await AsyncStorage.setItem(STORE_LANGUAGE_KEY, language);
