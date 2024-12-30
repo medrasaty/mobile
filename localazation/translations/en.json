@@ -79,7 +79,7 @@
   "network_error": "network error: check your internet connection than try again",
   "new_question": "New question",
   "create_question": {
-    "choose_subject": "اختر المادة",
+    "choose_subject": "choose subject",
     "new_question": "New question"
   },
   "submit": "submit",
@@ -90,7 +90,11 @@
   "users": "users",
   "schools": "schools",
   "settings": {
-    "settings": "الإعدادات"
+    "settings": "settings",
+    "privacy": "privacy",
+    "personal_info": "personal info",
+    "appearance": "appearance",
+    "your_account": "your_account"
   },
   "theme": {
     "theme": "theme",

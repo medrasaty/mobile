@@ -19,7 +19,7 @@ import SwitchOption from "../components/ToggleOption";
 import { useSettingStore } from "../store";
 import { useSettings } from "../hooks";
 
-const MainSettingScreen = () => {
+const EditAccountScreen = () => {
   const user = useCurrentUser();
   const q = useProfile(user.pk);
   return (
@@ -30,27 +30,11 @@ const MainSettingScreen = () => {
           <BackgroundImage background={q.data?.background_picture} />
           <ProfilePicture url={q.data?.profile_picture} />
           <ContainerView style={{ marginTop: 40 }}>
-            <ToggleDarkTheme />
             <TogglePushNotification />
           </ContainerView>
         </Animated.ScrollView>
       </ServerPage>
     </Page>
-  );
-};
-
-const ToggleDarkTheme = () => {
-  const theme = useSettingStore((state) => state.theme);
-  const setTheme = useSettingStore((state) => state.setTheme);
-  return (
-    <SwitchOption
-      onChange={() => {
-        if (theme !== "dark") setTheme("dark");
-        else setTheme("light");
-      }}
-      label={t("theme.dark")}
-      value={theme === "dark"}
-    />
   );
 };
 
@@ -154,4 +138,4 @@ const SettingSection = ({
   );
 };
 
-export default MainSettingScreen;
+export default EditAccountScreen;

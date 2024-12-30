@@ -1,7 +1,7 @@
-import EditAccountScreen from "@features/settings/screens/EditAccountScreen";
+import MainSettingScreen from "@features/settings/screens/MainSettingScreen";
 
 const MainSettingsPage = () => {
-  return <EditAccountScreen />;
+  return <MainSettingScreen />;
 };
 
 export default MainSettingsPage;

@@ -1,4 +1,4 @@
-import { Slot } from "expo-router";
+import { Slot, Stack } from "expo-router";
 
 const SettingsLayout = () => {
   return <Slot />;

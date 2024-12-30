@@ -10,7 +10,7 @@ import {
 
 type ToggleOptionProps<T> = {
   label: string;
-  labelProps?: TextProps<T>;
+  labelProps?: Omit<TextProps<T>, "children">;
 } & SwitchProps;
 
 export default function SwitchOption<T>({
@@ -26,9 +26,7 @@ export default function SwitchOption<T>({
         alignItems: "center",
       }}
     >
-      <ThemedText {...labelProps} variant="bodyLarge">
-        {label}
-      </ThemedText>
+      <ThemedText {...labelProps}>{label}</ThemedText>
       <Switch {...props} />
     </View>
   );

@@ -95,10 +95,14 @@
   "edit_your_answer": "تعديل",
   "Preview": "مراجعة",
   "settings": {
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "privacy": "الخصوصية",
+    "personal_info": "المعلومات الشخصية",
+    "appearance": "المظهر",
+    "your_account": "حسابك"
   },
   "theme": {
-    "theme": "المضهر",
+    "theme": "المظهر",
     "dark": "داكن",
     "light": "فاتح",
     "system": "النضام"
