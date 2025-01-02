@@ -12,7 +12,7 @@ import {
   RadioButton,
   RadioButtonProps,
 } from "react-native-paper";
-import RadioTextButton from "./RadioTextButton";
+import RadioTextButton, { RadioTextButtonProps } from "./RadioTextButton";
 import { debugStyle } from "@/constants/styels";
 
 export type RadioButtonGroupChoiceType = {
@@ -24,11 +24,19 @@ type RadioButtonGroupProps<T> = {
   choices: RadioButtonGroupChoiceType[];
   currentValue: RadioButtonGroupChoiceType["value"];
   onChoicePress: (choice: RadioButtonGroupChoiceType) => void;
-  radioButtonProps?: Omit<RadioButtonProps, "value">;
+  radioButtonProps?: Omit<Omit<RadioTextButtonProps, "value">, "title">;
 } & Omit<Omit<FlatListProps<T>, "renderItem">, "data">;
 
 /**
  * Display group of radio buttons.
+ * @param choices : RadioButtonGroupChoiceType {
+          value: string;
+          title: string;
+   };
+
+ * @param currentValue: value of current choice RadioButtonGroupChoiceType['value']
+ * @param onChoicePress: (choice: RadioButtonGroupChoiceType) => void; called for each choice.
+
  * @todo{explain it more}
  */
 
@@ -41,6 +49,8 @@ export default function RadioButtonGroup<T>({
 }: RadioButtonGroupProps<T>) {
   const renderItem = ({ item }: { item: RadioButtonGroupChoiceType }) => {
     return (
+      // TODO REDESIGNME: no need to pass full item , only value is important
+      // also consider adding typescript automatic detection for values
       <RadioTextButton
         status={currentValue === item.value ? "checked" : "unchecked"}
         onPress={() => onChoicePress(item)}

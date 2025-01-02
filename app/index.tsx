@@ -1,6 +1,7 @@
 import { Container } from "@/components/styled";
 import View, { SafeAreaView } from "@/components/styled/View";
 import { HOME_PAGE, LOGIN_PAGE } from "@/constants/routes";
+import SmallButton from "@components/SmallButton";
 import { ThemedText } from "@components/ThemedText";
 import { useSettingStore } from "@features/settings/store";
 import { router } from "expo-router";
@@ -17,32 +18,9 @@ export default function IndexPage() {
           style={{
             flex: 1,
             justifyContent: "center",
-            alignItems: "center",
             gap: 9,
           }}
         >
-          <View>
-            <ThemedText bold variant="titleMedium">
-              store
-            </ThemedText>
-            <ThemedText>{theme}</ThemedText>
-          </View>
-          <View>
-            <ThemedText bold variant="titleMedium">
-              local
-            </ThemedText>
-          </View>
-          <View style={{ gap: 10 }}>
-            <Button onPress={() => setTheme("dark")} mode="outlined">
-              dark
-            </Button>
-            <Button onPress={() => setTheme("light")} mode="outlined">
-              light
-            </Button>
-            <Button onPress={() => setTheme("system")} mode="outlined">
-              system
-            </Button>
-          </View>
           <Button mode="contained" onPress={() => router.replace(LOGIN_PAGE)}>
             go to login
           </Button>

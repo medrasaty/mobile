@@ -6,6 +6,7 @@ import { MMKV } from "react-native-mmkv";
 import { ThemeType } from "@features/theme/types";
 
 const SETTINGS_STORAGE_ID = "settings-storage";
+import { t, changeLanguage } from "i18next";
 
 const storage = new MMKV({
   id: SETTINGS_STORAGE_ID,
@@ -23,12 +24,27 @@ export const useSettingStore = create<SettingsStore>(
   persist(
     (set) => ({
       ...DEFAULT_SETTINGS,
+      /**
+       * Change theme preference.
+       * @param theme
+       */
       setTheme: (theme) => {
         set({ theme });
       },
+      /**
+       * change locally stored language and change i18next language.
+       * @param language language code name , 'en', 'ar', etc
+       */
       setLanguage: (language) => {
+        // i18next language
+        changeLanguage(language);
+        // locally stored
         set({ language });
       },
+      /**
+       * TODO: write usefull description
+       * @param settings
+       */
       updateServerSettings: (settings) => {
         set((state) => ({ ...state, ...settings }));
       },

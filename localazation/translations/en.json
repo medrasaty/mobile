@@ -101,5 +101,10 @@
     "dark": "dark",
     "light": "light",
     "system": "system"
+  },
+  "language": {
+    "language": "language",
+    "en": "English",
+    "ar": "Arabic"
   }
 }

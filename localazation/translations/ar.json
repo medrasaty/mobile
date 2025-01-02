@@ -102,9 +102,14 @@
     "your_account": "حسابك"
   },
   "theme": {
-    "theme": "المظهر",
+    "theme": "السمة",
     "dark": "داكن",
     "light": "فاتح",
     "system": "النضام"
+  },
+  "language": {
+    "language": "اللغة",
+    "en": "English",
+    "ar": "العربية"
   }
 }

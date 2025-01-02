@@ -30,17 +30,7 @@ type ProfileFollowingSectionProps = {
 const ProfileActionsSection = ({ profile }: ProfileFollowingSectionProps) => {
   return (
     <Row style={{ justifyContent: "flex-end" }} alignItems="center">
-      {profile.is_self ? (
-        <Button
-          mode="contained"
-          icon={(props) => {
-            return <Ionicons name="settings-outline" {...props} />;
-          }}
-          onPress={() => router.push(path.settings.main)}
-        >
-          {t("settings.settings")}
-        </Button>
-      ) : (
+      {!profile.is_self && (
         <>
           <FollowingActions profile={profile} />
           <MoreOptions profile={profile} />
