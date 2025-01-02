@@ -19,9 +19,6 @@ import { Button } from "react-native-paper";
 import { t } from "i18next";
 import ReportDialog from "@/features/reports/components/ReportDialog";
 import { useVisibleV2 } from "@/hooks/useVisible";
-import { Ionicons } from "@expo/vector-icons";
-import { path } from "@/lib/routing";
-import { router } from "expo-router";
 
 type ProfileFollowingSectionProps = {
   profile: UserProfile;
