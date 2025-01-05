@@ -68,7 +68,7 @@
     "react-native-gesture-handler": "~2.20.2",
     "react-native-image-viewing": "^0.2.2",
     "react-native-image-zoom-viewer": "^3.0.1",
-    "react-native-mmkv": "3.0.1",
+    "react-native-mmkv": "^3.2.0",
     "react-native-pager-view": "6.5.1",
     "react-native-paper": "^5.12.3",
     "react-native-paper-tabs": "^0.10.4",
