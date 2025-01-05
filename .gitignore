@@ -16,3 +16,6 @@ web-build/
 .env
 .medrasaty-666-firebase-adminsdk-private-key.json
 
+# prebuilds
+android/
+ios/
