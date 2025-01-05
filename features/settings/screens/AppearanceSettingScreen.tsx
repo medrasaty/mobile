@@ -5,7 +5,6 @@ import { AppBar } from "@features/navigation/components/AppBar";
 import { TouchableOpacity, TouchableOpacityProps, View } from "react-native";
 import { Chip, Divider } from "react-native-paper";
 import { ThemedText } from "@components/ThemedText";
-import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
 import { StyleSheet } from "react-native";
 import {
   DEFAULT_CONTAINER_SPACING,
@@ -37,7 +36,6 @@ const AppearanceSettingScreen = () => {
       <Divider />
       <ChangeLanguage />
       <Divider />
-      <ExpoStatusBar style="light" />
     </Page>
   );
 };
