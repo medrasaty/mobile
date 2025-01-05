@@ -45,7 +45,6 @@ const MainSearchScreen = () => {
         <View style={{ gap: 20, marginTop: 20 }}>
           <LatestQuestions />
           <LatestUsers />
-          <LatestSchools />
         </View>
       </ScrollView>
     </SafeAreaView>

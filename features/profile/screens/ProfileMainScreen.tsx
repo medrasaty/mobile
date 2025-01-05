@@ -25,7 +25,7 @@ const ProfileMainScreen = ({ id, ...props }: ProfileMainScreenProps) => {
   const renderHeader = useCallback(() => {
     if (profileQ.data) {
       return (
-        <View>
+        <View style={{ marginTop: 10 }}>
           <ProfileHeader profile={profileQ.data} />
           <Divider bold style={{ marginBottom: 20, marginTop: 20 }} />
         </View>
@@ -66,7 +66,7 @@ export const ProfileAppbar = ({ userId }: { userId: string | undefined }) => {
 
   const { t } = useTranslation();
   return (
-    <AppBar title={t("username", { username: userId })}>
+    <AppBar divider title={t("username", { username: userId })}>
       <Appbar.Action icon="dots-vertical" onPress={goToContent} />
     </AppBar>
   );

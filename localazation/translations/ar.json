@@ -99,7 +99,8 @@
     "privacy": "الخصوصية",
     "personal_info": "المعلومات الشخصية",
     "appearance": "المظهر",
-    "your_account": "حسابك"
+    "your_account": "حسابك",
+    "notifications": "الإشعارات"
   },
   "theme": {
     "theme": "السمة",
@@ -111,5 +112,19 @@
     "language": "اللغة",
     "en": "English",
     "ar": "العربية"
+  },
+  "privacy": {
+    "display_full_name": {
+      "label": "عرض الإسم الكامل",
+      "helper_text": "تمكين المستخدمين من رؤية اسمك الكامل"
+    },
+    "display_email": {
+      "label": "عرض البريد الإلكتروني",
+      "helper_text": "السماح للمستخدمين برؤية البريد الإلكتروني"
+    },
+    "display_gender": {
+      "label": "عرض النوع",
+      "helper_text": "السماح للمستخدمين برؤية النوع"
+    }
   }
 }

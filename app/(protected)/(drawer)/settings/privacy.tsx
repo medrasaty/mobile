@@ -1,7 +1,7 @@
-import PlaceholderPage from "@components/PlaceholderPage";
+import PrivacySettingScreen from "@features/settings/screens/PrivacySettingScreen";
 
 const PrivacySettingPage = () => {
-  return <PlaceholderPage title="privacy" />;
+  return <PrivacySettingScreen />;
 };
 
 export default PrivacySettingPage;

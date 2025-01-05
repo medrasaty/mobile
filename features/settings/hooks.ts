@@ -1,5 +1,9 @@
 import { useServerSettingsQuery } from "./queries";
 import useServerSettingsMutation from "./mutations";
+import { useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import { ServerSettings } from "./types";
+import { DEFAULT_SETTINGS } from "./defaults";
 
 export function useUpdateClientSettings() {
   /**
@@ -32,17 +36,36 @@ export function useUpdateClientSettings() {
  * @returns
  */
 export const useSettings = () => {
+  const { data, status, isRefetching } = useServerSettingsQuery();
   const {
-    data: serverSettings,
-    status,
-    isRefetching,
-  } = useServerSettingsQuery();
-  const { mutate: updateSettings } = useServerSettingsMutation();
+    mutate,
+    isPending: isUpdating,
+    isError,
+  } = useServerSettingsMutation();
 
+  const [serverSettings, setServerSettings] = useState<ServerSettings>(
+    data ?? DEFAULT_SETTINGS
+  );
+  useEffect(() => {
+    console.log("useEffect setServerSettings");
+    setServerSettings(data ?? DEFAULT_SETTINGS);
+  }, [data, isError]);
+
+  const updateSettings = (settings: Partial<ServerSettings>) => {
+    // optimistically update serversettings
+
+    console.log(`setServerSettings`);
+    const newSettings = { ...serverSettings, ...settings };
+    console.log(newSettings);
+    setServerSettings(newSettings);
+    // perform server update
+    mutate(settings);
+  };
   return {
     serverSettings,
     status,
     isRefetching,
     updateSettings,
+    isUpdating,
   };
 };

@@ -90,11 +90,12 @@
   "users": "users",
   "schools": "schools",
   "settings": {
-    "settings": "settings",
-    "privacy": "privacy",
-    "personal_info": "personal info",
-    "appearance": "appearance",
-    "your_account": "your_account"
+    "settings": "Settings",
+    "privacy": "Privacy",
+    "personal_info": "Personal info",
+    "appearance": "Appearance",
+    "your_account": "Your account",
+    "notifications": "Notifications"
   },
   "theme": {
     "theme": "theme",
@@ -106,5 +107,19 @@
     "language": "language",
     "en": "English",
     "ar": "Arabic"
+  },
+  "privacy": {
+    "display_full_name": {
+      "label": "Display full name",
+      "helper_text": "show your full name to other users"
+    },
+    "display_email": {
+      "label": "Display email",
+      "helper_text": "Allow users to view your email"
+    },
+    "display_gender": {
+      "label": "Display gender",
+      "helper_text": "Allow users to view your gender"
+    }
   }
 }
