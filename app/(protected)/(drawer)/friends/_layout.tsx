@@ -1,7 +1,7 @@
 import useTopTabsScreenOptions from "@/features/navigation/hooks/useTopTabsScreenOptions";
-import TopTabs from "@/features/navigation/layouts/TopTabs";
+import TopTabsBar from "@features/navigation/components/TopTabs";
+import TopTabs from "@features/navigation/layouts/TopTabs";
 import { useTranslation } from "react-i18next";
-import TopTabsBar from "@features/navigation/components/TopBar";
 
 type FriendsLayoutProps = {};
 
