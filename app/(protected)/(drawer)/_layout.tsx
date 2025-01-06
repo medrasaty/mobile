@@ -14,7 +14,7 @@ import { Drawer } from "expo-router/drawer";
 import { useTranslation } from "react-i18next";
 import { useWindowDimensions } from "react-native";
 import "react-native-gesture-handler";
-import { Appbar, Drawer as MaterialDrawer } from "react-native-paper";
+import { Appbar, Drawer as MaterialDrawer, useTheme } from "react-native-paper";
 
 export const MaterialDrawerContent = (props: DrawerContentComponentProps) => {
   const { height } = useWindowDimensions();
@@ -53,14 +53,22 @@ export const DrawerFooter = () => {
 export default function DrawerLayout() {
   const { t } = useTranslation();
   const user = useCurrentUser();
+  const theme = useTheme();
 
   return (
     <Drawer
-      drawerContent={MaterialDrawerContent}
       screenOptions={{
-        drawerLabelStyle: {
-          fontSize: 98,
+        drawerItemStyle: {
+          marginTop: 10,
+          marginBottom: 10,
         },
+        drawerLabelStyle: {
+          color: theme.colors.onBackground,
+        },
+        drawerStyle: {
+          backgroundColor: theme.colors.background,
+        },
+
         header: DrawerPagesAppbar,
       }}
       initialRouteName="(tabs)"
