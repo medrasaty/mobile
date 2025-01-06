@@ -13,7 +13,6 @@ import AlertDialogProvider from "@/contexts/AlertDialogContext";
 import "@/localazation/i18n";
 import { RootSiblingParent } from "react-native-root-siblings";
 import PaperThemeProvider from "@features/theme/providers";
-
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 

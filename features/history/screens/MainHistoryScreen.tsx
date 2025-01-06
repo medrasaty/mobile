@@ -45,6 +45,7 @@ export const WatchHistoryList = () => {
   ]);
 
   const { searchValue } = useSearchContext();
+
   const renderHeader = () => {
     return (
       <FilterOptionsView
@@ -57,6 +58,7 @@ export const WatchHistoryList = () => {
 
   const q = useInfiniteHistory({
     ordering: currentFilter,
+    search: searchValue,
   });
 
   // FIXME: duplicate in FollowingRequestsToMe

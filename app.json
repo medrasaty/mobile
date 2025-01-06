@@ -14,10 +14,6 @@
     },
     "ios": {
       "supportsTablet": true,
-      "infoPlist": {
-        "ExpoLocalization_supportsRTL": true,
-        "ExpoLocalization_forcesRTL": true
-      },
       "bundleIdentifier": "com.solomonsh.medrasatymobile"
     },
     "android": {
@@ -75,7 +71,6 @@
       "expo-secure-store"
     ],
     "extra": {
-      "supportsRTL": true,
       "router": {
         "origin": false
       },

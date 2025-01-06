@@ -23,7 +23,7 @@ export async function getInfiniteHistory(
   params: any
 ): Promise<CursorPaginatedResponse<WatchHistory>> {
   const res = await client.get<CursorPaginatedResponse<WatchHistory>>(url, {
-    params,
+    params: params,
   });
 
   return {
