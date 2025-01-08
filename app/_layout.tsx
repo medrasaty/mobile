@@ -50,7 +50,10 @@ export default function RootLayout() {
                   <AlertDialogProvider>
                     <Stack
                       initialRouteName={HOME_PAGE}
-                      screenOptions={{ headerShown: false }}
+                      screenOptions={{
+                        animation: "fade_from_bottom",
+                        headerShown: false,
+                      }}
                     >
                       <Stack.Screen name={HOME_PAGE} />
                       <Stack.Screen name="login" />

@@ -4,9 +4,9 @@ import { View, ViewProps } from "react-native";
 
 type CenterPageProps = ViewProps;
 
-const CenterPage = ({ children, ...props }: CenterPageProps) => {
+const CenterPage = ({ children, style, ...props }: CenterPageProps) => {
   return (
-    <View style={styles.container} {...props}>
+    <View style={[style, styles.container]} {...props}>
       {children}
     </View>
   );

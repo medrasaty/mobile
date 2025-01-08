@@ -5,6 +5,7 @@ import * as Burnt from "burnt";
 import { SQKeys } from "./keys";
 import { useSettingStore } from "./store";
 import { updateServerSettingsRequest } from "./requests";
+import { t } from "i18next";
 
 export default function useServerSettingsMutation() {
   const client = useAuthClient();
@@ -25,28 +26,22 @@ export default function useServerSettingsMutation() {
       const prevSettings = qc.getQueryData(SQKeys.all);
       qc.setQueryData(SQKeys.all, (oldSettings: ServerSettings | undefined) => {
         if (!oldSettings) return settings;
-        // Merge both
+        // Merge
         return { ...oldSettings, ...settings };
       });
       updateServerSettings(settings);
 
       return { prevSettings };
     },
-    onSuccess: () => {
-      // show success message
-      Burnt.toast({
-        title: "update settings success",
-        haptic: "success",
-      });
-    },
     onError: (_error, _variables, context) => {
-      // rollback to previous settings
       console.log(_error);
 
       Burnt.toast({
-        title: "update settings failed",
+        title: t("errors.network"),
         haptic: "error",
       });
+
+      // Rollback to previous settings
       qc.setQueryData(SQKeys.all, context?.prevSettings);
     },
 

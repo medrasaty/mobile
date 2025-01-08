@@ -10,6 +10,7 @@ import {
   DrawerContentScrollView,
   DrawerHeaderProps,
 } from "@react-navigation/drawer";
+import { Stack } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { useTranslation } from "react-i18next";
 import { useWindowDimensions } from "react-native";

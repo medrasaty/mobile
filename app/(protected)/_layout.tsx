@@ -25,6 +25,7 @@ export default function ProtectedLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
+          animation: "slide_from_right",
           header: (props) => {
             // you can only customize the title of Appbar
             return (
@@ -36,7 +37,11 @@ export default function ProtectedLayout() {
         <Stack.Screen name="(drawer)" />
         <Stack.Screen
           name="questions/new"
-          options={{ headerShown: true, headerTitle: t("new_question") }}
+          options={{
+            animation: "fade_from_bottom",
+            headerShown: true,
+            headerTitle: t("new_question"),
+          }}
         />
         <Stack.Screen
           name="questions/edit"

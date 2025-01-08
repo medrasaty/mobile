@@ -7,6 +7,8 @@ import { useTranslation } from "react-i18next";
 import ServerView, { ServerPage } from "@components/ServerView";
 import { useServerSettingsQuery } from "../queries";
 import { useSettings } from "../hooks";
+import { useEffect, useState } from "react";
+import { DEFAULT_SETTINGS } from "../defaults";
 
 const PrivacySettingScreen = () => {
   const { t } = useTranslation();
@@ -16,36 +18,23 @@ const PrivacySettingScreen = () => {
       <AppBar divider title={t("settings.privacy")} />
       {/* Display full name */}
       <ServerPage status={q.status}>
-        <DisplayFullNameOption />
+        <DisplayFullName />
         <Divider />
         {/* display email */}
-        <SwitchOption
-          style={styles.optionStyle}
-          labelProps={{ variant: "titleLarge" }}
-          label={t("privacy.display_email.label")}
-          helperText={t("privacy.display_email.helper_text")}
-          container
-          value={true}
-        />
+        <DisplayEmail />
         <Divider />
         {/* display gender */}
-        <SwitchOption
-          style={styles.optionStyle}
-          labelProps={{ variant: "titleLarge" }}
-          label={t("privacy.display_gender.label")}
-          helperText={t("privacy.display_gender.helper_text")}
-          container
-          value={true}
-        />
+        <DisplayGender />
         <Divider />
       </ServerPage>
     </Page>
   );
 };
 
-const DisplayFullNameOption = () => {
+const DisplayFullName = () => {
   const { t } = useTranslation();
-  const { serverSettings, updateSettings } = useSettings();
+  const { serverSettings, updateServerSettings } = useSettings();
+
   return (
     <SwitchOption
       style={styles.optionStyle}
@@ -53,10 +42,52 @@ const DisplayFullNameOption = () => {
       label={t("privacy.display_full_name.label")}
       helperText={t("privacy.display_full_name.helper_text")}
       container
-      value={serverSettings?.display_full_name}
-      onChange={() => {
-        updateSettings({
-          display_full_name: !serverSettings?.display_full_name,
+      value={serverSettings.display_full_name}
+      onChange={async () => {
+        updateServerSettings({
+          display_full_name: !serverSettings.display_full_name,
+        });
+      }}
+    />
+  );
+};
+
+const DisplayEmail = () => {
+  const { t } = useTranslation();
+  const { serverSettings, updateServerSettings } = useSettings();
+
+  return (
+    <SwitchOption
+      style={styles.optionStyle}
+      labelProps={{ variant: "titleLarge" }}
+      label={t("privacy.display_email.label")}
+      helperText={t("privacy.display_email.helper_text")}
+      container
+      value={serverSettings.display_email}
+      onChange={async () => {
+        updateServerSettings({
+          display_email: !serverSettings.display_email,
+        });
+      }}
+    />
+  );
+};
+
+const DisplayGender = () => {
+  const { t } = useTranslation();
+  const { serverSettings, updateServerSettings } = useSettings();
+
+  return (
+    <SwitchOption
+      style={styles.optionStyle}
+      labelProps={{ variant: "titleLarge" }}
+      label={t("privacy.display_gender.label")}
+      helperText={t("privacy.display_gender.helper_text")}
+      container
+      value={serverSettings.display_gender}
+      onChange={async () => {
+        updateServerSettings({
+          display_gender: !serverSettings.display_gender,
         });
       }}
     />
