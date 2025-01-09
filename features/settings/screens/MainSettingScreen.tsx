@@ -6,7 +6,11 @@ import { AppBar } from "@features/navigation/components/AppBar";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Pressable, PressableProps, View } from "react-native";
-import { Divider } from "react-native-paper";
+import {
+  Divider,
+  TouchableRipple,
+  TouchableRippleProps,
+} from "react-native-paper";
 
 const MainSettingScreen = () => {
   const { t } = useTranslation();
@@ -23,7 +27,10 @@ const MainSettingScreen = () => {
       <Divider />
       <SettingButton title={t("settings.your_account")} />
       <Divider />
-      <SettingButton title={t("settings.notifications")} />
+      <SettingButton
+        onPress={() => router.push("/settings/push_notifications")}
+        title={t("settings.notifications")}
+      />
       <Divider />
       <SettingButton
         onPress={() => router.push("/settings/appearance")}
@@ -36,11 +43,12 @@ const MainSettingScreen = () => {
 
 export type SettingButtonProps = {
   title: string;
-} & PressableProps;
+  help?: string;
+} & Omit<TouchableRippleProps, "children">;
 
-const SettingButton = ({ title, ...props }: SettingButtonProps) => {
+const SettingButton = ({ title, help, ...props }: SettingButtonProps) => {
   return (
-    <Pressable {...props}>
+    <TouchableRipple {...props}>
       <View
         style={{
           padding: 10,
@@ -49,9 +57,12 @@ const SettingButton = ({ title, ...props }: SettingButtonProps) => {
           ...containerMargins,
         }}
       >
+        {/* Title */}
         <ThemedText variant="titleLarge">{title}</ThemedText>
+        {/* Helper text */}
+        {help && <ThemedText variant="labelMedium">{help}</ThemedText>}
       </View>
-    </Pressable>
+    </TouchableRipple>
   );
 };
 

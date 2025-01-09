@@ -1,10 +1,8 @@
 import Page from "@/components/Page";
 import { ThemedText } from "@/components/ThemedText";
-import { containerMargins } from "@/constants/styels";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import ServerView, { ServerPage } from "@components/ServerView";
 import { ContainerView } from "@components/styled";
-import { Ionicons } from "@expo/vector-icons";
 import { AppBar } from "@features/navigation/components/AppBar";
 import { ProfileBackgroundImage } from "@features/profile/components/Profile";
 import { ProfilePicture as BaseProfilePicture } from "@features/profile/components/ProfileInfo";
@@ -16,7 +14,6 @@ import { Divider, IconButton, useTheme } from "react-native-paper";
 import Animated from "react-native-reanimated";
 import React, { useEffect, useState } from "react";
 import SwitchOption from "../components/ToggleOption";
-import { useSettingStore } from "../store";
 import { useSettings } from "../hooks";
 
 const EditAccountScreen = () => {
@@ -41,7 +38,7 @@ const EditAccountScreen = () => {
 const TogglePushNotification = () => {
   // FIXME: refactor this
   const [value, setValue] = useState(false);
-  const { status, serverSettings, isRefetching, updateSettings } =
+  const { status, serverSettings, isRefetching, updateServerSettings } =
     useSettings();
 
   useEffect(() => {
@@ -53,7 +50,7 @@ const TogglePushNotification = () => {
       <SwitchOption
         onChange={() => {
           setValue(!value);
-          updateSettings({
+          updateServerSettings({
             push_notification: !serverSettings?.push_notification,
           });
         }}

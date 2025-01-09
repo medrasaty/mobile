@@ -45,6 +45,8 @@ export default function SwitchOption<T>({
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          marginTop: 16,
+          marginBottom: 16,
         },
         containerStyle,
       ]}

@@ -1,7 +1,7 @@
-import PlaceholderPage from "@components/PlaceholderPage";
+import NotificationSettingScreen from "@features/settings/screens/NotificationSettingScreen";
 
 const PushNotificationsSettingPage = () => {
-  return <PlaceholderPage title="notifications" />;
+  return <NotificationSettingScreen />;
 };
 
 export default PushNotificationsSettingPage;

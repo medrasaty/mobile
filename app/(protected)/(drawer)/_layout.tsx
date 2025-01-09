@@ -10,12 +10,15 @@ import {
   DrawerContentScrollView,
   DrawerHeaderProps,
 } from "@react-navigation/drawer";
-import { Stack } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import { useTranslation } from "react-i18next";
 import { useWindowDimensions } from "react-native";
 import "react-native-gesture-handler";
 import { Appbar, Drawer as MaterialDrawer, useTheme } from "react-native-paper";
+import LoadingDialog from "@/components/LoadingDialog";
+import { LOGIN_PAGE } from "@/constants/routes";
+import { useSession } from "@/hooks/useSession";
+import { Redirect } from "expo-router";
 
 export const MaterialDrawerContent = (props: DrawerContentComponentProps) => {
   const { height } = useWindowDimensions();
@@ -55,10 +58,21 @@ export default function DrawerLayout() {
   const { t } = useTranslation();
   const user = useCurrentUser();
   const theme = useTheme();
+  const { session, isLoading } = useSession();
+
+  if (isLoading) {
+    return <LoadingDialog visible={isLoading} />;
+  }
+
+  // Redirect to login page if not logged in.
+  if (session === null) {
+    return <Redirect href={LOGIN_PAGE} />;
+  }
 
   return (
     <Drawer
       screenOptions={{
+        drawerType: "slide",
         drawerItemStyle: {
           marginTop: 10,
           marginBottom: 10,

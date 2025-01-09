@@ -1,28 +1,15 @@
-import LoadingDialog from "@/components/LoadingDialog";
-import { LOGIN_PAGE } from "@/constants/routes";
 import BottomTabNavigationBar from "@/features/navigation/components/BottomNavigationBar";
 import TabBarIcon, {
   NotificationsTabBarIcon,
 } from "@/features/navigation/components/TabBarIcon";
-import { useSession } from "@/hooks/useSession";
 import { Ionicons } from "@expo/vector-icons";
-import { Redirect, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "react-native-paper";
 
 export default function TabsLayout() {
-  const { session, isLoading } = useSession();
   const { t } = useTranslation();
   const theme = useTheme();
-
-  if (isLoading) {
-    return <LoadingDialog visible={isLoading} />;
-  }
-
-  // Redirect to login page if not logged in.
-  if (session === null) {
-    return <Redirect href={LOGIN_PAGE} />;
-  }
 
   return (
     <Tabs

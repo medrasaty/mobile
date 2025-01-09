@@ -108,6 +108,12 @@
     "en": "English",
     "ar": "Arabic"
   },
+  "notifications": {
+    "push_notifications": {
+      "label": "Push notifications",
+      "help": "allow medrasaty to send you push notifications"
+    }
+  },
   "privacy": {
     "display_full_name": {
       "label": "Display full name",

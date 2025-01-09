@@ -39,6 +39,7 @@ export default function ProtectedLayout() {
           name="questions/new"
           options={{
             animation: "fade_from_bottom",
+            presentation: "modal",
             headerShown: true,
             headerTitle: t("new_question"),
           }}
