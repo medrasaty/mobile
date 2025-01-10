@@ -7,13 +7,11 @@ import { useQuestionInfoPropsMemo } from "@/features/forum/hooks/useQuestionInfo
 export const QUESTION_LAYOUT_GAP = 16;
 
 export const QuestionDetail = ({ question }: { question: DetailQuestion }) => {
-  const infoProps = useQuestionInfoPropsMemo(question);
-
   return (
-    <View style={{ gap: 20, justifyContent: "center" }}>
+    <View style={{ gap: 20 }}>
       <View style={{ flexDirection: "row", gap: QUESTION_LAYOUT_GAP }}>
         <QuestionDetailActions question={question} />
-        <QuestionDetailInfo {...infoProps} question={question} />
+        <QuestionDetailInfo question={question} />
       </View>
     </View>
   );

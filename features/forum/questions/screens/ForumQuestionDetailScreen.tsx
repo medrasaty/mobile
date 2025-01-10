@@ -29,6 +29,7 @@ export default function ForumQuestionDetailScreen() {
   });
 
   const renderHeader = () => {
+    console.log("renderHeader");
     if (questionQuery.data) {
       return (
         <Container style={{ gap: 12 }}>

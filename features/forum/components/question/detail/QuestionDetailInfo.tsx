@@ -16,35 +16,11 @@ import { Pressable, ViewProps } from "react-native";
 import { useTheme } from "react-native-paper";
 
 type QuestionDetailInfoProps = {
-  id: DetailQuestion["id"];
-  title: DetailQuestion["title"];
-  subject: DetailQuestion["subject"];
-  text: DetailQuestion["text"];
-  tags: DetailQuestion["tags"];
-  picture?: DetailQuestion["picture"];
-  views: DetailQuestion["views"];
-  answersCount: DetailQuestion["answers_count"];
-  created: DetailQuestion["created"];
-  modified: DetailQuestion["modified"];
   question: DetailQuestion;
 } & ViewProps;
 
 const QuestionDetailInfo = memo(
-  ({
-    id,
-    title,
-    subject,
-    text,
-    tags,
-    picture,
-    views,
-    answersCount,
-    created,
-    modified,
-    question,
-    style,
-    ...props
-  }: QuestionDetailInfoProps) => {
+  ({ question, style, ...props }: QuestionDetailInfoProps) => {
     return (
       <View style={{ flex: 1, gap: 30 }}>
         <View
@@ -56,28 +32,31 @@ const QuestionDetailInfo = memo(
         >
           <ThemedView style={{ flex: 1 }}>
             {/* Title */}
-            <Text variant="headlineMedium">{question.title}</Text>
-            <SubjectInfo subject={subject} />
-            <Description description={text} />
+            <Text variant="headlineMedium">{question?.title}</Text>
+            <SubjectInfo subject={question?.subject} />
+            <Description description={question?.text} />
             <TagsList
               style={{ marginTop: 5, marginBottom: 5 }}
-              tags={question.tags}
+              tags={question?.tags}
             />
           </ThemedView>
-          {picture && <Picture image={picture} />}
+          {question?.picture && <Picture image={question.picture} />}
 
           <View style={{ flex: 0.1, gap: 9, marginTop: 4 }}>
             <ThemedView
               style={{ gap: 8, flexDirection: "row", alignItems: "center" }}
             >
-              <ViewsCount views={views} />
-              <AnswersCount answersCount={answersCount} />
-              <Share id={id} />
+              <ViewsCount views={question?.views} />
+              <AnswersCount answersCount={question?.answers_count} />
+              <Share id={question?.id} />
             </ThemedView>
-            <TimeInfo created={created} modified={modified} />
+            <TimeInfo
+              created={question?.created}
+              modified={question?.modified}
+            />
           </View>
         </View>
-        <UserInfo avatarSize={45} user={question.owner} />
+        <UserInfo avatarSize={45} user={question?.owner} />
       </View>
     );
   }
@@ -184,8 +163,9 @@ export const Picture = memo(({ image }: { image?: string }) => {
     <>
       <Pressable onPress={() => alert("bigger")}>
         <Image
-          
           style={[style, { height: 160 }]}
+          transition={0}
+          cachePolicy={"memory-disk"}
           source={{
             uri: image,
           }}

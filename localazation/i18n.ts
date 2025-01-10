@@ -4,6 +4,7 @@ import { initReactI18next } from "react-i18next";
 import { ar, en } from "./translations";
 import { useSettingStore } from "@features/settings/store";
 import { Language } from "@features/settings/types";
+import * as Local from "expo-localization";
 
 const STORE_LANGUAGE_KEY = "setting.lang";
 
@@ -18,16 +19,15 @@ interface I18nLanguageDetectorModule {
 
 export const LanguageDetector: I18nLanguageDetectorModule = {
   type: "languageDetector",
-  init: () => {
-    // TODO: remove me
-    console.log("init Language Detector");
-  },
   detect: () => {
     /**
      * Detect language used by the user,
      * you just need to get it from zustand setting store
      */
-    return useSettingStore.getState().language;
+
+    return (
+      Local.getLocales()[0].languageCode ?? useSettingStore.getState().language
+    );
   },
   cacheUserLanguage: (lng: Language) => {
     // set language code name

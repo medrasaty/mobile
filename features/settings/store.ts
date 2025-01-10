@@ -7,6 +7,7 @@ import { ThemeType } from "@features/theme/types";
 
 const SETTINGS_STORAGE_ID = "settings-storage";
 import { t, changeLanguage } from "i18next";
+import * as Locals from "expo-localization";
 
 const storage = new MMKV({
   id: SETTINGS_STORAGE_ID,

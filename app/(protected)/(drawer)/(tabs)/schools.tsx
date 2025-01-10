@@ -7,7 +7,7 @@ const SchoolsPage = () => {
   return (
     <PlaceholderPage
       titleVariant="labelSmall"
-      title={JSON.stringify(Local.getLocales())}
+      title={Local.getLocales()[0].languageCode}
     />
   );
 };
