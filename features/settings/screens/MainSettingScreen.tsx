@@ -1,11 +1,10 @@
 import { containerMargins } from "@/constants/styels";
 import Page from "@components/Page";
 import { ThemedText } from "@components/ThemedText";
-import { ContainerView } from "@components/styled";
 import { AppBar } from "@features/navigation/components/AppBar";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { Pressable, PressableProps, View } from "react-native";
+import { View } from "react-native";
 import {
   Divider,
   TouchableRipple,
@@ -22,10 +21,6 @@ const MainSettingScreen = () => {
         onPress={() => router.push("/settings/privacy")}
         title={t("settings.privacy")}
       />
-      <Divider />
-      <SettingButton title={t("settings.personal_info")} />
-      <Divider />
-      <SettingButton title={t("settings.your_account")} />
       <Divider />
       <SettingButton
         onPress={() => router.push("/settings/push_notifications")}

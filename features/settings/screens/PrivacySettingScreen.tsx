@@ -33,7 +33,7 @@ const PrivacySettingScreen = () => {
 
 const DisplayFullName = () => {
   const { t } = useTranslation();
-  const { serverSettings, updateServerSettings, isUpdating } = useSettings();
+  const { settings, updateServerSettings, isUpdating } = useSettings();
 
   return (
     <SwitchOption
@@ -42,7 +42,7 @@ const DisplayFullName = () => {
       labelProps={{ variant: "titleLarge" }}
       label={t("privacy.display_full_name.label")}
       helperText={t("privacy.display_full_name.helper_text")}
-      value={serverSettings?.display_full_name}
+      value={settings.display_full_name}
       onValueChange={(value) => {
         updateServerSettings({ display_full_name: value });
       }}
@@ -52,7 +52,7 @@ const DisplayFullName = () => {
 
 const DisplayEmail = () => {
   const { t } = useTranslation();
-  const { serverSettings, updateServerSettings } = useSettings();
+  const { settings, updateServerSettings } = useSettings();
 
   return (
     <SwitchOption
@@ -61,7 +61,7 @@ const DisplayEmail = () => {
       label={t("privacy.display_email.label")}
       helperText={t("privacy.display_email.helper_text")}
       container
-      value={serverSettings?.display_email}
+      value={settings.display_email}
       onValueChange={(value) => {
         updateServerSettings({
           display_email: value,
@@ -73,7 +73,7 @@ const DisplayEmail = () => {
 
 const DisplayGender = () => {
   const { t } = useTranslation();
-  const { serverSettings, updateServerSettings } = useSettings();
+  const { settings, updateServerSettings } = useSettings();
 
   return (
     <SwitchOption
@@ -82,7 +82,7 @@ const DisplayGender = () => {
       label={t("privacy.display_gender.label")}
       helperText={t("privacy.display_gender.helper_text")}
       container
-      value={serverSettings?.display_gender}
+      value={settings.display_gender}
       onValueChange={async (value) => {
         updateServerSettings({
           display_gender: value,

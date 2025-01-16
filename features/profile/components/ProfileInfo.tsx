@@ -3,7 +3,7 @@ import Row from "@/components/Row";
 import { ContainerView } from "@/components/styled";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { containerMargins, debugStyle } from "@/constants/styels";
+import { containerMargins } from "@/constants/styels";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
@@ -145,7 +145,6 @@ export const School = ({ id, name }: { id: number; name: string }) => {
 };
 
 const Bio = ({ bio }: { bio: string }) => {
-  const theme = useTheme();
   return (
     <ThemedText color={"gray"} variant="bodyMedium">
       {bio}
@@ -160,10 +159,6 @@ const statsInfoContainerMargins = 10;
 const styles = StyleSheet.create({
   container: {
     gap: 16,
-  },
-  row: {
-    justifyContent: "space-between",
-    ...debugStyle,
   },
   actionSection: {
     flex: 1,

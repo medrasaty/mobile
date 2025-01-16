@@ -32,7 +32,7 @@ export const useSettingStore = create<SettingsStore>(
        */
       setTheme: (theme) => {
         // set system color scheme
-        Appearance.setColorScheme(theme);
+        Appearance.setColorScheme(theme as "dark" | "light" | null | undefined);
 
         set({ theme });
       },

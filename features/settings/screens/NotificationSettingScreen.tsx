@@ -19,11 +19,11 @@ export default function NotificationSettingScreen() {
 
 const TogglePushNotification = () => {
   const { t } = useTranslation();
-  const { serverSettings, updateServerSettings } = useSettings();
+  const { settings, updateServerSettings } = useSettings();
 
-  const updatePushNotifications = () => {
+  const updatePushNotifications = (value: boolean) => {
     updateServerSettings({
-      push_notification: !serverSettings.push_notification,
+      push_notification: value,
     });
   };
 
@@ -33,8 +33,8 @@ const TogglePushNotification = () => {
       label={t("notifications.push_notifications.label")}
       helperText={t("notifications.push_notifications.help")}
       container
-      value={serverSettings.push_notification}
-      onChange={updatePushNotifications}
+      value={settings.push_notification}
+      onValueChange={updatePushNotifications}
     />
   );
 };
