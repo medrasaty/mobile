@@ -36,30 +36,13 @@ export function useUpdateClientSettings() {
  * @returns
  */
 export const useSettings = () => {
-  const { data, status, isRefetching } = useServerSettingsQuery();
   const {
-    mutate,
-    isPending: isUpdating,
-    isError,
-  } = useServerSettingsMutation();
-
-  const [serverSettings, setServerSetting] = useState<ServerSettings>(
-    data ?? DEFAULT_SERVER_SETTINGS
-  );
-
-  useEffect(() => {
-    // sync changes, update state whenever data changes.
-
-    if (data !== undefined) setServerSetting(data);
-  }, [data]);
-
-  const updateServerSettings = (settings: Partial<ServerSettings>) => {
-    // update local serverSettings
-    setServerSetting({ ...serverSettings, ...settings });
-
-    // perform server mutation
-    mutate(settings);
-  };
+    data: serverSettings,
+    status,
+    isRefetching,
+  } = useServerSettingsQuery();
+  const { mutate: updateServerSettings, isPending: isUpdating } =
+    useServerSettingsMutation();
 
   return {
     serverSettings,

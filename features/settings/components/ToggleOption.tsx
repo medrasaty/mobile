@@ -1,6 +1,6 @@
 import { containerPaddings, debugStyle } from "@/constants/styels";
 import { ThemedText } from "@components/ThemedText";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TouchableOpacity, View, ViewProps } from "react-native";
 import {
   Switch,
@@ -38,6 +38,7 @@ export default function SwitchOption<T>({
   helperText = "",
   helperTextProps,
   value: currentValue,
+  onValueChange,
   ...props
 }: ToggleOptionProps<T>) {
   const [value, setValue] = useState(currentValue);
@@ -47,13 +48,22 @@ export default function SwitchOption<T>({
   );
 
   /**
+   * keep sync with current value updates.
+   */
+  useEffect(() => {
+    setValue(currentValue);
+  }, [currentValue]);
+
+  /**
    * Optemistically update switche state,
    * than you can
    */
-  const handleChange = () => {
-    setValue(!value);
-    props.onValueChange && props.onValueChange(!value);
+  const handleChange = async () => {
+    const newValue = !value;
+    setValue(newValue);
+    onValueChange && onValueChange(newValue);
   };
+
   return (
     <TouchableRipple onPress={handleChange}>
       <View
@@ -62,8 +72,8 @@ export default function SwitchOption<T>({
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: 16,
-            marginBottom: 16,
+            marginTop: 10,
+            marginBottom: 10,
           },
           containerStyle,
         ]}
@@ -79,7 +89,7 @@ export default function SwitchOption<T>({
             </ThemedText>
           )}
         </View>
-        <Switch value={value} onChange={handleChange} {...props} />
+        <Switch value={value} onValueChange={handleChange} {...props} />
       </View>
     </TouchableRipple>
   );

@@ -15,7 +15,6 @@ import { ThemedText } from "@components/ThemedText";
 import * as DropDownMenu from "zeego/dropdown-menu";
 import { useEffect } from "react";
 import { useSettingStore } from "@features/settings/store";
-import { MenuView } from "@react-native-menu/menu";
 
 const MoreOptions = ({
   ownerUsername,
@@ -31,32 +30,32 @@ const MoreOptions = ({
   const user = useCurrentUser();
   const router = useRouter();
 
-  // Zeego
-  // return (
-  //   <DropDownMenu.Root>
-  //     <DropDownMenu.Trigger>
-  //       <IconButton icon={"dots-vertical"} onPress={() => {}} />
-  //     </DropDownMenu.Trigger>
-  //     <DropDownMenu.Content>
-  //       <DropDownMenu.Item key="1">
-  //         <DropDownMenu.ItemTitle>zeego is awesome!</DropDownMenu.ItemTitle>
-  //       </DropDownMenu.Item>
+  return (
+    <DropDownMenu.Root>
+      <DropDownMenu.Trigger>
+        <IconButton icon={"dots-vertical"} onPress={() => {}} />
+      </DropDownMenu.Trigger>
+      <DropDownMenu.Content>
+        <DropDownMenu.Item key="1">
+          <DropDownMenu.ItemTitle>zeego is awesome!</DropDownMenu.ItemTitle>
+        </DropDownMenu.Item>
 
-  //       <DropDownMenu.Item key="2">
-  //         <DropDownMenu.ItemTitle>zeego is awesome!</DropDownMenu.ItemTitle>
-  //       </DropDownMenu.Item>
+        <DropDownMenu.Item key="2">
+          <DropDownMenu.ItemTitle>zeego is awesome!</DropDownMenu.ItemTitle>
+        </DropDownMenu.Item>
 
-  //       <DropDownMenu.Item destructive onSelect={() => alert("0")} key="3">
-  //         <DropDownMenu.ItemTitle>zeego is awesome!</DropDownMenu.ItemTitle>
-  //         <DropDownMenu.Arrow />
-  //       </DropDownMenu.Item>
-  //       <DropDownMenu.Separator />
-  //       <DropDownMenu.CheckboxItem value={true} key="10">
-  //         zeego is somewhat awesome!
-  //       </DropDownMenu.CheckboxItem>
-  //     </DropDownMenu.Content>
-  //   </DropDownMenu.Root>
-  // );
+        <DropDownMenu.Item destructive onSelect={() => alert("0")} key="3">
+          <DropDownMenu.ItemTitle>zeego is awesome!</DropDownMenu.ItemTitle>
+        </DropDownMenu.Item>
+        <DropDownMenu.Separator />
+        <DropDownMenu.Item destructive onSelect={() => alert("33")} key="3">
+          <DropDownMenu.ItemTitle>
+            zeego is somewhat awesome!
+          </DropDownMenu.ItemTitle>
+        </DropDownMenu.Item>
+      </DropDownMenu.Content>
+    </DropDownMenu.Root>
+  );
 
   return (
     <Menu

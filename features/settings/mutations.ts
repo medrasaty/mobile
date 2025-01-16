@@ -18,7 +18,7 @@ export default function useServerSettingsMutation() {
     mutationFn: async (settings: Partial<ServerSettings>) =>
       updateServerSettingsRequest(client, settings),
 
-    onMutate: (settings) => {
+    onMutate: async (settings) => {
       /**
        * Optimistically update preferecnes query and zustand store
        */
@@ -33,6 +33,7 @@ export default function useServerSettingsMutation() {
 
       return { prevSettings };
     },
+
     onError: (_error, _variables, context) => {
       console.log(_error);
 

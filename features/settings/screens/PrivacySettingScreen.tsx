@@ -33,20 +33,18 @@ const PrivacySettingScreen = () => {
 
 const DisplayFullName = () => {
   const { t } = useTranslation();
-  const { serverSettings, updateServerSettings } = useSettings();
+  const { serverSettings, updateServerSettings, isUpdating } = useSettings();
 
   return (
     <SwitchOption
+      container
       style={styles.optionStyle}
       labelProps={{ variant: "titleLarge" }}
       label={t("privacy.display_full_name.label")}
       helperText={t("privacy.display_full_name.helper_text")}
-      container
-      value={serverSettings.display_full_name}
-      onChange={async () => {
-        updateServerSettings({
-          display_full_name: !serverSettings.display_full_name,
-        });
+      value={serverSettings?.display_full_name}
+      onValueChange={(value) => {
+        updateServerSettings({ display_full_name: value });
       }}
     />
   );
@@ -63,10 +61,10 @@ const DisplayEmail = () => {
       label={t("privacy.display_email.label")}
       helperText={t("privacy.display_email.helper_text")}
       container
-      value={serverSettings.display_email}
-      onChange={async () => {
+      value={serverSettings?.display_email}
+      onValueChange={(value) => {
         updateServerSettings({
-          display_email: !serverSettings.display_email,
+          display_email: value,
         });
       }}
     />
@@ -84,10 +82,10 @@ const DisplayGender = () => {
       label={t("privacy.display_gender.label")}
       helperText={t("privacy.display_gender.helper_text")}
       container
-      value={serverSettings.display_gender}
-      onChange={async () => {
+      value={serverSettings?.display_gender}
+      onValueChange={async (value) => {
         updateServerSettings({
-          display_gender: !serverSettings.display_gender,
+          display_gender: value,
         });
       }}
     />

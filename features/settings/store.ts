@@ -8,6 +8,7 @@ import { ThemeType } from "@features/theme/types";
 const SETTINGS_STORAGE_ID = "settings-storage";
 import { t, changeLanguage } from "i18next";
 import * as Locals from "expo-localization";
+import { Appearance } from "react-native";
 
 const storage = new MMKV({
   id: SETTINGS_STORAGE_ID,
@@ -30,6 +31,9 @@ export const useSettingStore = create<SettingsStore>(
        * @param theme
        */
       setTheme: (theme) => {
+        // set system color scheme
+        Appearance.setColorScheme(theme);
+
         set({ theme });
       },
       /**
