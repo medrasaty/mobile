@@ -1,4 +1,3 @@
-import { StyleSheet } from "react-native";
 
 export const DEFAULT_CONTAINER_SPACING = 16;
 
@@ -14,5 +13,5 @@ export const containerMargins = {
 
 export const debugStyle = {
   borderWidth: 1,
-  borderColor: "red",
+  borderColor: "magenta",
 };
