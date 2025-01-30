@@ -1,9 +1,9 @@
-import ProfileMainScreen from "@/features/profile/screens/ProfileMainScreen";
-import useCurrentUser from "@/hooks/useCurrentUser";
+import { useAuthSession } from "@features/auth/store";
+import CurrentUserProfileScreen from "@features/profile/screens/CurrentUserProfileScreen";
 
 const Profile = () => {
-  const user = useCurrentUser();
-  return <ProfileMainScreen id={user.id} />;
+  const user = useAuthSession(state => state.session?.user);
+  return user ? <CurrentUserProfileScreen id={user.id} /> : null;
 };
 
 export default Profile;

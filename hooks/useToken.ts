@@ -1,16 +1,13 @@
 import { LOGIN_PAGE } from "@/constants/routes";
-import { parseSession } from "@/lib/utils";
 import { router } from "expo-router";
-import { useSession } from "./useSession";
+import { useAuthSession } from "@features/auth/store";
 
 export default function useToken(): string | null {
-  const { session } = useSession();
+  const session = useAuthSession((state) => state.session);
 
-  try {
-    const { token } = parseSession(session);
-    return token as string;
-  } catch (error) {
+  if (!session?.token) {
     router.replace(LOGIN_PAGE);
-    return null;
   }
+
+  return session?.token ?? null;
 }

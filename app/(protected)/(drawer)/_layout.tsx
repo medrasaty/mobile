@@ -19,6 +19,7 @@ import LoadingDialog from "@/components/LoadingDialog";
 import { LOGIN_PAGE } from "@/constants/routes";
 import { useSession } from "@/hooks/useSession";
 import { Redirect } from "expo-router";
+import { useAuthSession } from "@features/auth/store";
 
 export const MaterialDrawerContent = (props: DrawerContentComponentProps) => {
   const { height } = useWindowDimensions();
@@ -58,16 +59,6 @@ export default function DrawerLayout() {
   const { t } = useTranslation();
   const user = useCurrentUser();
   const theme = useTheme();
-  const { session, isLoading } = useSession();
-
-  if (isLoading) {
-    return <LoadingDialog visible={isLoading} />;
-  }
-
-  // Redirect to login page if not logged in.
-  if (session === null) {
-    return <Redirect href={LOGIN_PAGE} />;
-  }
 
   return (
     <Drawer

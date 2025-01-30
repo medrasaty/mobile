@@ -20,19 +20,17 @@ export default function CreateAnswer({
   };
 
   return (
-    <Portal>
-      <FAB
-        onPress={goToCreateAnswer}
-        icon="plus"
-        size="medium"
-        variant="surface"
-        style={{
-          position: "absolute",
-          margin: CREATE_ANSWER_FAB_MARGIN,
-          right: 0,
-          bottom: 0,
-        }}
-      />
-    </Portal>
+    <FAB
+      onPress={goToCreateAnswer}
+      icon="plus"
+      size="medium"
+      variant="surface"
+      style={{
+        position: "absolute",
+        margin: CREATE_ANSWER_FAB_MARGIN,
+        right: 0,
+        bottom: 0,
+      }}
+    />
   );
 }

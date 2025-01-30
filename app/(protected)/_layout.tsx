@@ -1,22 +1,17 @@
-import LoadingDialog from "@/components/LoadingDialog";
 import { LOGIN_PAGE } from "@/constants/routes";
 import { AnimatedAppBarProvider } from "@/contexts";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import usePushNotificationFeature from "@/features/notifications/hooks/usePushNotificationFeature";
-import { useSession } from "@/hooks/useSession";
+import { useAuthSession } from "@features/auth/store";
 import { Redirect, Stack } from "expo-router";
 import { t } from "i18next";
 
 export default function ProtectedLayout() {
-  const { session, isLoading } = useSession();
+  const session = useAuthSession((state) => state.session);
   usePushNotificationFeature();
 
-  if (isLoading) {
-    return <LoadingDialog visible={isLoading} />;
-  }
-
   // Redirect to login page if not logged in.
-  if (session === null) {
+  if (!session?.token) {
     return <Redirect href={LOGIN_PAGE} />;
   }
 

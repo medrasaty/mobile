@@ -4,6 +4,7 @@ import { BaseSessionUser, UserType } from "@/types/user.types";
 import { useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosRequestConfig } from "axios";
 import React from "react";
+import { useAuthSession } from "./store";
 
 export type Session = {
   user: BaseSessionUser;
@@ -27,6 +28,7 @@ export const AuthContext = React.createContext<AuthSession>({
 
 export function SessionProvider(props: React.PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState("session");
+  const clearStoreSession = useAuthSession((state) => state.clearSession);
 
   const [[_, user], setUser] = useStorageState("user");
 
@@ -42,6 +44,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
           queryClient.removeQueries({ queryKey: ["profile"] });
           // set token to null
           setSession(null);
+          clearStoreSession();
         },
 
         session,
@@ -79,6 +82,9 @@ async function signIn(
         cause: "INVALID_USER_TYPE",
       });
     }
+
+    // Zustand Store for session management
+    useAuthSession.setState({ session: { user, token } });
 
     // convert user and token to serialized string
     const session = JSON.stringify({ user, token });

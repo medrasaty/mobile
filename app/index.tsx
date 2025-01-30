@@ -7,10 +7,7 @@ import { useSettingStore } from "@features/settings/store";
 import { router } from "expo-router";
 import { Button } from "react-native-paper";
 
-export default function IndexPage() {
-  const setTheme = useSettingStore((state) => state.setTheme);
-  const theme = useSettingStore((state) => state.theme);
-
+function IndexPage() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Container style={{ flex: 1 }}>

@@ -1,9 +1,9 @@
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
 
 import { SessionProvider } from "@/features/auth/ctx";
-import { HOME_PAGE } from "@/constants/routes";
+import { HOME_PAGE, LOGIN_PAGE } from "@/constants/routes";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -13,6 +13,8 @@ import AlertDialogProvider from "@/contexts/AlertDialogContext";
 import "@/localazation/i18n";
 import { RootSiblingParent } from "react-native-root-siblings";
 import PaperThemeProvider from "@features/theme/providers";
+import { useAuthSession } from "@features/auth/store";
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -55,9 +57,8 @@ export default function RootLayout() {
                         headerShown: false,
                       }}
                     >
-                      <Stack.Screen name={HOME_PAGE} />
+                      <Stack.Screen name="(protected)" />
                       <Stack.Screen name="login" />
-                      <Stack.Screen name="index" />
                     </Stack>
                   </AlertDialogProvider>
                 </SafeAreaProvider>

@@ -27,6 +27,7 @@ export interface BaseUser {
   profile_picture: string;
   is_private: boolean;
   contenttype: number;
+  display_name: string;
 }
 
 export interface BaseSessionUser extends BaseUser {

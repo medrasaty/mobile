@@ -114,7 +114,7 @@ const UserInfo = ({
 }: UserProfileProps) => {
   return (
     <ThemedView>
-      <ThemedText bold variant="displaySmall">
+      <ThemedText bold variant="titleLarge">
         {fullName}
       </ThemedText>
       <Username username={username} />

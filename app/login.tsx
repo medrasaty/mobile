@@ -6,7 +6,6 @@ import DoNotHaveAccount from "@/features/auth/components/DoNotHaveAccount";
 import LoginButton from "@/features/auth/components/LoginButton";
 import LoginFailedDialog from "@/features/auth/components/LoginFailedDialog";
 import { Session } from "@/features/auth/ctx";
-import { useSession } from "@/hooks/useSession";
 import { useQueryClient } from "@tanstack/react-query";
 import { Redirect } from "expo-router";
 import { useState } from "react";
@@ -14,7 +13,6 @@ import { Keyboard } from "react-native";
 import { Text, TextInput } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import useRoundedTheme from "@/hooks/useRoundedTheme";
-import { getLocales } from "expo-localization";
 
 export default function LoginPage() {
   const { signIn, session } = useSession();

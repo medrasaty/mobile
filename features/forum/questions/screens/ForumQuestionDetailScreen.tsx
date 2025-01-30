@@ -60,14 +60,6 @@ export default function ForumQuestionDetailScreen() {
           renderItem={renderItem}
           estimatedItemSize={200}
           ItemSeparatorComponent={Divider}
-          ListFooterComponent={() => {
-            return (
-              <CreateAnswer
-                questionId={questionQuery?.data?.id}
-                question={questionQuery.data}
-              />
-            );
-          }}
           contentContainerStyle={{
             paddingTop: 20,
             paddingBottom: CREATE_ANSWER_FAB_MARGIN,
@@ -79,6 +71,10 @@ export default function ForumQuestionDetailScreen() {
             questionQuery.refetch();
             answersQuery.refetch();
           }}
+        />
+        <CreateAnswer
+          questionId={questionQuery?.data?.id}
+          question={questionQuery.data}
         />
       </Page>
     </BottomSheetModalProvider>

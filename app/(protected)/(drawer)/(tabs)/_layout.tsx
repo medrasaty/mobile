@@ -67,20 +67,6 @@ export default function TabsLayout() {
           ),
         }}
       />
-
-      <Tabs.Screen
-        name="schools"
-        options={{
-          tabBarLabel: t("Schools"),
-          tabBarIcon: (props) => (
-            <TabBarIcon
-              {...props}
-              active_icon_name="school"
-              icon_name="school-outline"
-            />
-          ),
-        }}
-      />
       <Tabs.Screen
         name="profile"
         options={{

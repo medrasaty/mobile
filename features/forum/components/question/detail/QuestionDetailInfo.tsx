@@ -136,12 +136,7 @@ const TimeInfo = ({
 } & ViewProps) => {
   return (
     <View {...props}>
-      <Text style={{ color: "gray" }} variant="labelSmall">
-        {d(created).toString()} {d(created).fromNow()}
-      </Text>
-      <Text style={{ color: "gray" }} variant="labelSmall">
-        آخر تعديل {d(modified).toString()} {` (${d(modified).fromNow()})`}
-      </Text>
+      <Text variant="labelSmall">{d(created).fromNow()}</Text>
     </View>
   );
 };
