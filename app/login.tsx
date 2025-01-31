@@ -13,6 +13,7 @@ import { Keyboard } from "react-native";
 import { Text, TextInput } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import useRoundedTheme from "@/hooks/useRoundedTheme";
+import { useSession } from "@/hooks/useSession";
 
 export default function LoginPage() {
   const { signIn, session } = useSession();

@@ -1,19 +1,7 @@
-import Page from "@/components/Page";
-import { ThemedText } from "@/components/ThemedText";
-import { SafeAreaView } from "@/components/styled";
+import BookmarkedQuestionsScreen from "@features/bookmarks/screens/BookmarkedQuestionsScreen";
 
 const BookmarkQuestionsPage = () => {
-  return (
-    <SafeAreaView>
-      <Page
-        container
-        style={{ justifyContent: "center", alignItems: "center" }}
-      >
-        <ThemedText variant="titleLarge">Question</ThemedText>
-        <ThemedText variant="displaySmall">Questions</ThemedText>
-      </Page>
-    </SafeAreaView>
-  );
+  return <BookmarkedQuestionsScreen />;
 };
 
 export default BookmarkQuestionsPage;

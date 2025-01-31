@@ -16,4 +16,5 @@ const AnswerBookmarkPage = () => {
   );
 };
 
-export default AnswerBookmarkPage;
+// not now
+// export default AnswerBookmarkPage;

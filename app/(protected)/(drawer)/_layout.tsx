@@ -18,7 +18,7 @@ import { Appbar, Drawer as MaterialDrawer, useTheme } from "react-native-paper";
 import LoadingDialog from "@/components/LoadingDialog";
 import { LOGIN_PAGE } from "@/constants/routes";
 import { useSession } from "@/hooks/useSession";
-import { Redirect } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 import { useAuthSession } from "@features/auth/store";
 
 export const MaterialDrawerContent = (props: DrawerContentComponentProps) => {
@@ -74,7 +74,6 @@ export default function DrawerLayout() {
         drawerStyle: {
           backgroundColor: theme.colors.background,
         },
-
         header: DrawerPagesAppbar,
       }}
       initialRouteName="(tabs)"
@@ -144,7 +143,7 @@ export default function DrawerLayout() {
   );
 }
 
-export const DrawerPagesAppbar = (props: DrawerHeaderProps) => {
+export const DrawerPagesAppbar = (props: any) => {
   return (
     <AppBar title={props.options.title}>
       <Appbar.Action icon={"dots-vertical"} onPress={() => {}} />
