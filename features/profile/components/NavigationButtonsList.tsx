@@ -20,6 +20,35 @@ type NavigationButton = {
   label: string;
 };
 
+function NavigationButton({ path, icon, label }: NavigationButton) {
+  const theme = useTheme();
+  // roundness factor
+  const factor = 2;
+  const roundness = useMemo(() => theme.roundness * factor, [theme, factor]);
+
+  const router = useRouter();
+  return (
+    <View key={path} style={{ borderRadius: roundness, overflow: "hidden" }}>
+      <TouchableRipple
+        // Navigate to page
+        onPress={() => router.push(path)}
+        style={[
+          styles.container,
+          {
+            borderColor: theme.colors.secondary,
+            borderRadius: roundness,
+          },
+        ]}
+      >
+        <View style={styles.itemContent}>
+          <Ionicons name={icon} size={20} color={"gray"} />
+          <ThemedText>{label}</ThemedText>
+        </View>
+      </TouchableRipple>
+    </View>
+  );
+}
+
 type Props = {
   items: NavigationButton[];
 } & ViewProps;
@@ -38,27 +67,7 @@ function NavigationButtonsList({ items, ...props }: Props) {
   return (
     <View {...props}>
       {items.map((item) => (
-        <View
-          key={item.path}
-          style={{ borderRadius: roundness, overflow: "hidden" }}
-        >
-          <TouchableRipple
-            // Navigate to page
-            onPress={() => router.push(item.path)}
-            style={[
-              styles.container,
-              {
-                borderColor: theme.colors.secondary,
-                borderRadius: roundness,
-              },
-            ]}
-          >
-            <View style={styles.item}>
-              <Ionicons name={item.icon} size={20} color={"gray"} />
-              <ThemedText>{item.label}</ThemedText>
-            </View>
-          </TouchableRipple>
-        </View>
+        <NavigationButton key={item.label} {...item} />
       ))}
     </View>
   );
@@ -67,15 +76,15 @@ function NavigationButtonsList({ items, ...props }: Props) {
 import { StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { ViewProps } from "react-native";
+import { debugStyle } from "@/constants/styels";
 
 const styles = StyleSheet.create({
   container: {
-    height: 48,
+    padding: 15,
     borderWidth: 1,
     justifyContent: "center",
   },
-
-  item: {
+  itemContent: {
     marginStart: 10,
     flexDirection: "row",
     alignItems: "center",

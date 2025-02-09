@@ -88,6 +88,7 @@ export default function DrawerLayout() {
       />
       <Drawer.Screen
         options={{
+          headerShown: false,
           title: t("Bookmarks"),
           drawerIcon: BookmarksIcon,
         }}

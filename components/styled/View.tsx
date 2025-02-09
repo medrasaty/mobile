@@ -61,7 +61,6 @@ export const Container = ({ children, style, ...props }: ViewProps) => {
 };
 
 export const ContainerView = ({ children, style, ...props }: ViewProps) => {
-  const theme = useTheme();
   return (
     <ThemedView style={[style, { ...containerPaddings }]} {...props}>
       {children}

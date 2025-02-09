@@ -47,6 +47,12 @@ type ScreenListV2Props<T> = {
   infinite?: boolean;
 } & FlashListProps<T>;
 
+/**
+ *
+ * @deprecated{ use ScreenListV3 }
+ * @param
+ * @returns
+ */
 export function ScreenListV2<T>({
   isPending,
   isError,

@@ -10,13 +10,18 @@ import {
   unbookmarkQuestion,
   unregisterQuestion,
   updateQuestion,
-  updateQuestionData,
 } from "./requests";
 import {
   rateQuestionData,
   rateQuestion as rateQuestionRequest,
 } from "@/requests/forum/question";
 import { calcNewRatingsValue } from "../utils";
+import { Subject } from "@/types/school.types";
+import { createQuestion } from "@forum/questions/requests";
+import { questionSchemaType } from "./schemas";
+import { BQKeys } from "@features/bookmarks/keys";
+import { BookmarkQuestion } from "@features/bookmarks/types";
+import { PaginatedResponse } from "@/types/responses";
 
 export function useBookmarkQuestionMutation() {
   const c = useAuthClient();
@@ -69,8 +74,6 @@ export function useUnbookmarkQuestionMutation() {
       qc.setQueryData(
         ForumQuestionKeys.detail(questionId),
         (oldData: DetailQuestion): DetailQuestion => {
-          console.log(oldData);
-
           if (oldData) {
             return {
               ...oldData,
@@ -86,6 +89,22 @@ export function useUnbookmarkQuestionMutation() {
         title: t("removed_bookmark_succes"),
       });
     },
+    onSuccess: (_data, questionId) => {
+      qc.setQueryData(
+        BQKeys.all,
+        (oldData: PaginatedResponse<BookmarkQuestion> | undefined) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            results: oldData.results.filter(
+              (bookmarkQuestion) => bookmarkQuestion.question.id !== questionId
+            ),
+          };
+        }
+      );
+    },
+
     onError: (error) => {
       Burnt.toast({
         title: t("network_error"),
@@ -95,6 +114,8 @@ export function useUnbookmarkQuestionMutation() {
     onSettled: (_data, _error, questionId) => {
       // invalidate all quereis
       qc.invalidateQueries({ queryKey: ForumQuestionKeys.detail(questionId) });
+      // Invalidate Bookmakred Questions list
+      qc.invalidateQueries({ queryKey: BQKeys.all });
     },
   });
 }
@@ -220,10 +241,6 @@ export function useRateQuestionMutation() {
     },
   });
 }
-
-import { Subject } from "@/types/school.types";
-import { createQuestion } from "@forum/questions/requests";
-import { questionSchemaType } from "./schemas";
 
 export type QuestionData = {
   title: string;
