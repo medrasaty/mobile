@@ -15,17 +15,3 @@ export default function useAuthClient(): Axios {
 
   return axios.create(config);
 }
-
-export function AuthClient(): Axios {
-  // Get token from store
-  const token = useAuthSession.getState().session?.token;
-
-  const config = {
-    baseURL: API_URL,
-    headers: {
-      Authorization: `TOKEN ${token}`,
-    },
-  } satisfies AxiosRequestConfig;
-
-  return axios.create(config);
-}

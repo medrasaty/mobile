@@ -7,6 +7,7 @@ import { ConfirmDialogV2 } from "@components/ConfirmDialog";
 import { useVisibleV2 } from "@/hooks/useVisible";
 import LoadingDialog from "@components/LoadingDialog";
 import { useRemoveBookmarkQuestionMutation } from "../mutations";
+import { t } from "i18next";
 
 type BookmarkQuestionCardProps = {
   bookmarkQuestion: BookmarkQuestion;
@@ -73,10 +74,7 @@ function DeleteCardButton({ id }: { id: BookmarkQuestion["question"]["id"] }) {
         onConfirm={handleConfirm}
         message="are you sure you want to remove this question from bookmars?"
       />
-      <LoadingDialog
-        visible={isPending}
-        message="deleting from bookmarks ..."
-      />
+      <LoadingDialog visible={isPending} message={t("deleting")} />
     </>
   );
 }

@@ -1,20 +1,23 @@
-import useAuthClient, { AuthClient } from "@/hooks/useAuthClient";
+import { request } from "@/lib/api";
 import { BaseQuestion } from "@/types/forum.types";
+import { AxiosRequestConfig } from "axios";
 
 /**
  * Unified place for making requests
  * Experimental feature
  */
-
 export const api = {
   questions: {
     unbookmark: async (questionId: BaseQuestion["id"]) => {
-      const client = AuthClient();
-      return await client.delete(`/forum/questions/${questionId}/unbookmark/`);
+      const config = {
+        url: `/forum/questions/${questionId}/unbookmark/`,
+        method: "delete",
+      } satisfies AxiosRequestConfig;
+      return await request(config);
     },
   },
 };
 
 export async function removeBookmarkQuestion(questionId: string) {
-  api.questions.unbookmark(questionId);
+  return api.questions.unbookmark(questionId);
 }

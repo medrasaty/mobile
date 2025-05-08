@@ -22,6 +22,7 @@ import { questionSchemaType } from "./schemas";
 import { BQKeys } from "@features/bookmarks/keys";
 import { BookmarkQuestion } from "@features/bookmarks/types";
 import { PaginatedResponse } from "@/types/responses";
+import Toast from "@/lib/toast";
 
 export function useBookmarkQuestionMutation() {
   const c = useAuthClient();
@@ -267,6 +268,7 @@ export function useCreateQuestionMutation() {
     },
     onSuccess: (data: Question) => {
       // Set question to the catch
+      Toast.success("Question created successfully");
       qc.setQueryData(ForumQuestionKeys.detail(data.id), data);
     },
   });

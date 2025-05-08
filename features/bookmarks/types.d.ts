@@ -1,6 +1,6 @@
 import { Question } from "@/types/forum.types";
 
-export interface BookmarkQuestion {
+export type BookmarkQuestion = {
   bookmarked_at: Date;
   question: Question;
-}
+};

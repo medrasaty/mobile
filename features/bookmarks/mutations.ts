@@ -37,11 +37,19 @@ export function useRemoveBookmarkQuestionMutation() {
 
     onError: (error, questionId) => {
       Toast.error("solo is error");
-      console.log(JSON.stringify(error));
+      console.error(JSON.stringify(error));
     },
 
     onSettled: () => {
       qc.invalidateQueries({ queryKey: BQKeys.all });
     },
+  });
+}
+
+export function useClearBookmarksMutation() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationKey: ["clear_bookmarks"],
   });
 }

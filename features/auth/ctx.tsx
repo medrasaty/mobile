@@ -120,7 +120,7 @@ async function ServerLogin(credentials: Credentials): Promise<Session> {
    */
 
   const encodedCredentials = btoa(
-    `${credentials.username}:${credentials.password}`
+    `${credentials.username.toLowerCase()}:${credentials.password}`
   );
 
   const config = {

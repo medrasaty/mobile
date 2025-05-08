@@ -1,9 +1,7 @@
 import { Session } from "@/features/auth/ctx";
-import { GruvboxDarkCyan, GruvboxLightCyan } from "@/constants/Colors";
-import { useSession } from "@/hooks/useSession";
+import { GruvboxLightCyan } from "@/constants/Colors";
 import { Subject } from "@/types/school.types";
 import { BaseUser, UserType } from "@/types/user.types";
-import { useTheme } from "react-native-paper";
 import { fileUploadType } from "@/types";
 
 export function parseSession(session: string | null): Session {
