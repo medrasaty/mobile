@@ -1,5 +1,5 @@
 # Medrasaty mobile
-Mobile application for medrasaty, created using `React Native` & `expo`
+Mobile application for medrasaty, created using [React Native](https://reactnative.dev/) & [Expo](https://expo.dev)
 
 
 
