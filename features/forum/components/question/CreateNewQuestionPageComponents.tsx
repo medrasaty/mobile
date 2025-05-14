@@ -4,17 +4,12 @@ import { View, ViewProps } from "react-native";
 import {
   TextInput,
   TextInputProps,
-  HelperText,
   IconButton,
   IconButtonProps,
   Divider,
   useTheme,
 } from "react-native-paper";
-import {
-  ImagePickerAsset,
-  launchImageLibraryAsync,
-  MediaTypeOptions,
-} from "expo-image-picker";
+import { ImagePickerAsset, launchImageLibraryAsync } from "expo-image-picker";
 
 import {
   Title as TitlePreview,
@@ -23,10 +18,9 @@ import {
   SubjectInfo,
 } from "@/features/forum/components/question/detail/QuestionDetailInfo";
 import { Subject } from "@/types/school.types";
-import useVisible, { useVisibleV2 } from "@/hooks/useVisible";
+import { useVisibleV2 } from "@/hooks/useVisible";
 import { useState } from "react";
 import SelectSubjectDialog from "./SelectSubjectDialog";
-import Row from "@components/Row";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import TextError from "@components/TextError";
@@ -249,11 +243,11 @@ export const PreviewContent = ({
   ...props
 }: PreviewProps) => {
   return (
-    <ThemedView style={[style, { flex: 1, gap: 8 }]} {...props}>
+    <ThemedView style={[style, { flex: 1, gap: 8, marginTop: 12 }]} {...props}>
       <TitlePreview title={title} />
       {subject && <SubjectInfo subject={subject} />}
       <DescriptionPreview description={description} />
-      <PicturePreview image={picture} />
+      {picture && <PicturePreview image={picture} />}
     </ThemedView>
   );
 };

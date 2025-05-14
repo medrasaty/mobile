@@ -3,60 +3,127 @@ import { useBookmarkedQuestionsQuery } from "../queries";
 import { AppBar } from "@features/navigation/components/AppBar";
 import Page from "@components/Page";
 import { QueryPage } from "@components/QueryView";
-
-import BookmarkQuestionCard from "../components/BookmarkQuestionCard";
-import { BookmarkQuestion } from "../types";
 import { ContainerView } from "@components/styled";
-import { AnimatedFlashList, FlashListProps } from "@shopify/flash-list";
 import { useTranslation } from "react-i18next";
+import { FAB } from "react-native-paper";
+import FilterOptionsView from "@components/FilterOptionsView";
+import { SearchContextProvider, SearchContextbar, useSearchContext } from "@/contexts/SearchContext";
+import { Appbar } from "react-native-paper";
 
 type BookmarkedQuestionsScreenProps = {} & ViewProps;
 
+const OptionsAppbar = () => {
+  const { setIsSearch } = useSearchContext();
+  const { t } = useTranslation();
+  return (
+    <AppBar divider title={t("Solo")}>
+      <Appbar.Action icon="magnify" onPress={() => setIsSearch(true)} />
+    </AppBar>
+  );
+};
+
+const BookmarkAppbar = () => {
+  const { isSearch } = useSearchContext();
+  return isSearch ? <SearchContextbar /> : <OptionsAppbar />;
+};
+
 const BookmarkedQuestionsScreen = ({
   ...props
+}: BookmarkedQuestionsScreenProps) => (
+  <SearchContextProvider>
+    <BookmarkedQuestionsScreenContent {...props} />
+  </SearchContextProvider>
+);
+
+const BookmarkedQuestionsScreenContent = ({
+  ...props
 }: BookmarkedQuestionsScreenProps) => {
-  const q = useBookmarkedQuestionsQuery();
-
-  /*
-   *
-   * refreshControl
-   * I want the refreshing icon to appear when the user has pulled it down,
-   * and to remain until page is fully refetched,
-   * to achiev this you must know when the user has pulled the refresh,
-   */
-
   const { t } = useTranslation();
+  const { options, currentFilter, onFilterChange } = useFilterOptions([
+    { label: t("Newest"), value: "-bookmarked_at" },
+    { label: t("Oldest"), value: "bookmarked_at" },
+  ]);
+  const { searchValue } = useSearchContext();
+  const q = useBookmarkedQuestionsQuery({
+    ordering: currentFilter,
+    search: searchValue,
+  });
+
+  const renderHeader = () => (
+    <ContainerView>
+      <FilterOptionsView
+        container={false}
+        currentFilter={currentFilter}
+        filterOptions={options}
+        onFilterChange={onFilterChange}
+      />
+    </ContainerView>
+  );
+
+  const renderItem = ({ item }: { item: BookmarkQuestion }) => (
+    <Animated.View layout={LinearTransition}>
+      <BookmarkQuestionCard question={item} />
+    </Animated.View>
+  );
 
   return (
     <Page>
-      <AppBar title={t("Bookmarks")} />
-      {/* Actual list */}
+      <BookmarkAppbar />
       <QueryPage query={q}>
-        <BookmarkedQuestionsList
-          // gap between cards
-          data={q.data?.results}
-          refreshing={true}
+        <AnimatedFlashList
+          showsVerticalScrollIndicator={false}
+          scrollEnabled={!q.isRefetching}
+          estimatedItemSize={BOOKMARK_QUESTION_CARD_HEIGHT}
+          ItemSeparatorComponent={Divider}
+          ListFooterComponent={Divider}
+          ListHeaderComponent={renderHeader}
+          contentContainerStyle={{
+            paddingTop: 10,
+            paddingBottom: 100,
+          }}
+          renderItem={renderItem}
+          data={q.data?.results ?? []}
+          keyExtractor={(item) => item.question.id}
+          refreshing={q.isRefetching}
+          onRefresh={q.refetch}
         />
       </QueryPage>
     </Page>
   );
 };
 
-function BookmarkedQuestionsList<itemT>({
+const BookmarkQuestionAppBar = ({ title }: { title: string }) => {
+  return <AppBar title={title} />;
+}
+
+import { memo } from "react";
+import { AnimatedFlashList, FlashListProps } from "@shopify/flash-list";
+import { BookmarkQuestion } from "../types";
+import BookmarkQuestionCard, { BOOKMARK_QUESTION_CARD_HEIGHT } from "../components/BookmarkQuestionCard";
+import { Divider } from "react-native-paper";
+import Animated, { LinearTransition } from 'react-native-reanimated';
+import useFilterOptions from "@/hooks/useFilterOptions";
+
+/**
+ * A memoized list component for displaying bookmarked questions
+ * Extracted to its own file to improve hot reload performance
+ */
+export const BookmarkedQuestionsList = memo(function BookmarkedQuestionsList({
   ...props
-}: Omit<FlashListProps<itemT>, "renderItem">) {
+}: Omit<FlashListProps<BookmarkQuestion>, "renderItem">) {
   return (
     <AnimatedFlashList
       showsVerticalScrollIndicator={false}
-      estimatedItemSize={120}
-      renderItem={({ item }) => (
-        <ContainerView style={{ paddingBottom: 8, paddingTop: 8 }}>
-          <BookmarkQuestionCard bookmarkQuestion={item as BookmarkQuestion} />
-        </ContainerView>
+      estimatedItemSize={BOOKMARK_QUESTION_CARD_HEIGHT}
+      ItemSeparatorComponent={Divider}
+      renderItem={({ item }: { item: BookmarkQuestion }) => (
+        <Animated.View layout={LinearTransition}>
+          <BookmarkQuestionCard question={item} />
+        </Animated.View>
       )}
       {...props}
     />
   );
-}
+});
 
 export default BookmarkedQuestionsScreen;

@@ -5,6 +5,7 @@ import NetworkError, { FullPageNetworkError } from "./NetworkError";
 import Page from "./Page";
 import CenterPage from "./CenterPage";
 import FullPageLoadingIndicator from "./FullPageLoadingIndicator";
+import Toast  from "@/lib/toast";
 
 type QueryViewProps = {
   query: UseQueryResult;
@@ -32,30 +33,38 @@ const QueryView = ({ query, errorMessage, ...props }: QueryViewProps) => {
 };
 
 /**
+ * React Query page component that handles loading, error, and success states.
+ * It wraps the content in a Page component and provides appropriate UI based on query status.
  *
- * React Query page, it is the same as server view accept that
- * you don't need to pass status and onRetry, just the queryResult return from useQuery.
- *
- * @returns full page server view
+ * @param {Object} props - Component props
+ * @param {UseQueryResult} props.query - The query result from useQuery hook
+ * @param {string} [props.errorMessage] - Custom error message to display
+ * @returns {JSX.Element} Full page view with query-dependent content
  */
-
 export const QueryPage = ({
   query,
   errorMessage,
   ...props
-}: QueryViewProps) => {
+}: QueryViewProps): JSX.Element => {
   const { status, refetch } = query;
-  return (
-    <Page {...props}>
-      {status === "pending" ? (
-        <FullPageLoadingIndicator />
-      ) : status === "error" ? (
-        <FullPageNetworkError onRetry={refetch} message={errorMessage} />
-      ) : (
-        props.children
-      )}
-    </Page>
-  );
+
+  const renderContent = () => {
+    switch (status) {
+      case "pending":
+        if (query.data === undefined) {
+          return <FullPageLoadingIndicator />;
+        }
+      case "error":
+        // This prevent the error message from being displayed when query has data.
+        if (query.data === undefined) {
+          return <FullPageNetworkError onRetry={refetch} message={errorMessage} />;
+        }
+      default:
+        return props.children;
+    }
+  };
+
+  return <Page {...props}>{renderContent()}</Page>;
 };
 
-export default QueryView;
+export default QueryPage;

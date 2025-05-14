@@ -16,38 +16,30 @@ export default function RatingComponent({
   currentRating = 0,
 }: RatingProps) {
   return (
-    <RatingContainer>
-      <RatingButton
-        isPressed={currentRating === RatingValue.POSITIVE}
-        direction="up"
-        onPress={() => {
-          onPress(RatingValue.POSITIVE);
-        }}
-      />
-      <RatingValueText value={ratingsValue} />
-      <RatingButton
-        isPressed={currentRating === RatingValue.NEGATIVE}
-        onPress={() => {
-          onPress(RatingValue.NEGATIVE);
-        }}
-        direction="down"
-      />
-    </RatingContainer>
-  );
-}
-
-const RatingContainer = ({ children, ...props }: React.PropsWithChildren) => {
-  return (
-    <ThemedView {...props} style={{ alignItems: "center", gap: 8 }}>
-      {children}
+    <ThemedView style={{ width: 40 }}>
+      <ThemedView style={{ alignItems: "center" }}>
+        <RatingButton
+          isPressed={currentRating === RatingValue.POSITIVE}
+          direction="up"
+          onPress={() => {
+            onPress(RatingValue.POSITIVE);
+          }}
+        />
+      </ThemedView>
+      <ThemedView style={{ alignItems: "center", marginVertical: 8 }}>
+        <ThemedText variant="bodyLarge" style={{ fontWeight: "bold" }}>
+          {ratingsValue}
+        </ThemedText>
+      </ThemedView>
+      <ThemedView style={{ alignItems: "center" }}>
+        <RatingButton
+          isPressed={currentRating === RatingValue.NEGATIVE}
+          onPress={() => {
+            onPress(RatingValue.NEGATIVE);
+          }}
+          direction="down"
+        />
+      </ThemedView>
     </ThemedView>
   );
-};
-
-const RatingValueText = ({ value }: { value: number }) => {
-  return (
-    <ThemedText variant="bodyLarge" style={{ fontWeight: "bold" }}>
-      {value}
-    </ThemedText>
-  );
-};
+}

@@ -10,7 +10,7 @@ import { useRouter } from "expo-router";
 import { t } from "i18next";
 import { useCallback } from "react";
 import { Pressable, StyleSheet, View, ViewProps } from "react-native";
-import { IconButton, Surface, useTheme } from "react-native-paper";
+import { IconButton, Surface, TouchableRipple, useTheme } from "react-native-paper";
 import { useDeleteWatchHistoryMutation } from "../mutations";
 import { WatchHistory } from "../types";
 import { path } from "@/lib/routing";
@@ -18,6 +18,8 @@ import { path } from "@/lib/routing";
 type QuestionHistoryCellProps = {
   history: WatchHistory;
 };
+
+export const QUESTION_HISTORY_CELL_HEIGHT = 170;
 
 const QuestionHistoryCell = ({ history }: QuestionHistoryCellProps) => {
   const { question } = history;
@@ -30,8 +32,8 @@ const QuestionHistoryCell = ({ history }: QuestionHistoryCellProps) => {
   }, [history.id]);
 
   return (
-    <Pressable onPress={goToQuestion}>
-      <Surface style={[styles.container, { borderRadius: theme.roundness }]}>
+    <TouchableRipple onPress={goToQuestion}>
+      <Surface elevation={0} style={[styles.container, { borderRadius: theme.roundness }]}>
         <Row style={{ gap: 20 }}>
           <View style={{ flex: 1 }}>
             <Title title={question.title} />
@@ -48,7 +50,7 @@ const QuestionHistoryCell = ({ history }: QuestionHistoryCellProps) => {
           <Date date={history.watched_at} />
         </Row>
       </Surface>
-    </Pressable>
+    </TouchableRipple>
   );
 };
 
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: DEFAULT_CONTAINER_SPACING,
     paddingRight: 0,
-    height: 210,
+    height: QUESTION_HISTORY_CELL_HEIGHT,
     justifyContent: "space-between",
     margin: 6,
   },

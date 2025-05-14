@@ -1,5 +1,5 @@
 // TopTabs.tsx
-import React, { useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -7,23 +7,12 @@ import {
   StyleSheet,
   I18nManager,
 } from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  withSpring,
-  useSharedValue,
-  interpolate,
-} from "react-native-reanimated";
+import { useTheme } from "react-native-paper";
 import { MaterialTopTabBarProps } from "@react-navigation/material-top-tabs";
 
 interface TopTabsProps extends MaterialTopTabBarProps {
   tabStyle?: "default" | "pill" | "underline";
-  activeColor?: string;
-  inactiveColor?: string;
-  indicatorColor?: string;
-  backgroundColor?: string;
-  labelStyle?: object;
   showBadge?: boolean;
-  badgeColor?: string;
 }
 
 const TopTabsBar: React.FC<TopTabsProps> = ({
@@ -31,71 +20,37 @@ const TopTabsBar: React.FC<TopTabsProps> = ({
   descriptors,
   navigation,
   tabStyle = "underline",
-  activeColor = "#000",
-  inactiveColor = "#666",
-  indicatorColor = "#000",
-  backgroundColor = "#fff",
-  labelStyle,
   showBadge,
-  badgeColor = "#FF3B30",
 }) => {
-  const translateX = useSharedValue(0);
+  const { colors } = useTheme();
   const isRTL = I18nManager.isRTL;
-
-  useEffect(() => {
-    translateX.value = state.index * (100 / state.routes.length);
-  }, [state.index]);
-
-  const indicatorStyle = useAnimatedStyle(() => {
-    const width = 100 / state.routes.length;
-
-    return {
-      transform: [
-        {
-          translateX: withSpring(
-            isRTL
-              ? -(translateX.value * (width / 100) * width)
-              : translateX.value * (width / 100) * width,
-            {
-              damping: 20,
-              stiffness: 90,
-            }
-          ),
-        },
-      ],
-      width: `${width}%`,
-    };
-  });
 
   const getIndicatorComponent = () => {
     switch (tabStyle) {
       case "pill":
         return (
-          <Animated.View
+          <View
             style={[
               styles.pillIndicator,
-              { backgroundColor: indicatorColor },
-              indicatorStyle,
+              { backgroundColor: colors.background },
             ]}
           />
         );
       case "underline":
         return (
-          <Animated.View
+          <View
             style={[
               styles.underlineIndicator,
-              { backgroundColor: indicatorColor },
-              indicatorStyle,
+              { backgroundColor: colors.primary },
             ]}
           />
         );
       default:
         return (
-          <Animated.View
+          <View
             style={[
               styles.defaultIndicator,
-              { backgroundColor: indicatorColor },
-              indicatorStyle,
+              { backgroundColor: colors.background },
             ]}
           />
         );
@@ -103,7 +58,7 @@ const TopTabsBar: React.FC<TopTabsProps> = ({
   };
 
   return (
-    <View style={[styles.container, { backgroundColor }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.tabsContainer}>
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
@@ -141,14 +96,13 @@ const TopTabsBar: React.FC<TopTabsProps> = ({
               <Text
                 style={[
                   styles.label,
-                  labelStyle,
-                  { color: isFocused ? activeColor : inactiveColor },
+                  { color: isFocused ? colors.primary : colors.onBackground },
                 ]}
               >
                 {label}
               </Text>
               {showBadge && options.tabBarBadge && (
-                <View style={[styles.badge, { backgroundColor: badgeColor }]}>
+                <View style={[styles.badge, { backgroundColor: colors.error }]}>
                   <Text style={styles.badgeText}>{options.tabBarBadge}</Text>
                 </View>
               )}

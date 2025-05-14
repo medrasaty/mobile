@@ -1,6 +1,7 @@
 import { useTheme } from "react-native-paper";
 
 export const RatingButtonSize = 37;
+export const ACTION_BUTTON_CONTAINER_WIDTH = 40;
 
 export default function useActionsProps() {
   const theme = useTheme();

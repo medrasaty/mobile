@@ -1,11 +1,11 @@
 import Page from "@/components/Page";
 import { ScreenListV2 } from "@/components/ScreenFlatList";
 import { useInfiniteHistory } from "../queries";
-import QuestionHistoryCell from "../components/QuestionHistoryCell";
+import QuestionHistoryCell, { QUESTION_HISTORY_CELL_HEIGHT } from "../components/QuestionHistoryCell";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { t } from "i18next";
 import FilterOptionsView from "@/components/FilterOptionsView";
-import { Appbar, IconButton, Menu, MenuItemProps } from "react-native-paper";
+import { Appbar, Divider, IconButton, Menu, MenuItemProps } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import useClearWatchHistoryMutation from "../mutations";
 import useCurrentUser from "@/hooks/useCurrentUser";
@@ -75,15 +75,23 @@ export const WatchHistoryList = () => {
   return (
     <ScreenListV2
       renderItem={({ item, index }) => {
-        return <QuestionHistoryCell history={item} key={index} />;
+        return ( 
+          <>
+        <QuestionHistoryCell history={item} key={index} />
+        {index == data.length - 1 && <Divider />}
+          </>
+
+      );
       }}
+      ItemSeparatorComponent={Divider}
       isPending={q.isPending}
       ListHeaderComponent={renderHeader}
       ListFooterComponent={renderFooter}
+      ListFooterComponentStyle={{ paddingBottom: 20 }}
       ListEmptyComponent={EmptyHistory}
       onEndReachedThreshold={1}
       onEndReached={q.fetchNextPage}
-      estimatedItemSize={200}
+      estimatedItemSize={QUESTION_HISTORY_CELL_HEIGHT}
       isError={q.isError}
       refreshing={q.isRefetching}
       onRefresh={q.refetch}

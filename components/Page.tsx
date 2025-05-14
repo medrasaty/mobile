@@ -1,23 +1,16 @@
-import View, { Container, SafeAreaView } from "@/components/styled/View";
+import View, { Container } from "@/components/styled/View";
 import { ViewProps } from "react-native";
 
-type PageProps = {
+type PageProps = ViewProps & {
   container?: boolean;
-} & ViewProps;
+};
 
-const Page = ({ container = false, ...props }: PageProps) => {
-  if (container) {
-    return (
-      <Container {...props} style={[{ flex: 1 }, props.style]}>
-        {props.children}
-      </Container>
-    );
-  }
-
+const Page = ({ container = false, style, children, ...rest }: PageProps) => {
+  const Wrapper = container ? Container : View;
   return (
-    <View {...props} style={[{ flex: 1 }, props.style]}>
-      {props.children}
-    </View>
+    <Wrapper {...rest} style={[{ flex: 1 }, style]}>
+      {children}
+    </Wrapper>
   );
 };
 

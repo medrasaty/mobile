@@ -3,6 +3,7 @@ import QuestionDetailActions from "@/features/forum/components/question/detail/Q
 import QuestionDetailInfo from "@/features/forum/components/question/detail/QuestionDetailInfo";
 import { DetailQuestion } from "@/types/forum.types";
 import { useQuestionInfoPropsMemo } from "@/features/forum/hooks/useQuestionInfoMemo";
+import { ThemedText } from "@components/ThemedText";
 
 export const QUESTION_LAYOUT_GAP = 16;
 

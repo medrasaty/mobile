@@ -1,10 +1,7 @@
 import { ThemedView } from "@/components/ThemedView";
 import { FlatListProps, FlatList, View } from "react-native";
 import FullPageLoadingIndicator from "./FullPageLoadingIndicator";
-import NetworkError, { NetworkErrorProps } from "./NetworkError";
-import { StyleSheet } from "react-native";
 import { FlashList, FlashListProps } from "@shopify/flash-list";
-import LoadingIndicator from "./LoadingIndicator";
 import { UseQueryResult } from "@tanstack/react-query";
 import { ScreenError, ScreenLoadingIndicator } from "./Screen";
 
@@ -48,10 +45,22 @@ type ScreenListV2Props<T> = {
 } & FlashListProps<T>;
 
 /**
+ * A versatile list component leveraging FlashList that handles loading, error, empty, and infinite-scroll states.
+ * @deprecated use ScreenListV3 instead
+ * 
+ * @template T - The type of the items in the list.
  *
- * @deprecated{ use ScreenListV3 }
- * @param
- * @returns
+ * @param props.isPending - Whether the list is currently loading. If true, displays a loading indicator.
+ * @param props.isError - Whether the list encountered an error. If true, displays an error view.
+ * @param props.onRetry - Callback invoked when the error view retry action is triggered.
+ * @param props.errorMessage - The message to display in the error view when an error occurs.
+ * @param props.data - The array of items to render in the list. Falls back to an empty array if undefined.
+ * @param props.ListEmptyComponent - A React element to render when the list is empty and not loading or errored.
+ * @param props.infinite - If true, enables infinite scrolling by rendering a footer component.
+ * @param props.ListFooterComponent - A React element to render as the list footer, typically for loading more items.
+ * @param props.listProps - Additional props forwarded to the underlying FlashList component.
+ *
+ * @returns A FlashList configured with built-in loading, error, empty, and optional infinite-scroll behaviors.
  */
 export function ScreenListV2<T>({
   isPending,

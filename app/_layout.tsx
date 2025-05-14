@@ -18,7 +18,15 @@ import { useAuthSession } from "@features/auth/store";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const queryClient = new QueryClient();
+// Configure QueryClient with better dev tools options
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Useful for debugging
+      retry: process.env.NODE_ENV === 'production',
+    },
+  },
+});
 
 export default function RootLayout() {
   useReactQueryDevTools(queryClient);

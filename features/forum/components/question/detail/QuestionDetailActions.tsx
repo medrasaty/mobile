@@ -7,12 +7,11 @@ import {
   RegisterQuestion,
 } from "@/features/forum/components/RatingButton";
 
-import useQuestionRatingMutation from "@/features/forum/hooks/useQuestionRatingMutation";
-import { memo } from "react";
+import { ActionButton } from "@/features/forum/components/ActionButton";
+
 import { ViewProps } from "react-native";
 import RatingComponent from "../../Rating";
 import { useRateQuestionMutation } from "@forum/questions/mutations";
-import { ThemedText } from "@components/ThemedText";
 
 export const ACTIONS_GAP = 12;
 
@@ -26,7 +25,7 @@ const QuestionDetailActions = ({
   return (
     <>
       <View
-        style={[style, { gap: ACTIONS_GAP, alignItems: "center" }]}
+        style={[style, { gap: ACTIONS_GAP, alignItems: "flex-start" }]}
         {...props}
       >
         <RatingActions
@@ -34,14 +33,18 @@ const QuestionDetailActions = ({
           userRating={question.user_rating}
           ratingsValue={question.ratings_value}
         />
-        <BookmarkQuestion
-          questionID={question.id}
-          isBookmarked={question.is_bookmarked}
-        />
-        <RegisterQuestion
-          questionID={question.id}
-          isRegistered={question.is_registered}
-        />
+        <ActionButton>
+          <BookmarkQuestion
+            questionID={question.id}
+            isBookmarked={question.is_bookmarked}
+          />
+        </ActionButton>
+        <ActionButton>
+          <RegisterQuestion
+            questionID={question.id}
+            isRegistered={question.is_registered}
+          />
+        </ActionButton>
       </View>
     </>
   );
@@ -70,7 +73,7 @@ const RatingActions = ({
   return (
     <RatingComponent
       onPress={handleRating}
-      ratingsValue={ratingsValue}
+      ratingsValue={ratingsValue ?? 0} //
       currentRating={userRating}
     />
   );

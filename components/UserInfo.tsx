@@ -16,7 +16,7 @@ type UserInfoProps = {
 
 const UserInfo = ({
   showSchool = true,
-  avatarSize = 60,
+  avatarSize = 40,
   user,
 }: UserInfoProps) => {
   return (

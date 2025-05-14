@@ -1,51 +1,57 @@
-import { View, ViewProps } from "react-native";
+import { View, ViewProps, Pressable, StyleSheet, TouchableOpacity } from "react-native";
 import { BookmarkQuestion } from "../types";
-import { ThemedText } from "@components/ThemedText";
+import { ThemedText } from "@/components/ThemedText";
 import { d } from "@/lib/dates";
-import { IconButton, Surface, useTheme } from "react-native-paper";
-import { ConfirmDialogV2 } from "@components/ConfirmDialog";
+import { Divider, IconButton, Surface, TouchableRipple, useTheme } from "react-native-paper";
+import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
 import { useVisibleV2 } from "@/hooks/useVisible";
-import LoadingDialog from "@components/LoadingDialog";
+import LoadingDialog from "@/components/LoadingDialog";
 import { useRemoveBookmarkQuestionMutation } from "../mutations";
 import { t } from "i18next";
+import { useRouter } from "expo-router";
+import { path } from "@/lib/routing";
+import Row from "@/components/Row";
+import UserInfo from "@/components/UserInfo";
+import { debugStyle, DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
+import { ContainerView } from "@components/styled";
 
 type BookmarkQuestionCardProps = {
-  bookmarkQuestion: BookmarkQuestion;
+  question: BookmarkQuestion;
 } & ViewProps;
 
-const BookmarkQuestionCard = ({
-  bookmarkQuestion,
-  ...props
-}: BookmarkQuestionCardProps) => {
+export const BOOKMARK_QUESTION_CARD_HEIGHT = 150;
+
+const BookmarkQuestionCard = ({ question }: BookmarkQuestionCardProps) => {
+  const router = useRouter();
   const theme = useTheme();
+  const goToDetail = () => router.push(path.questions.detail(question.question.id));
 
   return (
-    <Surface mode="flat" style={{ borderRadius: theme.roundness * 3 }}>
-      <View
-        {...props}
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <View style={{ flex: 1, padding: 20, gap: 20 }}>
-          <View style={{ gap: 10 }}>
-            <ThemedText numberOfLines={1} variant="titleLarge">
-              {bookmarkQuestion.question.title}
+    <TouchableRipple onPress={goToDetail}>
+      <Surface elevation={0} style={[styles.container]}>
+        <Row style={{ gap: 10, }}>
+          <View style={{ flex: 1, margin: DEFAULT_CONTAINER_SPACING }}>
+            <ThemedText  numberOfLines={2} variant="titleLarge">
+              {question.question.title}
             </ThemedText>
-            <ThemedText numberOfLines={2} color="gray" variant="bodySmall">
-              {bookmarkQuestion.question.text}
-            </ThemedText>
+            <View style={{ marginTop: 10,  }}>
+              <ThemedText color="lightgray" numberOfLines={2} variant="bodySmall">
+                {question.question.text}
+              </ThemedText>
+            </View>
           </View>
-          <ThemedText color="gray" variant="labelSmall">
-            {d(bookmarkQuestion.bookmarked_at).toString()}
+          <View>
+            <DeleteCardButton id={question.question.id} />
+          </View>
+        </Row>
+
+        <View style={{ padding: DEFAULT_CONTAINER_SPACING }}>
+          <ThemedText color={theme.colors.onPrimaryContainer} variant="labelSmall">
+            {d(question.bookmarked_at).fromNow()}
           </ThemedText>
         </View>
-        <View>
-          <DeleteCardButton id={bookmarkQuestion.question.id} />
-        </View>
-      </View>
-    </Surface>
+      </Surface>
+    </TouchableRipple>
   );
 };
 
@@ -79,4 +85,12 @@ function DeleteCardButton({ id }: { id: BookmarkQuestion["question"]["id"] }) {
   );
 }
 
-export default BookmarkQuestionCard;
+export default BookmarkQuestionCard
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    height: BOOKMARK_QUESTION_CARD_HEIGHT,
+    justifyContent: 'space-between',
+  },
+});

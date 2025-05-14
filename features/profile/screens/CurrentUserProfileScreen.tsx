@@ -1,5 +1,4 @@
 import { AppBar } from "@/features/navigation/components/AppBar";
-import { BaseUser } from "@/types/user.types";
 import Page from "@components/Page";
 import ReputationInfo from "@components/ReputationInfo";
 import ScrollPage from "@components/ScrollPage";
@@ -8,107 +7,107 @@ import { ThemedText } from "@components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import { t } from "i18next";
 import React, { useMemo } from "react";
-import { View, ViewProps } from "react-native";
-import { Divider, TextProps, TouchableRipple } from "react-native-paper";
+import { StyleSheet, View, ViewProps } from "react-native";
+import { Divider } from "react-native-paper";
 import { useTheme } from "react-native-paper/src/core/theming";
-import { StyleSheet } from "react-native";
 import NavigationButtonsList from "../components/NavigationButtonsList";
-import { MotiView } from "moti";
 import { useAuthSession } from "@features/auth/store";
-import PlaceholderPage from "@components/PlaceholderPage";
 import ServerView from "@components/ServerView";
 import useProfile from "../hooks/useProfile";
 import { AuthUser } from "@features/auth/types";
 import { Image } from "expo-image";
 
-type CurrentUserProfileScreenProps = { id: BaseUser["id"] } & ViewProps;
+/**
+ * Props for the CurrentUserProfileScreen component
+ * @typedef CurrentUserProfileScreenProps
+ * @property {number} id - The user ID to display
+ */
+type CurrentUserProfileScreenProps = { 
+  id: number 
+} & ViewProps;
 
-const CurrentUserProfileScreen = ({
+/**
+ * CurrentUserProfileScreen - Displays the current user's profile
+ * 
+ * @param {CurrentUserProfileScreenProps} props - Component props
+ * @returns {React.ReactElement} A screen component with the current user's profile information
+ */
+const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
   id,
   ...props
 }: CurrentUserProfileScreenProps) => {
   const theme = useTheme();
   const user = useAuthSession((state) => state.session?.user);
+  
+  // Early return if no user is available
+  if (!user) {
+    return null;
+  }
+  
   return (
-    <Page>
+    <Page {...props}>
       <AppBar divider backAction={false} title={t("profile")} />
       <ScrollPage
-        contentContainerStyle={{ paddingBottom: 20 }}
+        contentContainerStyle={styles.scrollContent}
         overScrollMode="auto"
       >
-        <View style={{ alignItems: "center", marginTop: 10 }}>
+        <View style={styles.profileHeaderContainer}>
+          {/* Background Image */}
           <Image
-            style={{
-              height: 140,
-              width: "95%",
-              backgroundColor: "#333",
-              borderWidth: 2,
-              borderColor: "gray",
-              borderRadius: 10,
-            }}
-            source={user?.profile.background}
+            style={styles.backgroundImage}
+            source={user.profile.background}
+            cachePolicy="memory-disk"
           />
+          
+          {/* Profile Picture */}
           <Image
-            style={{
-              height: 120,
-              width: 120,
-              marginTop: -25,
-              borderWidth: 2,
-              borderColor: "gray",
-              backgroundColor: "gray",
-              borderRadius: 100,
-            }}
-            source={user?.profile_picture}
+            style={styles.profilePicture}
+            source={user.profile_picture}
             transition={500}
+            cachePolicy="memory-disk"
           />
 
-          <View style={{ gap: 5, marginTop: 6, alignItems: "center" }}>
-            {/* display name */}
-            <View style={{ alignItems: "center" }}>
+          <View style={styles.nameContainer}>
+            {/* Display Name */}
+            <View style={styles.centeredView}>
               <ThemedText bold variant="titleLarge">
-                {user?.display_name ? user.display_name : user?.full_name}
+                {user.display_name ? user.display_name : user.full_name}
               </ThemedText>
 
               {/* Username */}
               <ThemedText bold variant="bodySmall">
-                @{user?.username}
+                @{user.username}
               </ThemedText>
             </View>
 
-            <View style={{ alignItems: "center" }}>
-              {/* real name */}
+            <View style={styles.centeredView}>
+              {/* Real Name */}
               <ThemedText color="gray" variant="labelLarge">
-                {user?.full_name}
+                {user.full_name}
               </ThemedText>
 
               {/* Email */}
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 10,
-                }}
-              >
+              <View style={styles.emailContainer}>
                 <Ionicons color={theme.colors.secondary} name="mail" />
-                <ThemedText variant="labelSmall">{user?.email}</ThemedText>
+                <ThemedText variant="labelSmall">{user.email}</ThemedText>
               </View>
             </View>
           </View>
         </View>
 
-        {/* extra  info */}
-        <ContainerView style={{ marginTop: 20, gap: 12 }}>
+        {/* Extra Info */}
+        <ContainerView style={styles.biographyContainer}>
           {/* Biography */}
-          {user?.profile.biography && (
+          {user.profile.biography && (
             <ThemedText color="#333" variant="bodyMedium">
-              {user?.profile.biography}
+              {user.profile.biography}
             </ThemedText>
           )}
-          <CurrentUserReputation userPk={user?.pk} />
+          <CurrentUserReputation userPk={user.pk} />
         </ContainerView>
-        {/* Navigation pages ( Drawer replacement ) */}
-        <ContainerView style={{ marginTop: 30, gap: 8 }}>
+        
+        {/* Navigation Pages */}
+        <ContainerView style={styles.navigationContainer}>
           <Divider bold />
           <NavigationButtons />
         </ContainerView>
@@ -118,12 +117,13 @@ const CurrentUserProfileScreen = ({
 };
 
 /**
- * Fetch user reputation from server,
- *
- * @param userPk: CurrentUserReputation
- * @returns
+ * CurrentUserReputation - Fetches and displays the user's reputation information
+ * 
+ * @param {Object} props - Component props
+ * @param {number | undefined} props.userPk - The user's primary key
+ * @returns {React.ReactElement} A component displaying reputation information
  */
-function CurrentUserReputation({ userPk }: { userPk: AuthUser["pk"] }) {
+const CurrentUserReputation: React.FC<{ userPk: AuthUser["pk"] }> = React.memo(({ userPk }) => {
   const q = useProfile(userPk);
   return (
     <ServerView status={q.status}>
@@ -134,9 +134,15 @@ function CurrentUserReputation({ userPk }: { userPk: AuthUser["pk"] }) {
       />
     </ServerView>
   );
-}
+});
 
-function NavigationButtons(props: ViewProps) {
+/**
+ * NavigationButtons - Displays navigation buttons for different sections
+ * 
+ * @param {ViewProps} props - Component props
+ * @returns {React.ReactElement} A component with navigation buttons
+ */
+const NavigationButtons: React.FC<ViewProps> = React.memo((props: ViewProps) => {
   const buttons = useMemo(
     () => [
       {
@@ -180,12 +186,62 @@ function NavigationButtons(props: ViewProps) {
 
   return (
     <View {...props}>
-      <NavigationButtonsList style={{ gap: 10 }} items={buttons} />
+      <NavigationButtonsList style={styles.navigationList} items={buttons} />
     </View>
   );
-}
+});
 
+// Extract all styles to StyleSheet for better performance and maintainability
 const styles = StyleSheet.create({
+  scrollContent: { 
+    paddingBottom: 20 
+  },
+  profileHeaderContainer: { 
+    alignItems: "center", 
+    marginTop: 10 
+  },
+  backgroundImage: {
+    height: 140,
+    width: "95%",
+    backgroundColor: "#333",
+    borderWidth: 2,
+    borderColor: "gray",
+    borderRadius: 10,
+  },
+  profilePicture: {
+    height: 120,
+    width: 120,
+    marginTop: -25,
+    borderWidth: 2,
+    borderColor: "gray",
+    backgroundColor: "gray",
+    borderRadius: 100,
+  },
+  nameContainer: { 
+    gap: 5, 
+    marginTop: 6, 
+    alignItems: "center" 
+  },
+  centeredView: { 
+    alignItems: "center" 
+  },
+  emailContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  biographyContainer: { 
+    marginTop: 20, 
+    gap: 12 
+  },
+  navigationContainer: { 
+    marginTop: 30, 
+    gap: 8 
+  },
+  navigationList: { 
+    gap: 10 
+  },
   pageOptionButton: {
     height: 48,
     borderWidth: 1,
@@ -195,4 +251,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CurrentUserProfileScreen;
+export default React.memo(CurrentUserProfileScreen);
