@@ -19,6 +19,8 @@ import { useForumAnswers } from "@forum/answers/queries";
 import { View } from "react-native";
 import MoreOptions from "../components/QuestionCardOptionsMenu";
 import { useForumQuestion } from "../queries";
+import EmptyView from "@components/EmptyList";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function ForumQuestionDetailScreen() {
   const { t } = useTranslation();
@@ -59,6 +61,15 @@ export default function ForumQuestionDetailScreen() {
           dataStatus={answersQuery.status}
           renderItem={renderItem}
           estimatedItemSize={200}
+          // empty
+          ListEmptyComponent={
+            <View style={{ flex: 1, marginTop: 30 }}>
+              <EmptyView
+                message="no answers"
+                icon={(props) => <Ionicons name="book-outline" {...props} />}
+              />
+            </View>
+          }
           ItemSeparatorComponent={Divider}
           contentContainerStyle={{
             paddingTop: 20,

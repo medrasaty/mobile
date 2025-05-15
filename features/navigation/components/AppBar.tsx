@@ -88,7 +88,6 @@ export function AnimatedAppBar({ title, children }: AppBarProps) {
 }
 
 export const HomeAppBar = () => {
-  const { signOut } = useSession();
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -100,7 +99,6 @@ export const HomeAppBar = () => {
         title={t("Home")}
       >
         <Appbar.Action icon="magnify" onPress={() => {}} />
-        <Appbar.Action icon="dots-vertical" onPress={() => signOut()} />
       </AppBar>
       <Divider style={{ backgroundColor: theme.colors.primary }} />
     </>

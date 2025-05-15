@@ -80,7 +80,13 @@
   "new_question": "New question",
   "create_question": {
     "choose_subject": "choose subject",
-    "new_question": "New question"
+    "new_question": "New question",
+    "add_picture": "add picture",
+    "edit_picture": "edit picture",
+    "description": "description",
+    "title": "title",
+    "preview": "preview",
+    "add_subject": "add subject"
   },
   "submit": "submit",
   "Submit": "Submit",

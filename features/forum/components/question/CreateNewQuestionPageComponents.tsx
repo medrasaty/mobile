@@ -24,6 +24,7 @@ import SelectSubjectDialog from "./SelectSubjectDialog";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import TextError from "@components/TextError";
+import { debugStyle } from "@/constants/styels";
 
 export type BaseCreateQuestionInputProps = {
   onChangeText: TextInputProps["onChangeText"];
@@ -33,22 +34,24 @@ export type BaseCreateQuestionInputProps = {
   error?: string;
 } & ViewProps;
 
+const INPUT_ROUNDNESS = 16;
+
 export const TitleInput = ({
   value,
   onChangeText,
-  title = "العنوان",
+  title = t("create_question.title"),
   showError = false,
   error,
   ...props
 }: BaseCreateQuestionInputProps) => {
   return (
-    <View style={{ gap: 6 }} {...props}>
+    <View style={styles.container} {...props}>
       <ThemedText variant="titleLarge">{title}</ThemedText>
       <TextInput
         value={value}
         onChangeText={onChangeText}
         mode="outlined"
-        theme={{ roundness: 16 }}
+        theme={{ roundness: INPUT_ROUNDNESS }}
       />
       <TextError condition={showError}>{error}</TextError>
     </View>
@@ -58,19 +61,21 @@ export const TitleInput = ({
 export const DescriptionInput = ({
   value,
   onChangeText,
-  title = "التفاصيل",
+  title = t("create_question.description"),
   showError,
   error,
   ...props
 }: BaseCreateQuestionInputProps) => {
   return (
-    <View style={{ gap: 2 }} {...props}>
-      <ThemedText variant="titleLarge">{title}</ThemedText>
+    <View style={styles.container} {...props}>
+      <ThemedText variant="titleLarge" style={styles.label}>
+        {title}
+      </ThemedText>
       <TextInput
         value={value}
         onChangeText={onChangeText}
-        theme={{ roundness: 16 }}
-        style={{ paddingTop: 6, paddingBottom: 6 }}
+        theme={{ roundness: INPUT_ROUNDNESS }}
+        style={{ paddingTop: 25, paddingBottom: 25 }}
         multiline
         numberOfLines={6}
         mode="outlined"
@@ -102,7 +107,7 @@ export const AddPictureButton = ({
   onImageSelected,
   onImageUnselected,
   icon = "attachment",
-  lable = "اضافة صورة",
+  lable = t("create_question.add_picture"),
   ...props
 }: AddPictureProps) => {
   /**
@@ -139,8 +144,8 @@ export const AddPictureButton = ({
         mode="contained-tonal"
         {...props}
       />
-      <ThemedText variant="bodyLarge">
-        {selected ? "تعديل الصورة" : "اضافة صورة"}
+      <ThemedText variant="bodyLarge" style={styles.label}>
+        {selected ? t("create_question.edit_picture") : lable}
       </ThemedText>
       {selected && (
         <IconButton
@@ -174,7 +179,9 @@ export const SubjectInput = ({
         {...props}
       />
       <View style={{ gap: 3 }}>
-        <ThemedText color={error && theme.colors.error}>{lable}</ThemedText>
+        <ThemedText color={error && theme.colors.error} style={styles.label}>
+          {t("create_question.add_subject")}
+        </ThemedText>
       </View>
       <SelectSubjectDialog
         subject={subject}
@@ -191,7 +198,7 @@ export const HashTags = () => {
   return (
     <ThemedView>
       <ThemedText variant="titleLarge">###</ThemedText>
-      <TextInput theme={{ roundness: 16 }} mode="outlined" />
+      <TextInput theme={{ roundness: INPUT_ROUNDNESS }} mode="outlined" />
     </ThemedView>
   );
 };
@@ -219,9 +226,9 @@ export const Preview = ({
   const { t } = useTranslation();
 
   return (
-    <ThemedView style={[style, { gap: 10 }]}>
-      <ThemedText color={theme.colors.secondary} variant="displaySmall">
-        {t("Preview")}
+    <View style={[style, { gap: 10 }]} {...props}>
+      <ThemedText variant="titleLarge" style={styles.label}>
+        {t("create_question.preview")}
       </ThemedText>
       <Divider bold />
       <PreviewContent
@@ -230,7 +237,7 @@ export const Preview = ({
         description={description ?? ""}
         picture={picture}
       />
-    </ThemedView>
+    </View>
   );
 };
 
@@ -243,11 +250,22 @@ export const PreviewContent = ({
   ...props
 }: PreviewProps) => {
   return (
-    <ThemedView style={[style, { flex: 1, gap: 8, marginTop: 12 }]} {...props}>
+    <View style={[style, { flex: 1, gap: 8, marginTop: 12 }]} {...props}>
       <TitlePreview title={title} />
       {subject && <SubjectInfo subject={subject} />}
       <DescriptionPreview description={description} />
       {picture && <PicturePreview image={picture} />}
-    </ThemedView>
+    </View>
   );
 };
+
+import { StyleSheet } from "react-native";
+
+const styles = StyleSheet.create({
+  container: {
+    gap: 2,
+  },
+  label: {
+    color: "lightred",
+  },
+});

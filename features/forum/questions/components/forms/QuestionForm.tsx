@@ -1,5 +1,9 @@
 import Page from "@/components/Page";
-import { containerMargins, containerPaddings } from "@/constants/styels";
+import {
+  containerMargins,
+  containerPaddings,
+  debugStyle,
+} from "@/constants/styels";
 import { ScrollView } from "react-native";
 import * as CreateQuestion from "@/features/forum/components/question/CreateNewQuestionPageComponents";
 import { Button } from "react-native-paper";
@@ -33,7 +37,6 @@ export default function QuestionForm({
             <ScrollView
               contentContainerStyle={{
                 ...containerPaddings,
-                gap: 20,
                 paddingBottom: 30,
               }}
               showsVerticalScrollIndicator={false}
@@ -79,6 +82,7 @@ export default function QuestionForm({
                 {...values}
                 picture={values.picture}
                 description={values.text}
+                style={{ marginTop: 20 }}
               />
             </ScrollView>
 

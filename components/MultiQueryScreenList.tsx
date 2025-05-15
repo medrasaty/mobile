@@ -1,13 +1,9 @@
 import { FlashList, FlashListProps } from "@shopify/flash-list";
 import { UseQueryResult } from "@tanstack/react-query";
-import { View, ViewProps } from "react-native";
+import { View } from "react-native";
 import FullPageLoadingIndicator from "./FullPageLoadingIndicator";
 import { FullPageNetworkError, NetworkErrorProps } from "./NetworkError";
-import LoadingIndicator from "./LoadingIndicator";
 import ServerView from "./ServerView";
-import { Divider } from "react-native-paper";
-import ListFooterActivityIndicator from "./ListFooterActivityIndicator";
-import { debugStyle } from "@/constants/styels";
 
 type MultiQueryScreenListProps<T> = {
   headerStatus: UseQueryResult["status"];

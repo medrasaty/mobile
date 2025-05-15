@@ -83,7 +83,13 @@
   "math": "حساب",
   "create_question": {
     "choose_subject": "اختر المادة",
-    "new_question": "سؤال جديد"
+    "new_question": "سؤال جديد",
+    "add_picture": "إضافة صورة",
+    "edit_picture": "تعديل الصورة",
+    "description": "الوصف",
+    "title": "العنوان",
+    "preview": "المعاينة",
+    "add_subject": "إضافة مادة"
   },
   "submit": "نشر",
   "Submit": "نشر",
@@ -93,7 +99,6 @@
   "users": "الأشخاص",
   "schools": "المدارس",
   "edit_your_answer": "تعديل",
-  "Preview": "مراجعة",
   "settings": {
     "settings": "الإعدادات",
     "privacy": "الخصوصية",
