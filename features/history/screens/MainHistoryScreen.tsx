@@ -1,5 +1,4 @@
 import Page from "@/components/Page";
-import { ScreenListV2 } from "@/components/ScreenFlatList";
 import { useInfiniteHistory } from "../queries";
 import QuestionHistoryCell, { QUESTION_HISTORY_CELL_HEIGHT } from "../components/QuestionHistoryCell";
 import { AppBar } from "@/features/navigation/components/AppBar";
@@ -21,8 +20,12 @@ import {
 } from "@/contexts/SearchContext";
 import { View } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { useMemo } from "react";
+import React from "react";
 import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
+import { InfiniteScreenListV3 } from "@/components/ScreenFlatList";
+import { CursorPaginatedResponse } from "@/types/responses";
+import { WatchHistory } from "../types";
+import { InfiniteData } from "@tanstack/react-query";
 
 const MainHistoryScreen = () => {
   return (
@@ -56,48 +59,38 @@ export const WatchHistoryList = () => {
     );
   };
 
-  const q = useInfiniteHistory({
+  const infiniteQuery = useInfiniteHistory({
     ordering: currentFilter,
     search: searchValue,
   });
 
-  // FIXME: duplicate in FollowingRequestsToMe
-  const data = useMemo(() => {
-    if (!q.data) return [];
-
-    return q.data.pages.map((page) => page.results).flat();
-  }, [q.data]);
+  const getItems = (data: InfiniteData<CursorPaginatedResponse<WatchHistory>, unknown> | undefined): WatchHistory[] => {
+    if (!data) return [];
+    return data.pages.map((page) => page.results).flat();
+  };
 
   const renderFooter = () => {
-    if (q.isFetchingNextPage) return <ListFooterActivityIndicator />;
+    if (infiniteQuery.isFetchingNextPage) return <ListFooterActivityIndicator />;
   };
 
   return (
-    <ScreenListV2
-      renderItem={({ item, index }) => {
-        return ( 
-          <>
-        <QuestionHistoryCell history={item} key={index} />
-        {index == data.length - 1 && <Divider />}
-          </>
-
-      );
-      }}
+    <InfiniteScreenListV3<InfiniteData<CursorPaginatedResponse<WatchHistory>, unknown>, WatchHistory>
+      q={infiniteQuery}
+      getItems={getItems}
+      onFetchNextPage={() => infiniteQuery.fetchNextPage()}
+      renderItem={({ item }) => (
+        <QuestionHistoryCell history={item} />
+      )}
       ItemSeparatorComponent={Divider}
-      isPending={q.isPending}
       ListHeaderComponent={renderHeader}
       ListFooterComponent={renderFooter}
       ListFooterComponentStyle={{ paddingBottom: 20 }}
       ListEmptyComponent={EmptyHistory}
       onEndReachedThreshold={1}
-      onEndReached={q.fetchNextPage}
       estimatedItemSize={QUESTION_HISTORY_CELL_HEIGHT}
-      isError={q.isError}
-      refreshing={q.isRefetching}
-      onRefresh={q.refetch}
-      onRetry={q.refetch}
+      refreshing={infiniteQuery.isRefetching}
+      onRefresh={infiniteQuery.refetch}
       overScrollMode="always"
-      data={data}
     />
   );
 };

@@ -2,13 +2,23 @@ import { ViewProps } from "react-native";
 import { useBookmarkedQuestionsQuery } from "../queries";
 import { AppBar } from "@features/navigation/components/AppBar";
 import Page from "@components/Page";
-import { QueryPage } from "@components/QueryView";
-import { ContainerView } from "@components/styled";
 import { useTranslation } from "react-i18next";
-import { FAB } from "react-native-paper";
+import { Divider } from "react-native-paper";
 import FilterOptionsView from "@components/FilterOptionsView";
-import { SearchContextProvider, SearchContextbar, useSearchContext } from "@/contexts/SearchContext";
+import {
+  SearchContextProvider,
+  SearchContextbar,
+  useSearchContext,
+} from "@/contexts/SearchContext";
 import { Appbar } from "react-native-paper";
+import { PaginatedScreenListV3 } from "@/components/ScreenFlatList";
+import { View } from "react-native";
+import { ThemedText } from "@/components/ThemedText";
+import { BookmarkQuestion } from "../types";
+import BookmarkQuestionCard, {
+  BOOKMARK_QUESTION_CARD_HEIGHT,
+} from "../components/BookmarkQuestionCard";
+import useFilterOptions from "@/hooks/useFilterOptions";
 
 type BookmarkedQuestionsScreenProps = {} & ViewProps;
 
@@ -16,7 +26,7 @@ const OptionsAppbar = () => {
   const { setIsSearch } = useSearchContext();
   const { t } = useTranslation();
   return (
-    <AppBar divider title={t("Solo")}>
+    <AppBar title={t("Solo")}>
       <Appbar.Action icon="magnify" onPress={() => setIsSearch(true)} />
     </AppBar>
   );
@@ -35,6 +45,17 @@ const BookmarkedQuestionsScreen = ({
   </SearchContextProvider>
 );
 
+const EmptyBookmarks = () => {
+  const { t } = useTranslation();
+  return (
+    <View
+      style={{ justifyContent: "center", alignItems: "center", marginTop: 40 }}
+    >
+      <ThemedText variant="titleMedium">{t("No bookmarks")}</ThemedText>
+    </View>
+  );
+};
+
 const BookmarkedQuestionsScreenContent = ({
   ...props
 }: BookmarkedQuestionsScreenProps) => {
@@ -44,86 +65,50 @@ const BookmarkedQuestionsScreenContent = ({
     { label: t("Oldest"), value: "bookmarked_at" },
   ]);
   const { searchValue } = useSearchContext();
-  const q = useBookmarkedQuestionsQuery({
+  const bookmarksQuery = useBookmarkedQuestionsQuery({
     ordering: currentFilter,
     search: searchValue,
   });
 
   const renderHeader = () => (
-    <ContainerView>
-      <FilterOptionsView
-        container={false}
-        currentFilter={currentFilter}
-        filterOptions={options}
-        onFilterChange={onFilterChange}
+    <FilterOptionsView
+      currentFilter={currentFilter}
+      filterOptions={options}
+      onFilterChange={onFilterChange}
       />
-    </ContainerView>
   );
 
+  const renderFooter = () => {
+    return null;
+    // if (bookmarksQuery.isFetching) return <ListFooterActivityIndicator />;
+  };
+
   const renderItem = ({ item }: { item: BookmarkQuestion }) => (
-    <Animated.View layout={LinearTransition}>
-      <BookmarkQuestionCard question={item} />
-    </Animated.View>
+    <BookmarkQuestionCard question={item} />
   );
 
   return (
-    <Page>
+    <Page {...props}>
       <BookmarkAppbar />
-      <QueryPage query={q}>
-        <AnimatedFlashList
-          showsVerticalScrollIndicator={false}
-          scrollEnabled={!q.isRefetching}
-          estimatedItemSize={BOOKMARK_QUESTION_CARD_HEIGHT}
-          ItemSeparatorComponent={Divider}
-          ListFooterComponent={Divider}
-          ListHeaderComponent={renderHeader}
-          contentContainerStyle={{
-            paddingTop: 10,
-            paddingBottom: 100,
-          }}
-          renderItem={renderItem}
-          data={q.data?.results ?? []}
-          keyExtractor={(item) => item.question.id}
-          refreshing={q.isRefetching}
-          onRefresh={q.refetch}
-        />
-      </QueryPage>
+      <PaginatedScreenListV3<BookmarkQuestion>
+        q={bookmarksQuery}
+        showsVerticalScrollIndicator={false}
+        estimatedItemSize={BOOKMARK_QUESTION_CARD_HEIGHT}
+        ItemSeparatorComponent={Divider}
+        ListHeaderComponent={renderHeader}
+        ListFooterComponent={renderFooter}
+        ListEmptyComponent={EmptyBookmarks}
+        contentContainerStyle={{
+          paddingBottom: 50,
+        }}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.question.id}
+        refreshing={bookmarksQuery.isRefetching}
+        onRefresh={bookmarksQuery.refetch}
+        overScrollMode="always"
+      />
     </Page>
   );
 };
-
-const BookmarkQuestionAppBar = ({ title }: { title: string }) => {
-  return <AppBar title={title} />;
-}
-
-import { memo } from "react";
-import { AnimatedFlashList, FlashListProps } from "@shopify/flash-list";
-import { BookmarkQuestion } from "../types";
-import BookmarkQuestionCard, { BOOKMARK_QUESTION_CARD_HEIGHT } from "../components/BookmarkQuestionCard";
-import { Divider } from "react-native-paper";
-import Animated, { LinearTransition } from 'react-native-reanimated';
-import useFilterOptions from "@/hooks/useFilterOptions";
-
-/**
- * A memoized list component for displaying bookmarked questions
- * Extracted to its own file to improve hot reload performance
- */
-export const BookmarkedQuestionsList = memo(function BookmarkedQuestionsList({
-  ...props
-}: Omit<FlashListProps<BookmarkQuestion>, "renderItem">) {
-  return (
-    <AnimatedFlashList
-      showsVerticalScrollIndicator={false}
-      estimatedItemSize={BOOKMARK_QUESTION_CARD_HEIGHT}
-      ItemSeparatorComponent={Divider}
-      renderItem={({ item }: { item: BookmarkQuestion }) => (
-        <Animated.View layout={LinearTransition}>
-          <BookmarkQuestionCard question={item} />
-        </Animated.View>
-      )}
-      {...props}
-    />
-  );
-});
 
 export default BookmarkedQuestionsScreen;

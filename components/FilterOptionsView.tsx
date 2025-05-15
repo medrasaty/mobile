@@ -1,21 +1,19 @@
-import { containerPaddings, debugStyle } from "@/constants/styels";
-import { NotificationType } from "@/types/notifications.type";
+import { containerPaddings } from "@/constants/styels";
 import React from "react";
 import { StyleSheet, View, ViewProps } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Chip, ChipProps } from "react-native-paper";
-import { ThemedView } from "./ThemedView";
 
 export type FilterOption = {
   label: string;
-  value: string | NotificationType;
+  value: string;
 };
 
 type FilterOptionsViewProps = {
   filterOptions: FilterOption[];
-  currentFilter: string | NotificationType;
+  currentFilter: string;
   container?: boolean;
-  onFilterChange: (filter: string | NotificationType) => void;
+  onFilterChange: (filter: FilterOption["value"]) => void;
 } & ViewProps;
 
 const FilterOptionsView: React.FC<FilterOptionsViewProps> = ({
@@ -30,9 +28,10 @@ const FilterOptionsView: React.FC<FilterOptionsViewProps> = ({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={[styles.scrollContentContainer, container && { ...containerPaddings }]}
-
-
+        contentContainerStyle={[
+          styles.scrollContentContainer,
+          container && { ...containerPaddings },
+        ]}
       >
         {filterOptions.map((option) => (
           // @ts-ignore
@@ -72,6 +71,8 @@ const styles = StyleSheet.create({
   scrollContentContainer: {
     flex: 1,
     gap: 5,
+    marginTop: 8,
+    marginBottom: 8,
   },
 });
 

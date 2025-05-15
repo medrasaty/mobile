@@ -47,7 +47,7 @@ type ScreenListV2Props<T> = {
 /**
  * A versatile list component leveraging FlashList that handles loading, error, empty, and infinite-scroll states.
  * @deprecated use ScreenListV3 instead
- * 
+ *
  * @template T - The type of the items in the list.
  *
  * @param props.isPending - Whether the list is currently loading. If true, displays a loading indicator.
@@ -184,6 +184,89 @@ export function ScreenListV3<T>({
     <FlashList
       ListEmptyComponent={renderEmptyList()}
       data={data ?? []}
+      {...listProps}
+    />
+  );
+}
+
+/**
+ * A version of ScreenListV3 that handles paginated responses
+ */
+type PaginatedScreenListV3Props<T> = {
+  q: UseQueryResult<{ results: T[] }>;
+} & Omit<FlashListProps<T>, "data">;
+
+export function PaginatedScreenListV3<T>({
+  q,
+  ListEmptyComponent,
+  ...listProps
+}: PaginatedScreenListV3Props<T>) {
+  const renderEmptyList = () => {
+    if (q.isPending) {
+      return <ScreenLoadingIndicator />;
+    }
+
+    if (q.isError) {
+      return (
+        <ScreenError message={"something went wrong"} onRetry={q.refetch} />
+      );
+    }
+
+    // Empty list provided by user
+    return ListEmptyComponent;
+  };
+
+  const data = q.data?.results ?? [];
+
+  return (
+    <FlashList
+      ListEmptyComponent={renderEmptyList()}
+      data={data}
+      {...listProps}
+    />
+  );
+}
+
+/**
+ * A component specifically designed for infinite queries
+ */
+import { UseInfiniteQueryResult } from "@tanstack/react-query";
+
+type InfiniteScreenListV3Props<T, R> = {
+  q: UseInfiniteQueryResult<T>;
+  getItems: (data: T | undefined) => R[];
+  onFetchNextPage: () => void;
+} & Omit<FlashListProps<R>, "data" | "onEndReached">;
+
+export function InfiniteScreenListV3<T, R>({
+  q,
+  getItems,
+  ListEmptyComponent,
+  onFetchNextPage,
+  ...listProps
+}: InfiniteScreenListV3Props<T, R>) {
+  const renderEmptyList = () => {
+    if (q.isPending) {
+      return <ScreenLoadingIndicator />;
+    }
+
+    if (q.isError) {
+      return (
+        <ScreenError message={"something went wrong"} onRetry={q.refetch} />
+      );
+    }
+
+    // Empty list provided by user
+    return ListEmptyComponent;
+  };
+
+  const data = getItems(q.data);
+
+  return (
+    <FlashList
+      ListEmptyComponent={renderEmptyList()}
+      data={data}
+      onEndReached={onFetchNextPage}
       {...listProps}
     />
   );

@@ -8,7 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { t } from "i18next";
 import React, { useMemo } from "react";
 import { StyleSheet, View, ViewProps } from "react-native";
-import { Divider } from "react-native-paper";
+import { Appbar, Divider, IconButton } from "react-native-paper";
 import { useTheme } from "react-native-paper/src/core/theming";
 import NavigationButtonsList from "../components/NavigationButtonsList";
 import { useAuthSession } from "@features/auth/store";
@@ -16,21 +16,34 @@ import ServerView from "@components/ServerView";
 import useProfile from "../hooks/useProfile";
 import { AuthUser } from "@features/auth/types";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 
+const CurrentUserProfileAppbar: React.FC = () => {
+  const router = useRouter();
+  return (
+    <AppBar divider backAction={false} title={t("Profile")}>
+      <Appbar.Action
+        icon={(props) => <Ionicons name="settings-outline" {...props} />}
+        onPress={() => router.push("settings")}
+      />
+      <Appbar.Action
+        icon={"pencil-outline"}
+        onPress={() => alert("Edit account")}
+      />
+    </AppBar>
+  );
+};
 /**
  * Props for the CurrentUserProfileScreen component
- * @typedef CurrentUserProfileScreenProps
- * @property {number} id - The user ID to display
  */
-type CurrentUserProfileScreenProps = { 
-  id: number 
+type CurrentUserProfileScreenProps = {
+  id: number;
 } & ViewProps;
 
 /**
  * CurrentUserProfileScreen - Displays the current user's profile
- * 
- * @param {CurrentUserProfileScreenProps} props - Component props
- * @returns {React.ReactElement} A screen component with the current user's profile information
+ *
+ * @returns React.ReactElement A screen component with the current user's profile information
  */
 const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
   id,
@@ -38,15 +51,15 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
 }: CurrentUserProfileScreenProps) => {
   const theme = useTheme();
   const user = useAuthSession((state) => state.session?.user);
-  
+
   // Early return if no user is available
   if (!user) {
     return null;
   }
-  
+
   return (
     <Page {...props}>
-      <AppBar divider backAction={false} title={t("profile")} />
+      <CurrentUserProfileAppbar />
       <ScrollPage
         contentContainerStyle={styles.scrollContent}
         overScrollMode="auto"
@@ -58,7 +71,7 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
             source={user.profile.background}
             cachePolicy="memory-disk"
           />
-          
+
           {/* Profile Picture */}
           <Image
             style={styles.profilePicture}
@@ -105,7 +118,7 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
           )}
           <CurrentUserReputation userPk={user.pk} />
         </ContainerView>
-        
+
         {/* Navigation Pages */}
         <ContainerView style={styles.navigationContainer}>
           <Divider bold />
@@ -118,87 +131,97 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
 
 /**
  * CurrentUserReputation - Fetches and displays the user's reputation information
- * 
+ *
  * @param {Object} props - Component props
  * @param {number | undefined} props.userPk - The user's primary key
  * @returns {React.ReactElement} A component displaying reputation information
  */
-const CurrentUserReputation: React.FC<{ userPk: AuthUser["pk"] }> = React.memo(({ userPk }) => {
-  const q = useProfile(userPk);
-  return (
-    <ServerView status={q.status}>
-      <ReputationInfo
-        reach={q.data?.reach ?? 0}
-        views={q.data?.total_views ?? 0}
-        reputation={q.data?.reputation ?? 0}
-      />
-    </ServerView>
-  );
-});
+const CurrentUserReputation: React.FC<{ userPk: AuthUser["pk"] }> = React.memo(
+  ({ userPk }) => {
+    const q = useProfile(userPk);
+    return (
+      <ServerView status={q.status}>
+        <ReputationInfo
+          reach={q.data?.reach ?? 0}
+          views={q.data?.total_views ?? 0}
+          reputation={q.data?.reputation ?? 0}
+        />
+      </ServerView>
+    );
+  }
+);
 
 /**
  * NavigationButtons - Displays navigation buttons for different sections
- * 
+ *
  * @param {ViewProps} props - Component props
  * @returns {React.ReactElement} A component with navigation buttons
  */
-const NavigationButtons: React.FC<ViewProps> = React.memo((props: ViewProps) => {
-  const buttons = useMemo(
-    () => [
-      {
-        path: "friends",
-        icon: "people",
-        label: "Friends",
+const NavigationButtons: React.FC<ViewProps> = React.memo(
+  (props: ViewProps) => {
+    const user = useAuthSession((state) => state.session?.user);
+    
+    const buttons = useMemo(
+      () => {
+        // Base buttons that are always shown
+        const baseButtons = [
+          {
+            path: "friends",
+            icon: "people",
+            label: "Friends",
+          },
+          {
+            path: "watch_history",
+            icon: "time-outline",
+            label: "Watch history",
+          },
+          {
+            path: "blacklist",
+            icon: "list",
+            label: "Blacklist",
+          },
+          {
+            path: "bookmarks",
+            icon: "bookmark-outline",
+            label: "Bookmark questions",
+          },
+          {
+            path: "following_requests_from_me",
+            icon: "send",
+            label: "Your following requests",
+          },
+        ];
+        
+        // Only add the following_requests_to_me button if user is private
+        if (user?.is_private) {
+          baseButtons.push({
+            path: "following_requests_to_me",
+            icon: "pulse",
+            label: "Following requests to you",
+          });
+        }
+        
+        return baseButtons;
       },
-      {
-        path: "watch_history",
-        icon: "time-outline",
-        label: "Watch history",
-      },
-      {
-        path: "blacklist",
-        icon: "list",
-        label: "Blacklist",
-      },
-      {
-        path: "bookmarks",
-        icon: "bookmark-outline",
-        label: "Bookmark questions",
-      },
-      {
-        path: "following_requests_from_me",
-        icon: "send",
-        label: "Your following requests",
-      },
-      {
-        path: "following_requests_to_me",
-        icon: "pulse",
-        label: "Following requests to you",
-      },
-      {
-        path: "settings",
-        icon: "settings",
-        label: "Settings",
-      },
-    ],
-    []
-  );
+      [user?.is_private] // Dependency on user.is_private to recompute when it changes
+    );
 
-  return (
-    <View {...props}>
-      <NavigationButtonsList style={styles.navigationList} items={buttons} />
-    </View>
-  );
-});
+    return (
+      <View {...props}>
+        <NavigationButtonsList style={styles.navigationList} items={buttons} />
+      </View>
+    );
+  }
+);
 
 // Extract all styles to StyleSheet for better performance and maintainability
 const styles = StyleSheet.create({
-  scrollContent: { 
-    paddingBottom: 20 
+  scrollContent: {
+    paddingBottom: 20,
   },
-  profileHeaderContainer: { 
-    alignItems: "center", 
-    marginTop: 10 
+  profileHeaderContainer: {
+    alignItems: "center",
+    marginTop: 10,
   },
   backgroundImage: {
     height: 140,
@@ -217,13 +240,13 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
     borderRadius: 100,
   },
-  nameContainer: { 
-    gap: 5, 
-    marginTop: 6, 
-    alignItems: "center" 
+  nameContainer: {
+    gap: 5,
+    marginTop: 6,
+    alignItems: "center",
   },
-  centeredView: { 
-    alignItems: "center" 
+  centeredView: {
+    alignItems: "center",
   },
   emailContainer: {
     flexDirection: "row",
@@ -231,16 +254,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 10,
   },
-  biographyContainer: { 
-    marginTop: 20, 
-    gap: 12 
+  biographyContainer: {
+    marginTop: 20,
+    gap: 12,
   },
-  navigationContainer: { 
-    marginTop: 30, 
-    gap: 8 
+  navigationContainer: {
+    marginTop: 30,
+    gap: 8,
   },
-  navigationList: { 
-    gap: 10 
+  navigationList: {
+    gap: 10,
   },
   pageOptionButton: {
     height: 48,

@@ -19,7 +19,7 @@ export default function HomeScreen() {
     { label: "following", value: "followings" },
   ]);
 
-  const renderItem = ({ item, index }: { item: Question; index: number }) => {
+  const renderItem = ({ item }: { item: Question; index: number }) => {
     return <ForumQuestionCard question={item} />;
   };
 
@@ -39,7 +39,7 @@ export default function HomeScreen() {
       <ScreenListV2
         ListHeaderComponent={renderHeader}
         estimatedItemSize={FORUM_QUESTION_CARD_HEIGHT}
-        contentContainerStyle={{ paddingTop: 20, paddingBottom: 40 }}
+        contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
         ItemSeparatorComponent={Divider}

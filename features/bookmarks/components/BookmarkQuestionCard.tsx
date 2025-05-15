@@ -1,4 +1,4 @@
-import { View, ViewProps, Pressable, StyleSheet, TouchableOpacity } from "react-native";
+import { View, ViewProps,  StyleSheet } from "react-native";
 import { BookmarkQuestion } from "../types";
 import { ThemedText } from "@/components/ThemedText";
 import { d } from "@/lib/dates";
@@ -11,15 +11,14 @@ import { t } from "i18next";
 import { useRouter } from "expo-router";
 import { path } from "@/lib/routing";
 import Row from "@/components/Row";
-import UserInfo from "@/components/UserInfo";
-import { debugStyle, DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
-import { ContainerView } from "@components/styled";
+import {  DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
+import React from "react";
 
 type BookmarkQuestionCardProps = {
   question: BookmarkQuestion;
 } & ViewProps;
 
-export const BOOKMARK_QUESTION_CARD_HEIGHT = 150;
+export const BOOKMARK_QUESTION_CARD_HEIGHT = 130;
 
 const BookmarkQuestionCard = ({ question }: BookmarkQuestionCardProps) => {
   const router = useRouter();
@@ -46,7 +45,7 @@ const BookmarkQuestionCard = ({ question }: BookmarkQuestionCardProps) => {
         </Row>
 
         <View style={{ padding: DEFAULT_CONTAINER_SPACING }}>
-          <ThemedText color={theme.colors.onPrimaryContainer} variant="labelSmall">
+          <ThemedText color={theme.colors.onSurface} variant="labelSmall">
             {d(question.bookmarked_at).fromNow()}
           </ThemedText>
         </View>

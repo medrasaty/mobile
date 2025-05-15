@@ -14,6 +14,7 @@ import FilterOptionsView, {
 import { useTranslation } from "react-i18next";
 import { YourFollowingRequestsScreenContext } from "../contexts/YourFollowingScreenContexts";
 import ScreenList from "@/components/ScreenFlatList";
+import { AppBar } from "@features/navigation/components/AppBar";
 
 const FollowingRequestsFromMeScreen = () => {
   const { t } = useTranslation();
@@ -48,6 +49,7 @@ const FollowingRequestsFromMeScreen = () => {
     <YourFollowingRequestsScreenContext.Provider
       value={{ filter, setFilter, filterOptions }}
     >
+      <AppBar title="Your Following Requests" />
       <Page>
         <FilterOptionsView
           filterOptions={filterOptions}

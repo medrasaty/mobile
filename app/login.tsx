@@ -74,6 +74,7 @@ export default function LoginPage() {
             <TextInput
               value={username}
               keyboardType="email-address"
+              autoCapitalize="none"
               onChangeText={(text) => setUsername(text)}
               label="البريد الإلكتروني"
               mode="outlined"
@@ -82,6 +83,7 @@ export default function LoginPage() {
             <TextInput
               mode="outlined"
               value={password}
+              autoCapitalize="none"
               onChangeText={(text) => setPassword(text)}
               secureTextEntry={hiddentPassword}
               label="كلمة السر"

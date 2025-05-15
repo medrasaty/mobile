@@ -3,7 +3,6 @@ import * as React from "react";
 
 /**
  * Return the auth context value.
- * @deprecated {use useAuthSession instead}
  */
 export function useSession(): AuthSession {
   const value = React.useContext(AuthContext);

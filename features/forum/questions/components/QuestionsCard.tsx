@@ -1,9 +1,9 @@
 import Row from "@/components/Row";
-import { Pressable, View, ViewProps } from "react-native";
+import { View, ViewProps } from "react-native";
 import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import UserInfo from "@/components/UserInfo";
-import { Surface, useTheme } from "react-native-paper";
+import { Surface, TouchableRipple, useTheme } from "react-native-paper";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
 import { useCallback, useMemo } from "react";
 import { useRouter } from "expo-router";
@@ -26,7 +26,6 @@ const ForumQuestionCard = ({
   question,
   compact = false,
 }: QuestionCardProps) => {
-  const { owner } = question;
   const router = useRouter();
   const theme = useTheme();
 
@@ -35,7 +34,7 @@ const ForumQuestionCard = ({
   }, [question.id]);
 
   return (
-    <Pressable
+    <TouchableRipple
       style={{
         height: compact
           ? COMPACT_QUESTION_CARD_HEIGHT
@@ -114,7 +113,7 @@ const ForumQuestionCard = ({
           <UserInfo user={question.owner} avatarSize={compact ? 35 : 45} />
         </Row>
       </Surface>
-    </Pressable>
+    </TouchableRipple>
   );
 };
 
