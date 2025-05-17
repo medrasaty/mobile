@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback,  useRef } from "react";
+import React, { forwardRef, useCallback, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { Portal, useTheme } from "react-native-paper";
 import BottomSheet, {
@@ -98,7 +98,9 @@ export const Sheet = forwardRef<BottomSheet, SheetProps>(
           backdropComponent={backdrop ? renderBackdrop : undefined}
           {...props}
         >
-          <BottomSheetView style={[styles.contentContainer, contentContainerStyle]}>
+          <BottomSheetView
+            style={[styles.contentContainer, contentContainerStyle]}
+          >
             {children}
           </BottomSheetView>
         </BottomSheet>
@@ -153,12 +155,17 @@ export const SheetModal = forwardRef<BottomSheetModal, SheetModalProps>(
         ref={ref}
         snapPoints={snapPoints}
         enablePanDownToClose
-        handleIndicatorStyle={[styles.handle, { backgroundColor: handleBarColor }]}
+        handleIndicatorStyle={[
+          styles.handle,
+          { backgroundColor: handleBarColor },
+        ]}
         backgroundStyle={[styles.background, { backgroundColor: bgColor }]}
         backdropComponent={backdrop ? renderBackdrop : undefined}
         {...props}
       >
-        <BottomSheetView style={[styles.contentContainer, contentContainerStyle]}>
+        <BottomSheetView
+          style={[styles.contentContainer, contentContainerStyle]}
+        >
           {children}
         </BottomSheetView>
       </BottomSheetModal>

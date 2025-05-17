@@ -17,6 +17,7 @@ import { CursorPaginatedResponse } from "@/types/responses";
 import { BlackListUser } from "../types";
 import { useVisibleV2 } from "@/hooks/useVisible";
 import { UnblockAllMenuItem } from "../components/UnblockAllDialog";
+import EmptyView from "@/components/EmptyList";
 
 /**
  * Main screen for displaying and managing blacklisted users
@@ -82,9 +83,27 @@ export const BlackListUsersList = () => {
     }
   ), []);
 
+  // Get users from the query data
+  const users = getItems(infiniteQuery.data);
+  const hasUsers = users.length > 0;
+
   // Render loading indicator when fetching more data
   const renderFooter = () => 
     infiniteQuery.isFetchingNextPage ? <ListFooterActivityIndicator /> : null;
+    
+  // Show empty view when there are no blacklisted users and not loading
+  if (!hasUsers && !infiniteQuery.isLoading && !infiniteQuery.isError) {
+    return (
+      <EmptyView 
+        message={t("no_blacklisted_users")} 
+        secondaryMessage={t("blacklist_empty_description", "Users you block will appear here")}
+        icon="account-cancel"
+        iconSize={40}
+        fullScreen={true}
+        padding={24}
+      />
+    );
+  }
 
   return (
     <InfiniteScreenListV3<InfiniteData<CursorPaginatedResponse<BlackListUser>, unknown>, BlackListUser>

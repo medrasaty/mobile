@@ -177,12 +177,7 @@ export const Share = ({ id }: { id: Question["id"] }) => {
 
   return (
     <View>
-      <ThemedText
-        // add link styling
-        color="lightblue"
-        link
-        onPress={() => sheetRef.current?.snapToIndex(0)}
-      >
+      <ThemedText link onPress={() => sheetRef.current?.snapToIndex(0)}>
         {t("share")}
       </ThemedText>
       <ShareContentSheet questionId={id} ref={sheetRef} />

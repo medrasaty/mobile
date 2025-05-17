@@ -16,6 +16,9 @@ import * as DropDownMenu from "zeego/dropdown-menu";
 import { useEffect } from "react";
 import { useSettingStore } from "@features/settings/store";
 import { MenuView } from "@react-native-menu/menu";
+import Sheet, { useSheetRef } from "@components/Sheet";
+import { useQuestion } from "@forum/hooks/useQuestions";
+import ServerView from "@components/ServerView";
 
 const MoreOptions = ({
   ownerUsername,
@@ -31,32 +34,26 @@ const MoreOptions = ({
   const user = useCurrentUser();
   const router = useRouter();
 
-  // Zeego
-  // return (
-  //   <DropDownMenu.Root>
-  //     <DropDownMenu.Trigger>
-  //       <IconButton icon={"dots-vertical"} onPress={() => {}} />
-  //     </DropDownMenu.Trigger>
-  //     <DropDownMenu.Content>
-  //       <DropDownMenu.Item key="1">
-  //         <DropDownMenu.ItemTitle>zeego is awesome!</DropDownMenu.ItemTitle>
-  //       </DropDownMenu.Item>
+  const sheetRef = useSheetRef()
 
-  //       <DropDownMenu.Item key="2">
-  //         <DropDownMenu.ItemTitle>zeego is awesome!</DropDownMenu.ItemTitle>
-  //       </DropDownMenu.Item>
+  const questionsQuery = useQuestion(questionId)
 
-  //       <DropDownMenu.Item destructive onSelect={() => alert("0")} key="3">
-  //         <DropDownMenu.ItemTitle>zeego is awesome!</DropDownMenu.ItemTitle>
-  //         <DropDownMenu.Arrow />
-  //       </DropDownMenu.Item>
-  //       <DropDownMenu.Separator />
-  //       <DropDownMenu.CheckboxItem value={true} key="10">
-  //         zeego is somewhat awesome!
-  //       </DropDownMenu.CheckboxItem>
-  //     </DropDownMenu.Content>
-  //   </DropDownMenu.Root>
-  // );
+  // new implementation will use sheet
+  return (
+    <>
+    <IconButton icon={"dots-vertical"} onPress={() => sheetRef.current?.expand()} />
+      <Sheet snapPoints={["50%"]} ref={sheetRef}>
+        <ServerView status={questionsQuery.status}>
+          {questionsQuery.data?.is_bookmarked ? 
+          <ThemedText>Bookmarked</ThemedText>
+          :
+          <ThemedText>Not Bookmarked ( bookmark ) </ThemedText>
+          }
+          
+        </ServerView>
+      </Sheet>
+    </>
+  )
 
   return (
     <Menu

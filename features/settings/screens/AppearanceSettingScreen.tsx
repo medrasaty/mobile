@@ -18,7 +18,7 @@ import RadioButtonGroup, {
 } from "@components/RadioButtonGroup";
 import { ThemeType } from "@features/theme/types";
 import { Language } from "../types";
-import Sheet, {  useSheetRef } from "@components/Sheet";
+import Sheet, { useSheetRef } from "@components/Sheet";
 
 enum ThemeChoices {
   Light = "light",
@@ -81,11 +81,7 @@ const ChangeThemeOption = ({ ...props }: ChangeThemeOptionProps) => {
         </Row>
       </TouchableOpacity>
 
-      <Sheet 
-        ref={sheetRef}
-        initialIndex={-1} 
-        enableDynamicSizing
-      >
+      <Sheet ref={sheetRef} initialIndex={-1} enableDynamicSizing>
         <RadioButtonGroup
           ItemSeparatorComponent={Divider}
           radioButtonProps={{
@@ -97,7 +93,6 @@ const ChangeThemeOption = ({ ...props }: ChangeThemeOptionProps) => {
           choices={themeChoices}
         />
       </Sheet>
-         
     </>
   );
 };
@@ -143,11 +138,7 @@ const ChangeLanguage = ({ ...props }: TouchableOpacityProps) => {
           </View>
         </Row>
       </TouchableOpacity>
-      <Sheet 
-        ref={langSheetRef}
-        initialIndex={-1}
-        enableDynamicSizing
-      >
+      <Sheet ref={langSheetRef} initialIndex={-1} enableDynamicSizing>
         <RadioButtonGroup
           ItemSeparatorComponent={Divider}
           radioButtonProps={{
