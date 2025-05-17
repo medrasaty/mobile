@@ -1,4 +1,7 @@
-import {
+import React, { forwardRef, useCallback,  useRef } from "react";
+import { StyleSheet, View } from "react-native";
+import { Portal, useTheme } from "react-native-paper";
+import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetModal,
@@ -6,58 +9,200 @@ import {
   BottomSheetProps,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet";
-import { BlurView } from "expo-blur";
-import React, { forwardRef, useCallback, useEffect, useRef } from "react";
-import { StyleSheet, ViewProps } from "react-native";
-import { useTheme } from "react-native-paper";
-import { ThemedView } from "./ThemedView";
-import { BottomSheetViewProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types";
 
-type SheetProps = {
-  present: boolean;
-  snapPoints: BottomSheetModalProps["snapPoints"];
+export type SheetProps = {
+  /** Whether to show the backdrop */
   backdrop?: boolean;
-} & BottomSheetModalProps;
+  /** Background color of the sheet (defaults to surface color from theme) */
+  backgroundColor?: string;
+  /** Handle color (defaults to primary color from theme) */
+  handleColor?: string;
+  /** Initial snap point index */
+  initialIndex?: number;
+  /** Custom content container style */
+  contentContainerStyle?: object;
+  /** Enable dynamic sizing (auto-adjusts to content) */
+  enableDynamicSizing?: boolean;
+  /** Children to render inside the sheet */
+  children: React.ReactNode;
+} & BottomSheetProps;
+
+export type SheetModalProps = {
+  /** Whether to show the backdrop */
+  backdrop?: boolean;
+  /** Background color of the sheet */
+  backgroundColor?: string;
+  /** Handle color */
+  handleColor?: string;
+  /** Custom content container style */
+  contentContainerStyle?: object;
+  /** Children to render inside the sheet */
+  children: React.ReactNode;
+} & Omit<BottomSheetModalProps, "backdropComponent">;
 
 /**
- * @deprecated use SheetView instead
+ * A reusable bottom sheet component with dynamic content sizing
  */
-export default function Sheet({
-  present,
-  backdrop = true,
-  children,
-  snapPoints,
-  ...props
-}: SheetProps) {
-  const sheetRef = useRef<BottomSheetModal>(null);
-  const theme = useTheme();
+export const Sheet = forwardRef<BottomSheet, SheetProps>(
+  (
+    {
+      backdrop = true,
+      backgroundColor,
+      handleColor,
+      initialIndex = -1,
+      contentContainerStyle,
+      enableDynamicSizing = true,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const theme = useTheme();
+    const isDarkMode = theme.dark;
 
-  const renderBackdrop = useCallback((props) => {
-    return (
-      <BottomSheetBackdrop
-        {...props}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-      />
+    // Render backdrop component
+    const renderBackdrop = useCallback(
+      (backdropProps: BottomSheetBackdropProps) => (
+        <BottomSheetBackdrop
+          {...backdropProps}
+          disappearsOnIndex={-1}
+          appearsOnIndex={0}
+          opacity={0.6}
+          pressBehavior="close"
+        />
+      ),
+      []
     );
-  }, []);
 
-  useEffect(() => {
-    // present sheet when presnet is true
-    present ? sheetRef.current?.present() : sheetRef.current?.close();
-  }, [present]);
+    // Apply theme-aware colors
+    const bgColor =
+      backgroundColor ||
+      (isDarkMode
+        ? theme.colors.elevation.level3
+        : theme.colors.surfaceVariant);
+    const handleBarColor = handleColor || theme.colors.primary;
 
-  return (
-    <BottomSheetModal
-      ref={sheetRef}
-      snapPoints={snapPoints}
-      enableDismissOnClose
-      backgroundStyle={{ backgroundColor: theme.colors.surface }}
-      backdropComponent={backdrop ? renderBackdrop : null}
-      {...props}
-    >
-      {children}
-    </BottomSheetModal>
-  );
+    return (
+      <Portal>
+        <BottomSheet
+          ref={ref}
+          index={initialIndex}
+          enablePanDownToClose
+          enableContentPanningGesture
+          enableDynamicSizing={enableDynamicSizing}
+          handleIndicatorStyle={[
+            styles.handle,
+            { backgroundColor: handleBarColor },
+          ]}
+          backgroundStyle={[styles.background, { backgroundColor: bgColor }]}
+          backdropComponent={backdrop ? renderBackdrop : undefined}
+          {...props}
+        >
+          <BottomSheetView style={[styles.contentContainer, contentContainerStyle]}>
+            {children}
+          </BottomSheetView>
+        </BottomSheet>
+      </Portal>
+    );
+  }
+);
+
+/**
+ * A modal bottom sheet component
+ */
+export const SheetModal = forwardRef<BottomSheetModal, SheetModalProps>(
+  (
+    {
+      backdrop = true,
+      backgroundColor,
+      handleColor,
+      snapPoints = ["25%", "50%", "90%"],
+      contentContainerStyle,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const theme = useTheme();
+    const isDarkMode = theme.dark;
+
+    // Render backdrop component
+    const renderBackdrop = useCallback(
+      (backdropProps: BottomSheetBackdropProps) => (
+        <BottomSheetBackdrop
+          {...backdropProps}
+          disappearsOnIndex={-1}
+          appearsOnIndex={0}
+          opacity={0.6}
+          pressBehavior="close"
+        />
+      ),
+      []
+    );
+
+    // Apply theme-aware colors
+    const bgColor =
+      backgroundColor ||
+      (isDarkMode
+        ? theme.colors.elevation.level3
+        : theme.colors.surfaceVariant);
+    const handleBarColor = handleColor || theme.colors.primary;
+
+    return (
+      <BottomSheetModal
+        ref={ref}
+        snapPoints={snapPoints}
+        enablePanDownToClose
+        handleIndicatorStyle={[styles.handle, { backgroundColor: handleBarColor }]}
+        backgroundStyle={[styles.background, { backgroundColor: bgColor }]}
+        backdropComponent={backdrop ? renderBackdrop : undefined}
+        {...props}
+      >
+        <BottomSheetView style={[styles.contentContainer, contentContainerStyle]}>
+          {children}
+        </BottomSheetView>
+      </BottomSheetModal>
+    );
+  }
+);
+
+/**
+ * Hook to create and manage a bottom sheet ref
+ */
+export function useSheetRef() {
+  return useRef<BottomSheet>(null);
 }
+
+/**
+ * Hook to create and manage a bottom sheet modal ref
+ * The methods present() and dismiss() exist at runtime but
+ * might not be properly typed in the type definitions
+ */
+export function useSheetModalRef() {
+  // This satisfies the TypeScript compiler but allows access to present() and dismiss()
+  return useRef<BottomSheetModal>(null);
+}
+
+const styles = StyleSheet.create({
+  background: {
+    borderRadius: 24,
+    elevation: 8,
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+  },
+  contentContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  handle: {
+    width: 40,
+    height: 5, // Slightly taller for better visibility
+    borderRadius: 3,
+    marginTop: 10,
+    marginBottom: 12,
+  },
+});
+
+export default Sheet;

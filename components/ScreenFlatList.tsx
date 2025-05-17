@@ -228,13 +228,51 @@ export function PaginatedScreenListV3<T>({
 }
 
 /**
- * A component specifically designed for infinite queries
+ * A component specifically designed for infinite queries with pagination support.
+ * 
+ * @template T - The type of the infinite query data structure (typically InfiniteData from React Query)
+ * @template R - The type of individual items to be rendered in the list
+ * 
+ * @example
+ * ```tsx
+ * // Example usage with useInfiniteData hook
+ * const infiniteQuery = useInfiniteBlackListUsers({ search: searchValue });
+ * 
+ * const getItems = (data) => {
+ *   if (!data) return [];
+ *   return data.pages.map(page => page.results).flat();
+ * };
+ * 
+ * return (
+ *   <InfiniteScreenListV3
+ *     q={infiniteQuery}
+ *     getItems={getItems}
+ *     onFetchNextPage={() => infiniteQuery.fetchNextPage()}
+ *     renderItem={({ item }) => <ItemComponent item={item} />}
+ *     estimatedItemSize={100}
+ *   />
+ * );
+ * ```
  */
 import { UseInfiniteQueryResult } from "@tanstack/react-query";
 
 type InfiniteScreenListV3Props<T, R> = {
+  /**
+   * The infinite query result from React Query's useInfiniteQuery hook
+   */
   q: UseInfiniteQueryResult<T>;
+  
+  /**
+   * Function to extract the flat array of items from the paginated data structure
+   * @param data - The data from the infinite query result
+   * @returns An array of items to be rendered in the list
+   */
   getItems: (data: T | undefined) => R[];
+  
+  /**
+   * Callback function to load the next page of data
+   * Typically calls the fetchNextPage method from the infinite query
+   */
   onFetchNextPage: () => void;
 } & Omit<FlashListProps<R>, "data" | "onEndReached">;
 

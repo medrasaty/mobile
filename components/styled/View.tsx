@@ -2,9 +2,7 @@ import React from "react";
 import { View as BaseView, ViewProps } from "react-native";
 import { useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ThemedText } from "../ThemedText";
 import { containerPaddings } from "@/constants/styels";
-import { ThemedView } from "../ThemedView";
 
 export default function View({ style, ...props }: ViewProps) {
   const { colors } = useTheme();
@@ -40,15 +38,12 @@ export function SafeAreaView({
 }
 
 export const Container = ({ children, style, ...props }: ViewProps) => {
-  const { colors } = useTheme();
-
   return (
     <BaseView
       style={[
         style,
         {
           flex: 1,
-          backgroundColor: colors.surface,
           paddingStart: 16,
           paddingEnd: 16,
         },
@@ -62,8 +57,8 @@ export const Container = ({ children, style, ...props }: ViewProps) => {
 
 export const ContainerView = ({ children, style, ...props }: ViewProps) => {
   return (
-    <ThemedView style={[style, { ...containerPaddings }]} {...props}>
+    <View style={[style, { ...containerPaddings }]} {...props}>
       {children}
-    </ThemedView>
+    </View>
   );
 };

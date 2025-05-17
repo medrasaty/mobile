@@ -1,3 +1,4 @@
+import { Pressable, TouchableOpacity } from "react-native";
 import { useTheme } from "react-native-paper";
 import { Text as BaseText, TextProps } from "react-native-paper";
 
@@ -21,18 +22,22 @@ export function ThemedText<T>({
 
   color = !link ? color : theme.colors.primary;
 
+  const Wrapper = link ? TouchableOpacity : Pressable;
+
   return (
-    <BaseText
-      style={[
-        style,
-        {
-          fontFamily: theme.fonts.default.fontFamily,
-          color: color,
-          fontWeight: fontWeight,
-          textDecorationLine: link ? "underline" : "none",
-        },
-      ]}
-      {...rest}
-    />
+    <Wrapper>
+      <BaseText
+        style={[
+          style,
+          {
+            fontFamily: theme.fonts.default.fontFamily,
+            color: color,
+            fontWeight: fontWeight,
+            textDecorationLine: link ? "underline" : "none",
+          },
+        ]}
+        {...rest}
+      />
+    </Wrapper>
   );
 }

@@ -1,6 +1,6 @@
 import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
 import Page from "@/components/Page";
-import { ScreenListV2 } from "@/components/ScreenFlatList";
+import { InfiniteScreenListV3 } from "@/components/ScreenFlatList";
 import {
   SearchContextProvider,
   SearchContextbar,
@@ -9,13 +9,19 @@ import {
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { t } from "i18next";
 import { useMemo } from "react";
-import { Appbar } from "react-native-paper";
+import { Appbar, Menu } from "react-native-paper";
 import BlackListUserCell from "../components/BlackListUserCell";
 import { useInfiniteBlackListUsers } from "../queries";
+import { InfiniteData } from "@tanstack/react-query";
+import { CursorPaginatedResponse } from "@/types/responses";
+import { BlackListUser } from "../types";
+import { useVisibleV2 } from "@/hooks/useVisible";
+import { UnblockAllMenuItem } from "../components/UnblockAllDialog";
 
-type BlackListScreenProps = {};
-
-const BlackListScreen = ({}: BlackListScreenProps) => {
+/**
+ * Main screen for displaying and managing blacklisted users
+ */
+const BlackListScreen = () => {
   return (
     <SearchContextProvider>
       <Page>
@@ -26,49 +32,74 @@ const BlackListScreen = ({}: BlackListScreenProps) => {
   );
 };
 
+/**
+ * Conditional app bar that switches between search and options mode
+ */
 export const BlackListAppbar = () => {
   const { isSearch } = useSearchContext();
   return isSearch ? <SearchContextbar /> : <OptionAppbar />;
 };
 
+/**
+ * Standard app bar with search and options actions
+ */
 export const OptionAppbar = () => {
   const { setIsSearch } = useSearchContext();
+  const [menuVisible, showMenu, hideMenu] = useVisibleV2(false);
+
   return (
     <AppBar title={t("blacklist")}>
       <Appbar.Action icon="magnify" onPress={() => setIsSearch(true)} />
-      <Appbar.Action icon={"dots-vertical"} onPress={() => alert("options")} />
+      <Menu
+        visible={menuVisible}
+        onDismiss={hideMenu}
+        anchorPosition="bottom"
+        anchor={
+          <Appbar.Action
+            icon="dots-vertical"
+            onPress={showMenu}
+          />
+        }
+      >
+        <UnblockAllMenuItem onPress={hideMenu} />
+      </Menu>
     </AppBar>
   );
 };
 
+/**
+ * List component for displaying blacklisted users with infinite scrolling
+ */
 export const BlackListUsersList = () => {
   const { searchValue } = useSearchContext();
-  const q = useInfiniteBlackListUsers({ search: searchValue });
+  const infiniteQuery = useInfiniteBlackListUsers({ search: searchValue });
 
-  // FIXME: duplicate in FollowingRequestsToMe
-  const data = useMemo(() => {
-    if (!q.data) return [];
+  // Extract flat array of users from paginated response
+  const getItems = useMemo(() => (
+    (data: InfiniteData<CursorPaginatedResponse<BlackListUser>, unknown> | undefined): BlackListUser[] => {
+      if (!data) return [];
+      return data.pages.flatMap(page => page.results);
+    }
+  ), []);
 
-    return q.data.pages.map((page) => page.results).flat();
-  }, [q.data]);
+  // Render loading indicator when fetching more data
+  const renderFooter = () => 
+    infiniteQuery.isFetchingNextPage ? <ListFooterActivityIndicator /> : null;
 
   return (
-    <ScreenListV2
-      renderItem={({ item, index }) => {
-        return <BlackListUserCell key={index} user={item} />;
-      }}
-      data={data}
+    <InfiniteScreenListV3<InfiniteData<CursorPaginatedResponse<BlackListUser>, unknown>, BlackListUser>
+      q={infiniteQuery}
+      getItems={getItems}
+      onFetchNextPage={() => infiniteQuery.fetchNextPage()}
+      renderItem={({ item }) => (
+        <BlackListUserCell user={item} />
+      )}
       estimatedItemSize={100}
-      onEndReached={q.fetchNextPage}
-      ListFooterComponent={
-        <ListFooterActivityIndicator loading={q.isFetchingNextPage} />
-      }
+      ListFooterComponent={renderFooter()}
       keyExtractor={(item) => item.pk}
-      isPending={q.isPending}
-      isError={q.isError}
-      onRetry={q.refetch}
-      refreshing={q.isRefetching}
-      onRefresh={q.refetch}
+      refreshing={infiniteQuery.isRefetching}
+      onRefresh={infiniteQuery.refetch}
+      onEndReachedThreshold={0.5}
     />
   );
 };

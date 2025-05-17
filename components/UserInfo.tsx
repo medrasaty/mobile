@@ -1,3 +1,14 @@
+/**
+ * UserInfo component displays a user's avatar, name, and optionally their school.
+ * 
+ * Props:
+ * - user: BaseUser (required) - The user object containing user details.
+ * - avatarSize?: number - The size of the avatar to display (default: 55).
+ * - showSchool?: boolean - Whether to show the user's school (default: true).
+ * 
+ * When pressed, navigates to the user's profile page.
+ */
+
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { BaseUser } from "@/types/user.types";
@@ -14,9 +25,13 @@ type UserInfoProps = {
   showSchool?: boolean;
 };
 
+/**
+ * Renders a user's avatar, name, and optionally their school.
+ * The name and school are pressable and navigate to the user's profile.
+ */
 const UserInfo = ({
   showSchool = true,
-  avatarSize = 40,
+  avatarSize = 55,
   user,
 }: UserInfoProps) => {
   return (
@@ -33,6 +48,12 @@ const UserInfo = ({
   );
 };
 
+/**
+ * School component displays a school icon and the school name.
+ * 
+ * Props:
+ * - name: string - The name of the school to display.
+ */
 export const School = ({ name }: { name: string }) => {
   const theme = useTheme();
   return (
@@ -48,6 +69,7 @@ export const School = ({ name }: { name: string }) => {
     </Row>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",

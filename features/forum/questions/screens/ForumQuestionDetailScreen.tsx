@@ -53,42 +53,46 @@ export default function ForumQuestionDetailScreen() {
   if (!questionId) return <ThemedText>must provide question id</ThemedText>;
 
   return (
-    <BottomSheetModalProvider>
-      <Page>
-        <Headerbar question={questionQuery.data} />
-        <MultiQueryScreenList
-          ListHeaderComponent={renderHeader}
-          dataStatus={answersQuery.status}
-          renderItem={renderItem}
-          estimatedItemSize={200}
-          // empty
-          ListEmptyComponent={
-            <View style={{ flex: 1, marginTop: 30 }}>
-              <EmptyView
-                message="no answers"
-                icon={(props) => <Ionicons name="book-outline" {...props} />}
-              />
-            </View>
-          }
-          ItemSeparatorComponent={Divider}
-          contentContainerStyle={{
-            paddingTop: 20,
-            paddingBottom: CREATE_ANSWER_FAB_MARGIN,
-          }}
-          showsVerticalScrollIndicator={false}
-          data={answersQuery.data}
-          headerStatus={questionQuery.status}
-          onRetry={() => {
-            questionQuery.refetch();
-            answersQuery.refetch();
-          }}
-        />
+    <Page>
+      <Headerbar question={questionQuery.data} />
+      <MultiQueryScreenList
+        ListHeaderComponent={renderHeader}
+        dataStatus={answersQuery.status}
+        renderItem={renderItem}
+        estimatedItemSize={200}
+        // empty
+        ListEmptyComponent={
+          <View style={{ flex: 1, marginTop: 30 }}>
+            <EmptyView
+              message="no answers"
+              icon={(props) => <Ionicons name="book-outline" {...props} />}
+            />
+          </View>
+        }
+        ItemSeparatorComponent={Divider}
+        contentContainerStyle={{
+          paddingTop: 20,
+          paddingBottom: CREATE_ANSWER_FAB_MARGIN,
+        }}
+        showsVerticalScrollIndicator={false}
+        data={answersQuery.data}
+        headerStatus={questionQuery.status}
+        onRetry={() => {
+          questionQuery.refetch();
+          answersQuery.refetch();
+        }}
+      />
+      {/* 
+        only display when question is available 
+        or it will raise and error due to question not yet loaded ! 
+        */}
+      {questionQuery.data &&
         <CreateAnswer
           questionId={questionQuery?.data?.id}
           question={questionQuery.data}
         />
-      </Page>
-    </BottomSheetModalProvider>
+      }
+    </Page>
   );
 }
 

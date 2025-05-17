@@ -18,4 +18,8 @@ export const BlackListKeys = {
     "unblock",
     pk,
   ],
+  unblockAll: () => [
+    ...BlackListKeys.mutate_blacklist,
+    "unblock_all",
+  ],
 };

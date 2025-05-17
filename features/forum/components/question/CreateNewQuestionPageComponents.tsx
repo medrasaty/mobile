@@ -9,7 +9,7 @@ import {
   Divider,
   useTheme,
 } from "react-native-paper";
-import { ImagePickerAsset, launchImageLibraryAsync } from "expo-image-picker";
+import { ImagePickerAsset, launchImageLibraryAsync, MediaType } from "expo-image-picker";
 
 import {
   Title as TitlePreview,
@@ -119,7 +119,7 @@ export const AddPictureButton = ({
 
   const pickImage = async () => {
     let result = await launchImageLibraryAsync({
-      mediaTypes: MediaTypeOptions.Images,
+      mediaTypes: "images",
       allowsEditing: true,
       aspect: [4, 2],
       quality: 0.5,

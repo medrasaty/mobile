@@ -1,4 +1,4 @@
-import View, { Container } from "@/components/styled/View";
+import View, { ContainerView } from "@/components/styled/View";
 import { ViewProps } from "react-native";
 
 type PageProps = ViewProps & {
@@ -6,7 +6,7 @@ type PageProps = ViewProps & {
 };
 
 const Page = ({ container = false, style, children, ...rest }: PageProps) => {
-  const Wrapper = container ? Container : View;
+  const Wrapper = container ? ContainerView : View;
   return (
     <Wrapper {...rest} style={[{ flex: 1 }, style]}>
       {children}

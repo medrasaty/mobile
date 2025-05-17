@@ -41,6 +41,7 @@ const NetworkError = ({
 export const FullPageNetworkError: React.FC<NetworkErrorProps> = ({ message: error, onRetry }) => (
   <Page>
     <CenterPage>
+      <Button mode="outlined" >solo ishere</Button>
       <ErrorView error={error} onRetry={onRetry} />
     </CenterPage>
   </Page>

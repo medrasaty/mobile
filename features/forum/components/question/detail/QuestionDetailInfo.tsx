@@ -8,6 +8,7 @@ import ShareContentSheet from "@/features/share/components/ShareContentSheet";
 import { d } from "@/lib/dates";
 import { translateSubject } from "@/lib/utils";
 import { DetailQuestion, Question } from "@/types/forum.types";
+import { useSheetRef } from "@components/Sheet";
 import UserInfo from "@components/UserInfo";
 import { Image } from "expo-image";
 import { t } from "i18next";
@@ -172,16 +173,19 @@ export const Picture = memo(({ image }: { image?: string }) => {
 });
 
 export const Share = ({ id }: { id: Question["id"] }) => {
-  const shareRef = useSheetViewRef();
+  const sheetRef = useSheetRef();
+
   return (
     <View>
       <ThemedText
-        style={{ textDecorationLine: "underline" }}
-        onPress={() => shareRef.current?.present()}
+        // add link styling
+        color="lightblue"
+        link
+        onPress={() => sheetRef.current?.snapToIndex(0)}
       >
         {t("share")}
       </ThemedText>
-      <ShareContentSheet questionId={id} ref={shareRef} />
+      <ShareContentSheet questionId={id} ref={sheetRef} />
     </View>
   );
 };

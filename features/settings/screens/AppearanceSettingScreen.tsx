@@ -12,14 +12,13 @@ import {
 } from "@/constants/styels";
 import Row from "@components/Row";
 import { t } from "i18next";
-import SheetView, { useSheetViewRef } from "@components/SheetView";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import RadioButtonGroup, {
   RadioButtonGroupChoiceType,
 } from "@components/RadioButtonGroup";
-import { ContainerView } from "@components/styled";
 import { ThemeType } from "@features/theme/types";
 import { Language } from "../types";
+import Sheet, {  useSheetRef } from "@components/Sheet";
 
 enum ThemeChoices {
   Light = "light",
@@ -46,7 +45,7 @@ const ChangeThemeOption = ({ ...props }: ChangeThemeOptionProps) => {
   const theme = useSettingStore((state) => state.theme);
   const setTheme = useSettingStore((state) => state.setTheme);
 
-  const sheetRef = useSheetViewRef();
+  const sheetRef = useSheetRef();
   const themeChoices = useMemo(
     () => [
       { title: t(`theme.${ThemeChoices.Light}`), value: ThemeChoices.Light },
@@ -55,17 +54,17 @@ const ChangeThemeOption = ({ ...props }: ChangeThemeOptionProps) => {
     ],
     []
   );
-  const snapPoints = useMemo(() => [200], []);
 
   const handleThemeChange = (choice: RadioButtonGroupChoiceType) => {
     setTheme(choice.value as ThemeType);
+    sheetRef.current?.close();
   };
 
   return (
     <>
       <TouchableOpacity
         onPress={() => {
-          sheetRef.current?.present();
+          sheetRef.current?.snapToIndex(0);
         }}
         style={[{ padding: DEFAULT_CONTAINER_SPACING }]}
         {...props}
@@ -81,49 +80,52 @@ const ChangeThemeOption = ({ ...props }: ChangeThemeOptionProps) => {
           </View>
         </Row>
       </TouchableOpacity>
-      <SheetView snapPoints={snapPoints} ref={sheetRef}>
-        <ContainerView>
-          <RadioButtonGroup
-            ItemSeparatorComponent={Divider}
-            radioButtonProps={{
-              style: { paddingTop: 10, paddingBottom: 10 },
-              titleVariant: "bodyLarge",
-            }}
-            onChoicePress={handleThemeChange}
-            currentValue={theme}
-            choices={themeChoices}
-          />
-        </ContainerView>
-      </SheetView>
+
+      <Sheet 
+        ref={sheetRef}
+        initialIndex={-1} 
+        enableDynamicSizing
+      >
+        <RadioButtonGroup
+          ItemSeparatorComponent={Divider}
+          radioButtonProps={{
+            style: { paddingTop: 10, paddingBottom: 10 },
+            titleVariant: "bodyLarge",
+          }}
+          onChoicePress={handleThemeChange}
+          currentValue={theme}
+          choices={themeChoices}
+        />
+      </Sheet>
+         
     </>
   );
 };
 
 const ChangeLanguage = ({ ...props }: TouchableOpacityProps) => {
   const language = useSettingStore((state) => state.language);
-  console.log(language);
-
   const setLanguage = useSettingStore((state) => state.setLanguage);
 
-  const sheetRef = useSheetViewRef();
-  const themeChoices = useMemo(
+  const langSheetRef = useSheetRef();
+
+  const languageChoices = useMemo(
     () => [
       { title: t(`language.ar`), value: "ar" },
       { title: t(`language.en`), value: "en" },
     ],
     []
   );
-  const snapPoints = useMemo(() => [150], []);
 
   const handleLanguageChange = (choice: RadioButtonGroupChoiceType) => {
     setLanguage(choice.value as Language);
+    langSheetRef.current?.close();
   };
 
   return (
     <>
       <TouchableOpacity
         onPress={() => {
-          sheetRef.current?.present();
+          langSheetRef.current?.snapToIndex(0);
         }}
         style={[{ padding: DEFAULT_CONTAINER_SPACING }]}
         {...props}
@@ -141,20 +143,22 @@ const ChangeLanguage = ({ ...props }: TouchableOpacityProps) => {
           </View>
         </Row>
       </TouchableOpacity>
-      <SheetView snapPoints={snapPoints} ref={sheetRef}>
-        <ContainerView>
-          <RadioButtonGroup
-            ItemSeparatorComponent={Divider}
-            radioButtonProps={{
-              style: { paddingTop: 10, paddingBottom: 10 },
-              titleVariant: "bodyLarge",
-            }}
-            onChoicePress={handleLanguageChange}
-            currentValue={language}
-            choices={themeChoices}
-          />
-        </ContainerView>
-      </SheetView>
+      <Sheet 
+        ref={langSheetRef}
+        initialIndex={-1}
+        enableDynamicSizing
+      >
+        <RadioButtonGroup
+          ItemSeparatorComponent={Divider}
+          radioButtonProps={{
+            style: { paddingTop: 10, paddingBottom: 10 },
+            titleVariant: "bodyLarge",
+          }}
+          onChoicePress={handleLanguageChange}
+          currentValue={language}
+          choices={languageChoices}
+        />
+      </Sheet>
     </>
   );
 };

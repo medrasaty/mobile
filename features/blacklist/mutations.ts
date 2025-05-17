@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import * as Burnt from "burnt";
 import { BlackListUser } from "./types";
-import { blockUser, unblockUser } from "./requests";
+import { blockUser, unblockAllUsers, unblockUser } from "./requests";
 import { BlackListKeys } from "./keys";
 import { BaseUser } from "@/types/user.types";
 import { ProfileQueryKeys } from "../profile/keys";
@@ -15,6 +15,8 @@ import { FriendsQueryKeys } from "../friendship/hooks/useFriendsQuery";
 import { FriendUser } from "../friendship/types";
 import { CursorPaginatedResponse } from "@/types/responses";
 import { filterPages } from "../friendship/utils";
+import { t } from "i18next";
+import Toast from "@/lib/toast";
 
 export function useUnblockUserMutation(pk: BaseUser["pk"]) {
   const client = useAuthClient();
@@ -123,6 +125,37 @@ export function useBlockUserMutation(pk: BaseUser["pk"]) {
         title: "Failed blocking user",
         haptic: "error",
       });
+    },
+  });
+}
+
+/**
+ * Mutation for unblocking all users at once
+ */
+export function useUnblockAllUsersMutation() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationKey: BlackListKeys.unblockAll(),
+    mutationFn: async () => await unblockAllUsers(),
+    onSuccess: () => {
+      // Clear the blacklist in the query cache
+      qc.setQueriesData(
+        { queryKey: BlackListKeys.all },
+        () => {
+          return {
+            pages: [],
+            pageParams: []
+          };
+        }
+      );
+
+      // Show success message
+      Toast.success(t("blacklist.success_clearing"));
+    },
+    onSettled: () => {
+      // Invalidate queries that might be affected
+      qc.invalidateQueries({ queryKey: BlackListKeys.all });
     },
   });
 }

@@ -1,13 +1,11 @@
-import {
+import BottomSheet, {
   BottomSheetBackdrop,
+  BottomSheetBackdropProps,
   BottomSheetModal,
   BottomSheetModalProps,
-  BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import React, { forwardRef, useCallback, useEffect, useRef } from "react";
+import React, { forwardRef, useCallback, useRef } from "react";
 import { useTheme } from "react-native-paper";
-import { BottomSheetViewProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types";
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 
 type SheetViewProps = React.PropsWithChildren<{
   backdrop?: boolean;
@@ -19,7 +17,7 @@ export const SheetView = forwardRef<BottomSheetModal, SheetViewProps>(
   ({ backdrop = true, ...props }, ref) => {
     const theme = useTheme();
 
-    const renderBackdrop = useCallback((props) => {
+    const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => {
       return (
         <BottomSheetBackdrop
           {...props}
@@ -33,7 +31,6 @@ export const SheetView = forwardRef<BottomSheetModal, SheetViewProps>(
       <BottomSheetModal
         ref={ref}
         {...props}
-        enableDismissOnClose
         backgroundStyle={{ backgroundColor: theme.colors.surface }}
         backdropComponent={backdrop ? renderBackdrop : null}
       >
@@ -44,7 +41,7 @@ export const SheetView = forwardRef<BottomSheetModal, SheetViewProps>(
 );
 
 export function useSheetViewRef() {
-  return useRef<BottomSheetModal>(null);
+  return useRef<BottomSheet>(null);
 }
 
 export default SheetView;

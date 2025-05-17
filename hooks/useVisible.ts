@@ -32,7 +32,7 @@ type useVisibleV2Hook = [
   Dispatch<SetStateAction<boolean>>
 ];
 
-export function useVisibleV2(initialValue: boolean): useVisibleV2Hook {
+export function useVisibleV2(initialValue: boolean = false): useVisibleV2Hook {
   const [visible, setVisible] = useState<boolean>(initialValue);
 
   const show = useCallback(() => setVisible(true), [visible]);
