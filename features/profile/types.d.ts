@@ -1,6 +1,5 @@
 import { BaseSchool } from "@/types/school.types";
 import { BaseUser } from "@/types/user.types";
-import { BaseProfile } from "./types.types";
 
 export interface UserProfile extends BaseUser {
   followings_count: number;
@@ -33,5 +32,12 @@ export enum FollowingRequestStatus {
   REJECTED = "rejected",
   PENDING = "pending",
 }
+
+export type UpdateProfileData = {
+  profile: Partial<Omit<BaseProfile, "user">>;
+  email: string;
+  display_name: string;
+  profile_picture: string;
+};
 
 export type FollowingRequestStatusType = "accepted" | "rejected" | "pending";

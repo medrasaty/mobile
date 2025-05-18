@@ -78,6 +78,7 @@
   "Oldest": "Oldest",
   "Top_reputation": "Top reputation",
   "share": "share",
+  "update_loading": "updating ${{field}}... please wait",
   "username": "@{{username}}",
   "network_error": "network error: check your internet connection than try again",
   "new_question": "New question",

@@ -2,21 +2,21 @@ import { AppBar } from "@/features/navigation/components/AppBar";
 import Page from "@components/Page";
 import ReputationInfo from "@components/ReputationInfo";
 import ScrollPage from "@components/ScrollPage";
+import ServerView from "@components/ServerView";
 import { ContainerView } from "@components/styled";
 import { ThemedText } from "@components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
-import { t } from "i18next";
-import React, { useMemo } from "react";
-import { StyleSheet, View, ViewProps } from "react-native";
-import { Appbar, Divider, IconButton } from "react-native-paper";
-import { useTheme } from "react-native-paper/src/core/theming";
-import NavigationButtonsList from "../components/NavigationButtonsList";
 import { useAuthSession } from "@features/auth/store";
-import ServerView from "@components/ServerView";
-import useProfile from "../hooks/useProfile";
 import { AuthUser } from "@features/auth/types";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
+import { t } from "i18next";
+import React, { useMemo } from "react";
+import { StyleSheet, View, ViewProps } from "react-native";
+import { Appbar, Divider } from "react-native-paper";
+import { useTheme } from "react-native-paper/src/core/theming";
+import NavigationButtonsList from "../components/NavigationButtonsList";
+import useProfile from "../hooks/useProfile";
 
 const CurrentUserProfileAppbar: React.FC = () => {
   const router = useRouter();
@@ -28,7 +28,7 @@ const CurrentUserProfileAppbar: React.FC = () => {
       />
       <Appbar.Action
         icon={"pencil-outline"}
-        onPress={() => alert("Edit account")}
+        onPress={() => router.push("account/edit")}
       />
     </AppBar>
   );
@@ -119,7 +119,7 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
           <CurrentUserReputation userPk={user.pk} />
         </ContainerView>
 
-        {/* Navigation Pages */}
+        {/* Pages Navigation */}
         <ContainerView style={styles.navigationContainer}>
           <Divider bold />
           <NavigationButtons />
@@ -160,7 +160,7 @@ const CurrentUserReputation: React.FC<{ userPk: AuthUser["pk"] }> = React.memo(
 const NavigationButtons: React.FC<ViewProps> = React.memo(
   (props: ViewProps) => {
     const user = useAuthSession((state) => state.session?.user);
-    
+
     const buttons = useMemo(
       () => {
         // Base buttons that are always shown
@@ -191,7 +191,7 @@ const NavigationButtons: React.FC<ViewProps> = React.memo(
             label: "Your following requests",
           },
         ];
-        
+
         // Only add the following_requests_to_me button if user is private
         if (user?.is_private) {
           baseButtons.push({
@@ -200,7 +200,7 @@ const NavigationButtons: React.FC<ViewProps> = React.memo(
             label: "Following requests to you",
           });
         }
-        
+
         return baseButtons;
       },
       [user?.is_private] // Dependency on user.is_private to recompute when it changes

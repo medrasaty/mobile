@@ -1,5 +1,4 @@
 import { useAnimatedAppBar } from "@/contexts";
-import { useSession } from "@/hooks/useSession";
 import { useNavigation } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -13,6 +12,7 @@ import {
 } from "react-native-paper";
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import { useSession } from "@/hooks/useSession";
 
 type AppBarProps = React.PropsWithChildren<{
   title: string | undefined;
@@ -90,6 +90,7 @@ export function AnimatedAppBar({ title, children }: AppBarProps) {
 export const HomeAppBar = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const { signOut  } = useSession()
 
   return (
     <>
@@ -98,7 +99,7 @@ export const HomeAppBar = () => {
         backAction={false}
         title={t("Home")}
       >
-        <Appbar.Action icon="magnify" onPress={() => {}} />
+        <Appbar.Action icon="sign-out" onPress={() => signOut()} />
       </AppBar>
       <Divider style={{ backgroundColor: theme.colors.primary }} />
     </>

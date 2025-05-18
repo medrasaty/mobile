@@ -2,6 +2,7 @@ import { MMKV } from "react-native-mmkv";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { AuthSession } from "./types";
+import { AuthUser } from "./types";
 
 const AUTH_SESSION_STORAGE_ID = "auth-session-storage";
 
@@ -13,6 +14,7 @@ const storage = new MMKV({
 export interface AuthSessionStore {
   session: AuthSession | null;
   clearSession: () => void;
+  updateSession: (user: AuthUser) => void;
 }
 
 export const useAuthSession = create<AuthSessionStore>(
@@ -22,6 +24,17 @@ export const useAuthSession = create<AuthSessionStore>(
       session: null,
       clearSession: () => {
         set({ session: null });
+      },
+      updateSession: (user: AuthUser) => {
+        set((state) => {
+          if (!state.session) return state;
+          return {
+            session: {
+              ...state.session,
+              user,
+            }
+          };
+        });
       },
     }),
     {

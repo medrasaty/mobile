@@ -3,7 +3,6 @@ import { View, ViewProps } from "react-native";
 import LoadingIndicator from "./LoadingIndicator";
 import NetworkError, { FullPageNetworkError } from "./NetworkError";
 import Page from "./Page";
-import CenterPage from "./CenterPage";
 import FullPageLoadingIndicator from "./FullPageLoadingIndicator";
 
 type ServerViewProps = {
