@@ -1,13 +1,17 @@
 import { API_URL } from "@/constants";
 import { useStorageState } from "@/hooks/useStorageState";
-import { BaseSessionUser, UserType } from "@/types/user.types";
+import { UserType } from "@/types/user.types";
 import { useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosRequestConfig } from "axios";
 import React from "react";
 import { useAuthSession } from "./store";
+import { AuthUser } from "./types";
+import { login } from "./requests";
+import { loginCredentials as Credentials } from "./types";
+import { t } from "i18next";
 
 export type Session = {
-  user: BaseSessionUser;
+  user: AuthUser;
   token: string;
 };
 
@@ -56,11 +60,6 @@ export function SessionProvider(props: React.PropsWithChildren) {
   );
 }
 
-export type Credentials = {
-  username: string;
-  password: string;
-};
-
 async function signIn(
   credentials: Credentials,
   setSession: (session: string | null) => void,
@@ -75,10 +74,10 @@ async function signIn(
    */
 
   try {
-    let { user, token } = await ServerLogin(credentials);
-
+    let { user, token } = await login(credentials);
     if (user.type !== UserType.STUDENT && user.type !== UserType.TEACHER) {
-      throw new Error("لا يمكنك تسجيل الدخول، يجب ان تكون إما طالب او معلم", {
+      // Use English key and translate in UI
+      throw new Error("auth.error_invalid_user_type", {
         cause: "INVALID_USER_TYPE",
       });
     }
@@ -95,44 +94,16 @@ async function signIn(
     // check if  error is of type AxiosError
     if (axios.isAxiosError(error)) {
       if (error?.response?.status === 401) {
-        throw new Error("اسم المستخدم او كلمة المرور غير صحيحة", {
+        throw new Error(t("auth.error_invalid_credentials"), {
           cause: "INVALID_CREDENTIALS",
         });
       } else if (error?.response?.status === 500) {
-        throw new Error("حدث خطأ ما، حاول مجدداً  في وقت لاحق");
+        throw new Error("auth.error_server");
       } else {
-        throw new Error(
-          "حدث خطأ اثناء محاولة تسجيل الدخول, تحقق من اتصال جهازك بالانترنت ثم حاول مجدداً",
-          { cause: "UNKNOWN_ERROR" }
-        );
+        throw new Error("auth.error_unknown", { cause: "UNKNOWN_ERROR" });
       }
     }
 
     throw error; // rethrow the error for the caller to handle
   }
-}
-
-async function ServerLogin(credentials: Credentials): Promise<Session> {
-  /**
-   * Validate credentials in the server,
-   * if valie, return session id ( token )
-   * @param credentials : Credentials object
-   */
-
-  const encodedCredentials = btoa(
-    `${credentials.username.toLowerCase()}:${credentials.password}`
-  );
-
-  const config = {
-    method: "post",
-    url: "/auth/login/",
-    baseURL: API_URL,
-    headers: {
-      Authorization: "Basic " + encodedCredentials,
-    },
-  } satisfies AxiosRequestConfig;
-
-  // error will be thrown automatically if login failed
-  let response = await axios.request(config);
-  return response.data;
 }

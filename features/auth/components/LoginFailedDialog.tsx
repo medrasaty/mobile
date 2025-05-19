@@ -1,14 +1,9 @@
 import * as React from "react";
-import { ActivityIndicator, View } from "react-native";
-import {
-  Button,
-  Dialog,
-  Portal,
-  PaperProvider,
-  Text,
-} from "react-native-paper";
+import { View } from "react-native";
+import { Button, Dialog, Portal, Text } from "react-native-paper";
+import { useTranslation } from "react-i18next";
 
-type LoignFailedDialogProps = {
+type LoginFailedDialogProps = {
   visible: boolean;
   errorMessage?: string;
   hideDialog: () => void;
@@ -16,19 +11,27 @@ type LoignFailedDialogProps = {
 
 export default function LoginFailedDialog({
   visible,
-  errorMessage = "كلمة السر أو البريد الإلكتروني غير صحيح ",
+  errorMessage,
   hideDialog,
-}: LoignFailedDialogProps) {
+}: LoginFailedDialogProps) {
+  const { t } = useTranslation();
   return (
     <View>
       <Portal>
         <Dialog visible={visible} onDismiss={hideDialog}>
-          <Dialog.Title>خطأ في تسجيل الدخول</Dialog.Title>
+          <Dialog.Title>{t("auth.login_failed", "Login failed")}</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">{errorMessage}</Text>
+            <Text variant="bodyMedium">
+              {errorMessage
+                ? errorMessage
+                : t(
+                    "auth.error_invalid_credentials",
+                    "Incorrect email or password"
+                  )}
+            </Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={hideDialog}>اعادة المحاولة</Button>
+            <Button onPress={hideDialog}>{t("auth.retry", "Retry")}</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

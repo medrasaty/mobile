@@ -21,7 +21,7 @@ type RequestConfig = AxiosRequestConfig & {
    * Optional callback invoked with the caught error when the request fails.
    */
   onError?: (error: any) => void;
-}
+};
 
 /**
  * A unified function to perform all authenticated requests
@@ -43,20 +43,20 @@ type RequestConfig = AxiosRequestConfig & {
  *   2. Rethrows the original error to the caller.
  */
 export async function request<T>(config: RequestConfig) {
-  const client = AuthClient()
-  const { onError, ...axiosConfig } = config
+  const client = AuthClient();
+  const { onError, ...axiosConfig } = config;
 
   try {
-    const response = await client.request<T>(axiosConfig)
-    return response
+    const response = await client.request<T>(axiosConfig);
+    return response;
   } catch (error: any) {
     if (onError) {
       try {
-        onError(error)
+        onError(error);
       } catch (cbErr) {
-        console.error("onError callback failed:", cbErr)
+        console.error("onError callback failed:", cbErr);
       }
     }
-    throw error
+    throw error;
   }
 }

@@ -138,5 +138,25 @@
       "helper_text": "Allow users to view your gender"
     }
   },
-  "profile": {}
+  "profile": {},
+  "auth": {
+    "email_label": "Email address",
+    "password_label": "Password",
+    "login_button": "Login",
+    "login_title": "Login",
+    "login_failed": "Login failed",
+    "login_in_progress": "Verifying credentials ...",
+    "invalid_email": "Invalid email address",
+    "invalid_password": "Password must be at least 8 characters long",
+    "required_email": "Email is required",
+    "required_password": "Password is required",
+    "show_password": "Show password",
+    "hide_password": "Hide password",
+    "error_invalid_credentials": "Incorrect email or password",
+    "error_default": "An error occurred during login",
+    "error_invalid_user_type": "You must be a student or teacher to login",
+    "error_server": "A server error occurred, please try again later.",
+    "error_unknown": "An unknown error occurred. Please check your internet connection and try again.",
+    "retry": "Retry"
+  }
 }

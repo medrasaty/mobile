@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import { Button, Text, useTheme } from "react-native-paper";
 
 const LoginButton = ({
@@ -11,7 +12,7 @@ const LoginButton = ({
   return (
     <Button disabled={disabled} onPress={onPress} mode="contained">
       <Text style={{ color: theme.colors.onPrimary, fontFamily: "Cairo" }}>
-        سجل الدخول
+        {t("login")}
       </Text>
     </Button>
   );
