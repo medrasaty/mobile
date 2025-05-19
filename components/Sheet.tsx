@@ -48,7 +48,6 @@ export const Sheet = forwardRef<BottomSheet, SheetProps>(
     {
       backdrop = true,
       backgroundColor,
-      handleColor,
       initialIndex = -1,
       contentContainerStyle,
       enableDynamicSizing = true,
@@ -80,7 +79,6 @@ export const Sheet = forwardRef<BottomSheet, SheetProps>(
       (isDarkMode
         ? theme.colors.elevation.level3
         : theme.colors.surfaceVariant);
-    const handleBarColor = handleColor || theme.colors.primary;
 
     return (
       <Portal>
@@ -92,9 +90,12 @@ export const Sheet = forwardRef<BottomSheet, SheetProps>(
           enableDynamicSizing={enableDynamicSizing}
           handleIndicatorStyle={[
             styles.handle,
-            { backgroundColor: handleBarColor },
+            { backgroundColor: theme.colors.primary, opacity: 1 },
           ]}
-          backgroundStyle={[styles.background, { backgroundColor: bgColor }]}
+          backgroundStyle={[
+            styles.background, 
+            { backgroundColor: bgColor }
+          ]}
           backdropComponent={backdrop ? renderBackdrop : undefined}
           {...props}
         >
@@ -157,9 +158,12 @@ export const SheetModal = forwardRef<BottomSheetModal, SheetModalProps>(
         enablePanDownToClose
         handleIndicatorStyle={[
           styles.handle,
-          { backgroundColor: handleBarColor },
+          { backgroundColor: handleBarColor, opacity: 1 },
         ]}
-        backgroundStyle={[styles.background, { backgroundColor: bgColor }]}
+        backgroundStyle={[
+          styles.background, 
+          { backgroundColor: bgColor, opacity: 1 }
+        ]}
         backdropComponent={backdrop ? renderBackdrop : undefined}
         {...props}
       >
@@ -193,10 +197,6 @@ export function useSheetModalRef() {
 const styles = StyleSheet.create({
   background: {
     borderRadius: 24,
-    elevation: 8,
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
   },
   contentContainer: {
     flex: 1,
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   },
   handle: {
     width: 40,
-    height: 5, // Slightly taller for better visibility
+    height: 6, // Increased height for better visibility
     borderRadius: 3,
     marginTop: 10,
     marginBottom: 12,
