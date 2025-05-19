@@ -14,6 +14,7 @@ import {
   EditProfilePicture,
   EditBackgroundImage,
 } from "../components/EditAccountFields";
+import { Container } from "@components/styled";
 
 const EditAccountScreen: React.FC = () => {
   const user = useAuthSession((state) => state.session?.user);
@@ -38,11 +39,13 @@ const EditAccountScreen: React.FC = () => {
           </ThemedText>
         </View>
 
-        {/* Editable fields */}
-        <EditDisplayName />
-        <EditEmail />
-        <EditBiography />
-        <EditPrivacy />
+        <Container>
+          {/* Editable fields */}
+          <EditDisplayName />
+          <EditEmail />
+          <EditBiography />
+          <EditPrivacy />
+        </Container>
       </ScrollView>
     </Page>
   );
@@ -50,7 +53,6 @@ const EditAccountScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    ...containerPaddings,
     paddingBottom: 40,
   },
   profileHeaderContainer: {
