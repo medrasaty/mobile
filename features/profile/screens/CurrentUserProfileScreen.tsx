@@ -20,6 +20,7 @@ import useProfile from "../hooks/useProfile";
 import Biography from "../components/Biography";
 import Sheet, { useSheetRef } from "@components/Sheet";
 import { useSession } from "@/hooks/useSession";
+import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
 
 const CurrentUserProfileAppbar: React.FC = () => {
   const router = useRouter();
@@ -42,6 +43,7 @@ const CurrentUserProfileAppbar: React.FC = () => {
 const ProfileMoreOptionsAction = () => {
   const sheetRef = useSheetRef();
   const { signOut } = useSession();
+  const theme = useTheme();
   return (
     <>
       <Appbar.Action
@@ -49,7 +51,11 @@ const ProfileMoreOptionsAction = () => {
         onPress={() => sheetRef.current?.expand()}
       />
       <Sheet ref={sheetRef}>
-        <Button mode="elevated" onPress={signOut}>
+        <Button
+          theme={{ colors: { primary: theme.colors.error } }}
+          mode="outlined"
+          onPress={signOut}
+        >
           logout
         </Button>
       </Sheet>
@@ -136,11 +142,19 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
           {user.profile.biography && (
             <Biography>{user.profile.biography}</Biography>
           )}
-
-          <CurrentUserReputation userPk={user.pk} />
+          <Button
+            onPress={() => alert("take these info")}
+            mode="contained-tonal"
+          >
+            more info
+          </Button>
         </ContainerView>
 
-        <Divider bold />
+        {/* Visually separate between profile info and navigation buttons */}
+        <View style={{ margin: DEFAULT_CONTAINER_SPACING }}>
+          <Divider />
+        </View>
+
         {/* Pages Navigation */}
         <ContainerView style={styles.navigationContainer}>
           <NavigationButtons />

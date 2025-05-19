@@ -19,6 +19,8 @@ import { Button } from "react-native-paper";
 import { t } from "i18next";
 import ReportDialog from "@/features/reports/components/ReportDialog";
 import { useVisibleV2 } from "@/hooks/useVisible";
+import Sheet, { useSheetRef } from "@components/Sheet";
+import { View } from "react-native";
 
 type ProfileFollowingSectionProps = {
   profile: UserProfile;
@@ -38,25 +40,25 @@ const ProfileActionsSection = ({ profile }: ProfileFollowingSectionProps) => {
 };
 
 export const MoreOptions = ({ profile }: { profile: UserProfile }) => {
-  const sheetRef = useSheetViewRef();
+  const sheetRef = useSheetRef();
 
   return (
     <>
       <IconButton
         onPress={() => {
-          sheetRef.current?.present();
+          sheetRef.current?.expand();
         }}
         icon={"dots-vertical"}
       />
-      <SheetView ref={sheetRef} snapPoints={[140]}>
-        <ContainerView style={{ gap: 6 }}>
+      <Sheet ref={sheetRef}>
+        <View style={{ gap: 6 }}>
           <ToggleBlockingButton
             isBlocker={profile.is_blocker}
             pk={profile.pk}
           />
           <ReportUser userId={profile.id} contentTypeId={profile.contenttype} />
-        </ContainerView>
-      </SheetView>
+        </View>
+      </Sheet>
     </>
   );
 };
