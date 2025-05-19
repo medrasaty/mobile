@@ -15,6 +15,9 @@ export interface AuthSessionStore {
   session: AuthSession | null;
   clearSession: () => void;
   updateSession: (user: AuthUser) => void;
+  // TODO: implement these methods later.
+  login?: () => void;
+  loguot?: () => void;
 }
 
 export const useAuthSession = create<AuthSessionStore>(
@@ -32,7 +35,7 @@ export const useAuthSession = create<AuthSessionStore>(
             session: {
               ...state.session,
               user,
-            }
+            },
           };
         });
       },

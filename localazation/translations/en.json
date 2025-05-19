@@ -137,5 +137,6 @@
       "label": "Display gender",
       "helper_text": "Allow users to view your gender"
     }
-  }
+  },
+  "profile": {}
 }

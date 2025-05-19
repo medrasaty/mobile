@@ -23,7 +23,7 @@ import { useAuthSession } from "@features/auth/store";
  */
 export function useUpdateUserProfileMutation(userId: BaseUser["pk"]) {
   const qc = useQueryClient();
-  const updateSession = useAuthSession(state => state.updateSession)
+  const updateSession = useAuthSession((state) => state.updateSession);
 
   return useMutation({
     mutationKey: [...ProfileQueryKeys.all, "update", userId],
@@ -47,7 +47,6 @@ export function useUpdateUserProfileMutation(userId: BaseUser["pk"]) {
           ...previousProfile,
           ...newData,
         });
-
       }
 
       return { previousProfile };
@@ -57,7 +56,8 @@ export function useUpdateUserProfileMutation(userId: BaseUser["pk"]) {
       // Update the cache with the returned data
       qc.setQueryData(ProfileQueryKeys.detail(userId), updatedProfile);
 
-      updateSession(updatedProfile)
+      // Update the local session with the new profile data
+      updateSession(updatedProfile);
 
       // Show success message
       Toast.success(

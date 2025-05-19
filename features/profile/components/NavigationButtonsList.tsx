@@ -1,8 +1,11 @@
 import { ThemedText } from "@components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useMemo } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import { TouchableRipple, useTheme } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+import { ViewProps } from "react-native";
 
 type NavigationButton = {
   /**
@@ -23,7 +26,7 @@ type NavigationButton = {
 function NavigationButton({ path, icon, label }: NavigationButton) {
   const theme = useTheme();
   // roundness factor
-  const factor = 2;
+  const factor = 3;
   const roundness = useMemo(() => theme.roundness * factor, [theme, factor]);
 
   const router = useRouter();
@@ -35,7 +38,7 @@ function NavigationButton({ path, icon, label }: NavigationButton) {
         style={[
           styles.container,
           {
-            borderColor: theme.colors.secondary,
+            borderColor: theme.colors.outline,
             borderRadius: roundness,
           },
         ]}
@@ -58,12 +61,6 @@ type Props = {
  * @returns
  */
 function NavigationButtonsList({ items, ...props }: Props) {
-  const router = useRouter();
-  const theme = useTheme();
-  // roundness factor
-  const factor = 2;
-  const roundness = useMemo(() => theme.roundness * factor, [theme, factor]);
-
   return (
     <View {...props}>
       {items.map((item) => (
@@ -72,11 +69,6 @@ function NavigationButtonsList({ items, ...props }: Props) {
     </View>
   );
 }
-
-import { StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
-import { ViewProps } from "react-native";
-import { debugStyle } from "@/constants/styels";
 
 const styles = StyleSheet.create({
   container: {

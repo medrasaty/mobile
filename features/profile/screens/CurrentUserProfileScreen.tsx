@@ -13,10 +13,13 @@ import { useRouter } from "expo-router";
 import { t } from "i18next";
 import React, { useMemo } from "react";
 import { StyleSheet, View, ViewProps } from "react-native";
-import { Appbar, Divider } from "react-native-paper";
+import { Appbar, Divider, Button } from "react-native-paper";
 import { useTheme } from "react-native-paper/src/core/theming";
 import NavigationButtonsList from "../components/NavigationButtonsList";
 import useProfile from "../hooks/useProfile";
+import Biography from "../components/Biography";
+import Sheet, { useSheetRef } from "@components/Sheet";
+import { useSession } from "@/hooks/useSession";
 
 const CurrentUserProfileAppbar: React.FC = () => {
   const router = useRouter();
@@ -30,9 +33,30 @@ const CurrentUserProfileAppbar: React.FC = () => {
         icon={"pencil-outline"}
         onPress={() => router.push("account/edit")}
       />
+      {/* more options */}
+      <ProfileMoreOptionsAction />
     </AppBar>
   );
 };
+
+const ProfileMoreOptionsAction = () => {
+  const sheetRef = useSheetRef();
+  const { signOut } = useSession();
+  return (
+    <>
+      <Appbar.Action
+        icon={"dots-vertical"}
+        onPress={() => sheetRef.current?.expand()}
+      />
+      <Sheet ref={sheetRef}>
+        <Button mode="elevated" onPress={signOut}>
+          logout
+        </Button>
+      </Sheet>
+    </>
+  );
+};
+
 /**
  * Props for the CurrentUserProfileScreen component
  */
@@ -107,21 +131,18 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
             </View>
           </View>
         </View>
-
-        {/* Extra Info */}
-        <ContainerView style={styles.biographyContainer}>
+        <ContainerView style={{ gap: 10 }}>
           {/* Biography */}
           {user.profile.biography && (
-            <ThemedText color="#333" variant="bodyMedium">
-              {user.profile.biography}
-            </ThemedText>
+            <Biography>{user.profile.biography}</Biography>
           )}
+
           <CurrentUserReputation userPk={user.pk} />
         </ContainerView>
 
+        <Divider bold />
         {/* Pages Navigation */}
         <ContainerView style={styles.navigationContainer}>
-          <Divider bold />
           <NavigationButtons />
         </ContainerView>
       </ScrollPage>
@@ -218,6 +239,7 @@ const NavigationButtons: React.FC<ViewProps> = React.memo(
 const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 20,
+    gap: 10,
   },
   profileHeaderContainer: {
     alignItems: "center",
@@ -255,11 +277,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   biographyContainer: {
-    marginTop: 20,
     gap: 12,
   },
   navigationContainer: {
-    marginTop: 30,
     gap: 8,
   },
   navigationList: {

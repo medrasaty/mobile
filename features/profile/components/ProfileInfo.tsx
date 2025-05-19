@@ -1,6 +1,6 @@
 import ReputationInfo from "@/components/ReputationInfo";
 import Row from "@/components/Row";
-import { ContainerView } from "@/components/styled";
+import { Container } from "@/components/styled";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { containerMargins } from "@/constants/styels";
@@ -12,6 +12,7 @@ import { StyleSheet, View, ViewProps } from "react-native";
 import { useTheme } from "react-native-paper";
 import { UserProfile } from "../types";
 import ProfileActionsSection from "./ProfileFollowingSection";
+import Biography from "./Biography";
 
 type ProfileInfoProps = {
   profile: UserProfile;
@@ -26,16 +27,16 @@ const ProfileInfo = ({ profile, style, ...props }: ProfileInfoProps) => {
           <ProfileActionsSection profile={profile} />
         </ThemedView>
       </Row>
-      <ContainerView>
+      <Container style={{ gap: 10 }}>
         <UserInfo
           fullName={profile.full_name}
           username={profile.username}
           schoolName={profile.school_name}
           schoolId={profile.school}
           type={profile.type}
+          biography={profile.profile.biography}
         />
-        <Bio bio={profile.profile.biography} />
-      </ContainerView>
+      </Container>
       <ReputationInfo
         style={styles.reputationInfo}
         reputation={profile.reputation}
@@ -55,7 +56,7 @@ export const ProfilePicture = ({
   const theme = useTheme();
 
   return (
-    <ContainerView {...props} style={[style, styles.container]}>
+    <View style={[style, styles.container]} {...props}>
       <View
         style={{
           borderRadius: 100,
@@ -71,7 +72,7 @@ export const ProfilePicture = ({
           style={styles.image}
         />
       </View>
-    </ContainerView>
+    </View>
   );
 };
 
@@ -83,6 +84,7 @@ export function useProfilePictureStyle() {
     return StyleSheet.create({
       container: {
         marginTop: -AVATAR_SIZE * marginTopFactor,
+        ...containerMargins,
       },
       image: {
         width: AVATAR_SIZE,
@@ -103,6 +105,7 @@ type UserProfileProps = {
   schoolName: UserProfile["school_name"];
   schoolId: number;
   type: UserProfile["type"];
+  biography: UserProfile["profile"]["biography"];
 };
 
 const UserInfo = ({
@@ -110,16 +113,20 @@ const UserInfo = ({
   username,
   schoolName,
   schoolId,
+  biography,
   type,
 }: UserProfileProps) => {
   return (
-    <ThemedView>
-      <ThemedText bold variant="titleLarge">
-        {fullName}
-      </ThemedText>
-      <Username username={username} />
-      <School id={schoolId} name={schoolName} />
-    </ThemedView>
+    <View style={{ gap: 10 }}>
+      <View>
+        <ThemedText bold variant="titleLarge">
+          {fullName}
+        </ThemedText>
+        <Username username={username} />
+        <School id={schoolId} name={schoolName} />
+      </View>
+      <Biography>{biography}</Biography>
+    </View>
   );
 };
 
@@ -141,14 +148,6 @@ export const School = ({ id, name }: { id: number; name: string }) => {
         <ThemedText variant="bodyMedium">{name}</ThemedText>
       </Link>
     </Row>
-  );
-};
-
-const Bio = ({ bio }: { bio: string }) => {
-  return (
-    <ThemedText color={"gray"} variant="bodyMedium">
-      {bio}
-    </ThemedText>
   );
 };
 
