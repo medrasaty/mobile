@@ -25,6 +25,8 @@ export interface BaseUser {
   reach: number;
   is_superuser: boolean;
   profile_picture: string;
+  avatar: string;
+  thumbnail: string;
   is_private: boolean;
   contenttype: number;
   display_name: string;

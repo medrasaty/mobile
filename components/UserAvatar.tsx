@@ -20,9 +20,9 @@ const UserAvatar = ({ url, size, style }: UserAvatarProps) => {
   return (
     <ThemedView>
       <Image
-      contentFit="cover"
-       cachePolicy={"memory"}
-       transition={0}
+        contentFit="cover"
+        cachePolicy={"memory"}
+        transition={0}
         source={{ uri: url }}
         style={[
           style,
@@ -38,14 +38,40 @@ const UserAvatar = ({ url, size, style }: UserAvatarProps) => {
 };
 
 export type UserAvatarV2Props = {
+  /**
+   * The uri of the image to display.
+   * If not provided, the avatar will be displayed without an image.
+   */
+  uri?: string;
+  /**
+   * The user object containing the thumbnail.
+   * @deprecated: use uri instead.
+   */
   user: BaseUser;
+  /**
+   * Size of the avatar in pixels.
+   * The badge size is 10 times smaller than this value.
+   */
   size: number;
+  /**
+   * Style for the image.
+   * This is applied to the image inside the avatar.
+   */
   imageStyle?: ImageProps["style"];
+  /**
+   * Color of the border around the avatar.
+   * If not provided, it defaults to the theme's surface variant color.
+   */
   borderColor?: string;
+  /**
+   * The name of the icon to display as a badge.
+   * This is used to indicate the user's status (e.g., verified).
+   */
   badge?: IconProps<any>["name"];
 } & ViewProps;
 
 export const UserAvatarV2 = ({
+  uri,
   user,
   size,
   imageStyle,
@@ -81,7 +107,7 @@ export const UserAvatarV2 = ({
         contentFit="cover"
         transition={0}
         cachePolicy={"memory"}
-        source={{ uri: user.profile_picture }}
+        source={{ uri: uri ? uri : user.thumbnail }}
         style={[
           imageStyle,
           {

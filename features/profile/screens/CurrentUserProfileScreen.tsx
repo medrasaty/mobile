@@ -51,13 +51,15 @@ const ProfileMoreOptionsAction = () => {
         onPress={() => sheetRef.current?.expand()}
       />
       <Sheet ref={sheetRef}>
-        <Button
-          theme={{ colors: { primary: theme.colors.error } }}
-          mode="outlined"
-          onPress={signOut}
-        >
-          logout
-        </Button>
+        <ContainerView style={{ marginBottom: 10 }}>
+          <Button
+            theme={{ colors: { primary: theme.colors.error } }}
+            mode="outlined"
+            onPress={signOut}
+          >
+            logout
+          </Button>
+        </ContainerView>
       </Sheet>
     </>
   );
@@ -105,7 +107,7 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
           {/* Profile Picture */}
           <Image
             style={styles.profilePicture}
-            source={user.profile_picture}
+            source={user.thumbnail}
             transition={500}
             cachePolicy="memory-disk"
           />

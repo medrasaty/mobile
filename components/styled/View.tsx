@@ -57,8 +57,18 @@ export const Container = ({ children, style, ...props }: ViewProps) => {
 
 export const ContainerView = ({ children, style, ...props }: ViewProps) => {
   return (
-    <View style={[style, { ...containerPaddings }]} {...props}>
+    <View style={[styles.containerView, style]} {...props}>
       {children}
     </View>
   );
 };
+
+import { StyleSheet } from "react-native";
+
+const styles = StyleSheet.create({
+  containerView: {
+    flex: 1,
+    backgroundColor: "transparent",
+    ...containerPaddings,
+  },
+});

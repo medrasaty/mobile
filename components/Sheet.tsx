@@ -93,10 +93,7 @@ export const Sheet = forwardRef<BottomSheet, SheetProps>(
             styles.handle,
             { backgroundColor: theme.colors.primary, opacity: 1 },
           ]}
-          backgroundStyle={[
-            styles.background, 
-            { backgroundColor: bgColor }
-          ]}
+          backgroundStyle={[styles.background, { backgroundColor: bgColor }]}
           backdropComponent={backdrop ? renderBackdrop : undefined}
           {...props}
         >
@@ -162,8 +159,8 @@ export const SheetModal = forwardRef<BottomSheetModal, SheetModalProps>(
           { backgroundColor: handleBarColor, opacity: 1 },
         ]}
         backgroundStyle={[
-          styles.background, 
-          { backgroundColor: bgColor, opacity: 1 }
+          styles.background,
+          { backgroundColor: bgColor, opacity: 1 },
         ]}
         backdropComponent={backdrop ? renderBackdrop : undefined}
         {...props}
@@ -201,8 +198,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    padding: 0,
-    margin: 0,
   },
   handle: {
     width: 40,

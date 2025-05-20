@@ -1,11 +1,11 @@
 /**
  * UserInfo component displays a user's avatar, name, and optionally their school.
- * 
+ *
  * Props:
  * - user: BaseUser (required) - The user object containing user details.
  * - avatarSize?: number - The size of the avatar to display (default: 55).
  * - showSchool?: boolean - Whether to show the user's school (default: true).
- * 
+ *
  * When pressed, navigates to the user's profile page.
  */
 
@@ -36,7 +36,7 @@ const UserInfo = ({
 }: UserInfoProps) => {
   return (
     <ThemedView style={styles.container}>
-      <UserAvatarV2 user={user} size={avatarSize} />
+      <UserAvatarV2 uri={user.thumbnail} user={user} size={avatarSize} />
       <Pressable
         onPress={() => path.users.goToUser(user.id)}
         style={{ gap: 5 }}
@@ -50,7 +50,7 @@ const UserInfo = ({
 
 /**
  * School component displays a school icon and the school name.
- * 
+ *
  * Props:
  * - name: string - The name of the school to display.
  */

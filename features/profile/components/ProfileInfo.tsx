@@ -22,7 +22,7 @@ const ProfileInfo = ({ profile, style, ...props }: ProfileInfoProps) => {
   return (
     <ThemedView style={[style, styles.container]} {...props}>
       <Row>
-        <ProfilePicture url={profile.profile_picture} />
+        <ProfilePicture url={profile.thumbnail} />
         <ThemedView style={styles.actionSection}>
           <ProfileActionsSection profile={profile} />
         </ThemedView>
@@ -64,13 +64,7 @@ export const ProfilePicture = ({
           borderColor: theme.colors.secondaryContainer,
         }}
       >
-        <Image
-          contentFit="cover"
-          source={{ uri: url }}
-          transition={0}
-          cachePolicy={"memory"}
-          style={styles.image}
-        />
+        <Image contentFit="cover" source={{ uri: url }} style={styles.image} />
       </View>
     </View>
   );
