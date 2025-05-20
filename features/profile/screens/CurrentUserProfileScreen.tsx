@@ -230,7 +230,7 @@ const NavigationButtons: React.FC<ViewProps> = React.memo(
         ];
 
         // Only add the following_requests_to_me button if user is private
-        if (user?.is_private) {
+        if (user?.profile.is_private) {
           baseButtons.push({
             path: "following_requests_to_me",
             icon: "pulse",

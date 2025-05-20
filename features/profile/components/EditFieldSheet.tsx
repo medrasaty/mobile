@@ -41,14 +41,15 @@
  * This component ensures a consistent and user-friendly interface for editing fields
  * within a modal sheet, making it suitable for various use cases in React Native apps.
  */
-import React from "react";
-import { View, StyleSheet, Keyboard } from "react-native";
+import React, { useRef, useCallback } from "react";
+import { View, StyleSheet } from "react-native";
 import { Button, TextInput, Switch } from "react-native-paper";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Sheet, { SheetModal } from "@/components/Sheet";
 import { t } from "i18next";
 import LoadingDialog from "@components/LoadingDialog";
+import { Switch as RNSwitch } from "react-native";
 
 // Update the isSheetModalRef function to be more robust
 const isSheetModalRef = (ref: any): boolean => {
@@ -132,6 +133,21 @@ interface EditFieldSheetProps<V> {
   keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
 }
 
+// const [isEnabled, setIsEnabled] = useState(false); // Optional for tracking state
+// const switchRef = useRef(null);
+
+// const handleSubmit = () => {
+//   const value = switchRef.current?.value; // Access value directly via ref (if supported)
+// };
+
+// return (
+//   <Switch
+//     ref={switchRef}
+//     defaultValue={false} // Initial value without state updates
+//     onValueChange={(val) => setIsEnabled(val)} // Optional for tracking
+//   />
+// );
+
 const EditFieldSheet: React.FC<EditFieldSheetProps<any>> = ({
   sheetRef,
   title,
@@ -144,16 +160,30 @@ const EditFieldSheet: React.FC<EditFieldSheetProps<any>> = ({
   multiline = false,
   keyboardType = "default",
 }) => {
+  // Create refs to store the current values without causing re-renders
+  const currentValueRef = useRef<any>(value);
+  const [switchValue, setSwitchValue] = React.useState<boolean>(!!value);
+
+  // If type is switch, we need to handle the value changes differently
+  const handleSwitchChange = useCallback((newValue: boolean) => {
+    setSwitchValue(newValue);
+  }, []);
+
+  // If type is text, email, or textarea, we need to update the ref on text changes
+  const handleTextChange = useCallback((text: string) => {
+    currentValueRef.current = text;
+  }, []);
+
   // Different UI based on the field type
   const renderFieldEditor = () => {
     const renderTextInput = (additionalProps = {}) => (
       <TextInput
         mode="outlined"
         label={title}
-        value={value as string}
+        defaultValue={value as string}
         disabled={isSaving}
-        onChangeText={onChange}
         style={styles.textInput}
+        onChangeText={handleTextChange}
         {...additionalProps}
       />
     );
@@ -171,7 +201,7 @@ const EditFieldSheet: React.FC<EditFieldSheetProps<any>> = ({
           <>
             <ThemedView style={styles.switchContainer}>
               <ThemedText>{title}</ThemedText>
-              <Switch value={value as boolean} onValueChange={onChange} />
+              <Switch value={switchValue} onValueChange={handleSwitchChange} />
             </ThemedView>
             {renderDescription()}
           </>
@@ -192,9 +222,10 @@ const EditFieldSheet: React.FC<EditFieldSheetProps<any>> = ({
     }
   };
 
-  const handleSave = () => {
-    onSave(value);
-  };
+  const handleSave = useCallback(() => {
+    // At save time, we use the current value from our ref
+    onSave(type === "switch" ? switchValue : currentValueRef.current);
+  }, [onSave]);
 
   const renderContent = () => (
     <View style={styles.content}>
@@ -253,4 +284,3 @@ const styles = StyleSheet.create({
 });
 
 export default EditFieldSheet;
-

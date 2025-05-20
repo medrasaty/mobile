@@ -4,7 +4,7 @@ import EditFieldSheet from "./EditFieldSheet";
 import { useSheetRef } from "@components/Sheet";
 import { t } from "i18next";
 import { useAuthSession } from "@features/auth/store";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import EditField from "./EditField";
 import {
   useUpdateProfileMutation,
@@ -25,14 +25,13 @@ type EditFieldProps = ViewProps & {};
  */
 const EditDisplayName = ({ ...props }: EditFieldProps) => {
   const user = useAuthSession((state) => state.session?.user);
-  const [displayName, setDisplayName] = useState(user?.display_name || "");
   const sheetRef = useSheetRef();
 
   const { mutate: update, isPending } = useUpdateUserProfileMutation(
     user?.pk || ""
   );
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (displayName: string) => {
     update(
       { display_name: displayName },
       {
@@ -56,8 +55,8 @@ const EditDisplayName = ({ ...props }: EditFieldProps) => {
       <EditFieldSheet
         sheetRef={sheetRef}
         title={t("Display Name")}
-        value={displayName}
-        onChange={setDisplayName}
+        value={user?.display_name || ""}
+        onChange={() => {}} // No-op since we're now handling state internally
         isSaving={isPending}
         onSave={handleUpdate}
         type="text"
@@ -71,14 +70,13 @@ const EditDisplayName = ({ ...props }: EditFieldProps) => {
  */
 const EditEmail = ({ ...props }: EditFieldProps) => {
   const user = useAuthSession((state) => state.session?.user);
-  const [email, setEmail] = useState(user?.email || "");
   const sheetRef = useSheetRef();
 
   const { mutate: update, isPending } = useUpdateUserProfileMutation(
     user?.pk || ""
   );
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (email: string) => {
     update(
       { email },
       {
@@ -102,8 +100,8 @@ const EditEmail = ({ ...props }: EditFieldProps) => {
       <EditFieldSheet
         sheetRef={sheetRef}
         title={t("Email")}
-        value={email}
-        onChange={setEmail}
+        value={user?.email || ""}
+        onChange={() => {}} // No-op since we're now handling state internally
         isSaving={isPending}
         onSave={handleUpdate}
         type="email"
@@ -118,14 +116,13 @@ const EditEmail = ({ ...props }: EditFieldProps) => {
  */
 const EditBiography = ({ ...props }: EditFieldProps) => {
   const user = useAuthSession((state) => state.session?.user);
-  const [biography, setBiography] = useState(user?.profile?.biography || "");
   const sheetRef = useSheetRef();
 
   const { mutate: update, isPending } = useUpdateProfileMutation(
     user?.pk || ""
   );
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (biography: string) => {
     update(
       {
         biography,
@@ -151,8 +148,8 @@ const EditBiography = ({ ...props }: EditFieldProps) => {
       <EditFieldSheet
         sheetRef={sheetRef}
         title={t("Biography")}
-        value={biography}
-        onChange={setBiography}
+        value={user?.profile?.biography || ""}
+        onChange={() => {}} // No-op since we're now handling state internally
         isSaving={isPending}
         onSave={handleUpdate}
         type="textarea"
@@ -168,16 +165,14 @@ const EditBiography = ({ ...props }: EditFieldProps) => {
  */
 const EditPrivacy = ({ ...props }: EditFieldProps) => {
   const user = useAuthSession((state) => state.session?.user);
-  const [isPrivate, setIsPrivate] = useState(
-    user?.profile?.is_private || false
-  );
   const sheetRef = useSheetRef();
 
   const { mutate: update, isPending } = useUpdateProfileMutation(
     user?.pk || ""
   );
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (isPrivate: boolean) => {
+    console.log(isPrivate);
     update(
       {
         is_private: isPrivate,
@@ -197,19 +192,19 @@ const EditPrivacy = ({ ...props }: EditFieldProps) => {
     <View {...props}>
       <EditField
         label={t("Privacy")}
-        value={isPrivate ? t("Private") : t("Public")}
+        value={user?.profile?.is_private ? t("Private") : t("Public")}
         onPress={() => sheetRef.current?.expand()}
       />
       <EditFieldSheet
         sheetRef={sheetRef}
         title={t("Privacy")}
-        value={isPrivate}
-        onChange={setIsPrivate}
+        value={!!user?.profile?.is_private}
+        onChange={() => {}} // No-op since we're now handling state internally
         isSaving={isPending}
         onSave={handleUpdate}
         type="switch"
         description={t(
-          "When your profile is private, only approved followers can see your posts and activity"
+          "When your profile is private, users will need to request to follow you"
         )}
       />
     </View>
