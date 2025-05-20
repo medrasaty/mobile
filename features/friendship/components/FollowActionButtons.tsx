@@ -42,6 +42,7 @@ const FollowBack = ({ pk, ...props }: FollowButtonsProps) => {
   return (
     <Button
       loading={isPending}
+      disabled={isPending}
       onPress={handlePress}
       mode="contained"
       {...props}
