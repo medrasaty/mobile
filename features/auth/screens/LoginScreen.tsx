@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import useRoundedTheme from "@/hooks/useRoundedTheme";
 import { useSession } from "@/hooks/useSession";
 import { loginSchema } from "../types";
+import { ProfileQueryKeys } from "@features/profile/keys";
 
 export default function LoginScreen() {
   const { signIn, session } = useSession();
@@ -43,7 +44,7 @@ export default function LoginScreen() {
     try {
       Keyboard.dismiss();
       const sessionData = await signIn(data);
-      queryClient.setQueryData(["profile"], sessionData.user);
+      queryClient.setQueryData(ProfileQueryKeys.profile, sessionData.user);
     } catch (error: any) {
       setErrorMessage(error.message || "حدث خطأ أثناء تسجيل الدخول");
     }

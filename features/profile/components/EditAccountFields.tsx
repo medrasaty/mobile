@@ -6,14 +6,16 @@ import { t } from "i18next";
 import { useAuthSession } from "@features/auth/store";
 import { useState } from "react";
 import EditField from "./EditField";
-import { useUpdateUserProfileMutation } from "../mutations";
-import { launchImageLibraryAsync } from "expo-image-picker";
-import useImageAssetState from "@/hooks/useImageAssetState";
+import {
+  useUpdateProfileMutation,
+  useUpdateUserProfileMutation,
+} from "../mutations";
 import { Image } from "expo-image";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
 import { IconButton, useTheme } from "react-native-paper";
 import { ThemedText } from "@/components/ThemedText";
-import { debugStyle } from "@/constants/styels";
+import useImagePicker from "@/hooks/useImagePicker";
+import ImagePickerSheet from "./ImagePickerSheet";
 
 type EditFieldProps = ViewProps & {};
 
@@ -118,16 +120,14 @@ const EditBiography = ({ ...props }: EditFieldProps) => {
   const [biography, setBiography] = useState(user?.profile?.biography || "");
   const sheetRef = useSheetRef();
 
-  const { mutate: update, isPending } = useUpdateUserProfileMutation(
+  const { mutate: update, isPending } = useUpdateProfileMutation(
     user?.pk || ""
   );
 
   const handleUpdate = async () => {
     update(
       {
-        profile: {
-          biography,
-        },
+        biography,
       },
       {
         onSuccess: () => {
@@ -172,16 +172,14 @@ const EditPrivacy = ({ ...props }: EditFieldProps) => {
   );
   const sheetRef = useSheetRef();
 
-  const { mutate: update, isPending } = useUpdateUserProfileMutation(
+  const { mutate: update, isPending } = useUpdateProfileMutation(
     user?.pk || ""
   );
 
   const handleUpdate = async () => {
     update(
       {
-        profile: {
-          is_private: isPrivate,
-        },
+        is_private: isPrivate,
       },
       {
         onSuccess: () => {
@@ -222,35 +220,33 @@ const EditPrivacy = ({ ...props }: EditFieldProps) => {
  */
 const EditProfilePicture = ({ ...props }: EditFieldProps) => {
   const user = useAuthSession((state) => state.session?.user);
-  const [imageAsset, setImageAsset] = useImageAssetState();
+  const theme = useTheme();
+  const { fileUpload, pickImage, isLoading } = useImagePicker();
   const { mutate: update, isPending } = useUpdateUserProfileMutation(
     user?.pk || ""
   );
+  const pickerSheetRef = useSheetRef();
 
-  const handleSelectImage = async () => {
-    try {
-      const result = await launchImageLibraryAsync({
-        mediaTypes: "images",
-        allowsEditing: true,
+  const handleSelectImage = async (source: "library" | "camera") => {
+    const success = await pickImage(
+      {
         aspect: [1, 1],
+        allowsEditing: true,
         quality: 0.5,
-      });
+      },
+      source
+    );
 
-      if (!result.canceled) {
-        setImageAsset(result.assets[0]);
-        handleUpdate(result.assets[0].uri);
-      }
-    } catch (error) {
-      console.error("Error selecting profile picture:", error);
+    if (success && fileUpload) {
+      handleUpdate();
     }
   };
-  const theme = useTheme();
 
-  const handleUpdate = async (uri: string) => {
-    if (!imageAsset) return;
+  const handleUpdate = async () => {
+    if (!fileUpload) return;
 
     update(
-      { profile_picture: uri },
+      { profile_picture: fileUpload },
       {
         onSuccess: () => {
           console.log("Profile picture updated successfully");
@@ -267,7 +263,7 @@ const EditProfilePicture = ({ ...props }: EditFieldProps) => {
       <View style={styles.profileRow}>
         <Image
           style={styles.profilePicture}
-          source={user?.profile_picture}
+          source={fileUpload?.uri || user?.profile_picture}
           transition={500}
           cachePolicy="memory-disk"
         />
@@ -275,14 +271,22 @@ const EditProfilePicture = ({ ...props }: EditFieldProps) => {
           icon="camera"
           mode="contained"
           size={24}
-          onPress={handleSelectImage}
-          disabled={isPending}
+          onPress={() => pickerSheetRef.current?.expand()}
+          disabled={isPending || isLoading}
           style={[
             styles.profilePictureEditButton,
             { backgroundColor: theme.colors.secondaryContainer },
           ]}
           iconColor="#fff"
           containerColor="rgba(0, 0, 0, 0.5)"
+        />
+
+        <ImagePickerSheet
+          sheetRef={pickerSheetRef}
+          title={t("Profile Picture")}
+          onCameraPress={() => handleSelectImage("camera")}
+          onGalleryPress={() => handleSelectImage("library")}
+          isLoading={isPending || isLoading}
         />
       </View>
       <ThemedText style={styles.editLabel}>
@@ -298,37 +302,34 @@ const EditProfilePicture = ({ ...props }: EditFieldProps) => {
 const EditBackgroundImage = ({ ...props }: EditFieldProps) => {
   const user = useAuthSession((state) => state.session?.user);
   const theme = useTheme();
-  const [imageAsset, setImageAsset] = useImageAssetState();
-  const { mutate: update, isPending } = useUpdateUserProfileMutation(
+  const { fileUpload, pickImage, isLoading } = useImagePicker();
+  const { mutate: update, isPending } = useUpdateProfileMutation(
     user?.pk || ""
   );
 
-  const handleSelectImage = async () => {
-    try {
-      const result = await launchImageLibraryAsync({
-        mediaTypes: "images",
-        allowsEditing: true,
-        aspect: [16, 9],
-        quality: 0.5,
-      });
+  const pickerSheetRef = useSheetRef();
 
-      if (!result.canceled) {
-        setImageAsset(result.assets[0]);
-        handleUpdate(result.assets[0].uri);
-      }
-    } catch (error) {
-      console.error("Error selecting background image:", error);
+  const handleSelectImage = async (source: "library" | "camera") => {
+    const success = await pickImage(
+      {
+        aspect: [16, 9],
+        allowsEditing: true,
+        quality: 0.5,
+      },
+      source
+    );
+
+    if (success && fileUpload) {
+      handleUpdate();
     }
   };
 
-  const handleUpdate = async (uri: string) => {
-    if (!imageAsset) return;
+  const handleUpdate = async () => {
+    if (!fileUpload) return;
 
     update(
       {
-        profile: {
-          background: uri,
-        },
+        background: fileUpload,
       },
       {
         onSuccess: () => {
@@ -345,7 +346,7 @@ const EditBackgroundImage = ({ ...props }: EditFieldProps) => {
     <View {...props} style={styles.backgroundContainer}>
       <Image
         style={styles.backgroundImage}
-        source={user?.profile.background}
+        source={fileUpload?.uri || user?.profile?.background}
         cachePolicy="memory-disk"
       />
       <View style={styles.backgroundEditButton}>
@@ -354,10 +355,18 @@ const EditBackgroundImage = ({ ...props }: EditFieldProps) => {
           mode="contained"
           size={25}
           style={{ backgroundColor: theme.colors.secondaryContainer }}
-          onPress={handleSelectImage}
-          disabled={isPending}
+          onPress={() => pickerSheetRef.current?.expand()}
+          disabled={isPending || isLoading}
           iconColor="#fff"
           containerColor="rgba(0, 0, 0, 0.5)"
+        />
+
+        <ImagePickerSheet
+          sheetRef={pickerSheetRef}
+          title={t("Background Image")}
+          onCameraPress={() => handleSelectImage("camera")}
+          onGalleryPress={() => handleSelectImage("library")}
+          isLoading={isPending || isLoading}
         />
       </View>
     </View>
@@ -384,6 +393,8 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     borderRadius: 100,
+    borderWidth: 2,
+    borderColor: "gray",
     backgroundColor: "gray",
   },
   profilePictureEditButton: {
@@ -400,7 +411,7 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     height: 140,
-    width: "99%",
+    width: "95%",
     backgroundColor: "#333",
     borderWidth: 2,
     borderColor: "gray",
@@ -409,7 +420,7 @@ const styles = StyleSheet.create({
   backgroundEditButton: {
     position: "absolute",
     backgroundColor: "transparent",
-    bottom: 10,
+    bottom: 0,
     right: 10,
   },
   editLabel: {

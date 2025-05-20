@@ -9,6 +9,7 @@ import BottomSheet, {
   BottomSheetProps,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import { debugStyle } from "@/constants/styels";
 
 export type SheetProps = {
   /** Whether to show the backdrop */
@@ -200,8 +201,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    padding: 0,
+    margin: 0,
   },
   handle: {
     width: 40,

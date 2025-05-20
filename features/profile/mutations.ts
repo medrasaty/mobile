@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BaseUser } from "@/types/user.types";
-import { UpdateProfileData } from "./types";
+import { BaseProfile, UpdateBaseProfileData, UpdateUserData } from "./types";
 import { ProfileQueryKeys } from "./keys";
-import { updatePartialUserProfile } from "./requests";
+import { updatePartialUserProfile, updateProfile } from "./requests";
 import Toast from "@/lib/toast";
 import { t } from "i18next";
 import { useAuthSession } from "@features/auth/store";
@@ -23,11 +23,11 @@ import { useAuthSession } from "@features/auth/store";
  */
 export function useUpdateUserProfileMutation(userId: BaseUser["pk"]) {
   const qc = useQueryClient();
-  const updateSession = useAuthSession((state) => state.updateSession);
+  const updateSession = useAuthSession((state) => state.updateUser);
 
   return useMutation({
     mutationKey: [...ProfileQueryKeys.all, "update", userId],
-    mutationFn: async (data: Partial<UpdateProfileData>) =>
+    mutationFn: async (data: Partial<UpdateUserData>) =>
       await updatePartialUserProfile(data),
 
     onMutate: async (newData) => {
@@ -37,7 +37,7 @@ export function useUpdateUserProfileMutation(userId: BaseUser["pk"]) {
       });
 
       // Snapshot the previous value
-      const previousProfile = qc.getQueryData<UpdateProfileData>(
+      const previousProfile = qc.getQueryData<UpdateUserData>(
         ProfileQueryKeys.detail(userId)
       );
 
@@ -74,6 +74,44 @@ export function useUpdateUserProfileMutation(userId: BaseUser["pk"]) {
         );
       }
 
+      // Show error message
+      Toast.error(t("profile.update_error", "Failed to update profile"));
+    },
+
+    onSettled: () => {
+      // Invalidate the profile query to ensure fresh data
+      qc.invalidateQueries({
+        queryKey: ProfileQueryKeys.detail(userId),
+      });
+    },
+  });
+}
+
+export function useUpdateProfileMutation(userId: BaseProfile["user"]) {
+  const qc = useQueryClient();
+  const updateUser = useAuthSession((state) => state.updateUser);
+
+  return useMutation({
+    mutationKey: [...ProfileQueryKeys.profile, "update_profile"],
+    mutationFn: async (data: Partial<UpdateBaseProfileData>) =>
+      await updateProfile(data, userId),
+
+    onSuccess: (updatedProfile) => {
+      // Update the cache with the returned data
+      qc.setQueryData(ProfileQueryKeys.profile, updatedProfile);
+
+      // Update the local session with the new profile data
+      updateUser({
+        profile: updatedProfile,
+      });
+
+      // Show success message
+      Toast.success(
+        t("profile.update_success", "Profile updated successfully")
+      );
+    },
+
+    onError: (_error, _variables, _context) => {
       // Show error message
       Toast.error(t("profile.update_error", "Failed to update profile"));
     },

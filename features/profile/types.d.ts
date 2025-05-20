@@ -1,5 +1,6 @@
 import { BaseSchool } from "@/types/school.types";
 import { BaseUser } from "@/types/user.types";
+import { fileUploadType } from "@/types";
 
 export interface UserProfile extends BaseUser {
   followings_count: number;
@@ -21,6 +22,12 @@ export interface BaseProfile {
   biography: string;
 }
 
+export interface UpdateBaseProfileData {
+  background: string | fileUploadType;
+  is_private: boolean;
+  biography: string;
+}
+
 type NavigatorButtonType = {
   index: number;
   label: string;
@@ -33,11 +40,10 @@ export enum FollowingRequestStatus {
   PENDING = "pending",
 }
 
-export type UpdateProfileData = {
-  profile: Partial<Omit<BaseProfile, "user">>;
+export type UpdateUserData = {
   email: string;
   display_name: string;
-  profile_picture: string;
+  profile_picture: string | fileUploadType;
 };
 
 export type FollowingRequestStatusType = "accepted" | "rejected" | "pending";

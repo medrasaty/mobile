@@ -47,7 +47,7 @@ export async function createQuestion(client: Axios, data: questionSchemaType) {
     headers: {
       "Content-Type": "multipart/form-data",
     },
-    transformRequest: (data, headers) => {
+    transformRequest: (_data, _headers) => {
       return formData;
     },
   });

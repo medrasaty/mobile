@@ -1,14 +1,14 @@
-import { API_URL } from "@/constants";
 import { useStorageState } from "@/hooks/useStorageState";
 import { UserType } from "@/types/user.types";
 import { useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import React from "react";
 import { useAuthSession } from "./store";
 import { AuthUser } from "./types";
 import { login } from "./requests";
 import { loginCredentials as Credentials } from "./types";
 import { t } from "i18next";
+import { ProfileQueryKeys } from "@features/profile/keys";
 
 export type Session = {
   user: AuthUser;
@@ -45,7 +45,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
           await signIn(credentials, setSession, setUser),
         signOut: () => {
           // remove profile data from cache
-          queryClient.removeQueries({ queryKey: ["profile"] });
+          queryClient.removeQueries({ queryKey: ProfileQueryKeys.profile });
           // set token to null
           setSession(null);
           clearStoreSession();

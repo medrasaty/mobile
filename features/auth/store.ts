@@ -14,7 +14,7 @@ const storage = new MMKV({
 export interface AuthSessionStore {
   session: AuthSession | null;
   clearSession: () => void;
-  updateSession: (user: AuthUser) => void;
+  updateUser: (user: Partial<AuthUser>) => void;
   // TODO: implement these methods later.
   login?: () => void;
   loguot?: () => void;
@@ -28,13 +28,18 @@ export const useAuthSession = create<AuthSessionStore>(
       clearSession: () => {
         set({ session: null });
       },
-      updateSession: (user: AuthUser) => {
+      // TODO: document this.
+      updateUser: (user: Partial<AuthUser>) => {
         set((state) => {
           if (!state.session) return state;
           return {
+            ...state,
             session: {
               ...state.session,
-              user,
+              user: {
+                ...state.session.user,
+                ...user,
+              },
             },
           };
         });
