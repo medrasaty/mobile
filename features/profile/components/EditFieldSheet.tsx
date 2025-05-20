@@ -50,6 +50,7 @@ import Sheet, { SheetModal } from "@/components/Sheet";
 import { t } from "i18next";
 import LoadingDialog from "@components/LoadingDialog";
 import { Switch as RNSwitch } from "react-native";
+import { Keyboard } from "react-native";
 
 // Update the isSheetModalRef function to be more robust
 const isSheetModalRef = (ref: any): boolean => {
@@ -93,6 +94,12 @@ interface EditFieldSheetProps<V> {
    * @param value - The value to be saved.
    */
   onSave: (value: V) => void;
+
+  /**
+   * Whether to dismiss the keyboard when saving.
+   * @default true
+   */
+  dismissKeyboardOnSave?: boolean;
 
   /**
    * Whether the sheet is in a saving state.
@@ -158,6 +165,7 @@ const EditFieldSheet: React.FC<EditFieldSheetProps<any>> = ({
   onSave,
   isSaving = false,
   multiline = false,
+  dismissKeyboardOnSave = true,
   keyboardType = "default",
 }) => {
   // Create refs to store the current values without causing re-renders
@@ -223,7 +231,14 @@ const EditFieldSheet: React.FC<EditFieldSheetProps<any>> = ({
   };
 
   const handleSave = useCallback(() => {
-    // At save time, we use the current value from our ref
+    /**
+     * call onChange with the current value.
+     * Remove any active keyboard.
+     * **NOTE**: I am not sure if this is right ? removing the keyboard is a side effect
+     * by this component, components should not have such side effects that might
+     * cause unpredictability , you should keep it explicit
+     */
+    dismissKeyboardOnSave && Keyboard.dismiss();
     onSave(type === "switch" ? switchValue : currentValueRef.current);
   }, [onSave]);
 
@@ -234,7 +249,6 @@ const EditFieldSheet: React.FC<EditFieldSheetProps<any>> = ({
       {renderFieldEditor()}
 
       <Button
-        loading={isSaving}
         disabled={isSaving}
         mode="contained"
         onPress={handleSave}
@@ -244,7 +258,7 @@ const EditFieldSheet: React.FC<EditFieldSheetProps<any>> = ({
       </Button>
       <LoadingDialog
         visible={isSaving}
-        message={t("update_loading", { field: title })}
+        message={t("update_loading", { field: title.toLowerCase() })}
       />
     </View>
   );

@@ -4,7 +4,6 @@ import EditFieldSheet from "./EditFieldSheet";
 import { useSheetRef } from "@components/Sheet";
 import { t } from "i18next";
 import { useAuthSession } from "@features/auth/store";
-import { useState, useCallback } from "react";
 import EditField from "./EditField";
 import {
   useUpdateProfileMutation,
