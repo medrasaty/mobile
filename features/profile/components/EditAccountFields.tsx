@@ -16,6 +16,7 @@ import { IconButton, useTheme } from "react-native-paper";
 import { ThemedText } from "@/components/ThemedText";
 import useImagePicker from "@/hooks/useImagePicker";
 import ImagePickerSheet from "./ImagePickerSheet";
+import { fileUploadType } from "@/types";
 
 type EditFieldProps = ViewProps & {};
 
@@ -228,7 +229,7 @@ const EditProfilePicture = ({ ...props }: EditFieldProps) => {
   const pickerSheetRef = useSheetRef();
 
   const handleSelectImage = async (source: "library" | "camera") => {
-    const success = await pickImage(
+    const image = await pickImage(
       {
         aspect: [1, 1],
         allowsEditing: true,
@@ -237,16 +238,16 @@ const EditProfilePicture = ({ ...props }: EditFieldProps) => {
       source
     );
 
-    if (success && fileUpload) {
-      handleUpdate();
+    if (image) {
+      handleUpdate(image);
     }
   };
 
-  const handleUpdate = async () => {
-    if (!fileUpload) return;
+  const handleUpdate = async (image: fileUploadType) => {
+    if (!image) return;
 
     update(
-      { profile_picture: fileUpload },
+      { profile_picture: image },
       {
         onSuccess: () => {
           console.log("Profile picture updated successfully");
@@ -268,6 +269,7 @@ const EditProfilePicture = ({ ...props }: EditFieldProps) => {
           cachePolicy="memory-disk"
         />
         <IconButton
+          loading={isPending}
           icon="camera"
           mode="contained"
           size={24}
@@ -310,7 +312,7 @@ const EditBackgroundImage = ({ ...props }: EditFieldProps) => {
   const pickerSheetRef = useSheetRef();
 
   const handleSelectImage = async (source: "library" | "camera") => {
-    const success = await pickImage(
+    const image = await pickImage(
       {
         aspect: [16, 9],
         allowsEditing: true,
@@ -318,18 +320,17 @@ const EditBackgroundImage = ({ ...props }: EditFieldProps) => {
       },
       source
     );
-
-    if (success && fileUpload) {
-      handleUpdate();
+    if (image) {
+      handleUpdate(image);
     }
   };
 
-  const handleUpdate = async () => {
-    if (!fileUpload) return;
+  const handleUpdate = async (image: fileUploadType) => {
+    if (!image) return;
 
     update(
       {
-        background: fileUpload,
+        background: image,
       },
       {
         onSuccess: () => {
@@ -351,6 +352,7 @@ const EditBackgroundImage = ({ ...props }: EditFieldProps) => {
       />
       <View style={styles.backgroundEditButton}>
         <IconButton
+          loading={isPending}
           icon="camera"
           mode="contained"
           size={25}
