@@ -18,7 +18,11 @@ import NetworkError from "@/components/NetworkError";
 
 const FollowingRequestsToMeScreen = () => {
   const user = useCurrentUser();
-  return user.is_private ? <FollowingRequestsToMe /> : <NotPrivateAccount />;
+  return user.profile.is_private ? (
+    <FollowingRequestsToMe />
+  ) : (
+    <NotPrivateAccount />
+  );
 };
 
 export const FollowingRequestsToMe = () => {

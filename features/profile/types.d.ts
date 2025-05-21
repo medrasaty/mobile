@@ -12,7 +12,7 @@ export interface UserProfile extends BaseUser {
   is_self: boolean;
   is_following: boolean;
   is_follower: boolean;
-  following_request_status: FollowingRequestStatusType;
+  following_request_status: "accepted" | "rejected" | "pending";
 }
 
 export interface BaseProfile {

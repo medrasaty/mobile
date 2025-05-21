@@ -1,11 +1,10 @@
 import { ThemedView } from "@/components/ThemedView";
 import { Image } from "expo-image";
-import { useMemo } from "react";
-import { StyleSheet, View, ViewProps } from "react-native";
+import React, { memo, useMemo, useEffect } from "react";
+import { StyleSheet, View, ViewProps, Text } from "react-native";
 import { Divider, useTheme } from "react-native-paper";
 import { UserProfile } from "../types";
 import ProfileInfo from "./ProfileInfo";
-import { debugStyle } from "@/constants/styels";
 
 type ProfileBackgroundImageProps = {
   background: UserProfile["profile"]["background"];
@@ -13,28 +12,37 @@ type ProfileBackgroundImageProps = {
 
 const DEFAULT_BACKGROUND_IMAGE_HEIGHT = 170;
 
-export const ProfileBackgroundImage = ({
-  background,
-  style,
-  ...props
-}: ProfileBackgroundImageProps) => {
-  const styles = useProfileBackgroundStyle();
+// Optimized background image component with stable caching
+export const OptimizedBackgroundImage = memo(
+  ({ background }: { background: string | undefined }) => {
+    const styles = useProfileBackgroundStyle();
 
-  return (
-    <ThemedView style={[style, styles.container]} {...props}>
-      <View style={styles.imageContainer}>
-        <Image
-          contentFit="cover"
-          transition={0}
-          cachePolicy={"memory"}
-          source={{ uri: background }}
-          style={styles.image}
-        />
+    // Generate a stable cache key using the background URL
+    const cacheKey = useMemo(
+      () => `bg-${background || "default"}`,
+      [background]
+    );
+
+    return (
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image
+            contentFit="cover"
+            transition={300}
+            cachePolicy="memory-disk"
+            source={{ uri: background }}
+            style={styles.image}
+            recyclingKey={cacheKey}
+            placeholder={{
+              uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+            }}
+          />
+        </View>
+        <Divider />
       </View>
-      <Divider />
-    </ThemedView>
-  );
-};
+    );
+  }
+);
 
 function useProfileBackgroundStyle() {
   const theme = useTheme();
@@ -67,13 +75,27 @@ function useProfileBackgroundStyle() {
   }, [theme]);
 }
 
-const ProfileHeader = ({ profile }: { profile: UserProfile }) => {
+// Memoize the ProfileHeader component to prevent unnecessary rerenders
+const ProfileHeader = memo(({ profile }: { profile: UserProfile }) => {
+  // Ensure we have valid profile data
+  if (!profile || !profile.profile) {
+    console.warn("ProfileHeader: Invalid profile data");
+    return (
+      <ThemedView style={{ padding: 20 }}>
+        <Text>Error: Invalid profile data</Text>
+      </ThemedView>
+    );
+  }
+
+  // Safely access the background URL
+  const backgroundUrl = profile.profile?.background;
+
   return (
     <ThemedView>
-      <ProfileBackgroundImage background={profile.profile.background} />
+      <OptimizedBackgroundImage background={backgroundUrl} />
       <ProfileInfo profile={profile} />
     </ThemedView>
   );
-};
+});
 
 export default ProfileHeader;

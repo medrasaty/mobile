@@ -13,8 +13,8 @@ type MultiQueryScreenListProps<T> = {
   NetworkErrorProps;
 
 /** Handle rendering list with two async queries, header, and the actual data,
- * The entire list will not be rendered untile the header query is loaded.
- * data will also be in loading state until fully loaded
+ * The entire list will not be rendered until the header query is loaded.
+ * Data will also be in loading state until fully loaded.
  */
 const MultiQueryScreenList = forwardRef(function MultiQueryScreenList<T>(
   {
@@ -22,27 +22,46 @@ const MultiQueryScreenList = forwardRef(function MultiQueryScreenList<T>(
     dataStatus,
     onRetry,
     message: errorMessage,
+    data,
+    ListHeaderComponent,
     ...props
   }: MultiQueryScreenListProps<T>,
   ref: Ref<FlashList<T>>
 ) {
+  // Show loading indicator if header data is still loading
   if (headerStatus === "pending") {
     return <FullPageLoadingIndicator />;
   }
 
+  // Show error view if there's an error with the header data
   if (headerStatus === "error") {
     return <FullPageNetworkError onRetry={onRetry} message={errorMessage} />;
   }
 
+  // Create footer component - show loading or error state for data
   const renderFooter = () => {
-    return (
-      <View style={{ margin: 20 }}>
-        <ServerView status={dataStatus} />
-      </View>
-    );
+    if (dataStatus !== "success") {
+      return (
+        <View style={{ margin: 20 }}>
+          <ServerView status={dataStatus} />
+        </View>
+      );
+    }
+    return null;
   };
 
-  return <FlashList ref={ref} ListFooterComponent={renderFooter} {...props} />;
+  // Render the FlashList with optimized props to prevent flickering
+  return (
+    <FlashList 
+      ref={ref} 
+      ListFooterComponent={renderFooter}
+      data={data}
+      ListHeaderComponent={ListHeaderComponent}
+      // Optimize image handling
+      removeClippedSubviews={false}
+      {...props}
+    />
+  );
 });
 
 export default MultiQueryScreenList;

@@ -39,7 +39,7 @@ export default function DrawerLayout() {
         }}
       />
       <Stack.Screen
-        redirect={!user.is_private}
+        redirect={!user.profile.is_private}
         name="following_requests_to_me"
         options={{
           title: t("Following_requests"),

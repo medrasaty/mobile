@@ -51,13 +51,13 @@ export const MoreOptions = ({ profile }: { profile: UserProfile }) => {
         icon={"dots-vertical"}
       />
       <Sheet ref={sheetRef}>
-        <View style={{ gap: 6 }}>
+        <ContainerView style={{ gap: 6, marginBottom: 16 }}>
           <ToggleBlockingButton
             isBlocker={profile.is_blocker}
             pk={profile.pk}
           />
           <ReportUser userId={profile.id} contentTypeId={profile.contenttype} />
-        </View>
+        </ContainerView>
       </Sheet>
     </>
   );

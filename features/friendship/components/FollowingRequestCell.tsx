@@ -5,16 +5,13 @@ import { StyleSheet } from "react-native";
 import { Chip, IconButton, useTheme } from "react-native-paper";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
 import { t } from "i18next";
-import { FollowingRequestStatusType } from "@/features/profile/types";
 import Row from "@/components/Row";
 import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
 import { useVisibleV2 } from "@/hooks/useVisible";
 import { Ionicons } from "@expo/vector-icons";
 import useDeleteFollowingRequestMutation from "../hooks/useDeleteFollowingRequestMutaiton";
 import LoadingDialog from "@/components/LoadingDialog";
-import { router } from "expo-router";
 import UserInfo from "@components/UserInfo";
-import { path } from "@/lib/routing";
 
 const FollowingRequestCell = ({ request }: { request: FollowingRequest }) => {
   return (
@@ -30,11 +27,19 @@ const FollowingRequestCell = ({ request }: { request: FollowingRequest }) => {
   );
 };
 
-export const Status = ({ status }: { status: FollowingRequestStatusType }) => {
-  // TODO: Style chip differently based on status ( success: green, rejected: red, etc)
+export const Status = ({ status }: { status: FollowingRequest["status"] }) => {
+  // Style chip differently based on status (success: green, rejected: red, pending: yellow)
+  const theme = useTheme();
 
   return (
-    <Chip compact mode="flat">
+    <Chip
+      compact
+      textStyle={{
+        color:
+          status === "rejected" ? theme.colors.error : theme.colors.onSurface,
+      }}
+      mode="flat"
+    >
       {t(status)}
     </Chip>
   );
