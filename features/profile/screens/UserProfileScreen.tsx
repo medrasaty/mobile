@@ -1,14 +1,10 @@
 import Page from "@/components/Page";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { Question } from "@/types/forum.types";
-import MultiQueryScreenList from "@components/MultiQueryScreenList";
-import ForumQuestionCard, {
-  FORUM_QUESTION_CARD_HEIGHT,
-} from "@forum/questions/components/QuestionsCard";
-import React, { useCallback, useMemo, memo, useEffect } from "react";
+import ForumQuestionCard from "@forum/questions/components/QuestionsCard";
+import React, { useCallback, useMemo  } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View, ViewProps, Text } from "react-native";
-import { Divider } from "react-native-paper";
 import ProfileHeader from "../components/Profile";
 import useProfile from "../hooks/useProfile";
 import useUserQuestions from "../queries";
@@ -16,8 +12,6 @@ import ErrorView from "@/components/ErrorView";
 
 /**
  * Props for the UserProfileScreen component
- * @typedef UserProfileScreenProps
- * @property {number} id - The user ID to display
  */
 type UserProfileScreenProps = {
   id: number;
@@ -70,7 +64,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
       {profileQ.data ? (
         <View style={styles.headerContainer}>
           <ProfileHeader key={`profile-${id}`} profile={profileQ.data} />
-          <Divider bold style={styles.divider} />
+          {/* <Divider bold style={styles.divider} /> */}
         </View>
       ) : (
         <View style={styles.headerContainer}>
@@ -78,7 +72,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
         </View>
       )}
 
-      {/* Questions list */}
+      {/* 
       <MultiQueryScreenList
         headerStatus={profileQ.status}
         dataStatus={questionsQ.status}
@@ -93,6 +87,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
         data={questionsQ.data as any}
         contentContainerStyle={styles.listContent}
       />
+      */}
     </Page>
   );
 };

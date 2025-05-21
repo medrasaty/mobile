@@ -11,12 +11,13 @@ import { AuthUser } from "@features/auth/types";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { t } from "i18next";
-import React, { useMemo } from "react";
-import { StyleSheet, View, ViewProps } from "react-native";
+import React, { useMemo, useState, useCallback } from "react";
+import { StyleSheet, View, ViewProps, RefreshControl } from "react-native";
 import { Appbar, Divider, Button } from "react-native-paper";
 import { useTheme } from "react-native-paper/src/core/theming";
 import NavigationButtonsList from "../components/NavigationButtonsList";
 import useProfile from "../hooks/useProfile";
+import useProfileAutoRefresh from "../hooks/useProfileAutoRefresh";
 import Biography from "../components/Biography";
 import Sheet, { useSheetRef } from "@components/Sheet";
 import { useSession } from "@/hooks/useSession";
@@ -83,6 +84,18 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
 }: CurrentUserProfileScreenProps) => {
   const theme = useTheme();
   const user = useAuthSession((state) => state.session?.user);
+  const { refreshProfile } = useProfileAutoRefresh();
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Handle manual refresh via pull-to-refresh
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await refreshProfile();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refreshProfile]);
 
   // Early return if no user is available
   if (!user) {
@@ -93,6 +106,14 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
     <Page {...props}>
       <CurrentUserProfileAppbar />
       <ScrollPage
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[theme.colors.primary]}
+            tintColor={theme.colors.primary}
+          />
+        }
         contentContainerStyle={styles.scrollContent}
         overScrollMode="auto"
       >

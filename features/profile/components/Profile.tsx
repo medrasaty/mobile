@@ -2,9 +2,11 @@ import { ThemedView } from "@/components/ThemedView";
 import { Image } from "expo-image";
 import React, { memo, useMemo, useEffect } from "react";
 import { StyleSheet, View, ViewProps, Text } from "react-native";
-import { Divider, useTheme } from "react-native-paper";
+import { Button, Divider, useTheme } from "react-native-paper";
 import { UserProfile } from "../types";
 import ProfileInfo from "./ProfileInfo";
+import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
+import { t } from "i18next";
 
 type ProfileBackgroundImageProps = {
   background: UserProfile["profile"]["background"];
@@ -94,6 +96,11 @@ const ProfileHeader = memo(({ profile }: { profile: UserProfile }) => {
     <ThemedView>
       <OptimizedBackgroundImage background={backgroundUrl} />
       <ProfileInfo profile={profile} />
+      <View style={{ padding: DEFAULT_CONTAINER_SPACING }}>
+        <Button mode="elevated" onPress={() => {}}>
+          {t("more_info")}
+        </Button>
+      </View>
     </ThemedView>
   );
 });
