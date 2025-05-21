@@ -28,10 +28,15 @@ export default function ForumQuestionDetailScreen() {
   const { t } = useTranslation();
   const questionId = useQuestionIdParams();
   
-  // Optimize query calls to prevent unnecessary re-renders
-  const questionQuery = useForumQuestion(questionId);
+  // Optimize query calls to prevent unnecessary re-renders - with prefetch hints
+  const questionQuery = useForumQuestion(questionId, {
+    staleTime: 1000 * 60 * 5, // Keep data fresh for 5 minutes
+  });
+  
   const answersQuery = useForumAnswers({
-    question: questionId,
+    question: questionId
+  }, {
+    staleTime: 1000 * 60 * 5 // Keep data fresh for 5 minutes
   });
 
   // Memoize the data to prevent unnecessary re-renders
@@ -40,13 +45,17 @@ export default function ForumQuestionDetailScreen() {
   // Use our hook to handle scrolling to and highlighting answers
   const { 
     listRef, 
-    handleDataChange
+    handleDataChange,
+    isHighlighted
   } = useNotificationScrollAndHighlight(questionId);
   
-  // Only process data changes when necessary
+  // Only process data changes when necessary - with debouncing
   useEffect(() => {
     if (answersData.length > 0) {
-      handleDataChange(answersData);
+      // Use requestAnimationFrame to delay until after render
+      requestAnimationFrame(() => {
+        handleDataChange(answersData);
+      });
     }
   }, [answersData, handleDataChange]);
 
@@ -63,12 +72,15 @@ export default function ForumQuestionDetailScreen() {
     );
   }, [questionQuery.data, t]);
 
-  // Optimize render item function to only depend on the item itself
+  // Optimize render item function to only depend on the item itself and isHighlighted check
   const renderItem = useCallback(
     ({ item }: { item: any }) => (
-      <AnswerCard answer={item} />
+      <AnswerCard 
+        answer={item} 
+        isHighlighted={isHighlighted(item.id)}
+      />
     ),
-    []
+    [isHighlighted]
   );
 
   // Memoize empty component 

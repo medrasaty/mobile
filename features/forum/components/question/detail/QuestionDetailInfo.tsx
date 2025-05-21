@@ -175,11 +175,13 @@ export const PictureOptimized = memo(({ image }: { image?: string }) => {
     <Pressable onPress={() => alert("bigger")}>
       <Image
         style={style}
-        transition={300}
+        transition={500}
         cachePolicy="memory-disk"
         source={{ uri: image }}
         contentFit="cover"
         placeholder={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==' }}
+        recyclingKey={image}
+        priority="low"
       />
     </Pressable>
   );
