@@ -7,36 +7,16 @@ type useNotificationsParams = {
   is_read?: boolean;
 };
 
-import { NotificationType } from "@/types/notifications.type";
-import { useMemo } from "react";
+import { notificationsKeys } from "../keys";
 
-export default function useNotifications() {
+export default function useNotifications(params: useNotificationsParams = {}) {
   /**
    * return all notifications for active client
    */
-  const client = useAuthClient();
-  const [filter, setFilter] = useState<NotificationType | "ALL">("ALL");
-
-  const query = useQuery({
-    queryKey: ["notifications"],
-    queryFn: async () => await getNotifications(client),
+  return useQuery({
+    queryKey: notificationsKeys.list(params),
+    queryFn: async () => await getNotifications(params),
   });
-
-  // filter notifications
-  const filteredNotifications = useMemo(() => {
-    if (!query.data) return [];
-    if (filter === "ALL") return query.data;
-    return query.data.filter(
-      (notification) => notification.notification.type === filter
-    );
-  }, [query.data, filter]);
-
-  return {
-    ...query,
-    filteredNotifications,
-    setFilter,
-    filter,
-  };
 }
 
 export function useUnreadNotificationsCount() {
