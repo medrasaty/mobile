@@ -1,18 +1,19 @@
 import { transformDates } from "@/features/forum/utils";
 import { Axios } from "axios";
 import { Notification } from "@/types/notifications.type";
+import { request } from "@/lib/api";
 
 export async function getNotifications(
-  client: Axios,
   params: { is_read?: boolean } = {}
 ): Promise<Notification[]> {
   /**
    * return all notifications for active client,
-   * @param {Axios} client: current active client
    * @param {{is_read: boolean}} params: optional params to send with request as url params
    */
 
-  const response = await client.get("/notifications/notifications/", {
+  const response = await request<Notification[]>({
+    url: "/notifications/notifications/",
+    method: "GET",
     params,
   });
   // convert data

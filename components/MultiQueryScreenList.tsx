@@ -4,6 +4,7 @@ import { View } from "react-native";
 import FullPageLoadingIndicator from "./FullPageLoadingIndicator";
 import { FullPageNetworkError, NetworkErrorProps } from "./NetworkError";
 import ServerView from "./ServerView";
+import React, { forwardRef, Ref } from "react";
 
 type MultiQueryScreenListProps<T> = {
   headerStatus: UseQueryResult["status"];
@@ -15,13 +16,16 @@ type MultiQueryScreenListProps<T> = {
  * The entire list will not be rendered untile the header query is loaded.
  * data will also be in loading state until fully loaded
  */
-export default function MultiQueryScreenList<T>({
-  headerStatus,
-  dataStatus,
-  onRetry,
-  message: errorMessage,
-  ...props
-}: MultiQueryScreenListProps<T>) {
+const MultiQueryScreenList = forwardRef(function MultiQueryScreenList<T>(
+  {
+    headerStatus,
+    dataStatus,
+    onRetry,
+    message: errorMessage,
+    ...props
+  }: MultiQueryScreenListProps<T>,
+  ref: Ref<FlashList<T>>
+) {
   if (headerStatus === "pending") {
     return <FullPageLoadingIndicator />;
   }
@@ -38,5 +42,7 @@ export default function MultiQueryScreenList<T>({
     );
   };
 
-  return <FlashList ListFooterComponent={renderFooter} {...props} />;
-}
+  return <FlashList ref={ref} ListFooterComponent={renderFooter} {...props} />;
+});
+
+export default MultiQueryScreenList;

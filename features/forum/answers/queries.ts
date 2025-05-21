@@ -1,4 +1,3 @@
-import useAuthClient from "@/hooks/useAuthClient";
 import { useQuery } from "@tanstack/react-query";
 import { getAnswers } from "./requests";
 import { AnswersQK } from "./keys";
@@ -6,11 +5,9 @@ import { Answer } from "./types";
 import { useMemo } from "react";
 
 export function useForumAnswers(params: any = {}) {
-  const client = useAuthClient();
-
   return useQuery({
     queryKey: AnswersQK.withParams(params),
-    queryFn: async () => getAnswers(client, params),
+    queryFn: async () => await getAnswers(params),
   });
 }
 

@@ -5,11 +5,16 @@ import { answerSchemaType } from "./schema";
 import { genFileUploadFromPath } from "@/lib/utils";
 import { parse } from "react-native-svg";
 import { RatingValue } from "@/types/forum.types";
+import { request } from "@/lib/api";
 
-export async function getAnswers(client: Axios, params: any = {}) {
-  return (
-    await client.get<PaginatedResponse<Answer>>(`/forum/answers/`, { params })
-  ).data.results;
+export async function getAnswers(params: any = {}) {
+  const response = await request<PaginatedResponse<Answer>>({
+    url: "/forum/answers/",
+    method: "GET",
+    params,
+  });
+
+  return response.data.results;
 }
 
 /**

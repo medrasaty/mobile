@@ -20,8 +20,12 @@ type QuestionDetailInfoProps = {
   question: DetailQuestion;
 } & ViewProps;
 
+// Wrap entire component with memo to prevent unnecessary re-renders
 const QuestionDetailInfo = memo(
   ({ question, style, ...props }: QuestionDetailInfoProps) => {
+    // Pre-calculate all needed values
+    const hasImage = Boolean(question?.picture);
+    
     return (
       <View style={{ flex: 1, gap: 30 }}>
         <View
@@ -41,7 +45,7 @@ const QuestionDetailInfo = memo(
               tags={question?.tags}
             />
           </ThemedView>
-          {question?.picture && <Picture image={question.picture} />}
+          {hasImage && <PictureOptimized image={question.picture || undefined} />}
 
           <View style={{ flex: 0.1, gap: 9, marginTop: 4 }}>
             <ThemedView
@@ -49,7 +53,7 @@ const QuestionDetailInfo = memo(
             >
               <ViewsCount views={question?.views} />
               <AnswersCount answersCount={question?.answers_count} />
-              <Share id={question?.id} />
+              <ShareMemoized id={question?.id} />
             </ThemedView>
             <TimeInfo
               created={question?.created}
@@ -63,116 +67,126 @@ const QuestionDetailInfo = memo(
   }
 );
 
-export const Title = ({ title }: { title: Question["title"] }) => {
+export const Title = memo(({ title }: { title: Question["title"] }) => {
   return <Text variant="headlineMedium">{title}</Text>;
-};
+});
 
-export const Description = ({
-  description,
-}: {
-  description: Question["text"];
-}) => {
-  return <ThemedText variant="bodyLarge">{description}</ThemedText>;
-};
+export const Description = memo(
+  ({ description }: { description: Question["text"] }) => {
+    return <ThemedText variant="bodyLarge">{description}</ThemedText>;
+  }
+);
 
-const TagsList = ({
-  tags,
-  style,
-  ...props
-}: { tags: DetailQuestion["tags"] } & ViewProps) => {
-  return (
-    <View
-      style={[
-        style,
-        {
-          flexDirection: "row",
-          flexWrap: "wrap",
-          gap: 4,
-        },
-      ]}
-    >
-      {tags.map((tag) => (
-        <Tag key={tag} name={tag} />
-      ))}
-    </View>
-  );
-};
+const TagsList = memo(
+  ({
+    tags,
+    style,
+    ...props
+  }: { tags: DetailQuestion["tags"] } & ViewProps) => {
+    return (
+      <View
+        style={[
+          style,
+          {
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: 4,
+          },
+        ]}
+      >
+        {tags.map((tag) => (
+          <Tag key={tag} name={tag} />
+        ))}
+      </View>
+    );
+  }
+);
 
-const ViewsCount = ({ views }: { views: DetailQuestion["views"] }) => {
+const ViewsCount = memo(({ views }: { views: DetailQuestion["views"] }) => {
   return (
     <View style={{ flexDirection: "row" }}>
       <ThemedText variant="labelSmall">{views} مشاهدة, </ThemedText>
     </View>
   );
-};
+});
 
-export const AnswersCount = ({
-  answersCount,
-}: {
-  answersCount: DetailQuestion["answers_count"];
-}) => {
-  return <ThemedText variant="labelSmall">{answersCount} اجابة</ThemedText>;
-};
+export const AnswersCount = memo(
+  ({
+    answersCount,
+  }: {
+    answersCount: DetailQuestion["answers_count"];
+  }) => {
+    return <ThemedText variant="labelSmall">{answersCount} اجابة</ThemedText>;
+  }
+);
 
-export const SubjectInfo = ({
-  subject,
-}: {
-  subject: DetailQuestion["subject"];
-}) => {
+export const SubjectInfo = memo(
+  ({
+    subject,
+  }: {
+    subject: DetailQuestion["subject"];
+  }) => {
+    const theme = useTheme();
+    return (
+      <Text style={{ color: theme.colors.tertiary }} variant="labelMedium">
+        {translateSubject(subject.name)}
+      </Text>
+    );
+  }
+);
+
+const TimeInfo = memo(
+  ({
+    created,
+    modified,
+    ...props
+  }: {
+    created: DetailQuestion["created"];
+    modified: DetailQuestion["modified"];
+  } & ViewProps) => {
+    // Pre-compute the formatted date
+    const formattedDate = useMemo(() => d(created).fromNow(), [created]);
+    
+    return (
+      <View {...props}>
+        <Text variant="labelSmall">{formattedDate}</Text>
+      </View>
+    );
+  }
+);
+
+// Optimized Picture component to prevent unnecessary re-renders and load images efficiently
+export const PictureOptimized = memo(({ image }: { image?: string }) => {
   const theme = useTheme();
-  return (
-    <Text style={{ color: theme.colors.tertiary }} variant="labelMedium">
-      {translateSubject(subject.name)}
-    </Text>
-  );
-};
-
-const TimeInfo = ({
-  created,
-  modified,
-  ...props
-}: {
-  created: DetailQuestion["created"];
-  modified: DetailQuestion["modified"];
-} & ViewProps) => {
-  return (
-    <View {...props}>
-      <Text variant="labelSmall">{d(created).fromNow()}</Text>
-    </View>
-  );
-};
-
-export const Picture = memo(({ image }: { image?: string }) => {
-  const hash = "";
-
-  const theme = useTheme();
+  
+  // Memoize styles to prevent recalculation
   const style = useMemo(
     () => ({
-      height: 190,
+      height: 160,
       backgroundColor: theme.colors.surfaceVariant,
       borderRadius: theme.roundness + 6,
     }),
-    [theme]
+    [theme.colors.surfaceVariant, theme.roundness]
   );
 
+  if (!image) return null;
+
   return (
-    <>
-      <Pressable onPress={() => alert("bigger")}>
-        <Image
-          style={[style, { height: 160 }]}
-          transition={0}
-          cachePolicy={"memory-disk"}
-          source={{
-            uri: image,
-          }}
-          contentFit="cover"
-        />
-      </Pressable>
-    </>
+    <Pressable onPress={() => alert("bigger")}>
+      <Image
+        style={style}
+        transition={300}
+        cachePolicy="memory-disk"
+        source={{ uri: image }}
+        contentFit="cover"
+        placeholder={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==' }}
+      />
+    </Pressable>
   );
 });
 
-export const Share = ({ id }: { id: Question["id"] }) => {
+// Memoize the Share component
+export const ShareMemoized = memo(({ id }: { id: Question["id"] }) => {
   const sheetRef = useSheetRef();
 
   return (
@@ -183,6 +197,6 @@ export const Share = ({ id }: { id: Question["id"] }) => {
       <ShareContentSheet questionId={id} ref={sheetRef} />
     </View>
   );
-};
+});
 
 export default QuestionDetailInfo;

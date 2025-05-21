@@ -8,20 +8,26 @@ import Sheet, {
 } from "@components/Sheet";
 import { ContainerView } from "@components/styled";
 import { TextInput, Button } from "react-native-paper";
+import useStore from "@/store/index";
+import { ThemedText } from "@components/ThemedText";
 
 const Exper = () => {
-  // refs
-  const sheetRef = useSheetModalRef();
+  const isNotificationActive = useStore((state) => state.isNotificationActive);
+  const setActiveNotification = useStore(
+    (state) => state.setNotificationActive
+  );
+
   return (
     <Page container>
-      <CenterPage>
-        <Button onPress={() => sheetRef?.current?.present()}>open</Button>
+      <CenterPage style={{ gap: 20 }}>
+        <Button
+          mode="elevated"
+          onPress={() => setActiveNotification(!isNotificationActive)}
+        >
+          toggle activity
+        </Button>
+        <ThemedText>{isNotificationActive ? "active" : "inactive"}</ThemedText>
       </CenterPage>
-      <SheetModal snapPoints={["50%"]} ref={sheetRef}>
-        <ContainerView style={{ marginBottom: 20 }}>
-          <TextInput mode="outlined" />
-        </ContainerView>
-      </SheetModal>
     </Page>
   );
 };

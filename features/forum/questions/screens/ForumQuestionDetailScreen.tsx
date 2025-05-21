@@ -10,7 +10,7 @@ import { AppBar } from "@features/navigation/components/AppBar";
 import { Question } from "@/types/forum.types";
 import { Answer } from "@forum/answers/types";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Divider } from "react-native-paper";
 import { useQuestionIdParams } from "../hooks";
@@ -21,34 +21,65 @@ import MoreOptions from "../components/QuestionCardOptionsMenu";
 import { useForumQuestion } from "../queries";
 import EmptyView from "@components/EmptyList";
 import { Ionicons } from "@expo/vector-icons";
+import { useNotificationScrollAndHighlight } from "@/hooks/useScrollToIndexListRef";
+import useStore from "@/store";
 
 export default function ForumQuestionDetailScreen() {
   const { t } = useTranslation();
   const questionId = useQuestionIdParams();
+  
+  // Optimize query calls to prevent unnecessary re-renders
   const questionQuery = useForumQuestion(questionId);
   const answersQuery = useForumAnswers({
     question: questionId,
   });
 
-  const renderHeader = () => {
-    console.log("renderHeader");
-    if (questionQuery.data) {
-      return (
-        <Container style={{ gap: 12 }}>
-          <QuestionDetail question={questionQuery.data} />
-          <Divider bold />
-          <Text variant="headlineMedium">{t("Answers")}</Text>
-        </Container>
-      );
+  // Memoize the data to prevent unnecessary re-renders
+  const answersData = useMemo(() => answersQuery.data || [], [answersQuery.data]);
+  
+  // Use our hook to handle scrolling to and highlighting answers
+  const { 
+    listRef, 
+    handleDataChange
+  } = useNotificationScrollAndHighlight(questionId);
+  
+  // Only process data changes when necessary
+  useEffect(() => {
+    if (answersData.length > 0) {
+      handleDataChange(answersData);
     }
-  };
+  }, [answersData, handleDataChange]);
 
+  // Memoize header to prevent re-rendering when data hasn't changed
+  const headerComponent = useMemo(() => {
+    if (!questionQuery.data) return null;
+    
+    return (
+      <Container style={{ gap: 12 }}>
+        <QuestionDetail question={questionQuery.data} />
+        <Divider bold />
+        <Text variant="headlineMedium">{t("Answers")}</Text>
+      </Container>
+    );
+  }, [questionQuery.data, t]);
+
+  // Optimize render item function to only depend on the item itself
   const renderItem = useCallback(
-    ({ item }: { item: Answer }) => {
-      return <AnswerCard key={item.id} answer={item} />;
-    },
-    [questionId, answersQuery]
+    ({ item }: { item: any }) => (
+      <AnswerCard answer={item} />
+    ),
+    []
   );
+
+  // Memoize empty component 
+  const emptyComponent = useMemo(() => (
+    <View style={{ flex: 1, marginTop: 30 }}>
+      <EmptyView
+        message="no answers"
+        icon={(props) => <Ionicons name="book-outline" {...props} />}
+      />
+    </View>
+  ), []);
 
   if (!questionId) return <ThemedText>must provide question id</ThemedText>;
 
@@ -56,26 +87,19 @@ export default function ForumQuestionDetailScreen() {
     <Page>
       <Headerbar question={questionQuery.data} />
       <MultiQueryScreenList
-        ListHeaderComponent={renderHeader}
+        ref={listRef}
+        ListHeaderComponent={headerComponent}
         dataStatus={answersQuery.status}
         renderItem={renderItem}
         estimatedItemSize={200}
-        // empty
-        ListEmptyComponent={
-          <View style={{ flex: 1, marginTop: 30 }}>
-            <EmptyView
-              message="no answers"
-              icon={(props) => <Ionicons name="book-outline" {...props} />}
-            />
-          </View>
-        }
+        ListEmptyComponent={emptyComponent}
         ItemSeparatorComponent={Divider}
         contentContainerStyle={{
           paddingTop: 20,
           paddingBottom: CREATE_ANSWER_FAB_MARGIN,
         }}
         showsVerticalScrollIndicator={false}
-        data={answersQuery.data}
+        data={answersData}
         headerStatus={questionQuery.status}
         onRetry={() => {
           questionQuery.refetch();
@@ -88,7 +112,7 @@ export default function ForumQuestionDetailScreen() {
         */}
       {questionQuery.data &&
         <CreateAnswer
-          questionId={questionQuery?.data?.id}
+          questionId={questionQuery.data.id}
           question={questionQuery.data}
         />
       }
@@ -96,7 +120,7 @@ export default function ForumQuestionDetailScreen() {
   );
 }
 
-export const Headerbar = ({ question }: { question: Question | undefined }) => {
+export const Headerbar = React.memo(({ question }: { question: Question | undefined }) => {
   return (
     <View>
       <AppBar title={question?.title}>
@@ -111,4 +135,4 @@ export const Headerbar = ({ question }: { question: Question | undefined }) => {
       <Divider />
     </View>
   );
-};
+});

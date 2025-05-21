@@ -5,16 +5,21 @@ import { Answer } from "@/types/forum.types";
 import { View, ViewProps } from "react-native";
 import { useTheme } from "react-native-paper";
 import { d } from "@/lib/dates";
-import { Picture } from "@forum/components/question/detail/QuestionDetailInfo";
+import { PictureOptimized } from "@forum/components/question/detail/QuestionDetailInfo";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import UserInfo from "@components/UserInfo";
+import { memo, useMemo } from "react";
 
-export default function Info({
+// Memoize the main component
+const Info = memo(function Info({
   answer,
   style,
   ...props
 }: { answer: Answer } & ViewProps) {
+  // Store this to avoid re-renders with the same data
+  const hasPicture = Boolean(answer.picture);
+  
   return (
     <ThemedView
       style={[style, { flex: 1, justifyContent: "space-between" }]}
@@ -23,7 +28,7 @@ export default function Info({
       <View>
         <View style={{ gap: 8 }}>
           <AnswerText text={answer.text} />
-          {answer.picture && <Picture image={answer.picture} />}
+          {hasPicture && <PictureOptimized image={answer.picture || undefined} />}
           <StatInfo answer={answer} />
         </View>
       </View>
@@ -37,12 +42,15 @@ export default function Info({
       </View>
     </ThemedView>
   );
-}
+});
 
-export const StatInfo = ({ answer }: { answer: Answer }) => {
+// Memoize the StatInfo component
+export const StatInfo = memo(({ answer }: { answer: Answer }) => {
   const router = useRouter();
   const { t } = useTranslation();
-  const goToEditAnswerPage = () => {
+  
+  // Memoize this function
+  const goToEditAnswerPage = useMemo(() => () => {
     router.push({
       pathname: "/answers/edit",
       params: {
@@ -50,7 +58,8 @@ export const StatInfo = ({ answer }: { answer: Answer }) => {
         answerId: answer.id,
       },
     });
-  };
+  }, [router, answer.question.id, answer.question, answer.id]);
+  
   return (
     <>
       <TimeInfo answer={answer} />
@@ -59,27 +68,20 @@ export const StatInfo = ({ answer }: { answer: Answer }) => {
       </ThemedText>
     </>
   );
-};
+});
 
-export const ReplyText = ({
+// Memoize the ReplyText component
+export const ReplyText = memo(({
   replies_count,
   onPress,
 }: {
   replies_count: Answer["replies_count"];
   onPress: () => void;
 }) => {
-  /**
-   * if replies count === 0
-   * return "no replies"
-   * else if replies count === 1
-   * return "1 reply"
-   * else
-   * return `${replies_count} replies`
-   */
-
   const theme = useTheme();
 
-  const BaseText = ({ text }: { text: string }) => (
+  // Extract the inner component
+  const BaseText = memo(({ text }: { text: string }) => (
     <ThemedView>
       <ThemedText
         onPress={onPress}
@@ -89,44 +91,63 @@ export const ReplyText = ({
         {text}
       </ThemedText>
     </ThemedView>
-  );
+  ));
 
-  if (replies_count === 0) {
-    return <BaseText text={"رد"} />;
-  } else if (replies_count >= 1 && replies_count <= 10) {
-    return <BaseText text={`${replies_count} ردود`} />;
-  } else {
-    return <BaseText text={`${replies_count} رد`} />;
+  // Determine text based on replies count
+  let displayText = 'رد';
+  if (replies_count >= 1 && replies_count <= 10) {
+    displayText = `${replies_count} ردود`;
+  } else if (replies_count > 10) {
+    displayText = `${replies_count} رد`;
   }
-};
 
-export const TimeInfo = ({ answer }: { answer: Answer }) => {
-  // TODO: add modified time
+  return <BaseText text={displayText} />;
+});
+
+// Memoize the TimeInfo component
+export const TimeInfo = memo(({ answer }: { answer: Answer }) => {
   return (
     <ThemedView style={{ gap: 6 }}>
       <Created created={answer.created} />
       <Modified modified={answer.modified} />
     </ThemedView>
   );
-};
+});
 
-export const Created = ({ created }: { created: Answer["created"] }) => {
+// Memoize and optimize date formatting
+export const Created = memo(({ created }: { created: Answer["created"] }) => {
+  // Pre-compute formatted dates to avoid repeated calculation
+  const formattedDate = useMemo(() => {
+    // Calculate both formats at once to avoid calling dayjs twice
+    const day = d(created);
+    return {
+      formatted: day.format("DD-MM-YY"),
+      fromNow: day.fromNow()
+    };
+  }, [created]);
+  
   return (
     <ThemedText color="gray" variant="labelSmall">
-      {d(created).format("DD-MM-YY")} {d(created).fromNow()}
+      {formattedDate.formatted} {formattedDate.fromNow}
     </ThemedText>
   );
-};
+});
 
-export const Modified = ({ modified }: { modified: Answer["modified"] }) => {
-  // TODO: fix the direction
+// Memoize and optimize date formatting
+export const Modified = memo(({ modified }: { modified: Answer["modified"] }) => {
+  // Pre-compute formatted date
+  const fromNow = useMemo(() => d(modified).fromNow(), [modified]);
+  
   return (
     <ThemedText color="gray" variant="labelSmall">
-      last modified: ({d(modified).fromNow()})
+      last modified: ({fromNow})
     </ThemedText>
   );
-};
+});
 
-function AnswerText({ text }: { text: Answer["text"] }) {
+// Memoize the AnswerText component
+const AnswerText = memo(({ text }: { text: Answer["text"] }) => {
   return <ReadMoreText>{text}</ReadMoreText>;
-}
+});
+
+export default Info;
