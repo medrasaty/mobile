@@ -6,14 +6,9 @@ import { useTranslation } from "react-i18next";
 type FriendsLayoutProps = {};
 
 const FriendsLayout = ({}: FriendsLayoutProps) => {
-  const screenOptions = useTopTabsScreenOptions();
   const { t } = useTranslation();
   return (
-    <TopTabs
-      tabBar={TopTabsBar}
-      layoutDirection={"rtl"}
-      screenOptions={{ ...screenOptions }}
-    >
+    <TopTabs layoutDirection={"rtl"}>
       <TopTabs.Screen name="followers" options={{ title: t("followers") }} />
       <TopTabs.Screen name="following" options={{ title: t("following") }} />
     </TopTabs>

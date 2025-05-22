@@ -14,6 +14,7 @@ export default function DrawerLayout() {
       screenOptions={{
         headerShown: false,
         animation: "fade_from_bottom",
+        header: (props) => <AppBar title={props.options.title} />,
         contentStyle: {
           backgroundColor: theme.colors.background,
         },
@@ -35,6 +36,7 @@ export default function DrawerLayout() {
       <Stack.Screen
         name="friends"
         options={{
+          headerShown: true,
           title: t("Friends"),
         }}
       />
