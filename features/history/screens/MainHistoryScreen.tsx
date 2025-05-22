@@ -4,7 +4,7 @@ import QuestionHistoryCell, { QUESTION_HISTORY_CELL_HEIGHT } from "../components
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { t } from "i18next";
 import FilterOptionsView from "@/components/FilterOptionsView";
-import { Appbar, Divider, IconButton, Menu, MenuItemProps } from "react-native-paper";
+import { Appbar, Divider, IconButton, List, Menu, MenuItemProps } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import useClearWatchHistoryMutation from "../mutations";
 import useCurrentUser from "@/hooks/useCurrentUser";
@@ -26,6 +26,7 @@ import { InfiniteScreenListV3 } from "@/components/ScreenFlatList";
 import { CursorPaginatedResponse } from "@/types/responses";
 import { WatchHistory } from "../types";
 import { InfiniteData } from "@tanstack/react-query";
+import Sheet, { useSheetRef } from "@components/Sheet";
 
 const MainHistoryScreen = () => {
   return (
@@ -111,45 +112,15 @@ export const OptionsAppbar = () => {
 };
 
 export const HistoryAppbarOptions = () => {
-  const {
-    mutate: clear,
-    isPending,
-    isSuccess,
-  } = useClearWatchHistoryMutation();
-  const [confirmVisible, showConfirm, hideConfirm] = useVisibleV2(false);
-  const [menuVisible, showMenu, hideMenu] = useVisibleV2(false);
-  const user = useCurrentUser();
+  const sheetRef = useSheetRef();
 
-  const handleClearHistoryConfirm = () => {
-    hideConfirm();
-    clear();
-  };
 
   return (
     <>
-      <Menu
-        visible={menuVisible}
-        anchor={<IconButton icon={"dots-vertical"} onPress={showMenu} />}
-        onDismiss={hideMenu}
-        anchorPosition="bottom"
-      >
-        <ClearHistoryMenuItem
-          onPress={() => {
-            hideMenu();
-            showConfirm();
-          }}
-        />
-      </Menu>
-      <ConfirmDialogV2
-        message="Are you sure you want to clear the histrory ?"
-        visible={confirmVisible}
-        onConfirm={handleClearHistoryConfirm}
-        onCancel={hideConfirm}
-      />
-      <LoadingDialog
-        message={t("clearing watch history ...")}
-        visible={isPending}
-      />
+      <IconButton icon={"dots-vertical"} onPress={() => sheetRef.current?.expand()} />
+      <Sheet ref={sheetRef} >
+        <ClearHistoryListItem />
+      </Sheet>
     </>
   );
 };
@@ -164,8 +135,40 @@ export const EmptyHistory = () => {
   );
 };
 
-export const ClearHistoryMenuItem = (props: Omit<MenuItemProps, "title">) => {
-  return <Menu.Item title="clear history" leadingIcon={"delete"} {...props} />;
+
+
+export const ClearHistoryListItem = () => {
+  const {
+    mutate: clear,
+    isPending,
+  } = useClearWatchHistoryMutation();
+
+  const [confirmVisible, showConfirm, hideConfirm] = useVisibleV2(false);
+
+  const handleClearHistoryConfirm = () => {
+    hideConfirm();
+    clear();
+  };
+
+  return (
+    <>
+      <List.Item
+        onPress={showConfirm}
+        title="clear history"
+        left={props => <List.Icon {...props} icon="trash" />}
+      />
+      <ConfirmDialogV2
+        message="Are you sure you want to clear the histrory ?"
+        visible={confirmVisible}
+        onConfirm={handleClearHistoryConfirm}
+        onCancel={hideConfirm}
+      />
+      <LoadingDialog
+        message={t("clearing watch history ...")}
+        visible={isPending}
+      />
+    </>
+  );
 };
 
 export default MainHistoryScreen;

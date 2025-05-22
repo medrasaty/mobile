@@ -3,13 +3,13 @@ import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
 import LoadingDialog from "@/components/LoadingDialog";
 import { useVisibleV2 } from "@/hooks/useVisible";
 import { t } from "i18next";
-import { Menu, MenuItemProps } from "react-native-paper";
+import { List, ListItemProps } from "react-native-paper";
 import { useUnblockAllUsersMutation } from "../mutations";
 
 /**
  * Menu item for unblocking all users with confirmation dialog
  */
-export const UnblockAllMenuItem = (props: Omit<MenuItemProps, "title" | "leadingIcon">) => {
+export const ClearBlacklistItem = (props: Omit<ListItemProps, "title" | "left">) => {
   const [dialogVisible, showDialog, hideDialog] = useVisibleV2(false);
   const { mutate: unblockAll, isPending } = useUnblockAllUsersMutation();
 
@@ -25,11 +25,11 @@ export const UnblockAllMenuItem = (props: Omit<MenuItemProps, "title" | "leading
 
   return (
     <>
-      <Menu.Item 
+      <List.Item 
         title={t("Unblock All Users")} 
-        leadingIcon="account-multiple-remove" 
-        {...props}
+        left={props => <List.Icon {...props} icon="account-multiple-remove" />}
         onPress={handlePress}
+        {...props}
       />
       
       <ConfirmDialogV2

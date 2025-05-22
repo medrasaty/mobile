@@ -122,7 +122,8 @@
     "push_notifications": {
       "label": "Push notifications",
       "help": "allow medrasaty to send you push notifications"
-    }
+    },
+    "settings": "Notification settings"
   },
   "privacy": {
     "display_full_name": {

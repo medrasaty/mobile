@@ -11,6 +11,8 @@ import { deleteWatchHistory } from "./requests";
 import { WatchHistory } from "./types";
 import { CursorPaginatedResponse } from "@/types/responses";
 import { clearPages, filterPages } from "../friendship/utils";
+import { request } from "@/lib/api";
+import Toast from "@/lib/toast";
 
 export default function useClearWatchHistoryMutation() {
   const client = useAuthClient();
@@ -20,10 +22,11 @@ export default function useClearWatchHistoryMutation() {
     mutationKey: WatchHistoryKeys.clearHisory,
     mutationFn: async () => {
       // clear user watch history
-
-      return await client.delete(`/activities/watch_history/clear/`);
+      return await request({ 
+        url: `/activities/watch_history/clear/`,
+        method: "DELETE",
+    })
     },
-
     onSuccess: async (_data, username) => {
       // Clear WatchHistory cache
       qc.setQueriesData(
@@ -36,16 +39,10 @@ export default function useClearWatchHistoryMutation() {
         }
       );
 
-      Burnt.toast({
-        title: t("success_clear_history"),
-        haptic: "success",
-      });
+      Toast.success(t("success_clear_history"))
     },
     onError: async () => {
-      Burnt.toast({
-        title: t("failed_clear_history"),
-        haptic: "error",
-      });
+      Toast.error(t("failed_clear_history"));
     },
   });
 }

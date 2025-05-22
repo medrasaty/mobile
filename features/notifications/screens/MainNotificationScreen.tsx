@@ -1,13 +1,12 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Appbar, Divider, List } from "react-native-paper";
+import { Appbar, Divider, List, useTheme } from "react-native-paper";
 import { RefreshControl } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 
 import Page from "@/components/Page";
 import FilterOptionsView from "@/components/FilterOptionsView";
 import { ThemedView } from "@/components/ThemedView";
-import { ThemedText } from "@/components/ThemedText";
 import EmptyView from "@/components/EmptyList";
 import ErrorView from "@/components/ErrorView";
 import Sheet, { useSheetRef } from "@/components/Sheet";
@@ -22,17 +21,17 @@ import {
 import { useReadAllNotificationEffect } from "@/features/notifications/hooks/useReadNotification";
 import useNotifications from "@/features/notifications/hooks/useNotifications";
 import NotificationCard from "@/features/notifications/components/NotificationCard";
-import { Notification, NotificationType } from "@/types/notifications.type";
-import { groupNotificationsByDate } from "@/features/notifications/lib/utils";
+import { NotificationType, Notification } from "@/types/notifications.type";
 import useFilterOptions from "@/hooks/useFilterOptions";
-import View from "@components/styled/View";
+import { path } from "@/lib/routing";
+import { router } from "expo-router";
 
 /**
  * Main screen for displaying and managing notifications
  */
 const MainNotificationScreen = () => {
   useReadAllNotificationEffect();
-  
+
   return (
     <SearchContextProvider>
       <Page>
@@ -48,13 +47,13 @@ const MainNotificationScreen = () => {
  */
 export const NotificationAppbar = () => {
   const { isSearch } = useSearchContext();
-  return isSearch ? <SearchContextbar /> : <OptionAppbar />;
+  return isSearch ? <SearchContextbar /> : <NotificationsActionAppbar />;
 };
 
 /**
  * Standard app bar with search and options actions
  */
-export const OptionAppbar = () => {
+export const NotificationsActionAppbar = () => {
   const { t } = useTranslation();
   const { setIsSearch } = useSearchContext();
   const sheetRef = useSheetRef();
@@ -68,18 +67,13 @@ export const OptionAppbar = () => {
           onPress={() => sheetRef.current?.expand()}
         />
       </AppBar>
-      
-      <Sheet
-        ref={sheetRef}
-        snapPoints={["25%"]}
-        index={0}
-      >
+      <Sheet ref={sheetRef}>
         <List.Item
-          title={t("Mark all as read")}
-          left={props => <List.Icon {...props} icon="check-all" />}
+          title={t("notification.settings")}
+          left={props => <List.Icon {...props} icon="settings" />}
           onPress={() => {
-            // Implement mark all as read functionality
             sheetRef.current?.close();
+            router.push(path.settings.notifications)
           }}
         />
       </Sheet>
@@ -87,13 +81,14 @@ export const OptionAppbar = () => {
   );
 };
 
+
 /**
  * Content component for displaying notifications with filtering
  */
 export const NotificationsContent = () => {
   const { t } = useTranslation();
-  const theme = { colors: { surface: "#f5f5f5" } }; // Use actual theme when available
-  
+  const theme = useTheme();
+
   const {
     isLoading,
     isRefetching,
@@ -111,10 +106,18 @@ export const NotificationsContent = () => {
     { label: t("replies"), value: NotificationType.Reply },
   ]);
 
-  // Group notifications by date
-  const sections = useMemo(() => 
-    groupNotificationsByDate(data ?? []),
-    [data]
+  // Memoized render callbacks
+  const renderFilterOptions = useCallback(() => (
+    <FilterOptionsView
+      filterOptions={options}
+      currentFilter={currentFilter}
+      onFilterChange={onFilterChange}
+    />
+  ), [options, currentFilter, onFilterChange]);
+
+  const renderItem = useCallback(
+    ({ item }: { item: Notification }) => <NotificationCard notification={item} />
+    , []
   );
 
   // Filter notifications based on selected filter
@@ -126,28 +129,12 @@ export const NotificationsContent = () => {
     );
   }, [data, currentFilter]);
 
-  // Render section headers
-  const renderSectionHeader = ({ section }: { section: { title: string } }) => (
-    <View style={{ padding: 10, backgroundColor: theme.colors.surface }}>
-      <ThemedText variant="titleLarge">{section.title}</ThemedText>
-    </View>
-  );
-
-  // Filter options component
-  const renderFilterOptions = () => (
-    <FilterOptionsView
-      filterOptions={options}
-      currentFilter={currentFilter}
-      onFilterChange={onFilterChange}
-    />
-  );
-
   // Show loading state
   if (isLoading) {
     return (
       <ThemedView style={{ flex: 1 }}>
         {renderFilterOptions()}
-        <EmptyView 
+        <EmptyView
           message={t("Loading...")}
           icon="loading"
           iconSize={40}
@@ -162,9 +149,9 @@ export const NotificationsContent = () => {
     return (
       <ThemedView style={{ flex: 1 }}>
         {renderFilterOptions()}
-        <ErrorView 
-          error={error} 
-          onRetry={refetch} 
+        <ErrorView
+          error={error}
+          onRetry={refetch}
         />
       </ThemedView>
     );
@@ -175,7 +162,7 @@ export const NotificationsContent = () => {
     return (
       <ThemedView style={{ flex: 1 }}>
         {renderFilterOptions()}
-        <EmptyView 
+        <EmptyView
           message={t("No notifications")}
           secondaryMessage={t("You don't have any notifications yet")}
           icon="bell-off-outline"
@@ -193,8 +180,8 @@ export const NotificationsContent = () => {
       {renderFilterOptions()}
       <FlashList
         data={filteredNotifications}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <NotificationCard notification={item} />}
+        keyExtractor={item => item.id.toString()}
+        renderItem={renderItem}
         ItemSeparatorComponent={Divider}
         estimatedItemSize={120}
         showsVerticalScrollIndicator={false}

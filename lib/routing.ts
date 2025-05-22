@@ -66,5 +66,8 @@ export const path = {
 
   settings: {
     main: `/settings/`,
+    notifications: `/settings/notifications`,
+    privacy: `/settings/privacy`,
+    appearance: `/settings/appearance`,
   },
 };

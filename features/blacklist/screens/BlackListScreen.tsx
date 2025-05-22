@@ -9,15 +9,16 @@ import {
 import { AppBar } from "@/features/navigation/components/AppBar";
 import { t } from "i18next";
 import { useMemo } from "react";
-import { Appbar, Menu } from "react-native-paper";
+import { Appbar } from "react-native-paper";
+import Sheet, { useSheetRef } from "@/components/Sheet";
 import BlackListUserCell from "../components/BlackListUserCell";
 import { useInfiniteBlackListUsers } from "../queries";
 import { InfiniteData } from "@tanstack/react-query";
 import { CursorPaginatedResponse } from "@/types/responses";
 import { BlackListUser } from "../types";
-import { useVisibleV2 } from "@/hooks/useVisible";
-import { UnblockAllMenuItem } from "../components/UnblockAllDialog";
+import { ClearBlacklistItem } from "../components/UnblockAllDialog";
 import EmptyView from "@/components/EmptyList";
+import View from "@components/styled/View";
 
 /**
  * Main screen for displaying and managing blacklisted users
@@ -46,20 +47,23 @@ export const BlackListAppbar = () => {
  */
 export const OptionAppbar = () => {
   const { setIsSearch } = useSearchContext();
-  const [menuVisible, showMenu, hideMenu] = useVisibleV2(false);
+  const sheetRef = useSheetRef();
 
   return (
-    <AppBar title={t("blacklist")}>
-      <Appbar.Action icon="magnify" onPress={() => setIsSearch(true)} />
-      <Menu
-        visible={menuVisible}
-        onDismiss={hideMenu}
-        anchorPosition="bottom"
-        anchor={<Appbar.Action icon="dots-vertical" onPress={showMenu} />}
-      >
-        <UnblockAllMenuItem onPress={hideMenu} />
-      </Menu>
-    </AppBar>
+    <>
+      <AppBar title={t("blacklist")}>
+        <Appbar.Action icon="magnify" onPress={() => setIsSearch(true)} />
+        <Appbar.Action
+          icon="dots-vertical"
+          onPress={() => sheetRef.current?.expand()}
+        />
+      </AppBar>
+      <Sheet ref={sheetRef}>
+        <View style={{ paddingVertical: 16 }} >
+          <ClearBlacklistItem />
+        </View>
+      </Sheet>
+    </>
   );
 };
 
