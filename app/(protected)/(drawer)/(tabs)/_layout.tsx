@@ -55,6 +55,7 @@ export default function TabsLayout() {
         }}
       />
 
+      {/* 
       <Tabs.Screen
         name="search"
         options={{
@@ -67,6 +68,7 @@ export default function TabsLayout() {
           ),
         }}
       />
+      */}
       <Tabs.Screen
         name="profile"
         options={{
@@ -93,7 +95,6 @@ export default function TabsLayout() {
           ),
         }}
       />
-           
     </Tabs>
   );
 }
