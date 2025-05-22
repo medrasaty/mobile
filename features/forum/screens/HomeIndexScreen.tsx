@@ -6,10 +6,7 @@ import ForumQuestionCard, {
 } from "@forum/questions/components/QuestionsCard";
 import { useForumQuestions } from "@forum/queries";
 import Page from "@components/Page";
-import {
-  ScreenListV2,
-  ScreenListV3,
-} from "@components/ScreenFlatList";
+import { ScreenListV3 } from "@components/ScreenFlatList";
 import FilterOptionsView from "@components/FilterOptionsView";
 import useFilterOptions from "@/hooks/useFilterOptions";
 import { useTranslation } from "react-i18next";
@@ -40,6 +37,7 @@ export const HomeAppBar = () => {
 
 export default function HomeScreen() {
   const q = useForumQuestions();
+
   const { options, onFilterChange, currentFilter } = useFilterOptions([
     // TODO: implement this filtering
     { label: "for you", value: "foryou" },

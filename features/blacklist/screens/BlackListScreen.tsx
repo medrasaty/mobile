@@ -58,10 +58,8 @@ export const OptionAppbar = () => {
           onPress={() => sheetRef.current?.expand()}
         />
       </AppBar>
-      <Sheet ref={sheetRef}>
-        <View style={{ paddingVertical: 16 }} >
-          <ClearBlacklistItem />
-        </View>
+      <Sheet contentContainerStyle={{ paddingVertical: 16 }} ref={sheetRef}>
+        <ClearBlacklistItem />
       </Sheet>
     </>
   );

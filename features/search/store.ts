@@ -4,6 +4,7 @@ type SearchStore = {
   isSearchActive: boolean;
   setQuery: (query: string) => void;
   setSearchActive: (active: boolean) => void;
+  clearSearch: () => void;
 };
 
 export const useSearchStore = create<SearchStore>((set) => ({
@@ -11,4 +12,5 @@ export const useSearchStore = create<SearchStore>((set) => ({
   isSearchActive: false,
   setQuery: (query) => set({ query }),
   setSearchActive: (active) => set({ isSearchActive: active }),
+  clearSearch: () => set({ query: "", isSearchActive: false }),
 }));
