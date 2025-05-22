@@ -10,14 +10,14 @@
  */
 
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { BaseUser } from "@/types/user.types";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { UserAvatarV2 } from "./UserAvatar";
 import Row from "./Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTheme } from "react-native-paper";
+import { TouchableRipple, useTheme } from "react-native-paper";
 import { path } from "@/lib/routing";
+import { useRouter } from "expo-router";
 
 type UserInfoProps = {
   avatarSize?: number;
@@ -34,17 +34,20 @@ const UserInfo = ({
   avatarSize = 55,
   user,
 }: UserInfoProps) => {
+  const router = useRouter();
+
+  const navigateToUserProfile = () => router.push(path.users.details(user.id));
+
   return (
-    <ThemedView style={styles.container}>
-      <UserAvatarV2 uri={user.thumbnail} user={user} size={avatarSize} />
-      <Pressable
-        onPress={() => path.users.goToUser(user.id)}
-        style={{ gap: 5 }}
-      >
-        <ThemedText>{user.short_name}</ThemedText>
-        {showSchool && <School name={user.school_name} />}
-      </Pressable>
-    </ThemedView>
+    <Pressable onPress={navigateToUserProfile} style={styles.container}>
+      <Row style={{ gap: 10 }}>
+        <UserAvatarV2 uri={user.thumbnail} user={user} size={avatarSize} />
+        <View style={{ gap: 5 }}>
+          <ThemedText>{user.short_name}</ThemedText>
+          {showSchool && <School name={user.school_name} />}
+        </View>
+      </Row>
+    </Pressable>
   );
 };
 
@@ -72,9 +75,9 @@ export const School = ({ name }: { name: string }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
+    borderRadius: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 6,
   },
 });
 

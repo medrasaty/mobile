@@ -5,7 +5,7 @@ import { ThemedText } from "@/components/ThemedText";
 import UserInfo from "@/components/UserInfo";
 import { Surface, TouchableRipple, useTheme } from "react-native-paper";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "expo-router";
 import { t } from "i18next";
 import { Question } from "@/types/forum.types";

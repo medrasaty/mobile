@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
-import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
-import { users } from "@/lib/routing";
+import { debugStyle, DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
+import { path, users } from "@/lib/routing";
 import { BaseUser } from "@/types/user.types";
 import SchoolName from "@features/schools/components/SchoolName";
 import { router } from "expo-router";
@@ -25,20 +25,24 @@ const BaseUserCell = ({
 }: BaseUserCellProps) => {
   // TODO: create this component
   return (
-    <View style={[styles.container]}>
+    <Pressable
+      onPress={() => path.users.goToUser(user.id)}
+      style={[styles.container]}
+    >
       <View style={styles.rowContainer}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
           <UserInfo user={user} />
         </View>
         <View>{ActionButton}</View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: DEFAULT_CONTAINER_SPACING,
+    ...debugStyle,
   },
 
   rowContainer: {

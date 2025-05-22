@@ -13,7 +13,7 @@ import AlertDialogProvider from "@/contexts/AlertDialogContext";
 import "@/localazation/i18n";
 import { RootSiblingParent } from "react-native-root-siblings";
 import PaperThemeProvider from "@features/theme/providers";
-import ProfileAutoRefreshProvider from "@/features/profile/providers/ProfileAutoRefreshProvider";
+import useProfileAutoRefresh from "@features/profile/hooks/useProfileAutoRefresh";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -54,28 +54,26 @@ export default function RootLayout() {
     <GestureHandlerRootView>
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
-          <ProfileAutoRefreshProvider>
-            <PaperThemeProvider>
-              <RootSiblingParent>
-                <BottomSheetModalProvider>
-                  <SafeAreaProvider>
-                    <AlertDialogProvider>
-                      <Stack
-                        initialRouteName={HOME_PAGE}
-                        screenOptions={{
-                          animation: "fade_from_bottom",
-                          headerShown: false,
-                        }}
-                      >
-                        <Stack.Screen name="(protected)" />
-                        <Stack.Screen name="login" />
-                      </Stack>
-                    </AlertDialogProvider>
-                  </SafeAreaProvider>
-                </BottomSheetModalProvider>
-              </RootSiblingParent>
-            </PaperThemeProvider>
-          </ProfileAutoRefreshProvider>
+          <PaperThemeProvider>
+            <RootSiblingParent>
+              <BottomSheetModalProvider>
+                <SafeAreaProvider>
+                  <AlertDialogProvider>
+                    <Stack
+                      initialRouteName={HOME_PAGE}
+                      screenOptions={{
+                        animation: "fade_from_bottom",
+                        headerShown: false,
+                      }}
+                    >
+                      <Stack.Screen name="(protected)" />
+                      <Stack.Screen name="login" />
+                    </Stack>
+                  </AlertDialogProvider>
+                </SafeAreaProvider>
+              </BottomSheetModalProvider>
+            </RootSiblingParent>
+          </PaperThemeProvider>
         </SessionProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>

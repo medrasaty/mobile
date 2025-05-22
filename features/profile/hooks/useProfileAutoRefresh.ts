@@ -18,6 +18,7 @@ export default function useProfileAutoRefresh() {
     session: state.session,
     updateUser: state.updateUser,
   }));
+
   const qc = useQueryClient();
   const client = useAuthClient();
   const networkListener = useRef<any>(null);
@@ -88,4 +89,3 @@ export default function useProfileAutoRefresh() {
     refreshProfile,
   };
 }
-
