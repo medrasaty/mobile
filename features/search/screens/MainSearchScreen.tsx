@@ -55,7 +55,7 @@ export const LatestQuestions = () => {
   const q = useLatestQuestions();
   return (
     <LatestSection
-      title={"احدث السؤالات"}
+      title={"Latest Questions"}
       data={q.data}
       status={q.status}
       estimatedItemHeight={FORUM_QUESTION_CARD_HEIGHT}

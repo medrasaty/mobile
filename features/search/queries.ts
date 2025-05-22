@@ -9,6 +9,7 @@ import { useForumQuestions } from "@forum/queries";
 import { useSchools } from "@features/schools/queries";
 import { PaginatedResponse } from "@/types/requests";
 import { BaseUser } from "@/types/user.types";
+import { useInfiniteData } from "@/lib/hooks/useInfiniteData";
 
 export type SearchTypes = "schools" | "users" | "questions";
 
@@ -17,43 +18,32 @@ export type useSearchProps = {
   type: SearchTypes;
 };
 
+/**
+ * Hook for searching different types of content
+ * @template T - The type of data being searched
+ * @param {useSearchProps} props - Search parameters
+ * @returns {Object} Search results and query state
+ */
 export default function useSearch<T>({ query, type }: useSearchProps) {
-  /**
-   * Search for questions using 'q'
-   */
-
   const client = useAuthClient();
 
-  const q = useInfiniteQuery({
+  // Use the new useInfiniteData hook for better efficiency
+  const infiniteQuery = useInfiniteData<T>({
     queryKey: SearchQueryKeys.withTypeAndQuery({ query, type }),
-    queryFn: async ({ pageParam }): Promise<CursorPaginatedResponse<T>> => {
-      const res = await client.get<CursorPaginatedResponse<T>>(pageParam, {
-        params: { q: query },
-      });
-
-      return {
-        ...res.data,
-        results: res.data.results.map((item) => {
-          return {
-            ...item,
-          };
-        }),
-      };
-    },
-    initialPageParam: `/search/${type}/`,
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.next;
-    },
+    initialPath: `/search/${type}/`,
+    params: { q: query },
+    enabled: query.trim().length > 0, // Only run the query if there's a valid search term
   });
 
+  // Extract and flatten data from pages
   const data = useMemo(() => {
-    if (!q.data) return [];
-    return q.data.pages.map((page) => page.results).flat();
-  }, [q.data]);
+    if (!infiniteQuery.data) return [];
+    return infiniteQuery.data.pages.map((page) => page.results).flat();
+  }, [infiniteQuery.data]);
 
   return {
-    ...q,
-    data: data,
+    ...infiniteQuery,
+    data,
   };
 }
 

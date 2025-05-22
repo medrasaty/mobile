@@ -55,12 +55,7 @@ export const OptionAppbar = () => {
         visible={menuVisible}
         onDismiss={hideMenu}
         anchorPosition="bottom"
-        anchor={
-          <Appbar.Action
-            icon="dots-vertical"
-            onPress={showMenu}
-          />
-        }
+        anchor={<Appbar.Action icon="dots-vertical" onPress={showMenu} />}
       >
         <UnblockAllMenuItem onPress={hideMenu} />
       </Menu>
@@ -76,27 +71,36 @@ export const BlackListUsersList = () => {
   const infiniteQuery = useInfiniteBlackListUsers({ search: searchValue });
 
   // Extract flat array of users from paginated response
-  const getItems = useMemo(() => (
-    (data: InfiniteData<CursorPaginatedResponse<BlackListUser>, unknown> | undefined): BlackListUser[] => {
-      if (!data) return [];
-      return data.pages.flatMap(page => page.results);
-    }
-  ), []);
+  const getItems = useMemo(
+    () =>
+      (
+        data:
+          | InfiniteData<CursorPaginatedResponse<BlackListUser>, unknown>
+          | undefined
+      ): BlackListUser[] => {
+        if (!data) return [];
+        return data.pages.flatMap((page) => page.results);
+      },
+    []
+  );
 
   // Get users from the query data
   const users = getItems(infiniteQuery.data);
   const hasUsers = users.length > 0;
 
   // Render loading indicator when fetching more data
-  const renderFooter = () => 
+  const renderFooter = () =>
     infiniteQuery.isFetchingNextPage ? <ListFooterActivityIndicator /> : null;
-    
+
   // Show empty view when there are no blacklisted users and not loading
   if (!hasUsers && !infiniteQuery.isLoading && !infiniteQuery.isError) {
     return (
-      <EmptyView 
-        message={t("no_blacklisted_users")} 
-        secondaryMessage={t("blacklist_empty_description", "Users you block will appear here")}
+      <EmptyView
+        message={t("no_blacklisted_users")}
+        secondaryMessage={t(
+          "blacklist_empty_description",
+          "Users you block will appear here"
+        )}
         icon="account-cancel"
         iconSize={40}
         fullScreen={true}
@@ -106,13 +110,14 @@ export const BlackListUsersList = () => {
   }
 
   return (
-    <InfiniteScreenListV3<InfiniteData<CursorPaginatedResponse<BlackListUser>, unknown>, BlackListUser>
+    <InfiniteScreenListV3<
+      InfiniteData<CursorPaginatedResponse<BlackListUser>, unknown>,
+      BlackListUser
+    >
       q={infiniteQuery}
       getItems={getItems}
       onFetchNextPage={() => infiniteQuery.fetchNextPage()}
-      renderItem={({ item }) => (
-        <BlackListUserCell user={item} />
-      )}
+      renderItem={({ item }) => <BlackListUserCell user={item} />}
       estimatedItemSize={100}
       ListFooterComponent={renderFooter()}
       keyExtractor={(item) => item.pk}

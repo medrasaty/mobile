@@ -40,8 +40,8 @@ const UserInfo = ({
 
   return (
     <Pressable onPress={navigateToUserProfile} style={styles.container}>
-      <Row style={{ gap: 10 }}>
-        <UserAvatarV2 uri={user.thumbnail} user={user} size={avatarSize} />
+      <Row alignItems="center" style={{ gap: 10 }}>
+        <UserAvatarV2 uri={user.thumbnail} size={avatarSize} />
         <View style={{ gap: 5 }}>
           <ThemedText>{user.short_name}</ThemedText>
           {showSchool && <School name={user.school_name} />}

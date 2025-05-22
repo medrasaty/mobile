@@ -1,7 +1,6 @@
 import useTopTabsScreenOptions from "@features/navigation/hooks/useTopTabsScreenOptions";
 import TopTabs from "@features/navigation/layouts/TopTabs";
 import { useTranslation } from "react-i18next";
-import { View, ViewProps } from "react-native";
 
 const SearchLayout = () => {
   const screenOptions = useTopTabsScreenOptions();

@@ -47,7 +47,7 @@ export type UserAvatarV2Props = {
    * The user object containing the thumbnail.
    * @deprecated: use uri instead.
    */
-  user: BaseUser;
+  user?: BaseUser;
   /**
    * Size of the avatar in pixels.
    * The badge size is 10 times smaller than this value.
@@ -107,7 +107,7 @@ export const UserAvatarV2 = ({
         contentFit="cover"
         transition={0}
         cachePolicy={"memory"}
-        source={{ uri: uri ? uri : user.thumbnail }}
+        source={{ uri: uri ? uri : user?.thumbnail }}
         style={[
           imageStyle,
           {

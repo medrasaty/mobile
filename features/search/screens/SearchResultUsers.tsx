@@ -1,60 +1,102 @@
 import Page from "@components/Page";
-import { View, ViewProps } from "react-native";
+import { StyleSheet, View, ViewProps } from "react-native";
 import { useSearchStore } from "../store";
 import useSearch from "../queries";
-
 import { ScreenListV2 } from "@/components/ScreenFlatList";
-import { Question } from "@/types/forum.types";
 import { ThemedText } from "@/components/ThemedText";
-import { t } from "i18next";
-import ForumQuestionCard from "@forum/questions/components/QuestionsCard";
-import { School } from "@/types/school.types";
-import SchoolMemberCell from "@features/schools/components/SchoolMemberCell";
+import { useTranslation } from "react-i18next";
+import { ActivityIndicator, Button, Divider } from "react-native-paper";
+import { Ionicons } from "@expo/vector-icons";
 import { BaseUser } from "@/types/user.types";
 import BaseUserCell from "@components/UserCell";
+import EmptyStateView from "@/components/EmptyStateView";
 
 type SearchResultUsersScreenProps = {} & ViewProps;
 
 const SearchResultUsersScreen = ({
   ...props
 }: SearchResultUsersScreenProps) => {
+  const { t } = useTranslation();
   const query = useSearchStore((state) => state.query);
 
-  const q = useSearch<BaseUser>({ query, type: "users" });
+  // Use the enhanced search hook
+  const searchQuery = useSearch<BaseUser>({ query, type: "users" });
 
-  const renderItem = ({ item, index }: { item: BaseUser; index: number }) => {
+  const renderItem = ({ item }: { item: BaseUser }) => {
     return <BaseUserCell user={item} />;
   };
 
-  const renderEmptyList = () => {
+  // If no query is provided, show empty query view
+  if (!query.trim()) {
     return (
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 40,
-        }}
-      >
-        <ThemedText bold variant="titleMedium">
-          {t("no_users_maches_your_query")}
-        </ThemedText>
-      </View>
+      <Page {...props}>
+        <EmptyStateView
+          iconName="search-outline"
+          title={t("Enter a search query to find users")}
+          subtitle={t("Type in the search bar above to get started")}
+        />
+      </Page>
     );
+  }
+
+  const handleRetry = () => {
+    searchQuery.refetch();
   };
 
+  // If we have data, show the list
   return (
-    <Page>
+    <Page {...props}>
       <ScreenListV2
-        ListEmptyComponent={renderEmptyList}
+        data={searchQuery.data}
         renderItem={renderItem}
-        data={q.data}
+        ItemSeparatorComponent={Divider}
+        ListEmptyComponent={
+          searchQuery.isLoading ? null : (
+            <EmptyStateView
+              iconName="alert-circle-outline"
+              title={t("No users found")}
+              subtitle={t("Try different keywords or check your spelling")}
+            />
+          )
+        }
+        ListFooterComponent={
+          searchQuery.isFetchingNextPage ? (
+            <ActivityIndicator style={styles.loadingIndicator} />
+          ) : null
+        }
         estimatedItemSize={200}
-        onRetry={q.refetch}
-        isPending={q.isFetching}
-        isError={q.isError}
+        onRefresh={searchQuery.refetch}
+        refreshing={searchQuery.isRefetching}
+        onEndReached={() => searchQuery.fetchNextPage()}
+        onEndReachedThreshold={0.5}
+        isPending={searchQuery.isLoading}
+        isError={searchQuery.isError}
+        onRetry={handleRetry}
+        errorMessage={t("Error loading search results")}
       />
     </Page>
   );
 };
+
+const styles = StyleSheet.create({
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    marginTop: 40,
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 16,
+    color: "gray",
+  },
+  retryButton: {
+    marginTop: 16,
+  },
+  loadingIndicator: {
+    padding: 16,
+  },
+});
 
 export default SearchResultUsersScreen;

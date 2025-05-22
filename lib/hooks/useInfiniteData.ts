@@ -7,6 +7,7 @@ type InfiniteQueryOptions<T> = {
   initialPath: string;
   params?: Record<string, any>;
   transformResults?: (items: T[]) => T[];
+  enabled?: boolean;
 };
 
 /**
@@ -18,6 +19,7 @@ type InfiniteQueryOptions<T> = {
  * @param options.initialPath - The initial API endpoint path
  * @param options.params - Optional query parameters
  * @param options.transformResults - Optional function to transform the response items
+ * @param options.enabled - Optional flag to enable/disable the query
  * @returns An infinite query result that can be used with InfiniteScreenListV3
  */
 export function useInfiniteData<T>({
@@ -25,6 +27,7 @@ export function useInfiniteData<T>({
   initialPath,
   params = {},
   transformResults,
+  enabled = true,
 }: InfiniteQueryOptions<T>) {
   return useInfiniteQuery({
     queryKey,
@@ -47,5 +50,6 @@ export function useInfiniteData<T>({
     },
     initialPageParam: initialPath,
     getNextPageParam: (lastPage) => lastPage.next,
+    enabled
   });
 } 

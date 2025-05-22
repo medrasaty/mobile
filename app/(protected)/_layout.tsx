@@ -1,10 +1,11 @@
 import { LOGIN_PAGE } from "@/constants/routes";
 import { AnimatedAppBarProvider } from "@/contexts";
-import { AppBar } from "@/features/navigation/components/AppBar";
 import usePushNotificationFeature from "@/features/notifications/hooks/usePushNotificationFeature";
 import { useAuthSession } from "@features/auth/store";
+import SearchResultAppbar from "@features/search/components/SearchResultAppbar";
 import { Redirect, Stack } from "expo-router";
 import { t } from "i18next";
+import { Appbar } from "react-native-paper";
 
 export default function ProtectedLayout() {
   const session = useAuthSession((state) => state.session);
@@ -24,7 +25,9 @@ export default function ProtectedLayout() {
           header: (props) => {
             // you can only customize the title of Appbar
             return (
-              <AppBar title={props.options.headerTitle ?? ""} {...props} />
+              <Appbar.Header>
+                <Appbar.Content title={props.options.headerTitle as string} />
+              </Appbar.Header> 
             );
           },
         }}
@@ -46,7 +49,7 @@ export default function ProtectedLayout() {
           name="search"
           options={{
             headerShown: true,
-            headerTitle: t("result"),
+            header: (props) => <SearchResultAppbar />,
           }}
         />
         <Stack.Screen name="schools/[schoolId]" />

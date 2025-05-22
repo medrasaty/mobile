@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+Always optemize for performance, never write a code what will cause frequent re renders without optemizing it with any optimization techniques like useMemo or memoizing the whole component, prevent unnecessary calucations

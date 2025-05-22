@@ -42,7 +42,6 @@ const BaseUserCell = ({
 const styles = StyleSheet.create({
   container: {
     padding: DEFAULT_CONTAINER_SPACING,
-    ...debugStyle,
   },
 
   rowContainer: {

@@ -1,20 +1,47 @@
 import { NewQuestionFAB } from "@/components/FAB";
 import { Question } from "@/types/forum.types";
-import { Divider } from "react-native-paper";
+import { Divider, useTheme, Appbar } from "react-native-paper";
 import ForumQuestionCard, {
   FORUM_QUESTION_CARD_HEIGHT,
 } from "@forum/questions/components/QuestionsCard";
 import { useForumQuestions } from "@forum/queries";
 import Page from "@components/Page";
-import { ScreenListV2 } from "@components/ScreenFlatList";
-import { HomeAppBar } from "@features/navigation/components/AppBar";
+import {
+  ScreenListV2,
+  ScreenListV3,
+} from "@components/ScreenFlatList";
 import FilterOptionsView from "@components/FilterOptionsView";
 import useFilterOptions from "@/hooks/useFilterOptions";
+import { useTranslation } from "react-i18next";
+import React from "react";
+import { useSearchStore } from "@features/search/store";
+import { HomeSearchAppbar } from "@features/search/components/SearchAppbar";
+
+export const HomeAppBar = () => {
+  const { t } = useTranslation();
+  const theme = useTheme();
+
+  const { isSearchActive, setSearchActive } = useSearchStore();
+
+  return isSearchActive ? (
+    <HomeSearchAppbar />
+  ) : (
+    <>
+      <Appbar.Header>
+        <Appbar.Content
+          titleStyle={{ fontSize: 24, color: theme.colors.secondary }}
+          title={t("Home")}
+        />
+        <Appbar.Action icon="magnify" onPress={() => setSearchActive(true)} />
+      </Appbar.Header>
+    </>
+  );
+};
 
 export default function HomeScreen() {
   const q = useForumQuestions();
   const { options, onFilterChange, currentFilter } = useFilterOptions([
-    // TODO: impolement this filtering
+    // TODO: implement this filtering
     { label: "for you", value: "foryou" },
     { label: "following", value: "followings" },
   ]);
@@ -36,18 +63,14 @@ export default function HomeScreen() {
   return (
     <Page>
       <HomeAppBar />
-      <ScreenListV2
+      <ScreenListV3
+        q={q}
         ListHeaderComponent={renderHeader}
         estimatedItemSize={FORUM_QUESTION_CARD_HEIGHT}
         contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
         ItemSeparatorComponent={Divider}
-        data={q.data}
-        isPending={q.isPending}
-        isError={q.isError}
-        onRetry={q.refetch}
-        errorMessage="error"
       />
       <NewQuestionFAB />
     </Page>

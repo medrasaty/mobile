@@ -13,6 +13,7 @@ import {
 import { modeAppbarHeight } from "react-native-paper/src/components/Appbar/utils";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useSession } from "@/hooks/useSession";
+import { debugStyle } from "@/constants/styels";
 
 type AppBarProps = React.PropsWithChildren<{
   title: string | undefined;
