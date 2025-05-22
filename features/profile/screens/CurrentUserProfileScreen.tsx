@@ -13,7 +13,7 @@ import { useRouter } from "expo-router";
 import { t } from "i18next";
 import React, { useMemo, useState, useCallback } from "react";
 import { StyleSheet, View, ViewProps, RefreshControl } from "react-native";
-import { Appbar, Divider, Button } from "react-native-paper";
+import { Appbar, Divider, Button, Chip } from "react-native-paper";
 import { useTheme } from "react-native-paper/src/core/theming";
 import NavigationButtonsList from "../components/NavigationButtonsList";
 import useProfile from "../hooks/useProfile";
@@ -21,6 +21,8 @@ import Biography from "../components/Biography";
 import Sheet, { useSheetRef } from "@components/Sheet";
 import { useSession } from "@/hooks/useSession";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
+import Row from "@components/Row";
+import { path } from "@/lib/routing";
 
 const CurrentUserProfileAppbar: React.FC = () => {
   const router = useRouter();
@@ -28,11 +30,11 @@ const CurrentUserProfileAppbar: React.FC = () => {
     <AppBar divider backAction={false} title={t("Profile")}>
       <Appbar.Action
         icon={(props) => <Ionicons name="settings-outline" {...props} />}
-        onPress={() => router.push("settings")}
+        onPress={() => router.push(path.settings.main)}
       />
       <Appbar.Action
         icon={"pencil-outline"}
-        onPress={() => router.push("account/edit")}
+        onPress={() => router.push(path.account.edit)}
       />
       {/* more options */}
       <ProfileMoreOptionsAction />
@@ -57,7 +59,7 @@ const ProfileMoreOptionsAction = () => {
             mode="outlined"
             onPress={signOut}
           >
-            logout
+            {t("Logout")}
           </Button>
         </ContainerView>
       </Sheet>
@@ -83,6 +85,7 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
 }: CurrentUserProfileScreenProps) => {
   const theme = useTheme();
   const user = useAuthSession((state) => state.session?.user);
+  const router = useRouter();
   // const { refreshProfile } = useProfileAutoRefresh();
   // const [refreshing, setRefreshing] = useState(false);
 
@@ -156,7 +159,36 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
                 <Ionicons color={theme.colors.secondary} name="mail" />
                 <ThemedText variant="labelSmall">{user.email}</ThemedText>
               </View>
+
             </View>
+             <Row style={{gap: 10}}>
+              {/* School */}
+              {user.school_name && (
+                <View style={styles.infoChip}>
+                  <Chip icon="school" mode="outlined" compact>
+                    {user.school_name}
+                  </Chip>
+                </View>
+              )}
+              
+              {/* User Type */}
+              <View style={styles.infoChip}>
+                <Chip icon="account" mode="outlined" compact>
+                  {user.type}
+                </Chip>
+              </View>
+              
+              {/* Account Privacy */}
+              <View style={styles.infoChip}>
+                <Chip 
+                  icon={user.profile.is_private ? "lock" : "lock-open"} 
+                  mode="outlined" 
+                  compact
+                >
+                  {user.profile.is_private ? "Private" : "Public"}
+                </Chip>
+              </View>
+              </Row> 
           </View>
         </View>
         <ContainerView style={{ gap: 10 }}>
@@ -165,7 +197,7 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
             <Biography>{user.profile.biography}</Biography>
           )}
           <Button
-            onPress={() => alert("take these info")}
+            onPress={() => router.push("/account/user-info")}
             mode="contained-tonal"
           >
             more info
@@ -311,6 +343,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
+  },
+  infoChip: {
+    marginTop: 5,
   },
   biographyContainer: {
     gap: 12,

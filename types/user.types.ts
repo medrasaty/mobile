@@ -12,6 +12,7 @@ export interface BaseUser {
   email: string;
   name: string;
   father_name: string;
+  date_joined: string;
   grand_father_name: string;
   family_name: string;
   short_name: string;

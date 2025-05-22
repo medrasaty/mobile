@@ -11,6 +11,7 @@ import {
   FlatListProps,
   RefreshControl,
   useWindowDimensions,
+  View,
 } from "react-native";
 import { useMemo } from "react";
 import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
@@ -111,19 +112,15 @@ const FollowingRequestsToMeList = ({
   );
 };
 
-const Error = () => {
-  return <ThemedText>Error</ThemedText>;
-};
-
 const NotPrivateAccount = () => {
   // TODO: create beautifull and descriptfull page
   return (
     <Page>
-      <ThemedView>
+      <View>
         <ThemedText>
           You must change your account type to see this page.
         </ThemedText>
-      </ThemedView>
+      </View>
     </Page>
   );
 };

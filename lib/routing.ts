@@ -36,9 +36,13 @@ export const users = {
 };
 
 export const path = {
+  account: {
+    info: `/account/user-info`,
+    edit: `/account/edit`,
+  },
+
   users: {
     details: (id: BaseUser["id"]) => `/users/${id}/detail`,
-
     content: (id: BaseUser["id"]) => ({
       pathname: `/users/[id]/content`,
       params: {
