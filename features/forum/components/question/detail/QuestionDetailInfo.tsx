@@ -193,7 +193,7 @@ export const ShareMemoized = memo(({ id }: { id: Question["id"] }) => {
 
   return (
     <View>
-      <ThemedText link onPress={() => sheetRef.current?.snapToIndex(0)}>
+      <ThemedText noInteraction={false} link onPress={() => sheetRef.current?.snapToIndex(0)}>
         {t("share")}
       </ThemedText>
       <ShareContentSheet questionId={id} ref={sheetRef} />
