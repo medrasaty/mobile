@@ -18,52 +18,61 @@ export type EmptyStateViewProps = {
  * A reusable component for displaying empty states, no results, or errors
  * Optimized to prevent unnecessary re-renders and calculations.
  */
-const EmptyStateView = memo(({
-  iconName,
-  title,
-  subtitle,
-  buttonText,
-  onButtonPress,
-  style,
-  isError = false,
-}: EmptyStateViewProps) => {
-  const theme = useTheme();
+const EmptyStateView = memo(
+  ({
+    iconName,
+    title,
+    subtitle,
+    buttonText,
+    onButtonPress,
+    style,
+    isError = false,
+  }: EmptyStateViewProps) => {
+    const theme = useTheme();
 
-  // Memoize background and icon color to avoid recalculation on every render
-  const { backgroundColor, iconColor } = useMemo(() => ({
-    backgroundColor: isError 
-      ? theme.colors.errorContainer 
-      : theme.colors.surfaceVariant,
-    iconColor: isError
-      ? theme.colors.error
-      : theme.colors.onSurfaceVariant,
-  }), [isError, theme.colors.errorContainer, theme.colors.surfaceVariant, theme.colors.error, theme.colors.onSurfaceVariant]);
+    // Memoize background and icon color to avoid recalculation on every render
+    const { backgroundColor, iconColor } = useMemo(
+      () => ({
+        backgroundColor: isError
+          ? theme.colors.errorContainer
+          : theme.colors.surfaceVariant,
+        iconColor: isError ? theme.colors.error : theme.colors.onSurfaceVariant,
+      }),
+      [
+        isError,
+        theme.colors.errorContainer,
+        theme.colors.surfaceVariant,
+        theme.colors.error,
+        theme.colors.onSurfaceVariant,
+      ]
+    );
 
-  return (
-    <View style={[styles.container, style]}>
-      <View style={[styles.iconContainer, { backgroundColor }]}>
-        <Ionicons name={iconName} size={40} color={iconColor} />
-      </View>
-      <ThemedText variant="titleMedium" style={styles.title}>
-        {title}
-      </ThemedText>
-      {subtitle ? (
-        <ThemedText variant="bodyMedium" style={styles.subtitle}>
-          {subtitle}
+    return (
+      <View style={[styles.container, style]}>
+        <View style={[styles.iconContainer, { backgroundColor }]}>
+          <Ionicons name={iconName} size={40} color={iconColor} />
+        </View>
+        <ThemedText variant="titleMedium" style={styles.title}>
+          {title}
         </ThemedText>
-      ) : null}
-      {buttonText && onButtonPress ? (
-        <Button 
-          mode="contained" 
-          onPress={onButtonPress} 
-          style={styles.button}
-        >
-          {buttonText}
-        </Button>
-      ) : null}
-    </View>
-  );
-});
+        {subtitle ? (
+          <ThemedText variant="bodyMedium" style={styles.subtitle}>
+            {subtitle}
+          </ThemedText>
+        ) : null}
+        {buttonText && onButtonPress ? (
+          <Button
+            mode="contained"
+            onPress={onButtonPress}
+            style={styles.button}
+          >
+            {buttonText}
+          </Button>
+        ) : null}
+      </View>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -98,3 +107,4 @@ const styles = StyleSheet.create({
 });
 
 export default EmptyStateView;
+

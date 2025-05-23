@@ -16,13 +16,20 @@ import {
 import { useMemo } from "react";
 import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
 import NetworkError from "@/components/NetworkError";
+import ErrorView from "@components/ErrorView";
+import { AppBar } from "@features/navigation/components/AppBar";
+import EmptyView from "@components/EmptyList";
+import EmptyStateView from "@components/EmptyStateView";
+import CenterPage from "@components/CenterPage";
 
 const FollowingRequestsToMeScreen = () => {
   const user = useCurrentUser();
-  return user.profile.is_private ? (
-    <FollowingRequestsToMe />
-  ) : (
-    <NotPrivateAccount />
+
+  return (
+    <Page>
+      <AppBar title="following request to me" />
+      <FollowingRequestsToMe />
+    </Page>
   );
 };
 
@@ -46,7 +53,10 @@ export const FollowingRequestsToMe = () => {
           data={data}
         />
       ) : (
-        <NetworkError onRetry={q.refetch} />
+        <ErrorView
+          error={"Network error, check you internet connection and try again!"}
+          onRetry={q.refetch}
+        />
       )}
     </Page>
   );
@@ -76,15 +86,10 @@ const FollowingRequestsToMeList = ({
 
   const renderEmptyList = () => {
     return (
-      <ThemedView
-        style={{
-          marginTop: height / 2.6,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <ThemedText>No items left</ThemedText>
-      </ThemedView>
+      <EmptyStateView
+        iconName="person-remove-outline"
+        title="You don't have any following requests"
+      />
     );
   };
 

@@ -1,14 +1,13 @@
-import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import { ClientSettings, Language, ServerSettings } from "./types";
-import { DEFAULT_SETTINGS } from "./defaults";
-import { MMKV } from "react-native-mmkv";
 import { ThemeType } from "@features/theme/types";
+import { changeLanguage } from "i18next";
+import { Appearance } from "react-native";
+import { MMKV } from "react-native-mmkv";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { DEFAULT_SETTINGS } from "./defaults";
+import { ClientSettings, Language, ServerSettings } from "./types";
 
 const SETTINGS_STORAGE_ID = "settings-storage";
-import { t, changeLanguage } from "i18next";
-import * as Locals from "expo-localization";
-import { Appearance } from "react-native";
 
 const storage = new MMKV({
   id: SETTINGS_STORAGE_ID,

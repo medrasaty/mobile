@@ -12,5 +12,3 @@ const Exper = () => {
     </Page>
   );
 };
-
-export default Exper;

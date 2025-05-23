@@ -1,20 +1,18 @@
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { FollowingRequest } from "../types";
-import { Button, Surface, useTheme } from "react-native-paper";
-import UserAvatar from "@/components/UserAvatar";
-import { School } from "./UserCompactCell";
+import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
+import LoadingDialog from "@/components/LoadingDialog";
 import Row from "@/components/Row";
-import { useRouter } from "expo-router";
-import React from "react";
-import { StyleSheet } from "react-native";
+import { ThemedText } from "@/components/ThemedText";
 import { containerMargins } from "@/constants/styels";
+import { useVisibleV2 } from "@/hooks/useVisible";
+import { d } from "@/lib/dates";
+import UserInfo from "@components/UserInfo";
 import { t } from "i18next";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { Button, Card, useTheme } from "react-native-paper";
 import useAcceptFollowingRequestMutation from "../hooks/useAcceptFollowingRequestMutation";
 import useRejectFollowingRequestMutation from "../hooks/useRejectFollowingRequestMutation";
-import { ConfirmDialog, ConfirmDialogV2 } from "@/components/ConfirmDialog";
-import { useVisibleV2 } from "@/hooks/useVisible";
-import LoadingDialog from "@/components/LoadingDialog";
+import { FollowingRequest } from "../types";
 
 type FollowingRequestsToMeCellProps = {
   request: FollowingRequest;
@@ -23,44 +21,74 @@ type FollowingRequestsToMeCellProps = {
 const FollowingRequestsToMeCell = ({
   request,
 }: FollowingRequestsToMeCellProps) => {
-  const router = useRouter();
-
-  const goToUser = () => {
-    router.push(`/users/${request.from_user.username}`);
-  };
+  const theme = useTheme();
 
   return (
-    <Surface style={[styles.container]}>
-      <ThemedView style={{ padding: 10, gap: 16 }}>
+    <Card mode="outlined" style={[styles.container]}>
+      <View style={{ padding: 10, gap: 16 }}>
         <Row style={{ justifyContent: "space-between" }}>
-          <ThemedView
-            style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+          <UserInfo user={request.from_user} />
+          <ThemedText
+            variant="labelSmall"
+            color={theme.colors.secondary}
+            style={{ marginTop: 10, marginEnd: 10 }}
           >
-            <UserAvatar url={request.from_user.profile_picture} size={60} />
-            <ThemedView style={{ gap: 5 }}>
-              <ThemedText onPress={goToUser}>
-                {request.from_user.short_name}
-              </ThemedText>
-              <School name={request.from_user.school_name} />
-            </ThemedView>
-          </ThemedView>
-          <ThemedText variant="labelSmall" style={{ marginTop: 10 }}>
-            {request.created.toLocaleDateString()}
+            {d(request.created).fromNow()}
           </ThemedText>
         </Row>
         <ActionButtons requestId={request.id} />
-      </ThemedView>
-    </Surface>
+      </View>
+    </Card>
   );
 };
 
 type ActionButtonsProps = { requestId: FollowingRequest["id"] };
 
-export const ActionButtons = (props: ActionButtonsProps) => {
+export const ActionButtons = ({ requestId }: ActionButtonsProps) => {
+  const { mutate: accept, isPending: isAcceptPending } =
+    useAcceptFollowingRequestMutation();
+  const { mutate: reject, isPending: isRejectPending } =
+    useRejectFollowingRequestMutation();
+  const theme = useTheme();
+  const [visible, show, hide] = useVisibleV2(false);
+
+  const handleRejectionConfirm = () => {
+    hide();
+    reject(requestId);
+  };
+
   return (
-    <Row style={{ gap: 8 }}>
-      <AcceptButton {...props} />
-      <RejectButton {...props} />
+    <Row style={{ gap: 8, justifyContent: "flex-end" }}>
+      <View>
+        <Button
+          theme={{ colors: { primary: theme.colors.error } }}
+          mode="elevated"
+          onPress={show}
+        >
+          {t("reject")}
+        </Button>
+        <ConfirmDialogV2
+          message={t("confirm_following_request_rejection")}
+          visible={visible}
+          onCancel={hide}
+          onConfirm={handleRejectionConfirm}
+        />
+        <LoadingDialog
+          message={t("rejecting") + "..."}
+          visible={isRejectPending}
+        />
+      </View>
+      <View>
+        <Button
+          disabled={isAcceptPending}
+          mode="contained"
+          onPress={() => {
+            accept(requestId);
+          }}
+        >
+          {t("accept")}
+        </Button>
+      </View>
     </Row>
   );
 };
@@ -112,7 +140,6 @@ export const RejectButton = ({ requestId }: ActionButtonsProps) => {
 const styles = StyleSheet.create({
   container: {
     ...containerMargins,
-    borderRadius: 6,
     marginBottom: 10,
     gap: 10,
   },

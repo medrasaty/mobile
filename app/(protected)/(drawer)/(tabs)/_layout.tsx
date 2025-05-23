@@ -82,6 +82,7 @@ export default function TabsLayout() {
           ),
         }}
       />
+      {/* 
       <Tabs.Screen
         name="exper"
         options={{
@@ -95,6 +96,7 @@ export default function TabsLayout() {
           ),
         }}
       />
+          */}
     </Tabs>
   );
 }

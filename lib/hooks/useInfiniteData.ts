@@ -12,7 +12,7 @@ type InfiniteQueryOptions<T> = {
 
 /**
  * A reusable hook for infinite queries using the request utility
- * 
+ *
  * @template T - The type of items in the response
  * @param options - Configuration options for the infinite query
  * @param options.queryKey - The React Query cache key
@@ -34,22 +34,23 @@ export function useInfiniteData<T>({
     queryFn: async ({ pageParam }): Promise<CursorPaginatedResponse<T>> => {
       const response = await request<CursorPaginatedResponse<T>>({
         url: pageParam,
-        method: 'GET',
-        params
+        method: "GET",
+        params,
       });
-      
+
       // Apply transformation if provided
-      const results = transformResults 
+      const results = transformResults
         ? transformResults(response.data.results)
         : response.data.results;
-        
+
       return {
         ...response.data,
-        results
+        results,
       };
     },
     initialPageParam: initialPath,
     getNextPageParam: (lastPage) => lastPage.next,
-    enabled
+    enabled,
   });
-} 
+}
+
