@@ -41,17 +41,16 @@ export const HomeSearchAppbar = () => {
     if (query.trim() !== "") {
       // Important to prevent UI glitch
       Keyboard.dismiss();
-
-      router.push({
-        pathname: "/search/questions",
-        params: { q: query },
+      Keyboard.addListener("keyboardDidHide", () => {
+        // Make sure keybaord has fully closed
+        setTimeout(() => {
+          router.push({
+            pathname: "/search/questions",
+            params: { q: query },
+          });
+        }, 1000);
       });
     }
-  };
-
-  const handleClose = () => {
-    setQuery("");
-    setSearchActive(false);
   };
 
   return (
@@ -60,7 +59,7 @@ export const HomeSearchAppbar = () => {
         onChangeText={(text) => setQuery(text)}
         style={{ backgroundColor: theme.colors.surface }}
         icon={"arrow-right"}
-        onIconPress={handleClose}
+        onIconPress={clearSearch}
         onSubmitEditing={handleSearch}
         showDivider={false}
         autoFocus

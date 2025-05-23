@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { BackHandler } from "react-native";
 import { Appbar, Searchbar, useTheme } from "react-native-paper";
 import { useSearchStore } from "../store";
+import { useFocusEffect } from "expo-router";
 
 export type BaseSearchAppbarProps = {
   /**
@@ -43,7 +44,7 @@ export const BaseSearchAppbar = ({
   placeholder = "Search...",
 }: BaseSearchAppbarProps) => {
   const theme = useTheme();
-  const { setQuery } = useSearchStore();
+  const { setQuery, clearSearch, isSearchActive } = useSearchStore();
   const [localQuery, setLocalQuery] = useState(initialQuery);
 
   // Handle back button press
@@ -62,9 +63,19 @@ export const BaseSearchAppbar = ({
     return () => backHandler.remove();
   }, [onClose]);
 
+  // Clear search when screen loose focus
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        if (isSearchActive) {
+          clearSearch();
+        }
+      };
+    }, [isSearchActive])
+  );
+
   const handleQueryChange = (text: string) => {
     setLocalQuery(text);
-    
     // If configured to update on change, update the store immediately
     if (updateOnChange) {
       setQuery(text);
@@ -83,10 +94,10 @@ export const BaseSearchAppbar = ({
         placeholder={placeholder}
         onChangeText={handleQueryChange}
         value={localQuery}
-        style={{ 
-          flex: 1, 
+        style={{
+          flex: 1,
           backgroundColor: theme.colors.surface,
-          marginRight: showBackButton ? 8 : 0
+          marginRight: showBackButton ? 8 : 0,
         }}
         onSubmitEditing={handleSearch}
         returnKeyType="search"
@@ -99,4 +110,5 @@ export const BaseSearchAppbar = ({
   );
 };
 
-export default BaseSearchAppbar; 
+export default BaseSearchAppbar;
+

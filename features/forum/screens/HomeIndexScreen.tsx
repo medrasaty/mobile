@@ -12,7 +12,7 @@ import useFilterOptions from "@/hooks/useFilterOptions";
 import { useTranslation } from "react-i18next";
 import React from "react";
 import { useSearchStore } from "@features/search/store";
-import { HomeSearchAppbar } from "@features/search/components/SearchAppbar";
+import { HomeSearchAppbar } from "@features/search/components/HomeSearchAppbar";
 
 export const HomeAppBar = () => {
   const { t } = useTranslation();

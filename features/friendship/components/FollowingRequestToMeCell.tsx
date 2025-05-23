@@ -2,14 +2,14 @@ import { ConfirmDialogV2 } from "@/components/ConfirmDialog";
 import LoadingDialog from "@/components/LoadingDialog";
 import Row from "@/components/Row";
 import { ThemedText } from "@/components/ThemedText";
-import { containerMargins } from "@/constants/styels";
+import { containerMargins, debugStyle } from "@/constants/styels";
 import { useVisibleV2 } from "@/hooks/useVisible";
 import { d } from "@/lib/dates";
 import UserInfo from "@components/UserInfo";
 import { t } from "i18next";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, Card, useTheme } from "react-native-paper";
+import { Button, Card, Surface, useTheme } from "react-native-paper";
 import useAcceptFollowingRequestMutation from "../hooks/useAcceptFollowingRequestMutation";
 import useRejectFollowingRequestMutation from "../hooks/useRejectFollowingRequestMutation";
 import { FollowingRequest } from "../types";
@@ -24,8 +24,8 @@ const FollowingRequestsToMeCell = ({
   const theme = useTheme();
 
   return (
-    <Card mode="outlined" style={[styles.container]}>
-      <View style={{ padding: 10, gap: 16 }}>
+    <Surface elevation={0} style={[styles.container]}>
+      <View style={{ gap: 16 }}>
         <Row style={{ justifyContent: "space-between" }}>
           <UserInfo user={request.from_user} />
           <ThemedText
@@ -38,7 +38,7 @@ const FollowingRequestsToMeCell = ({
         </Row>
         <ActionButtons requestId={request.id} />
       </View>
-    </Card>
+    </Surface>
   );
 };
 
@@ -93,54 +93,10 @@ export const ActionButtons = ({ requestId }: ActionButtonsProps) => {
   );
 };
 
-export const AcceptButton = ({ requestId }: ActionButtonsProps) => {
-  const { mutate: accept, isPending } = useAcceptFollowingRequestMutation();
-
-  return (
-    <Button
-      disabled={isPending}
-      onPress={() => {
-        accept(requestId);
-      }}
-    >
-      {t("accept")}
-    </Button>
-  );
-};
-
-export const RejectButton = ({ requestId }: ActionButtonsProps) => {
-  const theme = useTheme();
-  const { mutate: reject, isPending } = useRejectFollowingRequestMutation();
-  const [visible, show, hide] = useVisibleV2(false);
-
-  const handleRejectionConfirm = () => {
-    hide();
-    reject(requestId);
-  };
-
-  return (
-    <>
-      <Button
-        theme={{ colors: { primary: theme.colors.error } }}
-        onPress={show}
-      >
-        {t("reject")}
-      </Button>
-      <ConfirmDialogV2
-        message={t("confirm_following_request_rejection")}
-        visible={visible}
-        onCancel={hide}
-        onConfirm={handleRejectionConfirm}
-      />
-      <LoadingDialog message={t("rejecting") + "..."} visible={isPending} />
-    </>
-  );
-};
-
 const styles = StyleSheet.create({
   container: {
     ...containerMargins,
-    marginBottom: 10,
+    paddingVertical: 10,
     gap: 10,
   },
 });

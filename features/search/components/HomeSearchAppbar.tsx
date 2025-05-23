@@ -2,15 +2,17 @@ import React from "react";
 import { router } from "expo-router";
 import { useSearchStore } from "../store";
 import { BaseSearchAppbar } from "./BaseSearchAppbar";
+import { Keyboard } from "react-native";
 
 /**
  * Search appbar used on the home screen
  * Updates the query on change and navigates to results on submit
  */
 export const HomeSearchAppbar = () => {
-  const { query, setSearchActive } = useSearchStore();
+  const { query, clearSearch } = useSearchStore();
 
   const handleSearch = (searchQuery: string) => {
+    Keyboard.dismiss();
     if (searchQuery.trim() !== "") {
       router.push({
         pathname: "/search/questions",
@@ -20,7 +22,7 @@ export const HomeSearchAppbar = () => {
   };
 
   const handleClose = () => {
-    setSearchActive(false);
+    clearSearch();
   };
 
   return (
@@ -29,9 +31,10 @@ export const HomeSearchAppbar = () => {
       onSearch={handleSearch}
       onClose={handleClose}
       updateOnChange={true}
-      placeholder="Search questions, users, schools..."
+      placeholder="Search..."
     />
   );
 };
 
-export default HomeSearchAppbar; 
+export default HomeSearchAppbar;
+

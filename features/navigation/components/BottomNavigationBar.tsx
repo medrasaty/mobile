@@ -12,6 +12,7 @@ export default function BottomTabNavigationBar({
   style,
   activeLableColor,
   inactiveLableColor,
+  divider = false,
 }) {
   function handleTabPress({ route, preventDefault }) {
     const event = navigation.emit({
@@ -57,7 +58,7 @@ export default function BottomTabNavigationBar({
 
   return (
     <>
-      <Divider />
+      {divider && <Divider />}
       <BottomNavigation.Bar
         style={style}
         navigationState={state}
@@ -65,6 +66,7 @@ export default function BottomTabNavigationBar({
         onTabPress={handleTabPress}
         renderIcon={renderIcon}
         getLabelText={getLabelText}
+        keyboardHidesNavigationBar
       />
     </>
   );

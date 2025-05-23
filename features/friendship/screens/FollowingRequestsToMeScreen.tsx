@@ -1,30 +1,18 @@
 import Page from "@/components/Page";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import useCurrentUser from "@/hooks/useCurrentUser";
 import { useInfiniteFollwingRequestsToMe } from "../hooks/useFollowingRequestsToMe";
 import FullPageLoadingIndicator from "@/components/FullPageLoadingIndicator";
 import { FollowingRequest } from "../types";
 import FollowingRequestsToMeCell from "../components/FollowingRequestToMeCell";
 import Animated, { LinearTransition } from "react-native-reanimated";
-import {
-  FlatListProps,
-  RefreshControl,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { FlatListProps, RefreshControl } from "react-native";
 import { useMemo } from "react";
 import ListFooterActivityIndicator from "@/components/ListFooterActivityIndicator";
-import NetworkError from "@/components/NetworkError";
 import ErrorView from "@components/ErrorView";
 import { AppBar } from "@features/navigation/components/AppBar";
-import EmptyView from "@components/EmptyList";
 import EmptyStateView from "@components/EmptyStateView";
-import CenterPage from "@components/CenterPage";
+import { Divider } from "react-native-paper";
 
 const FollowingRequestsToMeScreen = () => {
-  const user = useCurrentUser();
-
   return (
     <Page>
       <AppBar title="following request to me" />
@@ -43,7 +31,7 @@ export const FollowingRequestsToMe = () => {
   }, [q.data]);
 
   return (
-    <Page>
+    <>
       {q.isPending ? (
         <FullPageLoadingIndicator />
       ) : q.isSuccess ? (
@@ -58,7 +46,7 @@ export const FollowingRequestsToMe = () => {
           onRetry={q.refetch}
         />
       )}
-    </Page>
+    </>
   );
 };
 
@@ -72,7 +60,6 @@ const FollowingRequestsToMeList = ({
   ...props
 }: FollowingRequestsToMeListProps) => {
   const q = useInfiniteFollwingRequestsToMe();
-  const { height } = useWindowDimensions();
 
   const renderFooter = () => {
     if (q.isFetchingNextPage) {
@@ -108,25 +95,13 @@ const FollowingRequestsToMeList = ({
         />
       }
       ListFooterComponent={renderFooter}
+      ItemSeparatorComponent={Divider}
       onEndReachedThreshold={15}
       ListEmptyComponent={renderEmptyList}
       onEndReached={handleOnEndReached}
       itemLayoutAnimation={LinearTransition}
       {...props}
     />
-  );
-};
-
-const NotPrivateAccount = () => {
-  // TODO: create beautifull and descriptfull page
-  return (
-    <Page>
-      <View>
-        <ThemedText>
-          You must change your account type to see this page.
-        </ThemedText>
-      </View>
-    </Page>
   );
 };
 
