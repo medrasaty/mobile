@@ -1,4 +1,5 @@
 import { containerMargins } from "@/constants/styels";
+import { path } from "@/lib/routing";
 import Page from "@components/Page";
 import { ThemedText } from "@components/ThemedText";
 import { AppBar } from "@features/navigation/components/AppBar";
@@ -18,17 +19,17 @@ const MainSettingScreen = () => {
     <Page>
       <AppBar divider title={t("settings.settings")} />
       <SettingButton
-        onPress={() => router.push("/settings/privacy")}
+        onPress={() => router.push(path.settings.privacy)}
         title={t("settings.privacy")}
       />
       <Divider />
       <SettingButton
-        onPress={() => router.push("/settings/push_notifications")}
+        onPress={() => router.push(path.settings.notifications)}
         title={t("settings.notifications")}
       />
       <Divider />
       <SettingButton
-        onPress={() => router.push("/settings/appearance")}
+        onPress={() => router.push(path.settings.appearance)}
         title={t("settings.appearance")}
       />
       <Divider />
