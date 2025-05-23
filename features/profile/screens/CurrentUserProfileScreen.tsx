@@ -11,8 +11,8 @@ import { AuthUser } from "@features/auth/types";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { t } from "i18next";
-import React, { useMemo, useState, useCallback } from "react";
-import { StyleSheet, View, ViewProps, RefreshControl } from "react-native";
+import React, { useMemo } from "react";
+import { StyleSheet, View, ViewProps } from "react-native";
 import { Appbar, Divider, Button, Chip } from "react-native-paper";
 import { useTheme } from "react-native-paper/src/core/theming";
 import NavigationButtonsList from "../components/NavigationButtonsList";
@@ -27,7 +27,7 @@ import { path } from "@/lib/routing";
 const CurrentUserProfileAppbar: React.FC = () => {
   const router = useRouter();
   return (
-    <AppBar divider backAction={false} title={t("Profile")}>
+    <AppBar backAction={false} title={t("Profile")}>
       <Appbar.Action
         icon={(props) => <Ionicons name="settings-outline" {...props} />}
         onPress={() => router.push(path.settings.main)}
@@ -159,9 +159,8 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
                 <Ionicons color={theme.colors.secondary} name="mail" />
                 <ThemedText variant="labelSmall">{user.email}</ThemedText>
               </View>
-
             </View>
-             <Row style={{gap: 10}}>
+            <Row style={{ gap: 10 }}>
               {/* School */}
               {user.school_name && (
                 <View style={styles.infoChip}>
@@ -170,25 +169,25 @@ const CurrentUserProfileScreen: React.FC<CurrentUserProfileScreenProps> = ({
                   </Chip>
                 </View>
               )}
-              
+
               {/* User Type */}
               <View style={styles.infoChip}>
                 <Chip icon="account" mode="outlined" compact>
                   {user.type}
                 </Chip>
               </View>
-              
+
               {/* Account Privacy */}
               <View style={styles.infoChip}>
-                <Chip 
-                  icon={user.profile.is_private ? "lock" : "lock-open"} 
-                  mode="outlined" 
+                <Chip
+                  icon={user.profile.is_private ? "lock" : "lock-open"}
+                  mode="outlined"
                   compact
                 >
                   {user.profile.is_private ? "Private" : "Public"}
                 </Chip>
               </View>
-              </Row> 
+            </Row>
           </View>
         </View>
         <ContainerView style={{ gap: 10 }}>

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { StyleSheet, View, ScrollView, Dimensions } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 import { AppBar } from "@/features/navigation/components/AppBar";
 import Page from "@components/Page";
 import { ThemedText } from "@components/ThemedText";
@@ -13,10 +13,9 @@ import {
 } from "react-native-paper";
 import { useTheme } from "react-native-paper/src/core/theming";
 import dayjs from "dayjs";
-import { debugStyle, DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
+import { Ionicons } from "@expo/vector-icons";
 import { AuthUser } from "@features/auth/types";
-import { LinearGradient } from "expo-linear-gradient";
 import Row from "@components/Row";
 
 // Define a type for the user data returned by the API
@@ -27,11 +26,6 @@ type UserInfoData = {
   profile_picture: string;
   school_name: string;
 };
-
-// Update component prop types
-type UserWithInfo = AuthUser & UserInfoData;
-
-const { width } = Dimensions.get("window");
 
 /**
  * UserInfoScreen - Displays detailed information about the current user
@@ -55,7 +49,7 @@ const UserInfoScreen = () => {
 
   return (
     <Page>
-      <AppBar title="User Information" divider />
+      <AppBar title="User Information" />
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -288,18 +282,6 @@ const FollowStatItem = React.memo(
         {label}
       </ThemedText>
     </View>
-  )
-);
-
-/**
- * DotInfo - Component for displaying a value with a colored dot
- */
-const DotInfo = React.memo(
-  ({ color, value }: { color: string; value: string | number }) => (
-    <Row alignItems="center" style={{ gap: 2 }}>
-      <ThemedText variant="labelSmall">{value}</ThemedText>
-      <MaterialIcons color={color} size={6} name="circle" />
-    </Row>
   )
 );
 
