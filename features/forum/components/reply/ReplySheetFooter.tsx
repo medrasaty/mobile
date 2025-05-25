@@ -3,6 +3,7 @@ import { Answer } from "@features/forum/answers/types";
 import {
   BottomSheetFooter,
   BottomSheetFooterProps,
+  useBottomSheet,
 } from "@gorhom/bottom-sheet";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -16,6 +17,7 @@ import { ThemedView } from "@/components/ThemedView";
 import useRoundedTheme from "@/hooks/useRoundedTheme";
 import useCreateReplyMutation from "../../hooks/useCreateReplyMutation";
 import { useQueryClient } from "@tanstack/react-query";
+import View from "@components/styled/View";
 
 export type ReplySheetFooterProps = {
   answer: Answer;
@@ -25,7 +27,6 @@ export const ReplySheetFooter = ({
   answer,
   ...props
 }: ReplySheetFooterProps) => {
-  const theme = useTheme();
   const [replyText, setReplyText] = useState<string>("");
 
   const isValidReplyText = useMemo(
@@ -33,7 +34,9 @@ export const ReplySheetFooter = ({
     [replyText]
   );
 
-  const { mutate, isPending, isSuccess, isError } = useCreateReplyMutation();
+  const { expand } = useBottomSheet();
+
+  const { mutate, isPending } = useCreateReplyMutation();
 
   const handleSubmitReply = () => {
     if (isValidReplyText)
@@ -49,22 +52,20 @@ export const ReplySheetFooter = ({
 
   return (
     <>
-      <BottomSheetFooter
-        style={{ backgroundColor: theme.colors.background }}
-        {...props}
-      >
-        <ThemedView style={styles.container}>
+      <BottomSheetFooter {...props} >
+        <View style={styles.container}>
           <ReplyTextInput
+            onFocus={() => expand()}
             disabled={isPending}
             value={replyText}
             onChangeText={(text) => setReplyText(text)}
             style={{ flex: 1 }}
           />
           <SubmitReplyButton
-            disabled={isValidReplyText === false || isPending}
+            disabled={!isValidReplyText || isPending}
             onSubmit={handleSubmitReply}
           />
-        </ThemedView>
+        </View>
       </BottomSheetFooter>
     </>
   );
@@ -76,6 +77,7 @@ const styles = StyleSheet.create({
     gap: 4,
     margin: 4,
     alignItems: "center",
+    backgroundColor: "transparent",
   },
 });
 
@@ -88,13 +90,19 @@ export const ReplyTextInput = ({
   ...props
 }: ReplyTextInputProps) => {
   const roundedTheme = useRoundedTheme();
+  const maxLength = useMemo(() => 150, []);
   return (
     <TextInput
       inputMode={inputMode}
       mode={mode}
       placeholder={placeholder}
       dense
-      maxLength={150}
+      right={
+        props.value && props.value.length > 0 
+          ? <TextInput.Affix text={`${props.value.length}/${maxLength}`} />
+          : null
+      }
+      maxLength={maxLength}
       {...props}
       theme={roundedTheme}
     />
@@ -108,7 +116,7 @@ type SendReplyButtonProps = {
 
 export function SubmitReplyButton({
   onSubmit,
-  disabled = true,
+  disabled = false,
 }: SendReplyButtonProps) {
   const roundedTheme = useRoundedTheme();
   return (

@@ -11,6 +11,7 @@ import { ACTIONS_GAP } from "@forum/components/question/detail/QuestionDetailAct
 import Rating from "@forum/components/Rating";
 import ReplySheet from "@forum/components/reply/ReplySheet";
 import { Answer } from "../types";
+import { useSheetRef } from "@components/Sheet";
 
 const Actions = ({ answer }: { answer: Answer }) => {
   return (
@@ -81,8 +82,8 @@ const useOpenReplySheetEffect = ({
 };
 
 export const Reply = ({ answer }: { answer: Answer }) => {
-  const sheetRef = useSheetViewRef();
-  const show = () => sheetRef.current?.present();
+  const sheetRef = useSheetRef();
+  const show = () => sheetRef.current?.expand();
   // useOpenReplySheetEffect({ answer, sheetRef });
 
   return (

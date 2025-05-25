@@ -5,6 +5,7 @@
  * - user: BaseUser (required) - The user object containing user details.
  * - avatarSize?: number - The size of the avatar to display (default: 55).
  * - showSchool?: boolean - Whether to show the user's school (default: true).
+ * - onPress?: () => void - Optional callback to be called before navigation.
  *
  * When pressed, navigates to the user's profile page.
  */
@@ -15,14 +16,16 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { UserAvatarV2 } from "./UserAvatar";
 import Row from "./Row";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { TouchableRipple, useTheme } from "react-native-paper";
+import { useTheme } from "react-native-paper";
 import { path } from "@/lib/routing";
 import { useRouter } from "expo-router";
+import { memo } from "react";
 
 type UserInfoProps = {
   avatarSize?: number;
   user: BaseUser;
   showSchool?: boolean;
+  onPress?: () => void;
 };
 
 /**
@@ -33,10 +36,14 @@ const UserInfo = ({
   showSchool = true,
   avatarSize = 55,
   user,
+  onPress,
 }: UserInfoProps) => {
   const router = useRouter();
 
-  const navigateToUserProfile = () => router.push(path.users.details(user.id));
+  const navigateToUserProfile = () => {
+    onPress?.();
+    router.push(path.users.details(user.id));
+  };
 
   return (
     <Pressable onPress={navigateToUserProfile} style={styles.container}>
@@ -57,7 +64,7 @@ const UserInfo = ({
  * Props:
  * - name: string - The name of the school to display.
  */
-export const School = ({ name }: { name: string }) => {
+const School = memo(({ name }: { name: string }) => {
   const theme = useTheme();
   return (
     <Row alignItems="center" style={{ gap: 4 }}>
@@ -71,7 +78,7 @@ export const School = ({ name }: { name: string }) => {
       </ThemedText>
     </Row>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -81,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserInfo;
+export default memo(UserInfo);
