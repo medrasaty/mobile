@@ -17,12 +17,16 @@ import useRoundedTheme from "@/hooks/useRoundedTheme";
 import { useSession } from "@/hooks/useSession";
 import { loginSchema } from "../types";
 import { ProfileQueryKeys } from "@features/profile/keys";
+import { useAuthSession } from "../store";
+import { ThemedText } from "@components/ThemedText";
 
 export default function LoginScreen() {
-  const { signIn, session } = useSession();
+  const { signIn, session: sessionFromSessionHook } = useSession();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const theme = useRoundedTheme();
+  const session = useAuthSession((state) => state.session);
+  const clearedSessionReason = useAuthSession((state) => state.clearedSessionReason);
 
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [hiddenPassword, setHiddenPassword] = useState(true);
@@ -71,6 +75,32 @@ export default function LoginScreen() {
           >
             {t("login")}
           </Text>
+
+            {clearedSessionReason == "session_expired" && (
+            <View
+              style={{
+                backgroundColor: theme.colors.errorContainer ?? "#fdecea",
+                borderRadius: 8,
+                padding: 12,
+                marginBottom: 16,
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <ThemedText
+                style={{
+                  color: theme.colors.error ?? "#b71c1c",
+                  fontWeight: "bold",
+                  flex: 1,
+                  textAlign: "center",
+                }}
+                variant="bodyMedium"
+              >
+                {t("auth.session_expired", "انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى.")}
+              </ThemedText>
+            </View>
+          )}
 
           {/* TextInputs */}
           <View style={{ gap: 12, flex: 1 }}>

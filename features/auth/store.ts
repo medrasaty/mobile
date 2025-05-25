@@ -11,13 +11,16 @@ const storage = new MMKV({
   encryptionKey: process.env.MMKV_ENCRYPTION_KEY ?? "(a?f9;adfj.",
 });
 
+type clearSessionReason = "session_expired" | "user_signed_out" | "unknown";
+
 export interface AuthSessionStore {
   session: AuthSession | null;
-  clearSession: () => void;
+  clearSession: (reason?: clearSessionReason) => void;
+  clearedSessionReason: clearSessionReason | null;
   updateUser: (user: Partial<AuthUser>) => void;
   // TODO: implement these methods later.
   login?: () => void;
-  loguot?: () => void;
+  logout?: () => void;
 }
 
 export const useAuthSession = create<AuthSessionStore>(
@@ -25,8 +28,9 @@ export const useAuthSession = create<AuthSessionStore>(
   persist(
     (set) => ({
       session: null,
-      clearSession: () => {
-        set({ session: null });
+      clearedSessionReason: null,
+      clearSession: (reason?: clearSessionReason) => {
+        set({ session: null, clearedSessionReason: reason });
       },
       // TODO: document this.
       updateUser: (user: Partial<AuthUser>) => {

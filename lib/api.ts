@@ -7,12 +7,8 @@ import { LOGIN_PAGE } from "@/constants/routes";
 const UNAUTHERIZED_401 = 401
 
 function handleInvalidToken() {
-  useAuthSession.getState().clearSession()
-
-  router.replace({
-    pathname: LOGIN_PAGE,
-    params: { error: "session_expired" }
-  })
+  // just clear the session and app will automatically redirect to login page.
+  useAuthSession.getState().clearSession("session_expired")
 }
 
 export function AuthClient(): Axios {
