@@ -82,7 +82,6 @@ export function useReadAllNotificationEffect() {
 
   useFocusEffect(
     useCallback(() => {
-      // When the screen loses focus, mark all unread notifications as read
       if (shouldRead) {
         return () => readAllNotifications();
       }

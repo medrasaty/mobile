@@ -55,11 +55,8 @@ const NotificationCard: React.FC<{ notification: Notification }> = ({ notificati
   };
 
   return (
-    <Pressable 
-      onPress={handlePress}
-      android_ripple={{ color: theme.colors.surfaceVariant }}
-    >
-      <Surface 
+      <Card
+        onPress={handlePress}
         style={[styles.card, cardStyle]} 
         elevation={0}
       >
@@ -96,8 +93,7 @@ const NotificationCard: React.FC<{ notification: Notification }> = ({ notificati
             </ThemedText>
           </View>
         </View>
-      </Surface>
-    </Pressable>
+      </Card>
   );
 };
 
@@ -170,6 +166,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginHorizontal: 12,
     borderRadius: 12,
+    marginVertical: 6,
   },
   contentContainer: {
     flexDirection: "row",

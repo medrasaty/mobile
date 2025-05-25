@@ -25,6 +25,7 @@ import { NotificationType, Notification } from "@/types/notifications.type";
 import useFilterOptions from "@/hooks/useFilterOptions";
 import { path } from "@/lib/routing";
 import { router } from "expo-router";
+import View from "@components/styled/View";
 
 /**
  * Main screen for displaying and managing notifications
@@ -87,7 +88,6 @@ export const NotificationsActionAppbar = () => {
  */
 export const NotificationsContent = () => {
   const { t } = useTranslation();
-  const theme = useTheme();
 
   const {
     isLoading,
@@ -132,7 +132,7 @@ export const NotificationsContent = () => {
   // Show loading state
   if (isLoading) {
     return (
-      <ThemedView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         {renderFilterOptions()}
         <EmptyView
           message={t("Loading...")}
@@ -140,27 +140,27 @@ export const NotificationsContent = () => {
           iconSize={40}
           fullScreen={true}
         />
-      </ThemedView>
+      </View>
     );
   }
 
   // Show error state
   if (isError) {
     return (
-      <ThemedView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         {renderFilterOptions()}
         <ErrorView
           error={error}
           onRetry={refetch}
         />
-      </ThemedView>
+      </View>
     );
   }
 
   // Show empty state
   if (data?.length === 0 || filteredNotifications.length === 0) {
     return (
-      <ThemedView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         {renderFilterOptions()}
         <EmptyView
           message={t("No notifications")}
@@ -170,19 +170,18 @@ export const NotificationsContent = () => {
           fullScreen={true}
           padding={24}
         />
-      </ThemedView>
+      </View>
     );
   }
 
   // Show notification list
   return (
-    <ThemedView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       {renderFilterOptions()}
       <FlashList
         data={filteredNotifications}
         keyExtractor={item => item.id.toString()}
         renderItem={renderItem}
-        ItemSeparatorComponent={Divider}
         estimatedItemSize={120}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingVertical: 8 }}
@@ -190,7 +189,7 @@ export const NotificationsContent = () => {
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
         }
       />
-    </ThemedView>
+    </View>
   );
 };
 
