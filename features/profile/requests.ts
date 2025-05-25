@@ -37,11 +37,20 @@ import { genFileUploadFromPath } from "@/lib/utils";
  * See parseUserProfileFormData documentation for examples.
  */
 
+export async function getCurrentUserProfile(): Promise<UserProfile> {
+  const response = await request<UserProfile>({
+    url: "/users/profile/",
+  });
+  return response.data;
+}
+
+
 export async function getProfile(
-  client: Axios,
   pk: BaseUser["pk"]
 ): Promise<UserProfile> {
-  const response = await client.get<UserProfile>(`/users/${pk}/`);
+  const response = await request<UserProfile>({
+    url: `/users/${pk}/`,
+  });
   return response.data;
 }
 
@@ -49,7 +58,8 @@ export async function getUserQuestions(
   client: Axios,
   userId: BaseUser["id"]
 ): Promise<Question[]> {
-  const response = await client.get("/forum/questions/", {
+  const response = await request({
+    url: "/forum/questions/",
     params: {
       owner: userId,
       extend: "subject",

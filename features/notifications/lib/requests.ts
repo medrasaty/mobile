@@ -2,6 +2,7 @@ import { transformDates } from "@/features/forum/utils";
 import { Axios } from "axios";
 import { Notification } from "@/types/notifications.type";
 import { request } from "@/lib/api";
+import { DeviceInfo } from "../types";
 
 export async function getNotifications(
   params: { is_read?: boolean } = {}
@@ -54,5 +55,20 @@ export async function registerDeviceForPushNotification(
    */
 
   const response = await client.post("/notifications/devices/", data);
+  return response.data;
+}
+
+export async function registerDevice(
+  deviceInfo: DeviceInfo,
+  expoPushToken: string
+) {
+  const response = await request({
+    url: "/notifications/device/",
+    method: "POST",
+    data: {
+      expo_push_token: expoPushToken,
+      ...deviceInfo,
+    },
+  });
   return response.data;
 }

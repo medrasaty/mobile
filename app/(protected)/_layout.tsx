@@ -2,14 +2,19 @@ import { LOGIN_PAGE } from "@/constants/routes";
 import { AnimatedAppBarProvider } from "@/contexts";
 import usePushNotificationFeature from "@/features/notifications/hooks/usePushNotificationFeature";
 import { useAuthSession } from "@features/auth/store";
+import useProfileAutoRefresh from "@features/profile/hooks/useProfileAutoRefresh";
 import SearchResultAppbar from "@features/search/components/SearchResultAppbar";
 import { Redirect, Stack } from "expo-router";
 import { t } from "i18next";
+import { useEffect } from "react";
 import { Appbar } from "react-native-paper";
 
 export default function ProtectedLayout() {
   const session = useAuthSession((state) => state.session);
+
   usePushNotificationFeature();
+
+  useProfileAutoRefresh();
 
   // Redirect to login page if not logged in.
   if (!session?.token) {

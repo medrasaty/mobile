@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useAuthSession } from "@/features/auth/store";
 import { useQueryClient } from "@tanstack/react-query";
 import { ProfileQueryKeys } from "../keys";
-import { getProfile } from "../requests";
+import { getCurrentUserProfile, getProfile } from "../requests";
 import useAuthClient from "@/hooks/useAuthClient";
 import NetInfo from "@react-native-community/netinfo";
 import { AppState } from "react-native";
@@ -14,13 +14,10 @@ import { AppState } from "react-native";
  * - When app returns to foreground
  */
 export default function useProfileAutoRefresh() {
-  const { session, updateUser } = useAuthSession((state) => ({
-    session: state.session,
-    updateUser: state.updateUser,
-  }));
+  const session = useAuthSession((state) => state.session);
+  const updateUser = useAuthSession((state) => state.updateUser);
 
   const qc = useQueryClient();
-  const client = useAuthClient();
   const networkListener = useRef<any>(null);
   const appStateListener = useRef<any>(null);
 
@@ -34,7 +31,7 @@ export default function useProfileAutoRefresh() {
       if (!networkState.isConnected) return;
 
       // Fetch updated profile data
-      const updatedProfile = await getProfile(client, session.user.pk);
+      const updatedProfile = await getCurrentUserProfile();
 
       // Update local state
       if (updatedProfile) {

@@ -9,6 +9,7 @@ import { login } from "./requests";
 import { loginCredentials as Credentials } from "./types";
 import { t } from "i18next";
 import { ProfileQueryKeys } from "@features/profile/keys";
+import useProfileAutoRefresh from "@features/profile/hooks/useProfileAutoRefresh";
 
 export type Session = {
   user: AuthUser;
@@ -33,6 +34,7 @@ export const AuthContext = React.createContext<AuthSession>({
 export function SessionProvider(props: React.PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState("session");
   const clearStoreSession = useAuthSession((state) => state.clearSession);
+
 
   const [[_, user], setUser] = useStorageState("user");
 

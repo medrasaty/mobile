@@ -113,3 +113,4 @@ export function genFileUploadFromPath(path: string): fileUploadType {
     uri: path,
   };
 }
+
