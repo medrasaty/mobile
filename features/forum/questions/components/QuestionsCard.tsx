@@ -3,9 +3,9 @@ import { Pressable, View, ViewProps } from "react-native";
 import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import UserInfo from "@/components/UserInfo";
-import { Surface, TouchableRipple, useTheme } from "react-native-paper";
+import { Surface, useTheme } from "react-native-paper";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, memo } from "react";
 import { useRouter } from "expo-router";
 import { t } from "i18next";
 import { Question } from "@/types/forum.types";
@@ -22,7 +22,7 @@ type QuestionCardProps = {
   compact?: boolean;
 };
 
-const ForumQuestionCard = ({
+const ForumQuestionCard = memo(({
   question,
   compact = false,
 }: QuestionCardProps) => {
@@ -33,55 +33,59 @@ const ForumQuestionCard = ({
     router.push(questionDetail({ questionId: question.id }));
   }, [question.id]);
 
+  const cardHeight = useMemo(() => ({
+    height: compact ? COMPACT_QUESTION_CARD_HEIGHT : FORUM_QUESTION_CARD_HEIGHT,
+  }), [compact]);
+
+  const surfaceStyle = useMemo(() => ([
+    styles.container,
+    {
+      borderRadius: theme.roundness,
+      width: compact ? FORUM_QUESTION_CARD_HEIGHT : "100%",
+    } as const,
+  ]), [theme.roundness, compact]);
+
+  const titleVariant = useMemo(() => ({
+    numberOfLines: compact ? 1 : 2,
+    bold: true,
+    variant: "titleLarge" as const,
+  }), [compact]);
+
+  const descriptionStyle = useMemo(() => ({
+    opacity: 0.8,
+    numberOfLines: compact ? 1 : 2,
+    variant: compact ? "bodySmall" as const : "bodyMedium" as const,
+  }), [compact]);
+
+  const dateStyle = useMemo(() => ({
+    marginRight: DEFAULT_CONTAINER_SPACING,
+    marginTop: 6,
+  }), []);
+
   return (
-    <Pressable
-      style={{
-        height: compact
-          ? COMPACT_QUESTION_CARD_HEIGHT
-          : FORUM_QUESTION_CARD_HEIGHT,
-      }}
-      onPress={goToQuestion}
-    >
+    <Pressable style={cardHeight} onPress={goToQuestion}>
       <Surface
         mode="flat"
         elevation={compact ? 1 : 0}
-        style={[
-          styles.container,
-          {
-            borderRadius: theme.roundness,
-            // rectangular card when compact
-            width: compact ? FORUM_QUESTION_CARD_HEIGHT : "auto",
-          },
-        ]}
+        style={surfaceStyle}
       >
-        <Row style={{ gap: 20 }}>
-          <View style={{ flex: 1 }}>
-            {/* Title */}
-            <ThemedText
-              numberOfLines={compact ? 1 : 2}
-              bold
-              variant={"titleLarge"}
-            >
+        <Row style={styles.contentRow}>
+          <View style={styles.flex}>
+            <ThemedText {...titleVariant}>
               {question.title}
             </ThemedText>
 
-            {/* Subject */}
             <ThemedText color={theme.colors.tertiary} variant="labelSmall">
               {question.subject.name}
             </ThemedText>
 
-            {/* Description */}
-            <View style={{ marginTop: 4 }}>
-              <ThemedText
-                style={{ opacity: 0.8 }}
-                numberOfLines={compact ? 1 : 2}
-                variant={compact ? "bodySmall" : "bodyMedium"}
-              >
+            <View style={styles.descriptionContainer}>
+              <ThemedText {...descriptionStyle}>
                 {question.text}
               </ThemedText>
             </View>
 
-            <View style={{ marginTop: 5 }}>
+            <View style={styles.statsContainer}>
               <Statistics
                 views={question.views}
                 answers={question.answers_count}
@@ -89,10 +93,7 @@ const ForumQuestionCard = ({
               />
               <Date
                 variant={compact ? "labelSmall" : "labelMedium"}
-                style={{
-                  marginRight: DEFAULT_CONTAINER_SPACING,
-                  marginTop: 6,
-                }}
+                style={dateStyle}
                 date={question.created}
               />
             </View>
@@ -108,67 +109,62 @@ const ForumQuestionCard = ({
 
         <Row
           alignItems="center"
-          style={{ justifyContent: "space-between", marginTop: 10 }}
+          style={styles.userInfoRow}
         >
           <UserInfo user={question.owner} avatarSize={compact ? 35 : 45} />
         </Row>
       </Surface>
     </Pressable>
   );
-};
+});
 
-export const Statistics = ({
+const Statistics = memo(({
   views,
   answers,
   rating,
   style,
   ...props
 }: ViewProps & { views: number; answers: number; rating: number }) => {
+  const combinedStyle = useMemo(() => [style, styles.statsRow], [style]);
+  
   return (
-    <Row style={[style, { gap: 8 }]} alignItems="center" {...props}>
+    <Row style={combinedStyle} alignItems="center" {...props}>
       <ViewsCount views={views} />
       <AnswersCount answers={answers} />
       <RatingCount rating={rating} />
     </Row>
   );
-};
+});
 
-export const Value = ({ value }: { value: number }) => {
-  return <ThemedText variant="labelSmall">{value}</ThemedText>;
-};
+const Value = memo(({ value }: { value: number }) => (
+  <ThemedText variant="labelSmall">{value}</ThemedText>
+));
 
-export const ViewsCount = ({ views }: { views: number }) => {
+const ViewsCount = memo(({ views }: { views: number }) => (
+  <Row style={styles.countRow} alignItems="center">
+    <Value value={views} />
+    <ThemedText variant="labelMedium">{t("views")}</ThemedText>
+  </Row>
+));
+
+const AnswersCount = memo(({ answers }: { answers: number }) => (
+  <Row style={styles.countRow} alignItems="center">
+    <Value value={answers} />
+    <ThemedText variant="labelMedium">{t("Answers")}</ThemedText>
+  </Row>
+));
+
+const RatingCount = memo(({ rating }: { rating: number }) => (
+  <Row style={styles.countRow} alignItems="center">
+    <Value value={rating} />
+    <RatingIcon rating={rating} />
+  </Row>
+));
+
+const RatingIcon = memo(({ rating }: { rating: number }) => {
   const theme = useTheme();
-  return (
-    <Row style={{ gap: 4 }} alignItems="center">
-      <Value value={views} />
-      <ThemedText variant="labelMedium">{t("views")}</ThemedText>
-    </Row>
-  );
-};
-
-export const AnswersCount = ({ answers }: { answers: number }) => {
-  return (
-    <Row style={{ gap: 4 }} alignItems="center">
-      <Value value={answers} />
-      <ThemedText variant="labelMedium">{t("Answers")}</ThemedText>
-    </Row>
-  );
-};
-
-export const RatingCount = ({ rating }: { rating: number }) => {
-  const theme = useTheme();
-  return (
-    <Row style={{ gap: 4 }} alignItems="center">
-      <Value value={rating} />
-      <RatingIcon rating={rating} />
-    </Row>
-  );
-};
-
-export const RatingIcon = ({ rating }: { rating: number }) => {
-  const theme = useTheme();
-  const isPositive = useMemo(() => rating >= 0, [rating]);
+  const isPositive = rating >= 0;
+  
   return (
     <Ionicons
       color={isPositive ? theme.colors.tertiary : theme.colors.error}
@@ -176,7 +172,7 @@ export const RatingIcon = ({ rating }: { rating: number }) => {
       size={12}
     />
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -187,10 +183,34 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     margin: 6,
   },
+  flex: {
+    flex: 1,
+  },
+  contentRow: {
+    gap: 20,
+  },
+  descriptionContainer: {
+    marginTop: 4,
+  },
+  statsContainer: {
+    marginTop: 5,
+  },
+  userInfoRow: {
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  statsRow: {
+    gap: 8,
+  },
+  countRow: {
+    gap: 4,
+  },
   moreOptionsItem: {
     paddingLeft: 10,
     paddingRight: 10,
   },
 });
+
+ForumQuestionCard.displayName = 'ForumQuestionCard';
 
 export default ForumQuestionCard;
