@@ -36,7 +36,6 @@ export default function ProtectedLayout() {
         <Stack.Screen
           name="questions/new"
           options={{
-            headerShown: true,
             headerTitle: t("new_question"),
           }}
         />

@@ -4,6 +4,8 @@ import { questionDetail } from "@/lib/routing";
 import QuestionForm from "../components/forms/QuestionForm";
 import Page from "@components/Page";
 import { Keyboard } from "react-native";
+import { Appbar } from "react-native-paper";
+import { AppBar } from "@features/navigation/components/AppBar";
 
 export default function CreateQuestionScreen() {
   const initialValues = {
@@ -18,6 +20,7 @@ export default function CreateQuestionScreen() {
 
   return (
     <Page>
+      <ScreenAppbar />
       <QuestionForm
         initialValues={initialValues}
         onSubmit={(values, { setSubmitting }) => {
@@ -36,3 +39,10 @@ export default function CreateQuestionScreen() {
     </Page>
   );
 }
+
+
+const ScreenAppbar = () => {
+  return (
+    <AppBar title="Create Question" />
+  )
+};

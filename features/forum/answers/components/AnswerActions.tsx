@@ -12,14 +12,14 @@ import Rating from "@forum/components/Rating";
 import ReplySheet from "@forum/components/reply/ReplySheet";
 import { Answer } from "../types";
 import { useSheetRef } from "@components/Sheet";
+import View from "@components/styled/View";
 
 const Actions = ({ answer }: { answer: Answer }) => {
   return (
-    <ThemedView style={{ alignItems: "center", gap: ACTIONS_GAP }}>
+    <View style={{ alignItems: "center", gap: ACTIONS_GAP }}>
       <RatingActions answer={answer} />
-      <BookmarkAnswer answer={answer} />
       <Reply answer={answer} />
-    </ThemedView>
+    </View>
   );
 };
 

@@ -17,6 +17,7 @@ import { ThemedView } from "@/components/ThemedView";
 import useStore from "@/store";
 import { useEffect, memo, useRef } from "react";
 import { useTheme } from "react-native-paper";
+import View from "@components/styled/View";
 
 // Extracted to avoid creating the same function on every render
 const NOOP = () => {};
@@ -70,12 +71,12 @@ const AnswerCard = memo(function AnswerCard({ answer, isHighlighted }: {
 
   return (
     <Animated.View style={[styles.container, highlightStyle]}>
-      <ThemedView>
-        <ThemedView style={styles.contentLayout}>
+      <View>
+        <View style={styles.contentLayout}>
           <Actions answer={answer} />
           <Info answer={answer} />
-        </ThemedView>
-      </ThemedView>
+        </View>
+      </View>
     </Animated.View>
   );
 });

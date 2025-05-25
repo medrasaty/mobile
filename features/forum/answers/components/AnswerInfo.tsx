@@ -1,7 +1,7 @@
 import ReadMoreText from "@/components/ReadMoreText";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Answer } from "@/types/forum.types";
+import { Answer } from "@features/forum/answers/types"; 
 import { View, ViewProps } from "react-native";
 import { useTheme } from "react-native-paper";
 import { d } from "@/lib/dates";
@@ -10,6 +10,7 @@ import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import UserInfo from "@components/UserInfo";
 import { memo, useMemo } from "react";
+import { useAuthSession } from "@features/auth/store";
 
 // Memoize the main component
 const Info = memo(function Info({
@@ -21,7 +22,7 @@ const Info = memo(function Info({
   const hasPicture = Boolean(answer.picture);
   
   return (
-    <ThemedView
+    <View
       style={[style, { flex: 1, justifyContent: "space-between" }]}
       {...props}
     >
@@ -40,7 +41,7 @@ const Info = memo(function Info({
       >
         <UserInfo avatarSize={40} user={answer.owner} />
       </View>
-    </ThemedView>
+    </View>
   );
 });
 
@@ -59,14 +60,19 @@ export const StatInfo = memo(({ answer }: { answer: Answer }) => {
       },
     });
   }, [router, answer.question.id, answer.question, answer.id]);
+  const user = useAuthSession(state => state.session?.user);
+
+  const isOwner = useMemo(() => answer.owner.id === user?.id, [answer.owner.id, user?.id]);
   
   return (
-    <>
+    <View style={{ gap: 6 }}>
       <TimeInfo answer={answer} />
-      <ThemedText onPress={goToEditAnswerPage} link variant="labelSmall">
-        {t("edit")}
-      </ThemedText>
-    </>
+      {isOwner && (
+        <ThemedText onPress={goToEditAnswerPage} link variant="labelSmall">
+          {t("edit")}
+        </ThemedText>
+      )}
+    </View>
   );
 });
 
@@ -82,7 +88,7 @@ export const ReplyText = memo(({
 
   // Extract the inner component
   const BaseText = memo(({ text }: { text: string }) => (
-    <ThemedView>
+    <View>
       <ThemedText
         onPress={onPress}
         color={theme.colors.primary}
@@ -90,7 +96,7 @@ export const ReplyText = memo(({
       >
         {text}
       </ThemedText>
-    </ThemedView>
+    </View>
   ));
 
   // Determine text based on replies count
@@ -107,10 +113,10 @@ export const ReplyText = memo(({
 // Memoize the TimeInfo component
 export const TimeInfo = memo(({ answer }: { answer: Answer }) => {
   return (
-    <ThemedView style={{ gap: 6 }}>
+    <View style={{ gap: 6 }}>
       <Created created={answer.created} />
       <Modified modified={answer.modified} />
-    </ThemedView>
+    </View>
   );
 });
 
