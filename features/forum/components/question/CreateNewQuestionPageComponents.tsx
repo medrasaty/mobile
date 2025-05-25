@@ -14,7 +14,7 @@ import { ImagePickerAsset, launchImageLibraryAsync, MediaType } from "expo-image
 import {
   Title as TitlePreview,
   Description as DescriptionPreview,
-  Picture as PicturePreview,
+  PictureOptimized as PicturePreview,
   SubjectInfo,
 } from "@/features/forum/components/question/detail/QuestionDetailInfo";
 import { Subject } from "@/types/school.types";
@@ -196,10 +196,10 @@ export const SubjectInput = ({
 export const HashTags = () => {
   // TODO:
   return (
-    <ThemedView>
+    <View>
       <ThemedText variant="titleLarge">###</ThemedText>
       <TextInput theme={{ roundness: INPUT_ROUNDNESS }} mode="outlined" />
-    </ThemedView>
+    </View>
   );
 };
 
@@ -265,7 +265,5 @@ const styles = StyleSheet.create({
   container: {
     gap: 2,
   },
-  label: {
-    color: "lightred",
-  },
+  label: {},
 });
