@@ -9,14 +9,14 @@ import { Keyboard } from "react-native";
  * Updates the query on change and navigates to results on submit
  */
 export const HomeSearchAppbar = () => {
-  const { query, clearSearch } = useSearchStore();
+  const { query, setQuery, clearSearch } = useSearchStore();
 
   const handleSearch = (searchQuery: string) => {
     Keyboard.dismiss();
+    setQuery(searchQuery);
     if (searchQuery.trim() !== "") {
       router.push({
         pathname: "/search/questions",
-        params: { q: searchQuery },
       });
     }
   };

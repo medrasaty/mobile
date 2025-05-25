@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { BackHandler } from "react-native";
 import { Appbar, Searchbar, useTheme } from "react-native-paper";
 import { useSearchStore } from "../store";
-import { useFocusEffect } from "expo-router";
 
 export type BaseSearchAppbarProps = {
   /**
@@ -44,7 +43,7 @@ export const BaseSearchAppbar = ({
   placeholder = "Search...",
 }: BaseSearchAppbarProps) => {
   const theme = useTheme();
-  const { setQuery, clearSearch, isSearchActive } = useSearchStore();
+  const { setQuery } = useSearchStore();
   const [localQuery, setLocalQuery] = useState(initialQuery);
 
   // Handle back button press
@@ -62,17 +61,6 @@ export const BaseSearchAppbar = ({
 
     return () => backHandler.remove();
   }, [onClose]);
-
-  // Clear search when screen loose focus
-  useFocusEffect(
-    React.useCallback(() => {
-      return () => {
-        if (isSearchActive) {
-          clearSearch();
-        }
-      };
-    }, [isSearchActive])
-  );
 
   const handleQueryChange = (text: string) => {
     setLocalQuery(text);

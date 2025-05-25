@@ -25,7 +25,6 @@ export type useSearchProps = {
  * @returns {Object} Search results and query state
  */
 export default function useSearch<T>({ query, type }: useSearchProps) {
-  const client = useAuthClient();
 
   // Use the new useInfiniteData hook for better efficiency
   const infiniteQuery = useInfiniteData<T>({
