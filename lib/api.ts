@@ -1,6 +1,19 @@
-import axios, { Axios, AxiosRequestConfig } from "axios";
+import axios, { Axios, AxiosError, AxiosRequestConfig } from "axios";
 import { API_URL } from "@/constants";
 import { useAuthSession } from "@features/auth/store";
+import { router } from "expo-router";
+import { LOGIN_PAGE } from "@/constants/routes";
+
+const UNAUTHERIZED_401 = 401
+
+function handleInvalidToken() {
+  useAuthSession.getState().clearSession()
+
+  router.replace({
+    pathname: LOGIN_PAGE,
+    params: { error: "session_expired" }
+  })
+}
 
 export function AuthClient(): Axios {
   // Get token from store
@@ -13,7 +26,16 @@ export function AuthClient(): Axios {
     },
   } satisfies AxiosRequestConfig;
 
-  return axios.create(config);
+  const client = axios.create(config);
+
+  client.interceptors.response.use((response) => response, (error: AxiosError) => {
+    if (error.response && (error.response?.status === UNAUTHERIZED_401)) {
+      handleInvalidToken()
+    }
+    return Promise.reject(error)
+  })
+
+  return client
 }
 
 type RequestConfig = AxiosRequestConfig & {
