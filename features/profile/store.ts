@@ -1,4 +1,5 @@
 import { create } from "zustand";
+
 type UserContentStore = {
     questionsSearchValue: string;
     answersSearchValue: string;

@@ -61,16 +61,6 @@ export default function useProfileAutoRefresh() {
       }
     });
 
-    // Set up app state listener to refresh when app comes to foreground
-    appStateListener.current = AppState.addEventListener(
-      "change",
-      (nextAppState) => {
-        if (nextAppState === "active") {
-          refreshProfile();
-        }
-      }
-    );
-
     // Clean up listeners on unmount
     return () => {
       if (networkListener.current) {

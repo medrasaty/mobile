@@ -4,9 +4,24 @@ import { useQueryClient } from "@tanstack/react-query";
 import * as Notifications from "expo-notifications";
 import { useEffect, useRef } from "react";
 import * as Device from "expo-device";
+import { Platform } from "react-native";
 
 import { getDeviceInfo } from "../lib/utils";
 import { registerDevice } from "../lib/requests";
+import { useSettingStore } from "@features/settings/store";
+import { usePushNotificationStore } from "../store";
+import { notificationsKeys } from "../keys";
+
+// Configure notification handler with high priority and proper display options
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowAlert: true, // Required for backward compatibility
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 
 export default function usePushNotificationFeature() {
   /**
@@ -16,6 +31,11 @@ export default function usePushNotificationFeature() {
   const responseListener = useRef<Notifications.EventSubscription>();
   const qc = useQueryClient();
   const user = useAuthSession((state) => state.session?.user);
+  const setting_push_notification = useSettingStore(
+    (state) => state.push_notification
+  );
+  const isRegistered = usePushNotificationStore((state) => state.isRegistered);
+  const reset = usePushNotificationStore((state) => state.reset);
 
   const handleRegisterDevice = async () => {
     /**
@@ -25,12 +45,16 @@ export default function usePushNotificationFeature() {
 
     const expo_token = await Notifications.getExpoPushTokenAsync();
     if (!expo_token) return;
-   
-    // get device id
-    const deviceInfo = await getDeviceInfo()
 
-    await registerDevice(deviceInfo, expo_token.data);
+    // get device info
+    const deviceInfo = await getDeviceInfo();
 
+    try {
+      await registerDevice(deviceInfo, expo_token.data);
+    } catch (error) {
+      console.error("Failed to register device:", error);
+      return;
+    }
   };
 
   useEffect(() => {
@@ -39,19 +63,60 @@ export default function usePushNotificationFeature() {
       return;
     }
 
-    handleRegisterDevice();
+    if (!setting_push_notification) {
+      // if push notifications are disabled in settings, don't register the device
+      reset();
+      return;
+    }
+
+    // Create notification channel for Android with high importance
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'Default',
+        importance: Notifications.AndroidImportance.HIGH,
+        enableVibrate: true,
+        enableLights: true,
+        lightColor: '#FF231F7C',
+        vibrationPattern: [0, 250, 250, 250],
+        showBadge: true,
+        lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+      });
+    }
+
+    // only register if not registered yet.
+    if (!isRegistered) {
+      handleRegisterDevice();
+    }
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         /**
          * When a push notification is recieved,
-         * this function will be fired, you can update the list of notifications , or invalidate notification query
+         * this function will be fired, you can update the list of notifications,
+         * or invalidate notification query
          */
-        // manually set recieved notification to react query cache
-        // queryClient.setQueryData(["notifications"], (oldNotifications) => {
-        //     return [notification, ...oldNotifications]
-        // })
-        console.warn(notification.date);
+        // Log the received notification
+        console.log("Notification received:", notification);
+
+        // Display a customized version of the notification
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: notification.request.content.title,
+            body: notification.request.content.body,
+            data: notification.request.content.data,
+            sound: 'default',
+            badge: 1,
+          },
+          trigger: {
+            seconds: 0,
+            channelId: 'default',
+          },
+        });
+
+        // Invalidate the notifications query to refresh the list
+        qc.invalidateQueries({
+          queryKey: notificationsKeys.all,
+        });
       });
 
     responseListener.current =
@@ -59,7 +124,7 @@ export default function usePushNotificationFeature() {
         /**
          * if the user clicked on the push notification , this function will be fired
          */
-        console.warn(response);
+        console.log("Notification response received:", response);
       });
 
     // Clear listeners when the app is closed
@@ -71,5 +136,5 @@ export default function usePushNotificationFeature() {
       responseListener.current &&
         Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, [user]);
+  }, [user?.id, setting_push_notification]);
 }

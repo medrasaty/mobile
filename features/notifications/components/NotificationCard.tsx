@@ -14,38 +14,47 @@ import useStore from "@/store";
 /**
  * A modern, clean notification card component
  */
-const NotificationCard: React.FC<{ notification: Notification }> = ({ notification }) => {
+const NotificationCard: React.FC<{ notification: Notification }> = ({
+  notification,
+}) => {
   const router = useRouter();
   const theme = useTheme();
-  const setActiveNotificationDetails = useStore(state => state.setActiveNotificationDetails);
-  
+  const setActiveNotificationDetails = useStore(
+    (state) => state.setActiveNotificationDetails
+  );
+
   const { is_read, notification: notificationData, created } = notification;
-  
+
   // Format the created date
   const formattedDate = useMemo(() => {
     if (!created) return "";
     return d(created).fromNow();
   }, [created]);
-  
+
   // Card background based on read status
-  const cardStyle = useMemo(() => ({
-    backgroundColor: is_read ? theme.colors.surface : theme.colors.primaryContainer,
-    borderLeftWidth: is_read ? 0 : 4,
-    borderLeftColor: is_read ? 'transparent' : theme.colors.primary,
-  }), [is_read, theme.colors]);
-  
+  const cardStyle = useMemo(
+    () => ({
+      backgroundColor: is_read
+        ? theme.colors.surface
+        : theme.colors.primaryContainer,
+      borderLeftWidth: is_read ? 0 : 4,
+      borderLeftColor: is_read ? "transparent" : theme.colors.primary,
+    }),
+    [is_read, theme.colors]
+  );
+
   // Handle notification tap
   const handlePress = () => {
     const ref = parseNotificationRef(notification);
-    
+
     // Set the notification details in the store before navigation
     setActiveNotificationDetails({
       type: notificationData.type as any, // Cast to the expected type
       question: ref.question,
       answer: ref.answer || null,
-      reply: ref.reply || null
+      reply: ref.reply || null,
     });
-    
+
     // Navigate to the question detail page
     router.push(
       questionDetail({
@@ -55,54 +64,49 @@ const NotificationCard: React.FC<{ notification: Notification }> = ({ notificati
   };
 
   return (
-      <Card
-        onPress={handlePress}
-        style={[styles.card, cardStyle]} 
-        elevation={0}
-      >
-        <View style={styles.contentContainer}>
-          <NotificationTypeAvatar type={notificationData.type} />
-          
-          <View style={styles.textContainer}>
-            <ThemedText 
-              variant="titleSmall" 
-              style={[
-                styles.title, 
-                is_read ? styles.readTitle : { color: theme.colors.primary }
-              ]}
-              numberOfLines={1}
+    <Card onPress={handlePress} style={[styles.card, cardStyle]} elevation={0}>
+      <View style={styles.contentContainer}>
+        <NotificationTypeAvatar type={notificationData.type} />
+
+        <View style={styles.textContainer}>
+          <ThemedText
+            variant="titleSmall"
+            style={[
+              styles.title,
+              is_read ? styles.readTitle : { color: theme.colors.primary },
+            ]}
+            numberOfLines={1}
+          >
+            {notificationData.title.toUpperCase()}
+          </ThemedText>
+
+          <View style={styles.bodyContainer}>
+            <ThemedText
+              variant="bodyMedium"
+              style={[styles.body, is_read && styles.readText]}
+              numberOfLines={2}
             >
-              {notificationData.title.toUpperCase()}
-            </ThemedText>
-            
-            <View style={styles.bodyContainer}>
-              <ThemedText 
-                variant="bodyMedium" 
-                style={[styles.body, is_read && styles.readText]}
-                numberOfLines={2}
-              >
-                {notificationData.body}
-              </ThemedText>
-            </View>
-            
-            <ThemedText 
-              variant="labelSmall" 
-              style={styles.timestamp}
-            >
-              {formattedDate}
+              {notificationData.body}
             </ThemedText>
           </View>
+
+          <ThemedText variant="labelSmall" style={styles.timestamp}>
+            {formattedDate}
+          </ThemedText>
         </View>
-      </Card>
+      </View>
+    </Card>
   );
 };
 
 /**
  * Avatar component that displays an icon based on notification type
  */
-const NotificationTypeAvatar: React.FC<{ type: NotificationType }> = ({ type }) => {
+const NotificationTypeAvatar: React.FC<{ type: NotificationType }> = ({
+  type,
+}) => {
   const theme = useTheme();
-  
+
   // Get avatar configuration based on notification type
   const avatarConfig = useMemo(() => {
     const configs = {
@@ -127,10 +131,10 @@ const NotificationTypeAvatar: React.FC<{ type: NotificationType }> = ({ type }) 
         iconType: "community",
       },
     };
-    
+
     return configs[type] || configs[NotificationType.Other];
   }, [type, theme.colors]);
-  
+
   // Render the appropriate icon
   const renderIcon = () => {
     if (avatarConfig.iconType === "material") {
@@ -142,7 +146,7 @@ const NotificationTypeAvatar: React.FC<{ type: NotificationType }> = ({ type }) 
         />
       );
     }
-    
+
     return (
       <MaterialCommunityIcons
         name={avatarConfig.icon as any}
@@ -151,10 +155,10 @@ const NotificationTypeAvatar: React.FC<{ type: NotificationType }> = ({ type }) 
       />
     );
   };
-  
+
   return (
-    <Avatar.Icon 
-      size={40} 
+    <Avatar.Icon
+      size={40}
       icon={renderIcon}
       style={{ backgroundColor: avatarConfig.backgroundColor }}
     />
