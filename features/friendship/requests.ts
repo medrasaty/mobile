@@ -4,6 +4,7 @@ import { BaseUser } from "@/types/user.types";
 import { Axios } from "axios";
 import { transformDates } from "../forum/utils";
 import { FollowingRequest, FriendUser } from "./types";
+import { request } from "@/lib/api";
 
 export async function follow(client: Axios, pk: BaseUser["pk"]) {
   /**
@@ -52,19 +53,25 @@ export async function getAllFollowers(client: Axios) {
    * Get all followers of the current user.
    */
 
-  const response = await client.get(`/friendship/followers/`);
+  const response = await request<PaginatedResponse<FriendUser>>({
+    method: "GET",
+    url: `/friendship/followers/`,
+});
+
   return response.data.results;
 }
 
-export async function getFollowings(client: Axios, params: any = {}) {
+export async function getFollowings(params: any = {}) {
   /**
    * Get all followers of the current user.
    */
 
-  const response = await client.get<PaginatedResponse<FriendUser>>(
-    `/friendship/followings/`,
-    { params }
-  );
+  const response = await request<PaginatedResponse<FriendUser>>({
+    url: `/friendship/followings/`,
+    method: "GET",
+    params,
+  });
+
   return response.data.results;
 }
 

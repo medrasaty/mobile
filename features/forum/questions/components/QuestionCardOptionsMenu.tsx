@@ -1,60 +1,72 @@
 import { Appearance, StyleSheet, View } from "react-native";
-import { Divider, IconButton, Menu, useTheme } from "react-native-paper";
+import { Divider, IconButton, List, Menu, useTheme } from "react-native-paper";
 import { Question } from "@/types/forum.types";
-import { useVisibleV2 } from "@/hooks/useVisible";
-import ReportDialog from "@/features/reports/components/ReportDialog";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import {
-  BookmarkQuestionItem,
-  RegisterQuestionItem,
-  ReportQuestionMenuItem,
-} from "./MoreOptionsMenuItems";
-import { useRouter } from "expo-router";
-import { editQuestion } from "@/lib/routing";
-import { ThemedText } from "@components/ThemedText";
-import * as DropDownMenu from "zeego/dropdown-menu";
-import { useEffect } from "react";
-import { useSettingStore } from "@features/settings/store";
-import { MenuView } from "@react-native-menu/menu";
+import { router, useRouter } from "expo-router";
 import Sheet, { useSheetRef } from "@components/Sheet";
-import { useQuestion } from "@forum/hooks/useQuestions";
-import ServerView from "@components/ServerView";
+import { t } from "i18next";
+import { Ionicons } from "@expo/vector-icons";
+import { path } from "@/lib/routing";
+import { useBottomSheet } from "@gorhom/bottom-sheet";
 
 const MoreOptions = ({
-  ownerUsername,
-  questionId,
-  contentTypeId,
+  question,
 }: {
   ownerUsername: Question["owner"]["username"];
   questionId: Question["id"];
+  question: Question;
   contentTypeId: number;
 }) => {
   const theme = useTheme();
-  const [visible, show, hide] = useVisibleV2(false);
   const user = useCurrentUser();
-  const router = useRouter();
 
-  const sheetRef = useSheetRef()
-
-  const questionsQuery = useQuestion(questionId)
+  const sheetRef = useSheetRef();
 
   // new implementation will use sheet
   return (
     <>
-    <IconButton icon={"dots-vertical"} onPress={() => sheetRef.current?.expand()} />
+      <IconButton
+        icon={"dots-vertical"}
+        onPress={() => sheetRef.current?.expand()}
+      />
       <Sheet snapPoints={["50%"]} ref={sheetRef}>
-        <ServerView status={questionsQuery.status}>
-          {questionsQuery.data?.is_bookmarked ? 
-          <ThemedText>Bookmarked</ThemedText>
-          :
-          <ThemedText>Not Bookmarked ( bookmark ) </ThemedText>
-          }
-          
-        </ServerView>
+        <View style={{ marginVertical: 8 }}>
+          <List.Item
+            title={t("bookmark")}
+            left={(props) => (
+              <List.Icon
+                {...props}
+                icon={(props) => (
+                  <Ionicons {...props} name="bookmark-outline" />
+                )}
+              />
+            )}
+            onPress={() => {}}
+          />
+        </View>
+        <Divider bold />
+        {question.owner.id === user.id && (
+          <View>
+            <EditQuestionItem questionId={question.id} />
+            <List.Item
+              title={t("delete")}
+              left={(props) => (
+                <List.Icon
+                  {...props}
+                  color={theme.colors.error}
+                  icon={(props) => <Ionicons {...props} name="trash-outline" />}
+                />
+              )}
+              onPress={() => {}}
+            />
+          </View>
+        )}
       </Sheet>
     </>
-  )
+  );
 
+  {
+    /* 
   return (
     <Menu
       visible={visible}
@@ -97,6 +109,24 @@ const MoreOptions = ({
         />
       )}
     </Menu>
+  );
+      */
+  }
+};
+
+const EditQuestionItem = ({ questionId }: { questionId: Question["id"] }) => {
+  const { close } = useBottomSheet();
+  const router = useRouter();
+  const handlePress = () => {
+    close();
+    router.push(path.questions.edit(questionId));
+  };
+  return (
+    <List.Item
+      title={t("edit")}
+      left={(props) => <List.Icon {...props} icon="pencil" />}
+      onPress={handlePress}
+    />
   );
 };
 

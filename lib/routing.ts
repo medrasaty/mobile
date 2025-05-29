@@ -62,6 +62,7 @@ export const path = {
     detail: (id: Question["id"], params?: any) =>
       questionDetail({ ...params, questionId: id }),
     new: `/questions/new`,
+    edit: (id: Question["id"]) => editQuestion({ questionId: id }),
   },
 
   settings: {

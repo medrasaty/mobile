@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import CenterPage from "@components/CenterPage";
 import Page from "@components/Page";
-import { ThemedText } from "@components/ThemedText";
+import { useAuthSession } from "@features/auth/store";
+import ResizableImage from "@components/ResizableImage";
 
 const Exper = () => {
+  const [expand, setExpand] = useState(false);
+
+  const background = useAuthSession(
+    (state) => state.session?.user.profile.background || ""
+  );
+
   return (
     <Page container>
-      <CenterPage style={{ gap: 20 }}>
-        <ThemedText>{"Solo is exper"}</ThemedText>
+      <CenterPage>
+        <ResizableImage uri={background} />
       </CenterPage>
     </Page>
   );
 };
+
+export default Exper;

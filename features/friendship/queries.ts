@@ -4,18 +4,15 @@ import { getAllFollowers, getFollowings } from "./requests";
 import { FriendsQueryKeys } from "./hooks/useFriendsQuery";
 
 export function useFollowersQuery() {
-  const client = useAuthClient();
-
   return useQuery({
     queryKey: FriendsQueryKeys.followers(),
-    queryFn: async () => await getAllFollowers(client),
+    queryFn: async () => await getAllFollowers(),
   });
 }
 
 export function useFollowingQuery(params: any = {}) {
-  const client = useAuthClient();
   return useQuery({
     queryKey: FriendsQueryKeys.followingsWithParams(params),
-    queryFn: async () => await getFollowings(client, params),
+    queryFn: async () => await getFollowings(params),
   });
 }

@@ -10,11 +10,14 @@ import { translateSubject } from "@/lib/utils";
 import { DetailQuestion, Question } from "@/types/forum.types";
 import { useSheetRef } from "@components/Sheet";
 import UserInfo from "@components/UserInfo";
-import { Image } from "expo-image";
 import { t } from "i18next";
-import { memo, useMemo } from "react";
-import { Pressable, ViewProps } from "react-native";
+import { memo, useMemo, useState, useEffect } from "react";
+import { ViewProps, Image, Dimensions } from "react-native";
 import { useTheme } from "react-native-paper";
+import { ResizableImage } from "@components/ResizableImage"
+
+// Module-level cache for image dimensions
+const imageDimensionsCache: Record<string, { width: number; height: number }> = {};
 
 type QuestionDetailInfoProps = {
   question: DetailQuestion;
@@ -158,32 +161,93 @@ const TimeInfo = memo(
 // Optimized Picture component to prevent unnecessary re-renders and load images efficiently
 export const PictureOptimized = memo(({ image }: { image?: string }) => {
   const theme = useTheme();
+  const [imageHeight, setImageHeight] = useState(160); // Default height
+  const [naturalImageSize, setNaturalImageSize] = useState<{ width: number; height: number } | null>(null);
+
+  // Effect 1: Fetch and cache natural image dimensions
+  useEffect(() => {
+    if (!image) {
+      setNaturalImageSize(null);
+      setImageHeight(160); // Reset to default if no image
+      return;
+    }
+
+    if (imageDimensionsCache[image]) {
+      setNaturalImageSize(imageDimensionsCache[image]);
+    } else {
+      Image.getSize(
+        image,
+        (width, height) => {
+          if (width > 0 && height > 0) {
+            const dimensions = { width, height };
+            imageDimensionsCache[image] = dimensions;
+            setNaturalImageSize(dimensions);
+          } else {
+            // Invalid dimensions, treat as error
+            setNaturalImageSize(null);
+            console.error(`Failed to get valid image size for ${image}: width or height is 0`);
+          }
+        },
+        (error) => {
+          console.error(`Failed to get image size for ${image}: ${error}`);
+          setNaturalImageSize(null); // Indicate failure
+        }
+      );
+    }
+  }, [image]); // Only re-run if the image URI changes
+
+  // Effect 2: Calculate and set display height when natural dimensions or screen width change
+  useEffect(() => {
+    const calculateHeight = (currentScreenWidth: number) => {
+      if (naturalImageSize && naturalImageSize.width > 0) {
+        const calculatedHeight = naturalImageSize.height * (currentScreenWidth / naturalImageSize.width);
+        // Apply max height and ensure it's a positive number
+        setImageHeight(Math.max(1, Math.min(calculatedHeight, 400))); 
+      } else {
+        setImageHeight(160); // Fallback or default height
+      }
+    };
+
+    // Initial calculation with current screen width
+    calculateHeight(Dimensions.get('window').width);
+
+    // Subscribe to dimension changes (e.g., orientation change)
+    const handleChange = ({ window }: { window: { width: number; height: number; scale: number; fontScale: number } }) => {
+      calculateHeight(window.width);
+    };
+    
+    const subscription = Dimensions.addEventListener('change', handleChange);
+
+    return () => {
+      subscription?.remove(); // Clean up listener
+    };
+  }, [naturalImageSize]); // Re-run if naturalImageSize changes (and for initial setup)
   
   // Memoize styles to prevent recalculation
   const style = useMemo(
     () => ({
-      height: 160,
+      height: imageHeight,
       backgroundColor: theme.colors.surfaceVariant,
       borderRadius: theme.roundness + 6,
     }),
-    [theme.colors.surfaceVariant, theme.roundness]
+    [theme.colors.surfaceVariant, theme.roundness, imageHeight]
   );
 
   if (!image) return null;
 
   return (
-    <Pressable onPress={() => alert("bigger")}>
-      <Image
-        style={style}
-        transition={500}
-        cachePolicy="memory-disk"
-        source={{ uri: image }}
-        contentFit="cover"
-        placeholder={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==' }}
-        recyclingKey={image}
-        priority="low"
-      />
-    </Pressable>
+    <ResizableImage
+      uri={image}
+      imageProps={{
+        style: style,
+        transition: 500,
+        cachePolicy: "memory-disk",
+        contentFit: "cover",
+        placeholder: { uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==' },
+        recyclingKey: image,
+        priority: "low"
+      }}
+    />
   );
 });
 

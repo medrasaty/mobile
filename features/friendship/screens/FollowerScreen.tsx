@@ -1,30 +1,32 @@
 import Page from "@/components/Page";
-import { ThemedText } from "@/components/ThemedText";
-import UserGridList from "../components/UsersGridList";
+import { ScreenListV3 } from "@components/ScreenFlatList";
+import UserCompactCell from "../components/UserCompactCell";
+import EmptyStateView from "@components/EmptyStateView";
+import { useCallback } from "react";
 import { useFollowersQuery } from "../queries";
-import FrienshipScreenActivityIndicator from "../components/FrienshipScreenActivityIndicator";
-import NetworkError from "@/components/NetworkError";
 
 type FollowerScreenProps = {};
 
 const FollowerScreen = ({}: FollowerScreenProps) => {
   const q = useFollowersQuery();
 
+  const renderEmpty = useCallback(() => {
+    return <EmptyStateView 
+        iconName="people-outline"
+        title="No followers"
+        subtitle="Be the first to follow someone"
+      />
+  }, [q.status]);
+
   return (
     <Page>
-      {q.isPending ? (
-        <FrienshipScreenActivityIndicator />
-      ) : q.isError ? (
-        <NetworkError onRetry={q.refetch} message="something went wrong!" />
-      ) : q.data ? (
-        <UserGridList
-          onRefresh={q.refetch}
-          isRefreshing={q.isRefetching}
-          users={q.data}
-        />
-      ) : (
-        <ThemedText>Couldn't get the data</ThemedText>
-      )}
+      <ScreenListV3
+        q={q}
+        renderItem={({ item }) => {
+          return <UserCompactCell user={item} />;
+        }}
+        ListEmptyComponent={renderEmpty}
+      />
     </Page>
   );
 };

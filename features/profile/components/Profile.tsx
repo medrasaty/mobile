@@ -1,12 +1,14 @@
 import { ThemedView } from "@/components/ThemedView";
 import { Image } from "expo-image";
-import React, { memo, useMemo, useEffect } from "react";
+import React, { memo, useMemo } from "react";
 import { StyleSheet, View, ViewProps, Text } from "react-native";
 import { Button, Divider, useTheme } from "react-native-paper";
 import { UserProfile } from "../types";
 import ProfileInfo from "./ProfileInfo";
 import { DEFAULT_CONTAINER_SPACING } from "@/constants/styels";
 import { t } from "i18next";
+import { useRouter } from "expo-router";
+import { path } from "@/lib/routing";
 
 type ProfileBackgroundImageProps = {
   background: UserProfile["profile"]["background"];
@@ -35,9 +37,11 @@ export const OptimizedBackgroundImage = memo(
             source={{ uri: background }}
             style={styles.image}
             recyclingKey={cacheKey}
-            placeholder={{
-              uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
-            }}
+            placeholder={
+              {
+                // uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+              }
+            }
           />
         </View>
         <Divider />
@@ -80,28 +84,33 @@ function useProfileBackgroundStyle() {
 // Memoize the ProfileHeader component to prevent unnecessary rerenders
 const ProfileHeader = memo(({ profile }: { profile: UserProfile }) => {
   // Ensure we have valid profile data
+  const router = useRouter();
   if (!profile || !profile.profile) {
     console.warn("ProfileHeader: Invalid profile data");
     return (
-      <ThemedView style={{ padding: 20 }}>
+      <View style={{ padding: 20 }}>
         <Text>Error: Invalid profile data</Text>
-      </ThemedView>
+      </View>
     );
   }
+
+  const handleMoreInfoPress = () => {
+    router.push(path.users.content(profile.id));
+  };
 
   // Safely access the background URL
   const backgroundUrl = profile.profile?.background;
 
   return (
-    <ThemedView>
+    <View>
       <OptimizedBackgroundImage background={backgroundUrl} />
       <ProfileInfo profile={profile} />
       <View style={{ padding: DEFAULT_CONTAINER_SPACING }}>
-        <Button mode="elevated" onPress={() => {}}>
+        <Button mode="elevated" onPress={handleMoreInfoPress}>
           {t("more_info")}
         </Button>
       </View>
-    </ThemedView>
+    </View>
   );
 });
 

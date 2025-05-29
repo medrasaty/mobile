@@ -1,3 +1,4 @@
+import React from 'react';
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { View, ViewProps } from "react-native";
@@ -25,6 +26,10 @@ import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import TextError from "@components/TextError";
 import { debugStyle } from "@/constants/styels";
+import useImagePicker from "@/hooks/useImagePicker";
+import ImagePickerSheet from "@/features/profile/components/ImagePickerSheet";
+import { useSheetRef } from "@/components/Sheet";
+import { fileUploadType } from "@/types";
 
 export type BaseCreateQuestionInputProps = {
   onChangeText: TextInputProps["onChangeText"];
@@ -110,51 +115,62 @@ export const AddPictureButton = ({
   lable = t("create_question.add_picture"),
   ...props
 }: AddPictureProps) => {
-  /**
-   * Launch ImageLIbraryAsync and let user choose a picture,
-   */
-
-  const [selected, setSelected] = useState(false);
+  const {
+    pickImage,
+    fileUpload,
+    isLoading: isImagePickerLoading,
+    reset,
+  } = useImagePicker();
+  const sheetRef = useSheetRef();
   const theme = useTheme();
 
-  const pickImage = async () => {
-    let result = await launchImageLibraryAsync({
-      mediaTypes: "images",
-      allowsEditing: true,
-      aspect: [4, 2],
-      quality: 0.5,
-    });
-
-    if (!result.canceled) {
-      setSelected(true);
-      onImageSelected(result.assets[0]); // list of images by default, evne if you want a single image.
+  const handleImageSelect = async (source: "camera" | "library") => {
+    const image = await pickImage({}, source);
+    if (image) {
+      // The existing onImageSelected expects ImagePickerAsset,
+      // but useImagePicker returns fileUploadType.
+      // We need to decide how to handle this discrepancy.
+      // For now, let's assume we adapt the caller or the hook later
+      // and pass the uri for preview and the full object for upload.
+      // This is a temporary solution and might need revisiting.
+      onImageSelected({ uri: image.uri } as ImagePickerAsset);
     }
   };
 
   const handleUnselect = () => {
+    reset();
     onImageUnselected();
-    setSelected(false);
   };
 
   return (
-    <ThemedView style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
-      <IconButton
-        onPress={pickImage}
-        icon={icon}
-        mode="contained-tonal"
-        {...props}
-      />
-      <ThemedText variant="bodyLarge" style={styles.label}>
-        {selected ? t("create_question.edit_picture") : lable}
-      </ThemedText>
-      {selected && (
+    <>
+      <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
         <IconButton
-          iconColor={theme.colors.error}
-          icon="trash-can-outline"
-          onPress={handleUnselect}
+          onPress={() => sheetRef.current?.expand()}
+          icon={icon}
+          mode="contained-tonal"
+          disabled={isImagePickerLoading}
+          {...props}
         />
-      )}
-    </ThemedView>
+        <ThemedText variant="bodyLarge" style={styles.label}>
+          {fileUpload ? t("create_question.edit_picture") : lable}
+        </ThemedText>
+        {fileUpload && (
+          <IconButton
+            iconColor={theme.colors.error}
+            icon="trash-can-outline"
+            onPress={handleUnselect}
+            disabled={isImagePickerLoading}
+          />
+        )}
+      </View>
+      <ImagePickerSheet
+        sheetRef={sheetRef}
+        onCameraPress={() => handleImageSelect("camera")}
+        onGalleryPress={() => handleImageSelect("library")}
+        isLoading={isImagePickerLoading}
+      />
+    </>
   );
 };
 
@@ -263,7 +279,12 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
-    gap: 2,
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    // backgroundColor: "red",
   },
-  label: {},
+  label: {
+    // marginBottom: 8,
+  },
 });

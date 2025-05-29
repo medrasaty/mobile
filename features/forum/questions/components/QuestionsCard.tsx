@@ -22,119 +22,127 @@ type QuestionCardProps = {
   compact?: boolean;
 };
 
-const ForumQuestionCard = memo(({
-  question,
-  compact = false,
-}: QuestionCardProps) => {
-  const router = useRouter();
-  const theme = useTheme();
+const ForumQuestionCard = memo(
+  ({ question, compact = false }: QuestionCardProps) => {
+    const router = useRouter();
+    const theme = useTheme();
 
-  const goToQuestion = useCallback(() => {
-    router.push(questionDetail({ questionId: question.id }));
-  }, [question.id]);
+    const goToQuestion = useCallback(() => {
+      router.push(questionDetail({ questionId: question.id }));
+    }, [question.id]);
 
-  const cardHeight = useMemo(() => ({
-    height: compact ? COMPACT_QUESTION_CARD_HEIGHT : FORUM_QUESTION_CARD_HEIGHT,
-  }), [compact]);
+    const cardHeight = useMemo(
+      () => ({
+        height: compact
+          ? COMPACT_QUESTION_CARD_HEIGHT
+          : FORUM_QUESTION_CARD_HEIGHT,
+      }),
+      [compact]
+    );
 
-  const surfaceStyle = useMemo(() => ([
-    styles.container,
-    {
-      borderRadius: theme.roundness,
-      width: compact ? FORUM_QUESTION_CARD_HEIGHT : "100%",
-    } as const,
-  ]), [theme.roundness, compact]);
+    const surfaceStyle = useMemo(
+      () => [
+        styles.container,
+        {
+          borderRadius: theme.roundness,
+          width: compact ? FORUM_QUESTION_CARD_HEIGHT : "100%",
+        } as const,
+      ],
+      [theme.roundness, compact]
+    );
 
-  const titleVariant = useMemo(() => ({
-    numberOfLines: compact ? 1 : 2,
-    bold: true,
-    variant: "titleLarge" as const,
-  }), [compact]);
+    const titleVariant = useMemo(
+      () => ({
+        numberOfLines: compact ? 1 : 2,
+        bold: true,
+        variant: "titleLarge" as const,
+      }),
+      [compact]
+    );
 
-  const descriptionStyle = useMemo(() => ({
-    opacity: 0.8,
-    numberOfLines: compact ? 1 : 2,
-    variant: compact ? "bodySmall" as const : "bodyMedium" as const,
-  }), [compact]);
+    const descriptionStyle = useMemo(
+      () => ({
+        opacity: 0.8,
+        numberOfLines: compact ? 1 : 2,
+        variant: compact ? ("bodySmall" as const) : ("bodyMedium" as const),
+      }),
+      [compact]
+    );
 
-  const dateStyle = useMemo(() => ({
-    marginRight: DEFAULT_CONTAINER_SPACING,
-    marginTop: 6,
-  }), []);
+    const dateStyle = useMemo(
+      () => ({
+        marginRight: DEFAULT_CONTAINER_SPACING,
+        marginTop: 6,
+      }),
+      []
+    );
 
-  return (
-    <Pressable style={cardHeight} onPress={goToQuestion}>
-      <Surface
-        mode="flat"
-        elevation={compact ? 1 : 0}
-        style={surfaceStyle}
-      >
-        <Row style={styles.contentRow}>
-          <View style={styles.flex}>
-            <ThemedText {...titleVariant}>
-              {question.title}
-            </ThemedText>
+    return (
+      <Pressable style={cardHeight} onPress={goToQuestion}>
+        <Surface mode="flat" elevation={compact ? 1 : 0} style={surfaceStyle}>
+          <Row style={styles.contentRow}>
+            <View style={styles.flex}>
+              <ThemedText {...titleVariant}>{question.title}</ThemedText>
 
-            <ThemedText color={theme.colors.tertiary} variant="labelSmall">
-              {question.subject.name}
-            </ThemedText>
-
-            <View style={styles.descriptionContainer}>
-              <ThemedText {...descriptionStyle}>
-                {question.text}
+              <ThemedText color={theme.colors.tertiary} variant="labelSmall">
+                {question.subject.name}
               </ThemedText>
+
+              <View style={styles.descriptionContainer}>
+                <ThemedText {...descriptionStyle}>{question.text}</ThemedText>
+              </View>
+
+              <View style={styles.statsContainer}>
+                <Statistics
+                  views={question.views}
+                  answers={question.answers_count}
+                  rating={question.ratings_value}
+                />
+                <Date
+                  variant={compact ? "labelSmall" : "labelMedium"}
+                  style={dateStyle}
+                  date={question.created}
+                />
+              </View>
             </View>
-
-            <View style={styles.statsContainer}>
-              <Statistics
-                views={question.views}
-                answers={question.answers_count}
-                rating={question.ratings_value}
+            {!compact && (
+              <MoreOptions
+                question={question}
+                ownerUsername={question.owner.username}
+                contentTypeId={question.contenttype}
+                questionId={question.id}
               />
-              <Date
-                variant={compact ? "labelSmall" : "labelMedium"}
-                style={dateStyle}
-                date={question.created}
-              />
-            </View>
-          </View>
-          {!compact && (
-            <MoreOptions
-              ownerUsername={question.owner.username}
-              contentTypeId={question.contenttype}
-              questionId={question.id}
-            />
-          )}
-        </Row>
+            )}
+          </Row>
 
-        <Row
-          alignItems="center"
-          style={styles.userInfoRow}
-        >
-          <UserInfo user={question.owner} avatarSize={compact ? 35 : 45} />
-        </Row>
-      </Surface>
-    </Pressable>
-  );
-});
+          <Row alignItems="center" style={styles.userInfoRow}>
+            <UserInfo user={question.owner} avatarSize={compact ? 35 : 45} />
+          </Row>
+        </Surface>
+      </Pressable>
+    );
+  }
+);
 
-const Statistics = memo(({
-  views,
-  answers,
-  rating,
-  style,
-  ...props
-}: ViewProps & { views: number; answers: number; rating: number }) => {
-  const combinedStyle = useMemo(() => [style, styles.statsRow], [style]);
-  
-  return (
-    <Row style={combinedStyle} alignItems="center" {...props}>
-      <ViewsCount views={views} />
-      <AnswersCount answers={answers} />
-      <RatingCount rating={rating} />
-    </Row>
-  );
-});
+const Statistics = memo(
+  ({
+    views,
+    answers,
+    rating,
+    style,
+    ...props
+  }: ViewProps & { views: number; answers: number; rating: number }) => {
+    const combinedStyle = useMemo(() => [style, styles.statsRow], [style]);
+
+    return (
+      <Row style={combinedStyle} alignItems="center" {...props}>
+        <ViewsCount views={views} />
+        <AnswersCount answers={answers} />
+        <RatingCount rating={rating} />
+      </Row>
+    );
+  }
+);
 
 const Value = memo(({ value }: { value: number }) => (
   <ThemedText variant="labelSmall">{value}</ThemedText>
@@ -164,7 +172,7 @@ const RatingCount = memo(({ rating }: { rating: number }) => (
 const RatingIcon = memo(({ rating }: { rating: number }) => {
   const theme = useTheme();
   const isPositive = rating >= 0;
-  
+
   return (
     <Ionicons
       color={isPositive ? theme.colors.tertiary : theme.colors.error}
@@ -211,6 +219,6 @@ const styles = StyleSheet.create({
   },
 });
 
-ForumQuestionCard.displayName = 'ForumQuestionCard';
+ForumQuestionCard.displayName = "ForumQuestionCard";
 
 export default ForumQuestionCard;

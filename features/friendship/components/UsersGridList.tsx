@@ -4,6 +4,7 @@ import { FlatList, RefreshControl, StyleSheet } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
 import UserCompactCell from "./UserCompactCell";
 import { FriendUser } from "../types";
+import View from "@components/styled/View";
 
 type UserGridListProps = {
   users: FriendUser[];
@@ -21,7 +22,7 @@ export const UserGridList = ({
    */
   const numOfCells = 1;
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
       <FlatList
         renderItem={({ item, index }) => {
           return <UserCompactCell key={index} user={item} />;
@@ -33,7 +34,7 @@ export const UserGridList = ({
         onRefresh={onRefresh}
         refreshing={isRefreshing}
       />
-    </ThemedView>
+    </View>
   );
 };
 

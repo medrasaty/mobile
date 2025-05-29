@@ -3,6 +3,7 @@ import { PaginatedResponse } from "@/types/requests";
 import { Axios } from "axios";
 import { parseQuestionFormData } from "./utils";
 import { questionSchemaType } from "./schemas";
+import { request } from "@/lib/api";
 
 export async function getForumQuestions(client: Axios, params?: any) {
   console.log(params);
@@ -14,14 +15,11 @@ export async function getForumQuestions(client: Axios, params?: any) {
   return res.data.results;
 }
 
-export async function getForumQuestion(
-  client: Axios,
-  questionId: Question["id"],
-  params?: any
-) {
-  const res = await client.get<DetailQuestion>(
-    `/forum/questions/${questionId}/`
-  );
+export async function getForumQuestion(questionId: Question["id"]) {
+  const res = await request<DetailQuestion>({
+    url: `/forum/questions/${questionId}/`,
+    method: "GET",
+  });
   return res.data;
 }
 

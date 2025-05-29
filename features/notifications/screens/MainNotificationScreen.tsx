@@ -10,7 +10,6 @@ import FilterOptionsView from "@/components/FilterOptionsView";
 import Page from "@/components/Page";
 import Sheet, { useSheetRef } from "@/components/Sheet";
 
-import { useSearchContext } from "@/contexts/SearchContext";
 import { AppBar } from "@/features/navigation/components/AppBar";
 
 import NotificationCard from "@/features/notifications/components/NotificationCard";
@@ -48,13 +47,11 @@ export const NotificationAppbar = () => {
  */
 export const NotificationsActionAppbar = () => {
   const { t } = useTranslation();
-  const { setIsSearch } = useSearchContext();
   const sheetRef = useSheetRef();
 
   return (
     <>
       <AppBar backAction={false} title={t("Notification")}>
-        <Appbar.Action icon="magnify" onPress={() => setIsSearch(true)} />
         <Appbar.Action
           icon="dots-vertical"
           onPress={() => sheetRef.current?.expand()}
