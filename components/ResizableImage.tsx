@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, Pressable, Dimensions, View } from 'react-native';
-import { Portal } from '@gorhom/portal';
-import { Image } from 'expo-image';
-import Gallery from 'react-native-awesome-gallery';
-import { debugStyle } from '@/constants/styels';
+import React, { useState, useRef } from "react";
+import { StyleSheet, Pressable, Dimensions, View } from "react-native";
+import { Portal } from "@gorhom/portal";
+import { Image } from "expo-image";
+import Gallery from "react-native-awesome-gallery";
+import { debugStyle } from "@/constants/styels";
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 interface ResizableImageProps {
   uri: string;
@@ -31,28 +31,18 @@ export const ResizableImage: React.FC<ResizableImageProps> = ({
   };
 
   const renderGalleryItem = ({ item }: { item: string }) => (
-    <View style={{ flex: 1, justifyContent: "center"}}>
-      <Image
-        source={{ uri: item }}
-        contentFit="fill"
-        {...imageProps}
-      />
+    <View style={{ flex: 1, justifyContent: "center" }}>
+      <Image source={{ uri: item }} contentFit="fill" {...imageProps} />
     </View>
   );
 
   return (
     <>
-      <Pressable 
-        onPress={handlePress} 
-        style={[
-          style,
-          { width, height }
-        ]}
-      >
+      <Pressable onPress={handlePress} style={[style, { width, height }]}>
         <Image
           source={{ uri }}
           style={[styles.image, { width, height }]}
-          contentFit="cover"
+          contentFit="contain"
           {...imageProps}
         />
       </Pressable>
@@ -68,9 +58,9 @@ export const ResizableImage: React.FC<ResizableImageProps> = ({
               onTap={handlePress}
               doubleTapScale={2.5}
               maxScale={5}
-              style={{backgroundColor: 'transparent' }}
+              style={{ backgroundColor: "transparent" }}
               onSwipeToClose={handlePress}
-              pinchEnabled={true}
+              pinchEnabled={false}
               {...galleryProps}
             />
           </View>
@@ -82,21 +72,22 @@ export const ResizableImage: React.FC<ResizableImageProps> = ({
 
 const styles = StyleSheet.create({
   image: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
   },
   galleryImage: {
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,
   },
   backdrop: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
     zIndex: 999,
-  }
+  },
 });
 
-export default ResizableImage; 
+export default ResizableImage;
+

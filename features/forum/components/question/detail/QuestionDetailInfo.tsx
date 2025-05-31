@@ -14,10 +14,11 @@ import { t } from "i18next";
 import { memo, useMemo, useState, useEffect } from "react";
 import { ViewProps, Image, Dimensions } from "react-native";
 import { useTheme } from "react-native-paper";
-import { ResizableImage } from "@components/ResizableImage"
+import { ResizableImage } from "@components/ResizableImage";
 
 // Module-level cache for image dimensions
-const imageDimensionsCache: Record<string, { width: number; height: number }> = {};
+const imageDimensionsCache: Record<string, { width: number; height: number }> =
+  {};
 
 type QuestionDetailInfoProps = {
   question: DetailQuestion;
@@ -28,7 +29,7 @@ const QuestionDetailInfo = memo(
   ({ question, style, ...props }: QuestionDetailInfoProps) => {
     // Pre-calculate all needed values
     const hasImage = Boolean(question?.picture);
-    
+
     return (
       <View style={{ flex: 1, gap: 30 }}>
         <View
@@ -48,7 +49,9 @@ const QuestionDetailInfo = memo(
               tags={question?.tags}
             />
           </ThemedView>
-          {hasImage && <PictureOptimized image={question.picture || undefined} />}
+          {hasImage && (
+            <PictureOptimized image={question.picture || undefined} />
+          )}
 
           <View style={{ flex: 0.1, gap: 9, marginTop: 4 }}>
             <ThemedView
@@ -81,11 +84,7 @@ export const Description = memo(
 );
 
 const TagsList = memo(
-  ({
-    tags,
-    style,
-    ...props
-  }: { tags: DetailQuestion["tags"] } & ViewProps) => {
+  ({ tags, style, ...props }: { tags: DetailQuestion["tags"] } & ViewProps) => {
     return (
       <View
         style={[
@@ -114,21 +113,13 @@ const ViewsCount = memo(({ views }: { views: DetailQuestion["views"] }) => {
 });
 
 export const AnswersCount = memo(
-  ({
-    answersCount,
-  }: {
-    answersCount: DetailQuestion["answers_count"];
-  }) => {
+  ({ answersCount }: { answersCount: DetailQuestion["answers_count"] }) => {
     return <ThemedText variant="labelSmall">{answersCount} اجابة</ThemedText>;
   }
 );
 
 export const SubjectInfo = memo(
-  ({
-    subject,
-  }: {
-    subject: DetailQuestion["subject"];
-  }) => {
+  ({ subject }: { subject: DetailQuestion["subject"] }) => {
     const theme = useTheme();
     return (
       <Text style={{ color: theme.colors.tertiary }} variant="labelMedium">
@@ -149,7 +140,7 @@ const TimeInfo = memo(
   } & ViewProps) => {
     // Pre-compute the formatted date
     const formattedDate = useMemo(() => d(created).fromNow(), [created]);
-    
+
     return (
       <View {...props}>
         <Text variant="labelSmall">{formattedDate}</Text>
@@ -162,7 +153,10 @@ const TimeInfo = memo(
 export const PictureOptimized = memo(({ image }: { image?: string }) => {
   const theme = useTheme();
   const [imageHeight, setImageHeight] = useState(160); // Default height
-  const [naturalImageSize, setNaturalImageSize] = useState<{ width: number; height: number } | null>(null);
+  const [naturalImageSize, setNaturalImageSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
 
   // Effect 1: Fetch and cache natural image dimensions
   useEffect(() => {
@@ -185,7 +179,9 @@ export const PictureOptimized = memo(({ image }: { image?: string }) => {
           } else {
             // Invalid dimensions, treat as error
             setNaturalImageSize(null);
-            console.error(`Failed to get valid image size for ${image}: width or height is 0`);
+            console.error(
+              `Failed to get valid image size for ${image}: width or height is 0`
+            );
           }
         },
         (error) => {
@@ -200,33 +196,44 @@ export const PictureOptimized = memo(({ image }: { image?: string }) => {
   useEffect(() => {
     const calculateHeight = (currentScreenWidth: number) => {
       if (naturalImageSize && naturalImageSize.width > 0) {
-        const calculatedHeight = naturalImageSize.height * (currentScreenWidth / naturalImageSize.width);
+        const calculatedHeight =
+          naturalImageSize.height *
+          (currentScreenWidth / naturalImageSize.width);
         // Apply max height and ensure it's a positive number
-        setImageHeight(Math.max(1, Math.min(calculatedHeight, 400))); 
+        setImageHeight(Math.max(1, Math.min(calculatedHeight, 400)));
       } else {
         setImageHeight(160); // Fallback or default height
       }
     };
 
     // Initial calculation with current screen width
-    calculateHeight(Dimensions.get('window').width);
+    calculateHeight(Dimensions.get("window").width);
 
     // Subscribe to dimension changes (e.g., orientation change)
-    const handleChange = ({ window }: { window: { width: number; height: number; scale: number; fontScale: number } }) => {
+    const handleChange = ({
+      window,
+    }: {
+      window: {
+        width: number;
+        height: number;
+        scale: number;
+        fontScale: number;
+      };
+    }) => {
       calculateHeight(window.width);
     };
-    
-    const subscription = Dimensions.addEventListener('change', handleChange);
+
+    const subscription = Dimensions.addEventListener("change", handleChange);
 
     return () => {
       subscription?.remove(); // Clean up listener
     };
   }, [naturalImageSize]); // Re-run if naturalImageSize changes (and for initial setup)
-  
+
   // Memoize styles to prevent recalculation
   const style = useMemo(
     () => ({
-      height: imageHeight,
+      height: 160,
       backgroundColor: theme.colors.surfaceVariant,
       borderRadius: theme.roundness + 6,
     }),
@@ -242,10 +249,9 @@ export const PictureOptimized = memo(({ image }: { image?: string }) => {
         style: style,
         transition: 500,
         cachePolicy: "memory-disk",
-        contentFit: "cover",
-        placeholder: { uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==' },
+        contentFit: "contain",
         recyclingKey: image,
-        priority: "low"
+        priority: "low",
       }}
     />
   );
@@ -257,7 +263,11 @@ export const ShareMemoized = memo(({ id }: { id: Question["id"] }) => {
 
   return (
     <View>
-      <ThemedText noInteraction={false} link onPress={() => sheetRef.current?.snapToIndex(0)}>
+      <ThemedText
+        noInteraction={false}
+        link
+        onPress={() => sheetRef.current?.snapToIndex(0)}
+      >
         {t("share")}
       </ThemedText>
       <ShareContentSheet questionId={id} ref={sheetRef} />
